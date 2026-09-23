@@ -1,13 +1,14 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, stats.json, internal.json, hall.json
+   산출: data/dashboard.json, stats.json, internal.json, hall.json, squads.json
    ============================================================ */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
+import { latestLineupMatch, formationOf, seasonIdOf, pidOf, SUB_POSITION } from "./lib/squad.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -156,6 +157,43 @@ function buildHall() {
   writeJSON(p("data", "hall.json"), { updated: now.toISOString(), minGames: MIN_GAMES, seasons });
 }
 
+/* ---------- ⑤ 스쿼드 (회원별 최근 경기 라인업) ---------- */
+function buildSquads() {
+  const players = readJSON(p("data", "meta", "players.json"), {});
+  const seasonMeta = readJSON(p("data", "meta", "seasonid.json"), {});
+  const posList = readJSON(p("data", "meta", "spposition.json"), []);
+  const posName = Object.fromEntries(posList.map((x) => [x.spposition, x.desc]));
+
+  const toCard = (pl) => {
+    const sid = seasonIdOf(pl.spId);
+    const season = seasonMeta[sid] || {};
+    return {
+      spId: pl.spId, pid: pidOf(pl.spId),
+      name: players[pl.spId] || `선수 ${pidOf(pl.spId)}`,   // 메타 누락 시 대체 표기
+      pos: pl.spPosition, posName: posName[pl.spPosition] || "",
+      grade: pl.spGrade,
+      seasonId: sid, seasonName: season.name || "", seasonImg: season.img || ""
+    };
+  };
+
+  const squads = {};
+  for (const m of members) {
+    const last = latestLineupMatch(matchesByOuid[m.ouid]);
+    if (!last) continue;
+    const starters = last.lineup.filter((pl) => pl.spPosition !== SUB_POSITION);
+    squads[m.ouid] = {
+      matchId: last.matchId, matchDate: last.matchDate, matchType: last.matchType,
+      result: last.result, goalFor: last.goalFor, goalAgainst: last.goalAgainst,
+      opponentNick: last.opponentNick,
+      formation: formationOf(starters),
+      starters: starters.map(toCard).sort((a, b) => a.pos - b.pos),
+      subs: last.lineup.filter((pl) => pl.spPosition === SUB_POSITION).map(toCard)
+    };
+  }
+  writeJSON(p("data", "squads.json"), { updated: now.toISOString(), squads });
+  return Object.keys(squads).length;
+}
+
 function round1(n) { return n == null ? null : Math.round(n * 10) / 10; }
 
 /* ---------- 실행 ---------- */
@@ -163,5 +201,6 @@ const cur = buildDashboard();
 buildStats();
 buildInternal();
 buildHall();
-console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, ` +
-  `dashboard/stats/internal/hall.json 갱신`);
+const squadCount = buildSquads();
+console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, ` +
+  `dashboard/stats/internal/hall/squads.json 갱신`);

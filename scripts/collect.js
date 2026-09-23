@@ -12,6 +12,7 @@ import {
   setCallInterval, getMatchIds, getMatchDetail,
   getUserBasic, getMaxDivision, getMeta, getOuidByNickname
 } from "./lib/nexon-api.js";
+import { latestLineupMatch, seasonIdOf, shortSeasonName } from "./lib/squad.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -120,6 +121,31 @@ async function collectProfile(member, divisionMeta) {
   return profile;
 }
 
+/* 스쿼드 표시용 메타 저장 — spid.json(6MB+)은 통째로 커밋하지 않고
+   각 회원 최근 라인업에 등장한 선수만 추려 data/meta/players.json 으로 저장 */
+async function saveSquadMeta(active) {
+  const used = new Set();
+  for (const m of active) {
+    const store = readJSON(p("data", "matches", `${m.ouid}.json`), { matches: [] });
+    const last = latestLineupMatch(store.matches);
+    if (last) last.lineup.forEach((pl) => used.add(pl.spId));
+  }
+  try {
+    const [spids, seasons] = await Promise.all([getMeta("spid"), getMeta("seasonid")]);
+    const players = {};
+    for (const s of spids) if (used.has(s.id)) players[s.id] = s.name;
+    const seasonMeta = {};
+    for (const s of seasons) {
+      seasonMeta[s.seasonId] = { name: shortSeasonName(s.className), img: s.seasonImg };
+    }
+    writeJSON(p("data", "meta", "players.json"), players);
+    writeJSON(p("data", "meta", "seasonid.json"), seasonMeta);
+    const unknownSeasons = [...used].map(seasonIdOf).filter((id) => !seasonMeta[id]);
+    if (unknownSeasons.length) console.warn(`  시즌 메타 없음: ${[...new Set(unknownSeasons)]}`);
+    console.log(`🧩 스쿼드 메타 저장 — 선수 ${Object.keys(players).length}/${used.size}명`);
+  } catch (e) { console.warn(`스쿼드 메타 저장 실패(기존 파일 유지): ${e.message}`); }
+}
+
 async function main() {
   const config = readJSON(p("config.json"), {});
   const membersFile = readJSON(p("data", "members.json"), { members: [] });
@@ -170,6 +196,7 @@ async function main() {
     profiles[m.ouid] = await collectProfile(m, divisionMeta);
   }
   writeJSON(p("data", "profiles.json"), { updated: new Date().toISOString(), profiles });
+  await saveSquadMeta(active);
   console.log(`✅ 수집 완료 — 신규 매치 총 ${total}건, 프로필 ${Object.keys(profiles).length}명`);
 }
 

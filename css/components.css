@@ -147,3 +147,87 @@ table.data td.num, table.data th.num { text-align: right; }
 .rank.r1 { background: linear-gradient(135deg,#ffe08a,#d4a017); color:#3a2c00; }
 .rank.r2 { background: var(--metal-grad); color:#1a1c1f; }
 .rank.r3 { background: linear-gradient(135deg,#e0a479,#a05a2c); color:#2a1400; }
+
+/* --- 작은 버튼 (명단 행 [스쿼드] 등) --- */
+.btn.sm { padding: var(--sp-2) var(--sp-3); font-size: var(--fs-xs); flex-shrink: 0; }
+
+/* ============================================================
+   스쿼드 모달 (js/squad.js) — 포메이션 필드 + 교체 명단
+   ============================================================ */
+body.sq-lock { overflow: hidden; }
+.sq-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.72);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: var(--sp-4); overflow-y: auto;
+}
+.sq-modal {
+  width: 100%; max-width: 520px; margin: auto 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  padding: var(--sp-4);
+}
+.sq-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.sq-title { font-size: var(--fs-lg); font-weight: 800; }
+.sq-dim { font-size: var(--fs-xs); color: var(--text-muted); font-weight: 400; }
+.sq-close {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  font-size: var(--fs-base);
+}
+.sq-close:hover { background: var(--surface-3); }
+.sq-note { margin-top: var(--sp-4); font-size: var(--fs-xs); color: var(--text-dim); }
+
+/* 필드 — 세로형 (위 = 공격, 아래 = 골키퍼) */
+.sq-pitch {
+  position: relative; width: 100%; aspect-ratio: 3 / 4;
+  border-radius: var(--radius); overflow: hidden;
+  background: repeating-linear-gradient(180deg, #1c4a2a 0 10%, #1a4327 10% 20%);
+  border: 1px solid #2c5e3a;
+}
+.sq-line { position: absolute; border: 1px solid rgba(255,255,255,.18); }
+.sq-line.half { left: 0; right: 0; top: 50%; border-width: 1px 0 0; }
+.sq-line.circle { left: 50%; top: 50%; width: 22%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%,-50%); }
+.sq-line.box { left: 25%; right: 25%; height: 13%; }
+.sq-line.box.top { top: 0; border-top: 0; }
+.sq-line.box.bottom { bottom: 0; border-bottom: 0; }
+
+.sq-player {
+  position: absolute; transform: translate(-50%,-50%);
+  width: 19%; display: flex; flex-direction: column; align-items: center;
+  text-align: center; line-height: 1.15;
+}
+.sq-face {
+  width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+  background: var(--surface-3); border: 1px solid rgba(255,255,255,.25);
+}
+.sq-face img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.sq-face img.sq-noimg { display: none; }
+.sq-meta { display: flex; align-items: center; gap: 2px; margin-top: -8px; }
+.sq-season { height: 14px; width: auto; }
+.sq-season-txt { font-size: 9px; color: var(--text-muted); background: var(--surface); padding: 0 3px; border-radius: 3px; }
+.sq-grade {
+  min-width: 16px; height: 14px; padding: 0 3px; border-radius: 3px;
+  font-size: 10px; font-weight: 800; line-height: 14px;
+  background: var(--surface-3); color: var(--text-muted);
+}
+.sq-grade.g-bronze { background: #7a4a2a; color: #f3d2b8; }
+.sq-grade.g-silver { background: #8b929b; color: #111; }
+.sq-grade.g-gold   { background: #d4a017; color: #2a1e00; }
+.sq-grade.g-top    { background: linear-gradient(135deg,#ffe08a,#e5534b); color: #1a0a00; }
+.sq-player .sq-name {
+  margin-top: 2px; max-width: 100%; font-size: 11px; font-weight: 700; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.9);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sq-pos { font-size: 9px; color: rgba(255,255,255,.7); }
+
+/* 교체 명단 — 가로 스크롤 없이 줄바꿈 그리드 */
+.sq-subs { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: var(--sp-3); }
+.sq-sub { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.sq-sub .sq-name { margin-top: 2px; font-size: 11px; color: var(--text); line-height: 1.2; word-break: keep-all; }
+
+@media (max-width: 380px) {
+  .sq-face { width: 36px; height: 36px; }
+  .sq-player .sq-name { font-size: 10px; }
+}

@@ -211,6 +211,7 @@ C:\Projects\dor6-club\
 - **`stats.json`**: `{ [ouid]: { games, avgPossession, avgShoot, passSuccessRate, tags:["점유형"] } }` — 성향 태그는 수치 임계값 기반.
 - **`internal.json`**: 양측 모두 클럽원(ouid ∈ members)인 매치만 추출 → `{ matches:[...], headToHead:{ "ouidA|ouidB": {aWin,bWin,draw} } }`.
 - **`hall.json`**: 시즌별 최다 판수/최다 승/최고 승률 등 자동 선정.
+- **`squads.json`**: `{ [ouid]: { matchId, matchDate, formation, starters:[...], subs:[...] } }` — 회원별 최근 수집 경기 라인업(넥슨은 현재 스쿼드 미제공). 공통 로직 `scripts/lib/squad.js`, 선수/시즌 메타는 `data/meta/players.json`·`seasonid.json`(사용 선수만 추림).
 
 ---
 
@@ -219,7 +220,7 @@ C:\Projects\dor6-club\
 | # | 페이지 | 핵심 내용 | 데이터 소스 |
 |---|--------|-----------|-------------|
 | 홈 | index.html | 클럽 로고, 이번 시즌 요약(전체 달성률·중간점검 임박 알림), 각 페이지 진입 | dashboard.json |
-| ① | members.html | 인게임닉·톡방닉·최고등급·역할, **담당 부클럽장별 그룹 보기** | members.json, matches |
+| ① | members.html | 인게임닉·최고등급·역할(운영진+클럽원 평면), **[스쿼드] 최근 경기 포메이션 모달** | members.json, profiles.json, squads.json |
 | ② | dashboard.html | 클럽원별 현재판수/기준판수 **진행률 바**, 상반기 중간점검 **미달자 표시**, **휴식자 제외**, 부클럽장별 담당 인원 현황 | dashboard.json |
 | ③ | record.html | 회원 선택 → 최근 경기 목록(승/무/패·스코어·상대), **라인업 표시** | matches/{ouid}.json |
 | ④ | style.html | 평균 점유율·슈팅·패스성공률 누적 통계, **수치 기반 성향 태그**(점유형/역습형 등) | stats.json |

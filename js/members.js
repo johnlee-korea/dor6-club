@@ -1,10 +1,13 @@
-/* members.js — 클럽원 명단 (담당 부클럽장별 그룹) */
+/* members.js — 클럽원 명단 (운영진 + 클럽원 평면 표시, 행별 [스쿼드] 보기) */
 
 const ROLE_ORDER = { "회장": 0, "클럽장": 1, "부클럽장": 2, "클럽원": 3 };
+let SQUADS = {}; // ouid → 최근 경기 라인업 (data/squads.json)
 
 async function initMembers() {
   const root = document.getElementById("members-root");
-  const [membersFile, profilesFile] = await loadAll(["data/members.json", "data/profiles.json"]);
+  const [membersFile, profilesFile, squadsFile] =
+    await loadAll(["data/members.json", "data/profiles.json", "data/squads.json"]);
+  SQUADS = (squadsFile && squadsFile.squads) || {};
 
   if (!membersFile || !membersFile.members || !membersFile.members.length) {
     root.innerHTML = emptyState("등록된 클럽원이 없습니다.", "👥");
@@ -43,6 +46,10 @@ function memberRow(m, profiles) {
   const level = prof && prof.level ? `Lv.${prof.level}` : "";
   const pending = !m.ouid ? `<span class="badge warn" title="넥슨 조회 대기">닉 확인중</span>` : "";
   const sub = m.isSub ? `<span class="badge">부계정</span>` : "";
+  // 최근 경기 기록이 있는 회원만 스쿼드 보기 가능
+  const squadBtn = m.ouid && SQUADS[m.ouid]
+    ? `<button class="btn sm" type="button" data-squad="${escapeHtml(m.ouid)}" data-nick="${escapeHtml(m.ingameNick)}">스쿼드</button>`
+    : `<button class="btn sm" type="button" disabled title="수집된 경기 없음">스쿼드</button>`;
   return `
     <div class="member-row">
       <div class="info">
@@ -52,8 +59,18 @@ function memberRow(m, profiles) {
         <div style="color:var(--silver);font-weight:700;">${grade}</div>
         <div style="font-size:var(--fs-xs);">${level}</div>
       </div>
+      ${squadBtn}
     </div>
   `;
 }
+
+/* [스쿼드] 버튼 — 행마다 리스너를 달지 않고 루트에서 이벤트 위임 */
+document.getElementById("members-root").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-squad]");
+  if (!btn) return;
+  const squad = SQUADS[btn.dataset.squad];
+  if (!squad) return;
+  openSquadModal(btn.dataset.nick, squad);
+});
 
 initMembers();

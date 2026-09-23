@@ -14,7 +14,7 @@ const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 const PAGES = [
   { file: "index.html",     scripts: ["js/common.js", "js/home.js"],           root: "summary" },
-  { file: "members.html",   scripts: ["js/common.js", "js/members.js"],        root: "members-root" },
+  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/members.js"], root: "members-root" },
   { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
   { file: "record.html",    scripts: ["js/common.js", "js/record.js"],         root: "record-root" },
   { file: "style.html",     scripts: ["js/common.js", "js/style-analysis.js"], root: "style-root" },
