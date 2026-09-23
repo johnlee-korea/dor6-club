@@ -7,8 +7,8 @@
 window.DOR6 = {
   clubName: "도륙",
   clubEn: "Dor6",
-  /* Cloudflare Worker 배포 후 URL 입력 (관리자 기능용). 미설정 시 관리자 패널 비활성 안내 */
-  workerUrl: "",
+  /* Cloudflare Worker URL (전적검색·관리자 백엔드) */
+  workerUrl: "https://dor6-club-admin.dor6club.workers.dev",
   /* GitHub Pages base path (레포명). 로컬 file:// 열람 시 자동 무시 */
   basePath: "/dor6-club"
 };

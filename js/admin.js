@@ -50,8 +50,7 @@ async function loadMemberList() {
   box.innerHTML = members.map((m) => `
     <div class="member-row">
       <div class="info">
-        <div class="nick">${escapeHtml(m.ingameNick)} ${roleBadge(m.role)}</div>
-        <div class="talk">톡방: ${escapeHtml(m.talkNick || "-")} ${m.ouid ? "" : "· <span style='color:var(--warn)'>ouid 없음</span>"}</div>
+        <div class="nick">${escapeHtml(m.ingameNick)} ${roleBadge(m.role)} ${m.ouid ? "" : "<span class='badge warn'>ouid 없음</span>"}</div>
       </div>
       ${m.ouid ? `<button class="btn danger" data-del="${m.ouid}" data-nick="${escapeHtml(m.ingameNick)}">삭제</button>` : ""}
     </div>`).join("");
@@ -62,7 +61,6 @@ async function loadMemberList() {
 async function doAdd() {
   const msg = $("add-msg");
   const nickname = $("new-nick").value.trim();
-  const talk = $("new-talk").value.trim();
   const role = $("new-role").value;
   if (!nickname) { msg.innerHTML = err("인게임 닉네임을 입력하세요."); return; }
 
@@ -74,7 +72,7 @@ async function doAdd() {
     msg.textContent = "등록 중…";
     const r = await auth.call("/members", {
       action: "add",
-      member: { ouid, ingameNick: nickname, talkNick: talk || nickname, role }
+      member: { ouid, ingameNick: nickname, role }
     });
     if (r.error) { msg.innerHTML = err(r.error); }
     else {

@@ -62,7 +62,6 @@ function memberRow(m, profiles) {
     <div class="member-row">
       <div class="info">
         <div class="nick">${escapeHtml(m.ingameNick)} ${roleBadge(m.role)} ${sub} ${pending}</div>
-        <div class="talk">톡방: ${escapeHtml(m.talkNick || "-")}</div>
       </div>
       <div class="meta">
         <div style="color:var(--silver);font-weight:700;">${grade}</div>

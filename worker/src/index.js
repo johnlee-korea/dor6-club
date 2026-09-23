@@ -68,10 +68,15 @@ export default {
 
 /* ---------- 넥슨 API 공통 ---------- */
 const NX = "https://open.api.nexon.com";
-async function nexonGet(path, key) {
-  const res = await fetch(NX + path, { headers: { "x-nxopen-api-key": key } });
-  if (!res.ok) throw new Error(`nexon ${res.status} ${path}`);
-  return res.json();
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function nexonGet(path, key, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    const res = await fetch(NX + path, { headers: { "x-nxopen-api-key": key } });
+    if (res.ok) return res.json();
+    // 429(수집 중 동시호출) / 5xx → 잠깐 대기 후 재시도
+    if ((res.status === 429 || res.status >= 500) && i < retries) { await sleep(600 * (i + 1)); continue; }
+    throw new Error(`nexon ${res.status} ${path}`);
+  }
 }
 
 /* 닉→ouid */
