@@ -31,6 +31,16 @@ export default {
         return json({ token, expiresIn: TOKEN_TTL });
       }
 
+      // 공개: 아무 유저 전적 검색 (인증 불필요, 키는 Worker에만)
+      if (url.pathname === "/search" && request.method === "POST") {
+        const { nickname } = await request.json();
+        if (!nickname) return json({ error: "닉네임을 입력하세요." }, 400);
+        const ouid = await resolveOuid(nickname, env.NEXON_API_KEY);
+        if (!ouid) return json({ error: "해당 닉네임을 찾을 수 없습니다. (닉 변경 직후면 하루 정도 뒤 조회됩니다)" }, 404);
+        const data = await publicSearch(ouid, env.NEXON_API_KEY);
+        return json(data);
+      }
+
       // 이하 인증 필요
       const payload = await requireAuth(request, env);
       if (!payload) return json({ error: "인증이 필요합니다. 다시 로그인하세요." }, 401);
@@ -56,13 +66,67 @@ export default {
   }
 };
 
-/* ---------- 넥슨 닉→ouid ---------- */
+/* ---------- 넥슨 API 공통 ---------- */
+const NX = "https://open.api.nexon.com";
+async function nexonGet(path, key) {
+  const res = await fetch(NX + path, { headers: { "x-nxopen-api-key": key } });
+  if (!res.ok) throw new Error(`nexon ${res.status} ${path}`);
+  return res.json();
+}
+
+/* 닉→ouid */
 async function resolveOuid(nickname, key) {
-  const u = `https://open.api.nexon.com/fconline/v1/id?nickname=${encodeURIComponent(nickname)}`;
-  const res = await fetch(u, { headers: { "x-nxopen-api-key": key } });
-  if (!res.ok) return null;
-  const j = await res.json();
-  return j.ouid || null;
+  try {
+    const j = await nexonGet(`/fconline/v1/id?nickname=${encodeURIComponent(nickname)}`, key);
+    return j.ouid || null;
+  } catch { return null; }
+}
+
+/* 등급 메타 캐시 (isolate 수명 동안 유지) */
+let _divMeta = null;
+async function divisionName(id) {
+  if (!_divMeta) {
+    try { _divMeta = await (await fetch(`${NX}/static/fconline/meta/division.json`)).json(); }
+    catch { _divMeta = []; }
+  }
+  const m = _divMeta.find((d) => d.divisionId === id);
+  return m ? m.divisionName : (id != null ? String(id) : "-");
+}
+
+/* 아무 유저 전적 요약 (최근 공식경기 위주) */
+const R_MAP = { "승": "win", "무": "draw", "패": "lose" };
+async function publicSearch(ouid, key) {
+  const out = { ouid, nickname: null, level: null, maxDivision: "-", matches: [] };
+  try { const b = await nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key); out.nickname = b.nickname; out.level = b.level; } catch {}
+  try {
+    const divs = await nexonGet(`/fconline/v1/user/maxdivision?ouid=${ouid}`, key);
+    const off = divs.find((d) => d.matchType === 50) || divs[0];
+    if (off) out.maxDivision = await divisionName(off.division);
+  } catch {}
+
+  let ids = [];
+  try { ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=50&offset=0&limit=8`, key); } catch {}
+  for (const id of ids) {
+    try {
+      const d = await nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key);
+      const me = (d.matchInfo || []).find((i) => i.ouid === ouid);
+      if (!me) continue;
+      const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
+      const md = me.matchDetail || {}, sh = me.shoot || {};
+      out.matches.push({
+        matchDate: d.matchDate,
+        result: R_MAP[md.matchResult] || "draw",
+        goalFor: sh.goalTotal ?? 0,
+        goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
+        opponentNick: opp ? opp.nickname : "?",
+        possession: md.possession ?? null
+      });
+    } catch {}
+  }
+  const w = out.matches.filter((m) => m.result === "win").length;
+  out.summary = { games: out.matches.length, wins: w,
+    winRate: out.matches.length ? Math.round((w / out.matches.length) * 100) : null };
+  return out;
 }
 
 /* ---------- GitHub members.json 등록/삭제 ---------- */

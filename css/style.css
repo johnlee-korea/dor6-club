@@ -56,6 +56,19 @@ body::before {
 }
 .app-header .admin-link:hover { color: var(--silver); border-color: var(--silver-dim); }
 
+/* 섹션 스위처 (클럽 / 일반 정보) */
+.sec-switch {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.sec-tab {
+  font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted);
+  padding: var(--sp-1) var(--sp-3); border-radius: 999px; white-space: nowrap;
+}
+.sec-tab.active { background: var(--silver); color: var(--bg); }
+@media (max-width: 380px) { .sec-tab { padding: var(--sp-1) var(--sp-2); font-size: var(--fs-xs); } }
+
 /* --- 네비 (가로 스크롤 탭) --- */
 .app-nav {
   position: sticky; top: var(--header-h); z-index: 40;

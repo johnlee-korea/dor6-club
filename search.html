@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>전적 검색 · 도륙 Dor6</title>
+  <link rel="icon" href="dor6.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body data-page="search" data-section="general">
+  <main class="page">
+    <h1 class="page-title">전적 검색</h1>
+    <p class="page-desc">FC 온라인 닉네임으로 아무 유저나 최근 공식경기 전적을 조회합니다.</p>
+
+    <div class="card" style="margin-bottom:var(--sp-4);">
+      <div style="display:flex;gap:var(--sp-2);">
+        <input id="q" class="input" placeholder="인게임 닉네임 입력" autocomplete="off">
+        <button id="search-btn" class="btn primary" style="flex:0 0 auto;">검색</button>
+      </div>
+      <div id="search-msg" style="margin-top:var(--sp-2);font-size:var(--fs-sm);color:var(--text-muted);"></div>
+    </div>
+
+    <div id="search-root"></div>
+  </main>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>

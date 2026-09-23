@@ -13,22 +13,42 @@ window.DOR6 = {
   basePath: "/dor6-club"
 };
 
-/* 네비 메뉴 정의 (순서 = 표시 순서) */
-const DOR6_NAV = [
-  { key: "home",      label: "홈",         href: "index.html" },
-  { key: "members",   label: "클럽원",     href: "members.html" },
-  { key: "dashboard", label: "판수",       href: "dashboard.html" },
-  { key: "record",    label: "전적",       href: "record.html" },
-  { key: "style",     label: "플레이스타일", href: "style.html" },
-  { key: "internal",  label: "내전",       href: "internal.html" },
-  { key: "hall",      label: "명예의전당",  href: "hall.html" },
-  { key: "rules",     label: "규칙·공지",   href: "rules.html" }
-];
+/* 섹션 구조: 클럽 / 일반 정보 (각 섹션은 자체 서브네비를 가짐) */
+const DOR6_SECTIONS = {
+  club: {
+    label: "클럽",
+    home: "index.html",
+    nav: [
+      { key: "home",      label: "홈",         href: "index.html" },
+      { key: "members",   label: "클럽원",     href: "members.html" },
+      { key: "dashboard", label: "판수",       href: "dashboard.html" },
+      { key: "record",    label: "전적",       href: "record.html" },
+      { key: "style",     label: "플레이스타일", href: "style.html" },
+      { key: "internal",  label: "내전",       href: "internal.html" },
+      { key: "hall",      label: "명예의전당",  href: "hall.html" },
+      { key: "rules",     label: "규칙·공지",   href: "rules.html" }
+    ]
+  },
+  general: {
+    label: "일반 정보",
+    home: "search.html",
+    nav: [
+      { key: "search",    label: "전적 검색",  href: "search.html" }
+    ]
+  }
+};
 
 /* ---------- 헤더/네비 렌더 ---------- */
 function renderChrome() {
   if (document.querySelector(".app-header")) return; // 중복 주입 방지
   const page = document.body.dataset.page || "home";
+  const sectionKey = document.body.dataset.section || "club";
+  const section = DOR6_SECTIONS[sectionKey] || DOR6_SECTIONS.club;
+
+  // 섹션 스위처 (클럽 / 일반 정보)
+  const switcher = Object.entries(DOR6_SECTIONS).map(([key, sec]) =>
+    `<a href="${sec.home}" class="sec-tab ${key === sectionKey ? "active" : ""}">${sec.label}</a>`
+  ).join("");
 
   const header = document.createElement("header");
   header.className = "app-header";
@@ -37,16 +57,17 @@ function renderChrome() {
       <img class="logo" src="dor6.png" alt="도륙 엠블럼">
       <span class="brand">
         <span class="name">도륙 · Dor6</span>
-        <span class="sub">클럽원 전용 정보</span>
+        <span class="sub">${sectionKey === "general" ? "전적 정보" : "클럽원 전용"}</span>
       </span>
     </a>
     <span class="spacer"></span>
-    <a class="admin-link" href="admin.html">🔒 관리자</a>
+    <span class="sec-switch">${switcher}</span>
+    <a class="admin-link" href="admin.html">🔒</a>
   `;
 
   const nav = document.createElement("nav");
   nav.className = "app-nav";
-  nav.innerHTML = DOR6_NAV.map(n =>
+  nav.innerHTML = section.nav.map(n =>
     `<a href="${n.href}" class="${n.key === page ? "active" : ""}">${n.label}</a>`
   ).join("");
 
