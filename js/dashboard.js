@@ -35,21 +35,15 @@ async function initDashboard() {
     </div>
   `;
 
-  // 그룹: 부클럽장별 담당 → 운영진 → 미배정
-  const managers = rows.filter((r) => r.role === "부클럽장");
+  // 운영진 + 클럽원 평면 (담당 그룹 없음). 판수 많은 순 정렬.
   const staff = rows.filter((r) => r.role !== "클럽원");
+  const clubMembers = rows.filter((r) => r.role === "클럽원")
+    .sort((a, b) => b.played - a.played);
+  const done = clubMembers.filter((r) => !r.resting && r.played >= r.target).length;
+
   let html = "";
-
-  html += groupBlock("👑 운영진", staff);
-  for (const mgr of managers) {
-    const mine = rows.filter((r) => r.role === "클럽원" && r.manager === mgr.ouid);
-    const done = mine.filter((r) => !r.resting && r.played >= r.target).length;
-    html += groupBlock(`🛡 ${mgr.ingameNick} 담당`, mine, `달성 ${done}/${mine.length}`);
-  }
-  const unassigned = rows.filter((r) => r.role === "클럽원" &&
-    !(r.manager && nameByOuid[r.manager] && managers.some((m) => m.ouid === r.manager)));
-  if (unassigned.length) html += groupBlock("❔ 부클럽장 미배정", unassigned, `${unassigned.length}명`);
-
+  if (staff.length) html += groupBlock("👑 운영진", staff);
+  html += groupBlock("👥 클럽원", clubMembers, `달성 ${done}/${clubMembers.length}`);
   root.innerHTML = html;
 }
 

@@ -12,31 +12,16 @@ async function initMembers() {
   }
   const members = membersFile.members;
   const profiles = (profilesFile && profilesFile.profiles) || {};
-  const byOuid = Object.fromEntries(members.filter((m) => m.ouid).map((m) => [m.ouid, m]));
 
-  // 그룹 구성
+  // 운영진(회장/클럽장/부클럽장) + 클럽원 평면 구성 (담당 그룹 없음)
   const staff = members.filter((m) => m.role !== "클럽원")
     .sort((a, b) => (ROLE_ORDER[a.role] - ROLE_ORDER[b.role]));
-  const managers = members.filter((m) => m.role === "부클럽장");
+  const clubMembers = members.filter((m) => m.role === "클럽원")
+    .sort((a, b) => a.ingameNick.localeCompare(b.ingameNick, "ko"));
 
   let html = "";
-
-  // 운영진
-  html += groupCard("👑 운영진", staff, profiles);
-
-  // 부클럽장별 담당 그룹
-  for (const mgr of managers) {
-    const mine = members.filter((m) => m.role === "클럽원" && m.manager === mgr.ouid);
-    html += groupCard(`🛡 ${mgr.ingameNick} 담당`, mine, profiles, `담당 클럽원 ${mine.length}명`);
-  }
-
-  // 미배정 클럽원
-  const unassigned = members.filter((m) =>
-    m.role === "클럽원" && !(m.manager && byOuid[m.manager] && byOuid[m.manager].role === "부클럽장"));
-  if (unassigned.length) {
-    html += groupCard("❔ 부클럽장 미배정", unassigned, profiles, `${unassigned.length}명`);
-  }
-
+  if (staff.length) html += groupCard("👑 운영진", staff, profiles);
+  html += groupCard("👥 클럽원", clubMembers, profiles, `${clubMembers.length}명`);
   root.innerHTML = html;
 }
 
