@@ -1,0 +1,339 @@
+# dor6-club — 도륙(Dor6) 클럽원 전용 정보 사이트
+
+> 본 문서는 **② 기획자 단계** 산출물(기획서)입니다. 마스터 기획서를 구체 설계로 확장했습니다.
+> 사용자 승인(**✅ 기획 완료**) 이후에만 ③ 개발 단계로 전환합니다.
+> 형제 프로젝트 `uni-match`, `task-manager`와 동일 기술 계열(순수 HTML/CSS/JS + Node.js 스크립트 + GitHub Pages)로 통일합니다.
+
+---
+
+## 1. 프로젝트 개요
+
+FC 온라인 카카오톡 오픈채팅 모임 **도륙(Dor6)** 의 클럽 개편에 맞춰, 클럽원 활동을 한눈에 보는 전용 정보 사이트.
+
+- **핵심 목적**: 부클럽장이 수작업하던 **시즌 판수 체크 자동화**
+- **부가 목적**: 클럽원 간 전적·성향 공유로 교류 활성화
+- **대상**: 클럽원 약 50명 + 부클럽장 + 클럽장(관리자)
+- **접속 환경**: 대부분 모바일 → **모바일 우선 반응형** (터치 타깃·세로 스크롤 최적화)
+- **개인정보 원칙**: 게임 닉네임·전적 외 개인정보는 **일절 다루지 않음** (공개 사이트)
+
+| 항목 | 값 |
+|------|-----|
+| 폴더 | `C:\Projects\dor6-club` |
+| 배포 | `https://johnlee-korea.github.io/dor6-club` |
+| 클럽 표시명 | 도륙 (영문 약어 Dor6) |
+
+---
+
+## 2. 기술 스택 및 배포
+
+| 항목 | 결정 | 비고 |
+|------|------|------|
+| 프론트 | 순수 HTML / CSS / JavaScript | 프레임워크·빌드 없음 (형제 프로젝트 동일) |
+| 백엔드 | 없음 | 정적 JSON 로딩만 |
+| 데이터 수집 | Node.js 스크립트 | `scripts/` 하위 |
+| 자동화 | GitHub Actions (cron) | 정기 실행 → JSON 커밋 |
+| 외부 API | 넥슨 오픈 API (EA SPORTS FC 온라인) | `open.api.nexon.com` |
+| API 키 | **GitHub Secrets** 저장 (`NEXON_API_KEY`) | 프론트/커밋에 **절대 노출 금지** |
+| 저장소 | `/data` 폴더 JSON 커밋 | 누적 저장 |
+| 관리자 백엔드 | **Cloudflare Workers** (무료) | 비밀번호 인증 → GitHub API로 `members.json` 커밋 |
+| 배포 | GitHub Pages | 브랜치: `main` / 루트 또는 `/docs` |
+
+**데이터 흐름**
+```
+GitHub Actions (cron)
+  → collect.js (넥슨 API 호출: ouid → 신규 matchid → 매치 상세)
+  → /data/matches/{ouid}.json 누적 갱신 (matchid 중복 제거)
+  → aggregate.js (대시보드/성향/내전/명예의전당 집계 JSON 생성)
+  → git commit & push
+  → GitHub Pages가 정적 JSON을 화면에 표시
+```
+
+---
+
+## 3. 폴더 구조
+
+```
+C:\Projects\dor6-club\
+├── CLAUDE.md                  # 기획서 (본 문서)
+├── README.md                  # ⑤ 기록자 단계에서 작성
+├── .gitignore                 # .env, node_modules 등 제외
+├── config.json                # 집계 대상 매치유형 등 운영 파라미터
+│
+├── index.html                 # 홈(대시보드 요약) — 진입점
+├── members.html               # ① 클럽원 명단
+├── dashboard.html             # ② 시즌 판수 대시보드
+├── record.html                # ③ 클럽원 전적 (개별)
+├── style.html                 # ④ 플레이스타일 분석
+├── internal.html              # ⑤ 클럽 내전 기록
+├── hall.html                  # ⑥ 명예의 전당
+├── rules.html                 # ⑦ 규칙·공지
+├── admin.html                 # 🔒 관리자 패널(로그인 후 클럽원 등록/삭제)
+│
+├── dor6.png                   # ★클럽 엠블럼 원본(사용자 제공 완료, 307x306 RGBA)
+├── assets\
+│   ├── favicon.png            # dor6.png 기반 파비콘(개발 단계 생성)
+│   └── og.png                 # 공유 미리보기 이미지(dor6.png 기반)
+│
+├── css\
+│   ├── tokens.css             # 디자인 토큰(색·간격·타이포 변수) — 다크/실버 테마
+│   ├── style.css              # 레이아웃·헤더·네비·공통 컴포넌트
+│   └── components.css         # 카드·진행바·배지·테이블·태그
+│
+├── js\
+│   ├── common.js             # 공통 헤더/네비 주입, 유틸(fetch, 포맷)
+│   ├── loader.js             # data/*.json 로딩 + 캐시
+│   ├── members.js            # 명단 렌더 (부클럽장별 그룹)
+│   ├── dashboard.js          # 판수 진행률·중간점검 미달·휴식 제외
+│   ├── record.js             # 개별 전적·라인업 렌더
+│   ├── style-analysis.js     # 성향 통계·태그 계산 렌더
+│   ├── internal.js           # 내전 추출·상대전적표
+│   ├── hall.js               # 명예의 전당 렌더
+│   ├── auth.js               # 관리자 로그인 상태 관리(세션)
+│   └── admin.js              # 관리자 패널: 등록/삭제, 닉→ouid 변환, Worker 호출
+│
+├── data\
+│   ├── members.json          # ★수동 관리 (명단·역할·담당·휴식)
+│   ├── seasons.json          # ★수동 관리 (시즌·중간점검·종료일)
+│   ├── dashboard.json        # 자동 집계 (시즌별 판수)
+│   ├── stats.json            # 자동 집계 (플레이스타일 누적)
+│   ├── internal.json         # 자동 집계 (내전·상대전적)
+│   ├── hall.json             # 자동 집계 (명예의 전당)
+│   └── matches\
+│       └── {ouid}.json       # 자동 수집 (회원별 매치 요약 누적)
+│
+├── scripts\
+│   ├── collect.js            # 넥슨 API 수집 (신규 매치만 상세 조회·누적)
+│   ├── aggregate.js          # matches → dashboard/stats/internal/hall 집계
+│   ├── lib\
+│   │   ├── nexon-api.js      # API 래퍼(호출 간격·재시도·에러 로그)
+│   │   └── season.js         # 시즌 판정·비례 기준 계산 유틸
+│   └── .env.example          # NEXON_API_KEY 예시 (실제 .env는 커밋 금지)
+│
+├── worker\
+│   ├── src\index.js          # Cloudflare Worker: 인증 + GitHub API 커밋
+│   ├── wrangler.toml         # Worker 배포 설정
+│   └── README.md             # Worker 배포·시크릿 등록 가이드
+│
+└── .github\
+    └── workflows\
+        └── collect.yml       # cron 스케줄 → collect + aggregate + commit
+```
+
+> **설계 방침**: 7개 기능을 **다중 HTML 페이지**로 구성(모바일에서 페이지별 독립 로딩·유지보수 단순). 헤더/네비는 `common.js`가 주입해 중복 제거. 무거운 개별 매치 데이터(`matches/{ouid}.json`)는 해당 페이지에서 **필요할 때만** 로딩.
+
+---
+
+## 4. 데이터 설계
+
+### 4-1. `members.json` (★관리자 수동 편집 또는 admin.html 패널에서 등록/삭제)
+```jsonc
+{
+  "meta": { "updated": "2026-09-23" },
+  "members": [
+    {
+      "ouid": "abcd1234...",        // 넥슨 ouid — 모든 수집/집계의 기준 키(닉 변경 대응)
+      "ingameNick": "도륙사자",       // 인게임 닉네임(사이트 관리 기준)
+      "talkNick": "철수",            // 톡방 '불릴이름'
+      "role": "클럽원",              // 회장 | 클럽장 | 부클럽장 | 클럽원 (회장·클럽장 = 관리자)
+      "manager": "abcd0000...",     // 담당 부클럽장 ouid (부클럽장/클럽장/회장은 null)
+      "joinDate": "2026-01-05",     // 가입일(시즌 중 가입 시 비례 기준 계산)
+      "isSub": false,               // 부계정 여부(직접 플레이 계정만 인정)
+      "parentOuid": null,           // 부계정이면 본계정 ouid
+      "restPeriods": [              // 휴식 신청 기간(판수 기준 제외)
+        { "from": "2026-02-01", "to": "2026-02-14" }
+      ]
+    }
+  ]
+}
+```
+
+### 4-2. `seasons.json` (★관리자 수동 편집)
+```jsonc
+{
+  "seasons": [
+    {
+      "id": "2026-h1",
+      "name": "2026 상반기",
+      "start": "2026-01-01",
+      "midCheck": "2026-02-15",     // 상반기 종료 = 중간점검일
+      "end": "2026-03-15",
+      "targetGames": 50,            // 시즌 기준 판수
+      "midTargetGames": 25          // 중간점검 기준 판수
+    }
+  ]
+}
+```
+
+### 4-3. `config.json` (운영 파라미터)
+```jsonc
+{
+  // 판수 집계 대상 매치유형 — [사용자 확정] 공식경기+공식친선+리그친선, 감독모드·볼타 제외
+  // 30:리그친선 40:클래식1on1 50:공식경기 52:감독모드 60:공식친선 / 204·214·224·234:볼타
+  "countedMatchTypes": [50, 60, 30],
+  "collectMatchTypes": [50, 60, 30],       // 수집 대상(집계·성향분석 동일 범위)
+  "matchListLimit": 100,                   // 매치목록 1회 조회 개수(개발 착수 시 상한 확정)
+  "apiCallIntervalMs": 250                 // 호출 간격(개발 착수 시 제한 확정 후 조정)
+}
+```
+
+### 4-4. `data/matches/{ouid}.json` (자동 수집·누적)
+```jsonc
+{
+  "ouid": "abcd1234...",
+  "updated": "2026-09-23T04:00:00Z",
+  "knownMatchIds": ["m1","m2"],   // 중복 제거용(신규 matchid만 상세 조회)
+  "matches": [
+    {
+      "matchId": "m1",
+      "matchType": 50,
+      "matchDate": "2026-01-10T21:00:00Z",
+      "result": "win",             // win | draw | lose
+      "goalFor": 3, "goalAgainst": 1,
+      "opponentOuid": "xxxx",      // 상대 ouid(내전 판정용)
+      "opponentNick": "상대닉",
+      "stats": {                   // 저장소 절약: 요약 값만
+        "possession": 55,
+        "shootTotal": 12, "effectiveShoot": 6,
+        "passTry": 320, "passSuccess": 285,
+        "tackle": 8, "foul": 3, "corner": 4
+      },
+      "lineup": [                  // 최근 경기 라인업(출전 선수)
+        { "spId": 300012345, "spPosition": 27, "spGrade": 8 }
+      ]
+    }
+  ]
+}
+```
+> `spId`(선수 고유 id)·`spPosition`·`spGrade`는 넥슨 메타데이터로 이름/포지션 변환. 선수 이미지는 개발자센터 정책 범위 내에서만 사용.
+
+### 4-5. 자동 집계 산출물
+- **`dashboard.json`**: `{ seasonId, rows:[{ouid, playedGames, target, mid, restDays, prorated, status}] }` — 진행률·중간점검 미달·휴식 제외·비례 기준 반영.
+- **`stats.json`**: `{ [ouid]: { games, avgPossession, avgShoot, passSuccessRate, tags:["점유형"] } }` — 성향 태그는 수치 임계값 기반.
+- **`internal.json`**: 양측 모두 클럽원(ouid ∈ members)인 매치만 추출 → `{ matches:[...], headToHead:{ "ouidA|ouidB": {aWin,bWin,draw} } }`.
+- **`hall.json`**: 시즌별 최다 판수/최다 승/최고 승률 등 자동 선정.
+
+---
+
+## 5. 기능 명세 (1차)
+
+| # | 페이지 | 핵심 내용 | 데이터 소스 |
+|---|--------|-----------|-------------|
+| 홈 | index.html | 클럽 로고, 이번 시즌 요약(전체 달성률·중간점검 임박 알림), 각 페이지 진입 | dashboard.json |
+| ① | members.html | 인게임닉·톡방닉·최고등급·역할, **담당 부클럽장별 그룹 보기** | members.json, matches |
+| ② | dashboard.html | 클럽원별 현재판수/기준판수 **진행률 바**, 상반기 중간점검 **미달자 표시**, **휴식자 제외**, 부클럽장별 담당 인원 현황 | dashboard.json |
+| ③ | record.html | 회원 선택 → 최근 경기 목록(승/무/패·스코어·상대), **라인업 표시** | matches/{ouid}.json |
+| ④ | style.html | 평균 점유율·슈팅·패스성공률 누적 통계, **수치 기반 성향 태그**(점유형/역습형 등) | stats.json |
+| ⑤ | internal.html | 클럽원끼리 경기만 추출, **클럽원 간 상대 전적표** | internal.json |
+| ⑥ | hall.html | 시즌별 최다판수·최다승·최고승률 **자동 선정** | hall.json |
+| ⑦ | rules.html | 클럽 운영 수칙·개편 공지(정적 콘텐츠) | (하드코딩/rules.json) |
+
+### 판수·기준 계산 규칙 (사이트 반영)
+- 시즌당 **50판 이상**(매치 유형 무관 → `config.countedMatchTypes` 기준 집계).
+- 상반기 종료 시 **25판** 중간점검.
+- **시즌 중 가입자**: 남은 기간 비례 적용(예: 하반기 가입 → 25판). `joinDate` vs 시즌 구간으로 자동 계산.
+- **휴식 신청 기간**: 해당 일수만큼 기준 비례 차감(또는 제외 표시).
+- 부계정도 동일 조건, **직접 플레이 계정만 인정**(`isSub`/`parentOuid`로 구분).
+- **닉네임이 아닌 `ouid` 기준** 관리(닉 변경 대응). 화면에는 인게임 닉 + 톡방 닉 병기.
+
+---
+
+## 6. 넥슨 API 사용 설계
+
+| 용도 | 엔드포인트(개발 착수 시 최종 확인) | 비고 |
+|------|-----------------------------------|------|
+| 닉→ouid | `/fconline/v1/id?nickname=` | 최초 등록 시 1회, 이후 ouid 고정 |
+| 기본정보 | `/fconline/v1/user/basic?ouid=` | 닉·레벨 |
+| 최고등급 | `/fconline/v1/user/maxdivision?ouid=` | 최고 등급 표시용 |
+| 매치목록 | `/fconline/v1/user/match?ouid=&matchtype=&offset=&limit=` | 신규 matchid만 필터 |
+| 매치상세 | `/fconline/v1/match-detail?matchid=` | 요약 값만 저장 |
+| 메타데이터 | `/static/fconline/meta/*.json` (matchtype, spid, spposition 등) | 정적 캐시 |
+
+**매치 유형 코드(확인 완료)**: `30`리그친선 · `40`클래식1on1 · `50`공식경기 · `52`감독모드 · `60`공식친선 · `204/214/224/234`볼타
+→ **[사용자 확정] 판수/수집 대상 = 공식경기(50) + 공식친선(60) + 리그친선(30). 감독모드(52)·볼타 제외.**
+
+**수집 원칙**
+- 매치 데이터 보관주기가 짧으므로 **정기 수집으로 누적 저장 필수**(넥슨: 크롤링 데이터 30일 내 갱신 의무).
+- `matchid` 기준 **중복 제거**, 신규 매치만 상세 조회.
+- 매치 상세는 **필요한 요약 값만** 저장(저장소 용량 관리).
+- 호출 간격 조절(`config.apiCallIntervalMs`)·재시도·에러 로깅. **정확한 초당 제한/목록 최대 개수는 개발자센터 문서로 최종 확정 후 반영**.
+- API 키는 GitHub Secrets(`NEXON_API_KEY`)에서만 주입, 프론트·커밋에 노출 금지.
+
+**수집 주기 [사용자 확정]**: **2시간마다** cron 실행 (`0 */2 * * *` UTC 기준, 하루 12회). 매치 보관 30일 대비 충분한 신선도 확보. 개발자센터 초당 호출 제한 확인 후 회당 호출 간격(`apiCallIntervalMs`)만 미세 조정.
+> 참고: GitHub Actions 스케줄은 러너 혼잡 시 수 분~수십 분 지연될 수 있음(정상 동작). 2시간 주기라 실사용 영향 없음.
+
+---
+
+## 6-A. 관리자 기능 & 인증 설계 (1차 포함, 사용자 확정)
+
+정적 사이트(GitHub Pages)는 서버가 없어 웹에서의 데이터 쓰기를 직접 할 수 없다. 따라서 **Cloudflare Workers**(무료)를 얇은 인증·쓰기 백엔드로 둔다.
+
+**역할 체계**: `회장` > `클럽장` > `부클럽장` > `클럽원`
+**관리자 권한(등록/삭제)**: 회장 · 클럽장 · 부클럽장 (사용자 확정)
+
+**로그인·쓰기 흐름**
+```
+관리자가 admin.html 접속 → 비밀번호 입력
+  → Worker /login: 비밀번호 검증(Worker 시크릿과 대조) → 서명 토큰(JWT류) 발급
+  → 관리자 패널에서 클럽원 등록(닉네임 입력)/삭제
+     · 등록 시 Worker /resolve: 닉네임 → 넥슨 API로 ouid 변환(키는 Worker 시크릿)
+  → Worker /commit: 검증된 요청만 GitHub Contents API로 data/members.json 갱신 커밋
+  → GitHub Pages 재빌드 → 사이트 반영
+```
+
+**보안 원칙**
+- 넥슨 API 키·GitHub 토큰은 **Worker 시크릿에만** 저장(브라우저·저장소 노출 0).
+- 프론트는 비밀번호만 다루고, 실제 쓰기 권한은 Worker가 검증 후 수행.
+- 비로그인 사용자는 모든 조회 메뉴 사용 가능, 관리 메뉴(admin.html)만 잠금.
+- 관리자 비밀번호는 Worker 시크릿(`ADMIN_PASSWORD`)로 관리, 코드/저장소에 평문 저장 금지.
+
+**Worker 시크릿 (wrangler secret)**: `ADMIN_PASSWORD`, `NEXON_API_KEY`, `GH_TOKEN`(repo contents 쓰기 권한), `JWT_SECRET`
+**Worker 엔드포인트**: `POST /login`, `POST /resolve`(닉→ouid), `POST /members`(등록/삭제 커밋) — 모두 CORS 허용(Pages 도메인 한정).
+
+---
+
+## 7. 디자인 방향
+
+- 확정 엠블럼(`dor6.png`) 기반: **검은 방패 + 실버 메탈릭 사자·왕관 + "도륙/Dor6"**.
+- **다크 테마 기본**(near-black 배경 → 엠블럼과 자연스럽게 융화), **실버/그레이 포인트**.
+- 엠블럼을 헤더 로고·파비콘·OG 이미지로 사용.
+- 모바일 우선: 큰 터치 타깃, 카드형 레이아웃, 하단/상단 고정 네비.
+- 토큰 예시(`tokens.css`): `--bg:#0e0f11; --surface:#17191d; --silver:#c7ccd1; --accent:#9aa4ad; --text:#e8eaed; --danger:#e5534b(미달); --ok:#3fb950(달성)`.
+
+---
+
+## 8. 2차 기능 (1차 안정화 후)
+- **아무 유저 전적 조회**: Cloudflare Workers 프록시로 API 키 보호(1차에서 만든 Worker 확장).
+- **스쿼드메이커**: 선수 메타데이터 기반(시세 정보 제외).
+> 참고: Cloudflare Worker는 원래 2차 예정이었으나, 관리자 CRUD 요구로 **1차에 선반영**. 2차 전적 조회는 동일 Worker에 라우트만 추가.
+
+---
+
+## 9. 개발 전 최종 확인 사항 (③ 개발 착수 시)
+- [x] 판수 집계 대상 매치 유형 확정 — 공식경기(50)+공식친선(60)+리그친선(30), 감독모드·볼타 제외
+- [x] 수집 주기 확정 — 2시간마다 cron (`0 */2 * * *`)
+- [ ] 넥슨 개발자센터에서 **초당 호출 제한·매치목록 최대 개수** 최종 확인 → `config.json` 반영
+- [ ] 매치 데이터 **정확한 보관 기간** 확인 → cron 주기 확정
+- [ ] 클럽원 **초기 ouid 목록** 확보(닉 → ouid 1회 변환해 `members.json` 채움)
+- [x] **엠블럼 이미지 파일** 확보(`dor6.png`) — 파비콘·OG는 개발 단계에서 생성
+
+---
+
+## 10. 5단계 파이프라인 규칙 (본 프로젝트 적용)
+
+| 단계 | 역할 | 완료 선언 | 전환 |
+|------|------|-----------|------|
+| ① 마스터 | claude.ai 기획 논의 | (완료·전달됨) | → ② |
+| ② 기획자 | 본 CLAUDE.md 작성 | **✅ 기획 완료** | 사용자 승인 후 → ③ |
+| ③ 개발자 | 기획 순서대로 코드 작성 | ✅ 개발 완료 | 자동 → ④ |
+| ④ 검수자 | 기획 기준 검수(기능·품질·누락) | ✅ 검수 완료 | 불합격 시 ③ 롤백, 합격 시 → ⑤ |
+| ⑤ 기록자 | README·변경이력·배포정보 | ✅ 프로젝트 완료 | 종료 |
+
+**개발 순서(③ 착수 시 제안)**
+1. 프로젝트 뼈대 + `tokens.css`/공통 레이아웃/네비 주입
+2. `members.json`/`seasons.json`/`config.json` 스키마 확정 + 샘플 데이터
+3. `scripts/lib/nexon-api.js` → `collect.js`(수집) → 로컬 검증
+4. `aggregate.js`(집계) → dashboard/stats/internal/hall JSON 생성
+5. 화면: 명단 → 대시보드 → 전적 → 성향 → 내전 → 명예의전당 → 규칙
+6. GitHub Actions `collect.yml`(cron) + Secrets 연동 + Pages 배포
+
+**공통 규칙**: 한국어 주석 · 유지보수 우선 구조 · 설계 의도 문서화 · 사용자 친화 에러메시지 + 콘솔 상세 로그 · 커밋은 `[유형] 내용`(기능/수정/리팩토링/문서/스타일).

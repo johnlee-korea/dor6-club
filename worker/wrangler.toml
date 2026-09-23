@@ -1,0 +1,15 @@
+name = "dor6-club-admin"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# 일반 변수 (비밀 아님) — 배포 전 값 수정
+[vars]
+GH_REPO = "johnlee-korea/dor6-club"
+GH_BRANCH = "main"
+ALLOWED_ORIGIN = "https://johnlee-korea.github.io"
+
+# 비밀값은 코드/설정에 넣지 말고 아래 명령으로 등록:
+#   wrangler secret put ADMIN_PASSWORD
+#   wrangler secret put NEXON_API_KEY
+#   wrangler secret put GH_TOKEN        # repo contents 쓰기 권한 (fine-grained PAT)
+#   wrangler secret put JWT_SECRET      # 아무 긴 랜덤 문자열

@@ -1,0 +1,149 @@
+/* ============================================================
+   components.css — 카드·진행바·배지·테이블·태그·버튼
+   ============================================================ */
+
+/* --- 카드 --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: var(--sp-3); }
+.card-grid {
+  display: grid; gap: var(--sp-3);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* --- 통계 타일 (홈 요약) --- */
+.stat-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
+@media (min-width: 560px) { .stat-row { grid-template-columns: repeat(4, 1fr); } }
+.stat-tile {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: var(--sp-4); text-align: center;
+}
+.stat-tile .value {
+  font-size: var(--fs-2xl); font-weight: 800;
+  background: var(--metal-grad); -webkit-background-clip: text;
+  background-clip: text; color: transparent;
+}
+.stat-tile .label { font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-1); }
+
+/* --- 진행바 (판수) --- */
+.progress {
+  height: 10px; background: var(--surface-3); border-radius: 999px;
+  overflow: hidden; margin: var(--sp-2) 0;
+}
+.progress .bar {
+  height: 100%; border-radius: 999px;
+  background: var(--metal-grad);
+  transition: width .4s ease;
+}
+.progress.ok  .bar { background: linear-gradient(90deg, #2ea043, #3fb950); }
+.progress.warn .bar { background: linear-gradient(90deg, #bb8009, #d29922); }
+.progress.danger .bar { background: linear-gradient(90deg, #c93c34, #e5534b); }
+
+/* --- 배지 --- */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-xs); font-weight: 700;
+  padding: 2px 8px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-muted);
+}
+.badge.role-회장    { color: #ffd479; border-color: #ffd47955; background: rgba(255,212,121,.1); }
+.badge.role-클럽장  { color: var(--silver-bright); border-color: var(--silver-dim); background: rgba(199,204,209,.1); }
+.badge.role-부클럽장 { color: #9ecbff; border-color: #58a6ff55; background: rgba(88,166,255,.1); }
+.badge.role-클럽원  { color: var(--text-muted); }
+.badge.ok     { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
+.badge.warn   { color: var(--warn); border-color: var(--warn); background: var(--warn-bg); }
+.badge.danger { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+.badge.rest   { color: var(--info); border-color: var(--info); background: rgba(88,166,255,.1); }
+
+/* --- 성향 태그 --- */
+.tag {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 600;
+  padding: 3px 10px; border-radius: 999px; margin: 2px;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--silver);
+}
+
+/* --- 승/무/패 표시 --- */
+.wl { font-weight: 800; }
+.wl.win  { color: var(--win); }
+.wl.draw { color: var(--draw); }
+.wl.lose { color: var(--lose); }
+.wl-dot {
+  display: inline-block; width: 20px; height: 20px; line-height: 20px;
+  text-align: center; border-radius: 5px; font-size: 11px; font-weight: 800; margin: 1px;
+}
+.wl-dot.win  { background: var(--ok-bg);     color: var(--win); }
+.wl-dot.draw { background: var(--surface-3); color: var(--draw); }
+.wl-dot.lose { background: var(--danger-bg); color: var(--lose); }
+
+/* --- 멤버 행 --- */
+.member-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) 0; border-bottom: 1px solid var(--border);
+}
+.member-row:last-child { border-bottom: none; }
+.member-row .info { flex: 1; min-width: 0; }
+.member-row .nick { font-weight: 700; }
+.member-row .talk { font-size: var(--fs-xs); color: var(--text-muted); }
+.member-row .meta { text-align: right; font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* --- 테이블 --- */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.data {
+  width: 100%; border-collapse: collapse; font-size: var(--fs-sm);
+}
+table.data th, table.data td {
+  padding: var(--sp-2) var(--sp-3); text-align: left;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+table.data th { color: var(--text-muted); font-weight: 700; font-size: var(--fs-xs); }
+table.data tr:hover td { background: var(--surface-2); }
+table.data td.num, table.data th.num { text-align: right; }
+
+/* --- 버튼 --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  font-size: var(--fs-sm); font-weight: 700;
+  padding: var(--sp-3) var(--sp-4); border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  transition: background .15s, border-color .15s;
+}
+.btn:hover { background: var(--surface-3); }
+.btn.primary { background: var(--silver); color: var(--bg); border-color: var(--silver); }
+.btn.primary:hover { background: var(--silver-bright); }
+.btn.danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+.btn.block { width: 100%; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* --- 입력 --- */
+.field { margin-bottom: var(--sp-4); }
+.field label { display: block; font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: var(--sp-2); }
+.input, select.input {
+  width: 100%; font-size: var(--fs-base); color: var(--text);
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: var(--sp-3);
+}
+.input:focus { outline: none; border-color: var(--silver-dim); }
+
+/* --- 선택 칩(회원 선택 등) --- */
+.chip-row { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+.chip {
+  font-size: var(--fs-sm); padding: var(--sp-2) var(--sp-3);
+  border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-muted);
+}
+.chip.active { background: var(--silver); color: var(--bg); border-color: var(--silver); }
+
+/* --- 순위(명예의 전당) --- */
+.rank {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%; font-weight: 800; font-size: var(--fs-sm);
+  background: var(--surface-3); color: var(--text-muted);
+}
+.rank.r1 { background: linear-gradient(135deg,#ffe08a,#d4a017); color:#3a2c00; }
+.rank.r2 { background: var(--metal-grad); color:#1a1c1f; }
+.rank.r3 { background: linear-gradient(135deg,#e0a479,#a05a2c); color:#2a1400; }

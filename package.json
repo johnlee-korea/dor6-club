@@ -1,0 +1,19 @@
+{
+  "name": "dor6-club",
+  "version": "1.0.0",
+  "description": "도륙(Dor6) 클럽원 전용 정보 사이트 — 수집·집계 스크립트",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "collect": "node --env-file=.env scripts/collect.js",
+    "aggregate": "node scripts/aggregate.js",
+    "build": "npm run collect && npm run aggregate",
+    "test": "node scripts/smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

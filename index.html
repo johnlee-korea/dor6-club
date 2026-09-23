@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>도륙 Dor6 · 클럽원 전용 정보</title>
+  <meta name="description" content="FC 온라인 클럽 도륙(Dor6) 클럽원 전용 정보 사이트">
+  <link rel="icon" href="dor6.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body data-page="home">
+  <main class="page">
+    <!-- 히어로 -->
+    <section style="text-align:center; padding: var(--sp-5) 0 var(--sp-6);">
+      <img src="dor6.png" alt="도륙 엠블럼" style="width:120px;height:120px;object-fit:contain;margin:0 auto var(--sp-3);filter:drop-shadow(0 6px 20px rgba(0,0,0,.6));">
+      <h1 class="page-title" style="margin-bottom:var(--sp-2);">도륙 <span style="color:var(--text-dim);font-weight:600;">Dor6</span></h1>
+      <p class="page-desc" style="margin-bottom:0;" id="season-name">시즌 정보를 불러오는 중…</p>
+    </section>
+
+    <!-- 이번 시즌 요약 -->
+    <div class="section-title">📊 이번 시즌 요약</div>
+    <div id="summary" class="stat-row">
+      <div class="loading">불러오는 중…</div>
+    </div>
+
+    <!-- 바로가기 -->
+    <div class="section-title">🔗 바로가기</div>
+    <div id="quicklinks" class="card-grid"></div>
+  </main>
+
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

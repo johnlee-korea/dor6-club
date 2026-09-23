@@ -1,0 +1,13 @@
+{
+  "_comment": "도륙 클럽 운영 파라미터. 넥슨 매치유형 코드 참고: 30리그친선 40클래식1on1 50공식경기 52감독모드 60공식친선 / 204·214·224·234볼타",
+  "countedMatchTypes": [50, 60, 30],
+  "collectMatchTypes": [50, 60, 30],
+  "matchListLimit": 100,
+  "apiCallIntervalMs": 250,
+  "styleTagThresholds": {
+    "possessionHigh": 55,
+    "possessionLow": 45,
+    "shootHigh": 15,
+    "passRateHigh": 85
+  }
+}

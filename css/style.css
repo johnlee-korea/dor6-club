@@ -1,0 +1,123 @@
+/* ============================================================
+   style.css — 레이아웃·헤더·네비·공통 요소 (모바일 우선)
+   ============================================================ */
+
+/* --- 리셋 --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+/* 배경에 은은한 메탈 광택(엠블럼 느낌) */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(199,204,209,.06), transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, rgba(88,166,255,.04), transparent 60%);
+}
+
+/* --- 헤더 --- */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--header-h);
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: 0 var(--sp-4);
+  background: rgba(11,12,14,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.app-header .logo { height: 36px; width: 36px; object-fit: contain; }
+.app-header .brand {
+  display: flex; flex-direction: column; line-height: 1.1;
+}
+.app-header .brand .name {
+  font-size: var(--fs-lg); font-weight: 800; letter-spacing: .5px;
+  background: var(--metal-grad); -webkit-background-clip: text;
+  background-clip: text; color: transparent;
+}
+.app-header .brand .sub { font-size: var(--fs-xs); color: var(--text-dim); }
+.app-header .spacer { flex: 1; }
+.app-header .admin-link {
+  font-size: var(--fs-sm); color: var(--text-muted);
+  padding: var(--sp-1) var(--sp-3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.app-header .admin-link:hover { color: var(--silver); border-color: var(--silver-dim); }
+
+/* --- 네비 (가로 스크롤 탭) --- */
+.app-nav {
+  position: sticky; top: var(--header-h); z-index: 40;
+  display: flex; gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  background: rgba(11,12,14,.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.app-nav::-webkit-scrollbar { display: none; }
+.app-nav a {
+  flex: 0 0 auto;
+  font-size: var(--fs-sm); font-weight: 600;
+  color: var(--text-muted);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.app-nav a:hover { background: var(--surface-2); color: var(--text); }
+.app-nav a.active {
+  color: var(--bg); background: var(--silver);
+  box-shadow: 0 2px 8px rgba(199,204,209,.25);
+}
+
+/* --- 페이지 컨테이너 --- */
+.page {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-4) var(--sp-8);
+}
+.page-title {
+  font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-1);
+}
+.page-desc { color: var(--text-muted); margin-bottom: var(--sp-5); font-size: var(--fs-sm); }
+.section-title {
+  font-size: var(--fs-lg); font-weight: 700; margin: var(--sp-6) 0 var(--sp-3);
+  display: flex; align-items: center; gap: var(--sp-2);
+}
+
+/* --- 푸터 --- */
+.app-footer {
+  text-align: center; color: var(--text-dim); font-size: var(--fs-xs);
+  padding: var(--sp-6) var(--sp-4); border-top: 1px solid var(--border);
+  margin-top: var(--sp-8);
+}
+
+/* --- 상태 유틸 --- */
+.loading, .empty {
+  text-align: center; color: var(--text-muted);
+  padding: var(--sp-7) var(--sp-4);
+}
+.empty .emoji { font-size: 40px; display: block; margin-bottom: var(--sp-3); opacity: .6; }
+.error-box {
+  background: var(--danger-bg); border: 1px solid var(--danger);
+  color: var(--text); border-radius: var(--radius);
+  padding: var(--sp-4); margin: var(--sp-4) 0;
+}
+
+/* --- 반응형 --- */
+@media (min-width: 720px) {
+  .page { padding-top: var(--sp-6); }
+  .page-title { font-size: var(--fs-3xl); }
+}
