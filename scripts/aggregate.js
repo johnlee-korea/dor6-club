@@ -44,6 +44,7 @@ function buildDashboard() {
       };
     });
     out.push({ seasonId: season.id, seasonName: season.name,
+      start: season.start, midCheck: season.midCheck, end: season.end,
       targetGames: season.targetGames, midTargetGames: season.midTargetGames, rows });
   }
   const curId = (seasonsFile.meta && seasonsFile.meta.currentSeasonId);

@@ -22,9 +22,13 @@ async function initDashboard() {
   const avgRate = Math.round(active.reduce((a, r) =>
     a + Math.min(100, r.target ? (r.played / r.target) * 100 : 100), 0) / (active.length || 1));
 
+  const dday = seasonDday(cur);
   bar.innerHTML = `
     <div class="card" style="margin-bottom:var(--sp-4);">
-      <div style="font-weight:800;font-size:var(--fs-lg);">${cur.seasonName}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);flex-wrap:wrap;">
+        <span style="font-weight:800;font-size:var(--fs-lg);">${cur.seasonName}</span>
+        ${dday ? `<span class="badge ${dday.cls}">${dday.label}</span>` : ""}
+      </div>
       <div style="color:var(--text-muted);font-size:var(--fs-sm);">기준 ${cur.targetGames}판 · 중간점검 ${cur.midTargetGames}판 · 갱신 ${fmt.dateTime(dash.updated)}</div>
     </div>
     <div class="stat-row" style="margin-bottom:var(--sp-5);">
@@ -80,6 +84,20 @@ function progressRow(r) {
       </div>
     </div>
   `;
+}
+
+/* 시즌 D-day: 전반기 종료(중간점검) 전이면 그때까지, 이후면 시즌 종료까지 */
+function seasonDday(cur) {
+  if (!cur.end) return null;
+  const parse = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = (t) => Math.round((t - today) / 86400000);
+  const end = parse(cur.end);
+  const mid = cur.midCheck ? parse(cur.midCheck) : null;
+  if (mid && today < mid) { const n = days(mid); return { label: `전반기 종료 D-${n}`, cls: n <= 7 ? "warn" : "" }; }
+  if (today <= end) { const n = days(end); return { label: `시즌 종료 D-${n}`, cls: n <= 7 ? "warn" : "" }; }
+  return { label: "시즌 종료", cls: "" };
 }
 
 initDashboard();
