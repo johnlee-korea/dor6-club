@@ -154,8 +154,13 @@ async function mutateMembers(body, env) {
     "User-Agent": "dor6-club-worker"
   };
 
+  // GitHub 토큰 미설정·만료는 관리자가 알아볼 수 있는 문구로 안내
+  if (!env.GH_TOKEN) throw new Error("GitHub 토큰(GH_TOKEN)이 설정되지 않아 명단을 저장할 수 없습니다. 클럽장에게 문의하세요.");
+
   // 현재 파일 로드
   const getRes = await fetch(`${apiBase}?ref=${branch}`, { headers: ghHeaders });
+  if (getRes.status === 401 || getRes.status === 403)
+    throw new Error(`GitHub 토큰이 만료되었거나 권한이 없습니다 (${getRes.status}). 토큰을 새로 발급해 GH_TOKEN을 갱신하세요.`);
   if (!getRes.ok) throw new Error(`members.json 로드 실패 (${getRes.status})`);
   const file = await getRes.json();
   const current = JSON.parse(decodeBase64(file.content));
