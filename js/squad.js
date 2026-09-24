@@ -27,12 +27,12 @@ const SQ_COORD = {
 /* [오른쪽, 가운데, 왼쪽] 삼각 라인 — 가운데가 있으면 좌우를 27/73으로 벌림 */
 const SQ_TRIOS = [[4, 5, 6], [9, 10, 11], [13, 14, 15], [17, 18, 19], [20, 21, 22], [24, 25, 26]];
 
-/* 강화 단계 → 색 등급 (게임 내 표기 관례: 2~4 브론즈, 5~7 실버, 8~10 골드, 11+ 특급) */
+/* 강화 단계 → 색 등급 (게임 내 표기: 1~4 브론즈, 5~7 실버, 8~10 골드, 11~13 백금) */
 function sqGradeClass(g) {
-  if (g >= 11) return "g-top";
+  if (g >= 11) return "g-plat";
   if (g >= 8) return "g-gold";
   if (g >= 5) return "g-silver";
-  if (g >= 2) return "g-bronze";
+  if (g >= 1) return "g-bronze";
   return "g-none";
 }
 
