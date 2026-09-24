@@ -92,7 +92,10 @@
 .member-row .meta { text-align: right; font-size: var(--fs-sm); color: var(--text-muted); }
 
 /* --- 플레이스타일 (명단 행 안) --- */
-.ps-note { font-size: var(--fs-xs); color: var(--text-dim); margin: 0 0 var(--sp-3); }
+.ps-note { font-size: var(--fs-xs); color: var(--text-dim); margin: 0 0 var(--sp-3); line-height: 1.6; }
+.ps-note b { color: var(--text-muted); }
+.ps-note summary { cursor: pointer; color: var(--silver); margin-top: 4px; }
+.ps-note ul { margin: 6px 0; padding-left: 18px; }
 .ps { margin-top: 4px; font-size: var(--fs-xs); }
 .ps-name { color: var(--silver-bright); font-weight: 700; }
 .ps-line { color: var(--text-muted); }
@@ -103,6 +106,9 @@
   white-space: nowrap; font-size: 11px; cursor: help;
 }
 .ps-chip b { font-weight: 700; }
+.ps-chip.key { border-width: 1.5px; font-weight: 700; }  /* 스타일 근거 지표 */
+.ps-chip.up.key   { border-color: var(--win); }
+.ps-chip.down.key { border-color: var(--lose); }
 .ps-chip.up   { color: var(--win);  border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.08); }
 .ps-chip.down { color: var(--lose); border-color: rgba(229,83,75,.4); background: rgba(229,83,75,.08); }
 

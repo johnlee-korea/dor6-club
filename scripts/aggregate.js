@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
-import { computeMetrics, judge } from "./lib/playstyle.js";
+import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -198,7 +198,10 @@ function buildPlaystyles() {
   }
   writeJSON(p("data", "playstyles.json"), {
     updated: now.toISOString(), baselineUpdated: baseline.updated, baselineSource: baseline.source,
-    baselineSampleSize: baseline.sampleSize, recentGames: opt.recentGames, minGames: opt.minGames, players
+    baselineSampleSize: baseline.sampleSize, recentGames: opt.recentGames, minGames: opt.minGames,
+    // 화면 '지표 기준' 안내용 — 지표 정의는 lib/playstyle.js METRICS 단일 소스
+    metrics: Object.fromEntries(Object.entries(METRICS).map(([k, m]) => [k, { label: m.label, desc: m.desc }])),
+    players
   });
   return Object.values(players).filter((x) => x.style).length;
 }

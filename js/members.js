@@ -71,7 +71,17 @@ function memberRow(m, profiles) {
 function styleNote() {
   if (!STYLES) return "";
   const d = STYLES.baselineUpdated ? STYLES.baselineUpdated.slice(0, 10) : "-";
-  return `<p class="ps-note">🎭 플레이스타일: 최근 ${STYLES.recentGames}경기를 랭커 평균(${escapeHtml(STYLES.baselineSource || "")}, ${STYLES.baselineSampleSize}명·${d} 기준)과 비교해 ▲높은 지표 3개 ▼낮은 지표 3개를 뽑았어요. 재미로 봐주세요 😎</p>`;
+  const defs = Object.values(STYLES.metrics || {})
+    .map((m) => `<li><b>${escapeHtml(m.label)}</b> — ${escapeHtml(m.desc)}</li>`).join("");
+  return `
+    <div class="ps-note">
+      🎭 <b>플레이스타일</b>: 최근 ${STYLES.recentGames}경기의 지표 25개를 랭커 평균(${escapeHtml(STYLES.baselineSource || "")}, ${STYLES.baselineSampleSize}명·${d} 기준)과 비교해
+      랭커 대비 가장 높은 지표 ▲3개, 가장 낮은 지표 ▼3개를 표시해요. 스타일은 이 6개 중 <b>★표시된 지표</b>로 정해집니다. 재미로 봐주세요 😎
+      <details><summary>지표 기준 보기</summary>
+        <ul>${defs}</ul>
+        <p>▲▼ 순서는 랭커 평균에서 벗어난 정도(표준편차 배수) 기준. ★ 두 지표가 함께 있으면 조합 스타일, 아니면 가장 두드러진 지표 하나의 스타일이 붙어요.</p>
+      </details>
+    </div>`;
 }
 
 /* 지표 값 표시 — '%'는 0~1 비율, 'avg%'는 이미 % 값, 그 외는 경기당 수치 */
@@ -83,7 +93,7 @@ function psVal(v, unit) {
 
 function psChip(x, dir) {
   const tip = `나 ${psVal(x.v, x.unit)} · 랭커 평균 ${psVal(x.avg, x.unit)}`;
-  return `<span class="ps-chip ${dir}" title="${escapeHtml(tip)}">${dir === "up" ? "▲" : "▼"} ${escapeHtml(x.label)} <b>${psVal(x.v, x.unit)}</b></span>`;
+  return `<span class="ps-chip ${dir}${x.key ? " key" : ""}" title="${escapeHtml(tip)}">${x.key ? "★" : dir === "up" ? "▲" : "▼"} ${escapeHtml(x.label)} <b>${psVal(x.v, x.unit)}</b></span>`;
 }
 
 function styleBlock(ouid) {
