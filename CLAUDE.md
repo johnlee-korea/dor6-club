@@ -214,6 +214,9 @@ C:\Projects\dor6-club\
 - **`squads.json`**: `{ [ouid]: { matchId, matchDate, matchType, result, goalFor, goalAgainst, opponentNick, lineup } }` — 회원별 최근 수집 경기 라인업 원본(넥슨은 현재 스쿼드 미제공). 선수 카드·포메이션 변환은 화면 `js/squad.js`(sqBuildTeam·sqFormation) 한 곳에서 처리. 선수/시즌 메타는 `data/meta/players.json`·`seasonid.json`(수집된 모든 경기 양팀 선수만 추림).
 - **`internal.json` 매치의 `aLineup`/`bLineup`**: 내전 당시 양팀 스쿼드(A 기록의 lineup/oppLineup). 내전 페이지 행 탭 → 양팀 스쿼드 모달.
 - **전적 검색 캐시**: 검색 결과는 브라우저 localStorage(`dor6.search.<닉 소문자>`)에 저장, [최신 업데이트]로만 Worker 재조회. 검색 유저는 cron 수집 대상 아님. 클럽 밖 선수 이름은 `data/meta/pnames.json`(pid→이름, collect.js가 매 실행 갱신)에서 필요 시 로딩.
+- **`playstyles.json`** (v1.7.0): `{ baselineUpdated, baselineSource, recentGames, minGames, players:{ [ouid]: { games, style:{name,line,conds}, highs:[{k,label,unit,v,avg,z}×3], lows:[…×3] } } }`. 최근 인정 경기 `config.playstyle.recentGames`판(정상 종료만)의 지표를 `data/meta/ranker-baseline.json`(지표별 mean·sd)과 Z점수 비교. 판정 규칙·스타일 30종·지표 정의는 `scripts/lib/playstyle.js` 단일 소스(스타일 추가/문구 수정은 `STYLES` 배열만 편집). `minGames` 미만 회원은 `{games}`만 → 화면에 '분석 대기'.
+- **랭커 기준값** `data/meta/ranker-baseline.json`: `scripts/ranker-baseline.js`가 FC온라인 데이터센터 랭킹 HTML(`rank_inner?rt=manager&n4pageno=`)에서 닉 샘플 → 넥슨 API로 공식경기 상세 조회 → 지표별 평균·표준편차. `config.rankerBaseline.refreshDays`(7일) 이내면 건너뜀, 유효 표본 20명 미만이면 기존 값 유지. 랭킹 페이지 구조가 바뀌면 이 스크립트의 정규식만 수정.
+- **`matches/{ouid}.json`의 `styleRaw`**: 플레이스타일용 경기별 원본 카운트(짧은 키, `lib/playstyle.js` styleRaw 참고). 도입 이전 경기는 oppLineup과 같은 백필 루틴에서 채움(4xx면 null).
 - **`matches/{ouid}.json`의 `oppLineup`**: 상대 라인업(형식은 `lineup`과 동일). 전적 페이지 '양팀 스쿼드' 모달에 사용. 도입 이전 매치는 collect.js가 회당 `config.oppLineupBackfillPerRun`건씩 백필(넥슨 4xx 응답 시 빈 배열로 표시).
 
 ---
@@ -223,7 +226,7 @@ C:\Projects\dor6-club\
 | # | 페이지 | 핵심 내용 | 데이터 소스 |
 |---|--------|-----------|-------------|
 | 홈 | index.html | 클럽 로고, 이번 시즌 요약(전체 달성률·중간점검 임박 알림), 각 페이지 진입 | dashboard.json |
-| ① | members.html | 인게임닉·최고등급·역할(운영진+클럽원 평면), **[스쿼드] 최근 경기 포메이션 모달** | members.json, profiles.json, squads.json |
+| ① | members.html | 인게임닉·최고등급·역할(운영진+클럽원 평면), **🎭 플레이스타일**(랭커 대비 ▲▼ 지표·한 줄 스타일), **[스쿼드] 최근 경기 포메이션 모달** | members.json, profiles.json, squads.json, playstyles.json |
 | ② | dashboard.html | 클럽원별 현재판수/기준판수 **진행률 바**, 상반기 중간점검 **미달자 표시**, **휴식자 제외**, 부클럽장별 담당 인원 현황 | dashboard.json |
 | ③ | record.html | 회원 선택 → 최근 경기 목록(승/무/패·스코어·상대), 탭하면 **양팀 스쿼드 모달** | matches/{ouid}.json, meta/* |
 | ④ | style.html | 평균 점유율·슈팅·패스성공률 누적 통계, **수치 기반 성향 태그**(점유형/역습형 등) | stats.json |

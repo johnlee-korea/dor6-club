@@ -14,7 +14,7 @@ const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 const PAGES = [
   { file: "index.html",     scripts: ["js/common.js", "js/home.js"],           root: "summary" },
-  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/members.js"], root: "members-root" },
+  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/members.js"], root: "members-root", expect: ".ps" },
   { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
   { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/record.js"], root: "record-root" },
   { file: "style.html",     scripts: ["js/common.js", "js/style-analysis.js"], root: "style-root" },
@@ -54,8 +54,10 @@ for (const pg of PAGES) {
 
   const hasHeader = !!window.document.querySelector(".app-header");
   const nav = window.document.querySelectorAll(".app-nav a").length;
-  const ok = errors.length === 0 && hasHeader && nav >= 1;
-  console.log(`${ok ? "✅" : "❌"} ${pg.file.padEnd(15)} header:${hasHeader} nav:${nav}`);
+  // expect: 데이터가 있을 때 반드시 렌더돼야 하는 요소(예: 명단의 플레이스타일 블록)
+  const expectCount = pg.expect ? window.document.querySelectorAll(pg.expect).length : null;
+  const ok = errors.length === 0 && hasHeader && nav >= 1 && (expectCount === null || expectCount > 0);
+  console.log(`${ok ? "✅" : "❌"} ${pg.file.padEnd(15)} header:${hasHeader} nav:${nav}${pg.expect ? ` ${pg.expect}:${expectCount}` : ""}`);
   [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
   ok ? pass++ : fail++;
 }

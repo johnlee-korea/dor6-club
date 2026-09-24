@@ -15,7 +15,7 @@ FC 온라인 클럽 **도륙(Dor6)** 클럽원 전용 정보 사이트.
 | 페이지 | 내용 |
 |--------|------|
 | 홈 | 이번 시즌 요약(달성률·중간점검 미달) |
-| 클럽원 명단 | 운영진·클럽원, 역할·최고등급, **[스쿼드]** 최근 경기 포메이션 모달 |
+| 클럽원 명단 | 운영진·클럽원, 역할·최고등급, **🎭 플레이스타일**(랭커 대비 ▲▼ 지표 3개씩 + 한 줄 스타일), **[스쿼드]** 최근 경기 포메이션 모달 |
 | 시즌 판수 | 진행률 바, 중간점검 미달자, 휴식 제외, 가입일 비례 |
 | 클럽원 전적 | 최근 경기(승/무/패·스코어·상대)·라인업 |
 | 플레이스타일 | 점유율·슈팅·패스성공률 + 성향 태그 |
@@ -55,7 +55,8 @@ dor6-club/
 #    NEXON_API_KEY=발급받은_키
 
 npm run collect     # 넥슨 API 수집 → data/matches/*.json, profiles.json
-npm run aggregate   # 집계 → dashboard/stats/internal/hall.json
+npm run baseline    # 랭커 기준값 → data/meta/ranker-baseline.json (7일 이내면 건너뜀, --force로 강제)
+npm run aggregate   # 집계 → dashboard/stats/internal/hall/squads/playstyles.json
 npm run build       # 수집 + 집계
 npm test            # 페이지 렌더 스모크 테스트 (jsdom)
 
@@ -84,6 +85,7 @@ npx serve .         # 또는 python -m http.server
 ```
 GitHub Actions (2시간마다)
   → collect.js  (신규 matchid만 상세 조회·누적)
+  → ranker-baseline.js (랭커 기준값, 7일 지났을 때만 갱신)
   → aggregate.js(집계 JSON 생성)
   → data/ 커밋 → Pages 자동 반영
 ```
@@ -121,6 +123,7 @@ GitHub Actions (2시간마다)
 3. **팀컬러 현황판** — 보류. 넥슨이 선수→구단 데이터 미제공. 대안으로 '회원별 스쿼드 보기'(v1.4.0) 먼저 반영. 선수→구단 매핑은 별도 데이터 필요.
 
 ## 변경 이력
+- **v1.7.0** (2026-09-24): 클럽원 명단에 **플레이스타일** 표시 — 최근 인정 경기 50판(정상 종료, 최소 10판)의 지표 25종을 **랭커 평균**(공식 랭킹 1~1000위에서 페이지당 3명 샘플, 공식경기 최근 15판)과 Z점수로 비교해 ▲높은/▼낮은 지표 3개씩 + 30가지 스타일 중 조건(3개 중 2개 이상, 편차 0.5σ↑)이 가장 잘 맞는 한 줄 문구. 규칙은 `scripts/lib/playstyle.js`(`STYLES`) 한 곳에서 관리. 수집 시 경기별 원본 카운트(`styleRaw`) 저장·기존 경기 백필, 기준값은 `scripts/ranker-baseline.js`가 주 1회 갱신(넥슨 API에 랭킹 목록이 없어 FC온라인 데이터센터 랭킹 페이지에서 닉네임 수집). 크로스 수치는 API에 없어 '띄우는 패스 비율'로 대체.
 - **v1.6.0** (2026-09-24): **내전** 경기 탭 → 당시 양팀 스쿼드(`internal.json`에 `aLineup`/`bLineup`). **전적 검색**: 결과를 이 기기(localStorage)에 저장하고 **[🔄 최신 업데이트]**를 눌러야 새로 조회(검색 유저는 자동 수집 안 함), 최근 검색 칩, [스쿼드](최근 경기 라인업)·경기 탭 → 양팀 스쿼드. Worker `/search`가 경기별 `lineup`/`oppLineup` 반환(**Worker 재배포 필요**). 클럽 밖 선수 이름용 `data/meta/pnames.json`(pid→이름, 누락 시에만 로딩) 추가.
 - **v1.5.0** (2026-09-24): 전적 페이지에서 경기를 탭하면 **양팀 스쿼드**(포메이션 필드·교체 명단)를 모달로 표시(기존 포지션·강화 표 대체). 수집 시 상대 라인업(`oppLineup`)도 저장하고, 기존 1,384경기는 백필 완료(`config.oppLineupBackfillPerRun`로 회당 상한). `players.json`은 수집된 모든 경기 양팀 선수로 확대. 선수 카드·포메이션 변환을 화면(`js/squad.js`) 한 곳으로 일원화, `squads.json`은 원본 라인업만 저장. 강화 색 구간 보정(1~4 브론즈·5~7 실버·8~10 골드·11~13 백금/하늘색).
 - **v1.4.0** (2026-09-24): 클럽원 명단에 **[스쿼드]** 버튼 추가 — 회원별 최근 수집 경기 라인업을 포메이션 필드(선수 이미지·시즌·강화)와 교체 명단으로 표시. 넥슨 API가 현재 스쿼드를 제공하지 않아 '최근 경기 출전 명단' 기준. 수집 시 필요한 선수/시즌 메타만 `data/meta/players.json`·`seasonid.json`으로 추려 저장(spid.json 6MB 미커밋), 집계 시 `data/squads.json` 생성.

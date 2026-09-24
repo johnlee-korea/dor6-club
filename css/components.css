@@ -91,6 +91,21 @@
 .member-row .talk { font-size: var(--fs-xs); color: var(--text-muted); }
 .member-row .meta { text-align: right; font-size: var(--fs-sm); color: var(--text-muted); }
 
+/* --- 플레이스타일 (명단 행 안) --- */
+.ps-note { font-size: var(--fs-xs); color: var(--text-dim); margin: 0 0 var(--sp-3); }
+.ps { margin-top: 4px; font-size: var(--fs-xs); }
+.ps-name { color: var(--silver-bright); font-weight: 700; }
+.ps-line { color: var(--text-muted); }
+.ps-wait { color: var(--text-dim); }
+.ps-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.ps-chip {
+  padding: 1px 6px; border-radius: 999px; border: 1px solid var(--border);
+  white-space: nowrap; font-size: 11px; cursor: help;
+}
+.ps-chip b { font-weight: 700; }
+.ps-chip.up   { color: var(--win);  border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.08); }
+.ps-chip.down { color: var(--lose); border-color: rgba(229,83,75,.4); background: rgba(229,83,75,.08); }
+
 /* --- 테이블 --- */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table.data {

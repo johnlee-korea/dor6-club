@@ -1,7 +1,7 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, stats.json, internal.json, hall.json, squads.json
+   산출: data/dashboard.json, stats.json, internal.json, hall.json, squads.json, playstyles.json
    ============================================================ */
 
 import fs from "node:fs";
@@ -9,6 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
+import { computeMetrics, judge } from "./lib/playstyle.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -178,6 +179,30 @@ function buildSquads() {
   return Object.keys(squads).length;
 }
 
+/* ---------- ⑥ 플레이스타일 (랭커 기준값 대비) ---------- */
+/* 최근 인정 경기(정상 종료, styleRaw 있는 것)로 지표 계산 → 랭커 평균과 비교해 높은/낮은 지표 3개 + 스타일
+   기준값(data/meta/ranker-baseline.json)은 scripts/ranker-baseline.js가 주 1회 갱신 */
+function buildPlaystyles() {
+  const baseline = readJSON(p("data", "meta", "ranker-baseline.json"), null);
+  if (!baseline) { console.warn("⚠ 랭커 기준값 없음 — playstyles.json 생략"); return 0; }
+  const opt = { recentGames: 50, minGames: 10, ...(config.playstyle || {}) };
+  const players = {};
+  for (const m of members) {
+    const raws = matchesByOuid[m.ouid]
+      .filter((x) => counted.includes(x.matchType) && x.styleRaw && x.styleRaw.end === 0)
+      .sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate))
+      .slice(0, opt.recentGames)
+      .map((x) => x.styleRaw);
+    if (raws.length < opt.minGames) { players[m.ouid] = { games: raws.length }; continue; }
+    players[m.ouid] = { games: raws.length, ...judge(computeMetrics(raws), baseline.stats) };
+  }
+  writeJSON(p("data", "playstyles.json"), {
+    updated: now.toISOString(), baselineUpdated: baseline.updated, baselineSource: baseline.source,
+    baselineSampleSize: baseline.sampleSize, recentGames: opt.recentGames, minGames: opt.minGames, players
+  });
+  return Object.values(players).filter((x) => x.style).length;
+}
+
 function round1(n) { return n == null ? null : Math.round(n * 10) / 10; }
 
 /* ---------- 실행 ---------- */
@@ -186,5 +211,6 @@ buildStats();
 buildInternal();
 buildHall();
 const squadCount = buildSquads();
-console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, ` +
-  `dashboard/stats/internal/hall/squads.json 갱신`);
+const styleCount = buildPlaystyles();
+console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, ` +
+  `dashboard/stats/internal/hall/squads/playstyles.json 갱신`);

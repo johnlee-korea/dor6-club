@@ -1,7 +1,15 @@
 {
   "_comment": "도륙 클럽 운영 파라미터. 넥슨 매치유형 코드 참고: 30리그친선 40클래식1on1 50공식경기 52감독모드 60공식친선 / 204·214·224·234볼타",
-  "countedMatchTypes": [50, 60, 30],
-  "collectMatchTypes": [50, 60, 30],
+  "countedMatchTypes": [
+    50,
+    60,
+    30
+  ],
+  "collectMatchTypes": [
+    50,
+    60,
+    30
+  ],
   "matchListLimit": 100,
   "apiCallIntervalMs": 250,
   "oppLineupBackfillPerRun": 300,
@@ -10,5 +18,18 @@
     "possessionLow": 45,
     "shootHigh": 15,
     "passRateHigh": 85
+  },
+  "playstyle": {
+    "_comment": "명단 플레이스타일: 최근 인정 경기 recentGames판으로 계산, minGames 미만이면 분석 대기",
+    "recentGames": 50,
+    "minGames": 10
+  },
+  "rankerBaseline": {
+    "_comment": "랭커 기준값(scripts/ranker-baseline.js): 랭킹 pages×20위까지 페이지당 perPage명 샘플, refreshDays마다 갱신",
+    "pages": 50,
+    "perPage": 3,
+    "matchesPerUser": 15,
+    "minMatches": 5,
+    "refreshDays": 7
   }
 }
