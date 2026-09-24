@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-24T14:47:16.221Z",
+  "updated": "2026-09-24T16:51:47.131Z",
   "baselineUpdated": "2026-09-24T13:17:17.528Z",
   "baselineSource": "공식 랭킹 1~1000위 샘플, 공식경기 최근 15경기",
   "baselineSampleSize": 75,
@@ -123,56 +123,56 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.304,
+          "v": 0.324,
           "avg": 0.229,
-          "z": 0.85,
+          "z": 1.07,
           "key": true
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 7.36,
+          "v": 7.48,
           "avg": 6.659,
-          "z": 0.74,
+          "z": 0.87,
           "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.799,
+          "v": 0.794,
           "avg": 0.762,
-          "z": 0.63,
+          "z": 0.55,
           "key": true
         }
       ],
       "lows": [
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.38,
-          "avg": 0.534,
-          "z": -0.74,
-          "key": false
-        },
-        {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
+          "k": "tackleRate",
+          "label": "태클 성공률",
           "unit": "%",
-          "v": 0.006,
-          "avg": 0.011,
-          "z": -0.58,
+          "v": 0.506,
+          "avg": 0.557,
+          "z": -0.64,
           "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 48.58,
+          "v": 48.46,
           "avg": 50.253,
-          "z": -0.54,
+          "z": -0.58,
+          "key": false
+        },
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.041,
+          "avg": 0.054,
+          "z": -0.56,
           "key": false
         }
       ]
@@ -261,56 +261,56 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.376,
+          "v": 0.359,
           "avg": 0.229,
-          "z": 1.66,
+          "z": 1.47,
           "key": true
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 54.42,
+          "v": 54.52,
           "avg": 50.253,
-          "z": 1.35,
+          "z": 1.39,
           "key": false
         },
         {
-          "k": "passRate",
-          "label": "패스 성공률",
+          "k": "longGoal",
+          "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.912,
-          "avg": 0.883,
-          "z": 1.16,
+          "v": 0.173,
+          "avg": 0.104,
+          "z": 1.15,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "boxGoal",
-          "label": "박스안골 비율",
-          "unit": "%",
-          "v": 0.792,
-          "avg": 0.872,
-          "z": -1.24,
-          "key": true
-        },
-        {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.7,
+          "v": 3.58,
           "avg": 4.753,
-          "z": -1.23,
+          "z": -1.37,
           "key": false
         },
         {
-          "k": "finish",
-          "label": "결정력",
+          "k": "boxGoal",
+          "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.349,
-          "avg": 0.414,
-          "z": -0.77,
+          "v": 0.789,
+          "avg": 0.872,
+          "z": -1.29,
+          "key": true
+        },
+        {
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.114,
+          "avg": 0.162,
+          "z": -0.71,
           "key": false
         }
       ]
