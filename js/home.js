@@ -5,6 +5,7 @@ const QUICK = [
   { label: "시즌 판수",     desc: "달성률·중간점검 미달자 확인",   href: "dashboard.html", emoji: "🎯" },
   { label: "클럽원 전적",   desc: "최근 경기·라인업",             href: "record.html",    emoji: "📜" },
   { label: "클럽 내전",     desc: "클럽원 간 상대 전적",           href: "internal.html",  emoji: "⚔️" },
+  { label: "토너먼트",     desc: "명단 등록 → 추첨 → 대진표 진행", href: "tournament.html", emoji: "🏟️" },
   { label: "명예의 전당",   desc: "시즌별 최다판수·최다승",         href: "hall.html",      emoji: "🏆" },
   { label: "규칙·공지",     desc: "운영 수칙·개편 공지",           href: "rules.html",     emoji: "📋" }
 ];

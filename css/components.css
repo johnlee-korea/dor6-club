@@ -262,3 +262,49 @@ body.sq-lock { overflow: hidden; }
   .sq-face { width: 36px; height: 36px; }
   .sq-player .sq-name { font-size: 10px; }
 }
+
+/* --- 토너먼트 (tournament.html) --- */
+.tn-tools { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.tn-picks { display: flex; flex-wrap: wrap; gap: 6px; }
+.tn-pick {
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-muted); font-size: var(--fs-sm); cursor: pointer;
+}
+.tn-pick.on { background: var(--silver); color: var(--bg); border-color: var(--silver); font-weight: 700; }
+.tn-guest { font-size: 10px; opacity: .8; }
+.tn-summary { margin: var(--sp-3) 0; font-size: var(--fs-sm); color: var(--text-muted); text-align: center; }
+.tn-summary b { color: var(--silver-bright); }
+.tn-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-3); flex-wrap: wrap; }
+.tn-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; }
+
+/* 대진표: 라운드별 칼럼, 모든 칼럼이 1라운드 높이에 맞춰 늘어나고 경기는 균등 배치 → 다음 라운드가 두 경기 사이에 위치 */
+.tn-bracket {
+  display: flex; gap: var(--sp-4); overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--sp-3);
+}
+.tn-col { display: flex; flex-direction: column; min-width: 150px; flex: 1 0 150px; }
+.tn-round { text-align: center; font-size: var(--fs-xs); color: var(--silver); font-weight: 700; margin-bottom: var(--sp-2); }
+.tn-matches { flex: 1; display: flex; flex-direction: column; justify-content: space-around; gap: var(--sp-2); }
+.tn-match {
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface);
+  overflow: hidden;
+}
+.tn-match.reveal { animation: tn-pop .4s ease both; }
+@keyframes tn-pop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+.tn-slot {
+  display: block; width: 100%; text-align: left; padding: 8px 10px; font-size: var(--fs-sm);
+  background: none; border: none; color: var(--text); min-height: 36px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tn-slot + .tn-slot { border-top: 1px solid var(--border); }
+button.tn-slot { cursor: pointer; }
+button.tn-slot:hover { background: var(--surface-3); }
+.tn-slot.win { background: rgba(63,185,80,.14); color: var(--win); font-weight: 700; }
+.tn-slot.lose { color: var(--text-dim); text-decoration: line-through; }
+.tn-slot.bye, .tn-slot.tbd { color: var(--text-dim); font-style: italic; }
+
+.tn-champ { text-align: center; margin-bottom: var(--sp-4); border-color: #ffd47966; }
+.tn-trophy { font-size: 56px; animation: tn-bounce 1.2s ease infinite; }
+@keyframes tn-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.tn-champ-name { font-size: 26px; font-weight: 800; color: #ffd479; margin: var(--sp-2) 0; }
+.tn-runner { margin: var(--sp-2) 0 var(--sp-3); color: var(--silver); }

@@ -24,6 +24,7 @@ const DOR6_SECTIONS = {
       { key: "dashboard", label: "판수",       href: "dashboard.html" },
       { key: "record",    label: "전적",       href: "record.html" },
       { key: "internal",  label: "내전",       href: "internal.html" },
+      { key: "tournament", label: "토너먼트",  href: "tournament.html" },
       { key: "hall",      label: "명예의전당",  href: "hall.html" },
       { key: "rules",     label: "규칙·공지",   href: "rules.html" }
     ]
