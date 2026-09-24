@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-24T16:51:47.131Z",
+  "updated": "2026-09-24T21:21:46.860Z",
   "baselineUpdated": "2026-09-24T13:17:17.528Z",
   "baselineSource": "공식 랭킹 1~1000위 샘플, 공식경기 최근 15경기",
   "baselineSampleSize": 75,
@@ -401,25 +401,25 @@
           "unit": "%",
           "v": 0.921,
           "avg": 0.883,
-          "z": 1.52,
+          "z": 1.5,
           "key": true
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.33,
+          "v": 0.326,
           "avg": 0.229,
-          "z": 1.14,
+          "z": 1.09,
           "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 53.18,
+          "v": 53.28,
           "avg": 50.253,
-          "z": 0.95,
+          "z": 0.98,
           "key": true
         }
       ],
@@ -428,9 +428,9 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.091,
+          "v": 0.092,
           "avg": 0.162,
-          "z": -1.06,
+          "z": -1.05,
           "key": false
         },
         {
@@ -745,11 +745,11 @@
     "0ec85bc04c006744f49a284cd624bbbb": {
       "games": 50,
       "style": {
-        "name": "점유율 롱볼러",
-        "line": "공은 오래 갖고, 찰 땐 멀리 찬다",
+        "name": "빌드업 생략파",
+        "line": "미드필더 생략, 골키퍼에서 공격수로 직행",
         "basis": [
-          "poss+",
-          "longRatio+"
+          "longRatio+",
+          "shortRatio-"
         ]
       },
       "highs": [
@@ -757,57 +757,57 @@
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.08,
+          "v": 0.083,
           "avg": 0.054,
-          "z": 1.1,
-          "key": true
-        },
-        {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 53.06,
-          "avg": 50.253,
-          "z": 0.91,
+          "z": 1.25,
           "key": true
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.905,
+          "v": 0.901,
           "avg": 0.883,
-          "z": 0.86,
+          "z": 0.71,
+          "key": false
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 52.1,
+          "avg": 50.253,
+          "z": 0.6,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
-          "unit": "%",
-          "v": 0.647,
-          "avg": 0.707,
-          "z": -0.8,
-          "key": false
-        },
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 9.86,
-          "avg": 13.32,
-          "z": -0.76,
-          "key": false
-        },
-        {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.38,
+          "v": 0.34,
           "avg": 0.534,
-          "z": -0.74,
+          "z": -0.93,
           "key": false
+        },
+        {
+          "k": "shots",
+          "label": "경기당 슈팅",
+          "unit": "",
+          "v": 5.8,
+          "avg": 6.659,
+          "z": -0.91,
+          "key": false
+        },
+        {
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.643,
+          "avg": 0.707,
+          "z": -0.86,
+          "key": true
         }
       ]
     },
