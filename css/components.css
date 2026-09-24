@@ -167,6 +167,16 @@ body.sq-lock { overflow: hidden; }
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
   padding: var(--sp-4);
 }
+.sq-modal.wide { max-width: 980px; }
+.sq-score { margin: 0 var(--sp-2); font-variant-numeric: tabular-nums; color: var(--silver-bright); }
+
+/* 양팀 스쿼드 — 모바일은 위아래, 넓은 화면은 좌우 */
+.sq-teams { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+@media (min-width: 760px) { .sq-teams { grid-template-columns: 1fr 1fr; } }
+.sq-team { min-width: 0; }
+.sq-team-head { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.sq-team-nick { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .sq-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-3); }
 .sq-title { font-size: var(--fs-lg); font-weight: 800; }
 .sq-dim { font-size: var(--fs-xs); color: var(--text-muted); font-weight: 400; }

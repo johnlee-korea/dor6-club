@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
-import { latestLineupMatch, formationOf, seasonIdOf, pidOf, SUB_POSITION } from "./lib/squad.js";
+import { latestLineupMatch } from "./lib/squad.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -158,36 +158,18 @@ function buildHall() {
 }
 
 /* ---------- ⑤ 스쿼드 (회원별 최근 경기 라인업) ---------- */
+/* 선수 이름·시즌·포메이션 변환은 화면(js/squad.js sqBuildTeam·sqFormation)에서 메타로 처리 —
+   명단/전적 두 화면이 같은 변환 로직을 쓰도록 여기서는 원본 라인업만 담는다 */
 function buildSquads() {
-  const players = readJSON(p("data", "meta", "players.json"), {});
-  const seasonMeta = readJSON(p("data", "meta", "seasonid.json"), {});
-  const posList = readJSON(p("data", "meta", "spposition.json"), []);
-  const posName = Object.fromEntries(posList.map((x) => [x.spposition, x.desc]));
-
-  const toCard = (pl) => {
-    const sid = seasonIdOf(pl.spId);
-    const season = seasonMeta[sid] || {};
-    return {
-      spId: pl.spId, pid: pidOf(pl.spId),
-      name: players[pl.spId] || `선수 ${pidOf(pl.spId)}`,   // 메타 누락 시 대체 표기
-      pos: pl.spPosition, posName: posName[pl.spPosition] || "",
-      grade: pl.spGrade,
-      seasonId: sid, seasonName: season.name || "", seasonImg: season.img || ""
-    };
-  };
-
   const squads = {};
   for (const m of members) {
     const last = latestLineupMatch(matchesByOuid[m.ouid]);
     if (!last) continue;
-    const starters = last.lineup.filter((pl) => pl.spPosition !== SUB_POSITION);
     squads[m.ouid] = {
       matchId: last.matchId, matchDate: last.matchDate, matchType: last.matchType,
       result: last.result, goalFor: last.goalFor, goalAgainst: last.goalAgainst,
       opponentNick: last.opponentNick,
-      formation: formationOf(starters),
-      starters: starters.map(toCard).sort((a, b) => a.pos - b.pos),
-      subs: last.lineup.filter((pl) => pl.spPosition === SUB_POSITION).map(toCard)
+      lineup: last.lineup
     };
   }
   writeJSON(p("data", "squads.json"), { updated: now.toISOString(), squads });

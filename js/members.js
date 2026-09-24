@@ -70,7 +70,7 @@ document.getElementById("members-root").addEventListener("click", (e) => {
   if (!btn) return;
   const squad = SQUADS[btn.dataset.squad];
   if (!squad) return;
-  openSquadModal(btn.dataset.nick, squad);
+  sqLoadMeta().then((meta) => openSquadModal(btn.dataset.nick, squad, meta));
 });
 
 initMembers();

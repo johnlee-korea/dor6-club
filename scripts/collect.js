@@ -12,7 +12,7 @@ import {
   setCallInterval, getMatchIds, getMatchDetail,
   getUserBasic, getMaxDivision, getMeta, getOuidByNickname
 } from "./lib/nexon-api.js";
-import { latestLineupMatch, seasonIdOf, shortSeasonName } from "./lib/squad.js";
+import { seasonIdOf, shortSeasonName } from "./lib/squad.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -54,10 +54,49 @@ function summarize(detail, ouid, matchType) {
       foul: md.foul ?? null,
       corner: md.cornerKick ?? null
     },
-    lineup: (me.player || []).map((pl) => ({
-      spId: pl.spId, spPosition: pl.spPosition, spGrade: pl.spGrade
-    }))
+    lineup: toLineup(me),
+    oppLineup: toLineup(opp)   // 상대 스쿼드 — 전적 화면 '양팀 포메이션' 표시용
   };
+}
+
+/* matchInfo 한쪽 → 저장용 라인업(선수 id·포지션·강화만) */
+function toLineup(side) {
+  return ((side && side.player) || []).map((pl) => ({
+    spId: pl.spId, spPosition: pl.spPosition, spGrade: pl.spGrade
+  }));
+}
+
+/* 상대 라인업 저장 이전에 수집된 매치 보충(백필)
+   - 회당 상한(limit)까지만 조회해 CI 실행 시간을 제한, 남은 건 다음 실행에서 이어서 처리
+   - 같은 매치를 두 회원이 공유(내전)하면 matchId 캐시로 1회만 조회
+   - 4xx(보관 기간 만료 등 복구 불가)는 빈 배열로 표시해 재시도하지 않음, 429/5xx·네트워크는 다음 실행에 재시도 */
+async function backfillOppLineups(active, limit) {
+  const cache = new Map();
+  let fetched = 0, remaining = 0;
+  for (const m of active) {
+    const file = p("data", "matches", `${m.ouid}.json`);
+    const store = readJSON(file, null);
+    if (!store) continue;
+    let dirty = false;
+    for (const match of store.matches) {
+      if (match.oppLineup !== undefined) continue;
+      if (!cache.has(match.matchId)) {
+        if (fetched >= limit) { remaining++; continue; }
+        fetched++;
+        try { cache.set(match.matchId, await getMatchDetail(match.matchId)); }
+        catch (e) {
+          console.warn(`  [백필] ${match.matchId} 실패: ${e.message}`);
+          cache.set(match.matchId, /^API 4\d\d/.test(e.message) ? { matchInfo: [] } : null);
+        }
+      }
+      const detail = cache.get(match.matchId);
+      if (!detail) continue;
+      match.oppLineup = toLineup((detail.matchInfo || []).find((i) => i.ouid !== m.ouid));
+      dirty = true;
+    }
+    if (dirty) writeJSON(file, store);
+  }
+  if (fetched || remaining) console.log(`🔁 상대 라인업 백필 — 조회 ${fetched}건, 남은 ${remaining}건`);
 }
 
 async function collectMember(member, config) {
@@ -122,13 +161,14 @@ async function collectProfile(member, divisionMeta) {
 }
 
 /* 스쿼드 표시용 메타 저장 — spid.json(6MB+)은 통째로 커밋하지 않고
-   각 회원 최근 라인업에 등장한 선수만 추려 data/meta/players.json 으로 저장 */
+   수집된 모든 경기(양팀 라인업)에 등장한 선수만 추려 data/meta/players.json 으로 저장 */
 async function saveSquadMeta(active) {
   const used = new Set();
   for (const m of active) {
     const store = readJSON(p("data", "matches", `${m.ouid}.json`), { matches: [] });
-    const last = latestLineupMatch(store.matches);
-    if (last) last.lineup.forEach((pl) => used.add(pl.spId));
+    for (const match of store.matches) {
+      for (const pl of [...(match.lineup || []), ...(match.oppLineup || [])]) used.add(pl.spId);
+    }
   }
   try {
     const [spids, seasons] = await Promise.all([getMeta("spid"), getMeta("seasonid")]);
@@ -196,6 +236,7 @@ async function main() {
     profiles[m.ouid] = await collectProfile(m, divisionMeta);
   }
   writeJSON(p("data", "profiles.json"), { updated: new Date().toISOString(), profiles });
+  await backfillOppLineups(active, config.oppLineupBackfillPerRun ?? 300);
   await saveSquadMeta(active);
   console.log(`✅ 수집 완료 — 신규 매치 총 ${total}건, 프로필 ${Object.keys(profiles).length}명`);
 }

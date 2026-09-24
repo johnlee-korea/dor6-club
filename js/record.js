@@ -1,12 +1,10 @@
-/* record.js — 클럽원 개별 전적 (최근 경기 + 라인업) */
+/* record.js — 클럽원 개별 전적 (최근 경기 + 탭하면 양팀 스쿼드 모달) */
 
 const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "1on1" };
-let posMap = {};
 let membersCache = [];
 
 async function initRecord() {
-  const [membersFile, posMeta] = await loadAll(["data/members.json", "data/meta/spposition.json"]);
-  if (posMeta) posMap = Object.fromEntries(posMeta.map((x) => [x.spposition, x.desc]));
+  const [membersFile] = await loadAll(["data/members.json"]);
 
   const picker = document.getElementById("member-picker");
   membersCache = ((membersFile && membersFile.members) || []).filter((m) => m.ouid);
@@ -63,28 +61,21 @@ async function showMember(ouid, member) {
       <div style="margin-top:var(--sp-3);">${strip}</div>
       <div style="font-size:var(--fs-xs);color:var(--text-dim);margin-top:var(--sp-1);">최근 15경기 (왼쪽이 최신)</div>
     </div>
-    <div class="section-title">최근 경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 라인업</span></div>
+    <div class="section-title">최근 경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
     <div class="card">${recent.map(matchRow).join("")}</div>
   `;
 
-  root.querySelectorAll(".match-row").forEach((row) => {
-    row.addEventListener("click", () => {
-      const lu = row.querySelector(".lineup");
-      if (lu) lu.style.display = lu.style.display === "none" ? "block" : "none";
+  // 선수 메타(이름·시즌)는 첫 탭 때 로딩(sqLoadMeta 내부 캐시)
+  root.querySelectorAll(".match-row").forEach((row, i) => {
+    row.addEventListener("click", async () => {
+      const meta = await sqLoadMeta();
+      openMatchModal(recent[i], meta, member.ingameNick);
     });
   });
 }
 
 function matchRow(m) {
   const label = MATCH_TYPE_LABEL[m.matchType] || `유형${m.matchType}`;
-  const lineup = (m.lineup || []).length
-    ? `<div class="lineup" style="display:none;margin-top:var(--sp-3);">
-         <div class="table-wrap"><table class="data">
-           <tr><th>포지션</th><th class="num">등급</th></tr>
-           ${m.lineup.map((p) => `<tr><td>${escapeHtml(posMap[p.spPosition] || ("#" + p.spPosition))}</td><td class="num">${p.spGrade}</td></tr>`).join("")}
-         </table></div>
-       </div>`
-    : "";
   return `
     <div class="match-row" style="padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer;">
       <div style="display:flex;align-items:center;gap:var(--sp-3);">
@@ -95,7 +86,6 @@ function matchRow(m) {
         <span class="badge">${label}</span>
         <span style="font-size:var(--fs-xs);color:var(--text-dim);white-space:nowrap;">${fmt.date(m.matchDate)}</span>
       </div>
-      ${lineup}
     </div>
   `;
 }
