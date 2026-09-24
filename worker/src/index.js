@@ -100,6 +100,9 @@ async function divisionName(id) {
 
 /* 아무 유저 전적 요약 (최근 공식경기 위주) */
 const R_MAP = { "승": "win", "무": "draw", "패": "lose" };
+const toLineup = (side) => ((side && side.player) || []).map((pl) => ({
+  spId: pl.spId, spPosition: pl.spPosition, spGrade: pl.spGrade
+}));
 async function publicSearch(ouid, key) {
   const out = { ouid, nickname: null, level: null, maxDivision: "-", matches: [] };
   try { const b = await nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key); out.nickname = b.nickname; out.level = b.level; } catch {}
@@ -119,12 +122,16 @@ async function publicSearch(ouid, key) {
       const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
       const md = me.matchDetail || {}, sh = me.shoot || {};
       out.matches.push({
+        matchId: d.matchId,
+        matchType: 50,
         matchDate: d.matchDate,
         result: R_MAP[md.matchResult] || "draw",
         goalFor: sh.goalTotal ?? 0,
         goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
         opponentNick: opp ? opp.nickname : "?",
-        possession: md.possession ?? null
+        possession: md.possession ?? null,
+        lineup: toLineup(me),       // 양팀 스쿼드 모달용 (선수 id·포지션·강화만)
+        oppLineup: toLineup(opp)
       });
     } catch {}
   }

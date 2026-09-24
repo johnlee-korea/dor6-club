@@ -112,7 +112,9 @@ function buildInternal() {
         matchId: x.matchId, matchDate: x.matchDate, matchType: x.matchType,
         aOuid: m.ouid, aNick: m.ingameNick,
         bOuid: x.opponentOuid, bNick: memberByOuid[x.opponentOuid].ingameNick,
-        result: x.result, goalFor: x.goalFor, goalAgainst: x.goalAgainst
+        result: x.result, goalFor: x.goalFor, goalAgainst: x.goalAgainst,
+        // 내전 당시 양팀 스쿼드 (A 기록의 lineup = A팀, oppLineup = B팀)
+        aLineup: x.lineup || [], bLineup: x.oppLineup || []
       });
       const [k1, k2] = [m.ouid, x.opponentOuid].sort();
       const key = `${k1}|${k2}`;

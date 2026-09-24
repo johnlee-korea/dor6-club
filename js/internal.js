@@ -1,4 +1,4 @@
-/* internal.js — 클럽 내전 기록 (상대 전적표 + 최근 내전) */
+/* internal.js — 클럽 내전 기록 (상대 전적표 + 최근 내전, 탭하면 당시 양팀 스쿼드) */
 
 async function initInternal() {
   const root = document.getElementById("internal-root");
@@ -25,8 +25,9 @@ async function initInternal() {
   }).join("");
 
   // 최근 내전
-  const recent = internal.matches.slice(0, 30).map((x) => `
-    <tr>
+  const recentList = internal.matches.slice(0, 30);
+  const recent = recentList.map((x, i) => `
+    <tr class="internal-row" data-i="${i}" style="cursor:pointer;">
       <td>${fmt.date(x.matchDate)}</td>
       <td><b>${escapeHtml(x.aNick)}</b></td>
       <td class="num" style="font-variant-numeric:tabular-nums;">
@@ -42,7 +43,7 @@ async function initInternal() {
       ${h2h}
     </table></div></div>
 
-    <div class="section-title">🕑 최근 내전</div>
+    <div class="section-title">🕑 최근 내전 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 당시 양팀 스쿼드</span></div>
     <div class="card"><div class="table-wrap"><table class="data">
       <tr><th>날짜</th><th>승자 관점</th><th class="num">스코어</th><th>상대</th></tr>
       ${recent}
@@ -51,6 +52,19 @@ async function initInternal() {
       스코어는 왼쪽(승자 관점) 기준입니다. 총 ${internal.matches.length}건.
     </div></div>
   `;
+
+  // 내전 행 탭 → A 관점 경기 객체로 바꿔 양팀 스쿼드 모달 (선수 메타는 첫 탭 때 로딩)
+  root.querySelectorAll(".internal-row").forEach((row) => {
+    row.addEventListener("click", async () => {
+      const x = recentList[row.dataset.i];
+      const meta = await sqLoadMeta();
+      openMatchModal({
+        matchType: x.matchType, matchDate: x.matchDate,
+        result: x.result, goalFor: x.goalFor, goalAgainst: x.goalAgainst,
+        opponentNick: x.bNick, lineup: x.aLineup, oppLineup: x.bLineup
+      }, meta, x.aNick);
+    });
+  });
 }
 
 initInternal();

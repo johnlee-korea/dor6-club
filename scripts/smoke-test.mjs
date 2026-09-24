@@ -18,11 +18,11 @@ const PAGES = [
   { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
   { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/record.js"], root: "record-root" },
   { file: "style.html",     scripts: ["js/common.js", "js/style-analysis.js"], root: "style-root" },
-  { file: "internal.html",  scripts: ["js/common.js", "js/internal.js"],       root: "internal-root" },
+  { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/hall.js"],           root: "hall-root" },
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },
   { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin.js"], root: null },
-  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/search.js"], root: null }
+  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/search.js"], root: null }
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -22,6 +22,15 @@ function sqLoadMeta() {
   return _sqMetaPromise;
 }
 
+/* 클럽 밖 선수 이름 보충 — players.json은 클럽원 경기 선수만 담으므로
+   전적 검색(아무 유저)처럼 없는 선수가 있을 때만 전체 이름표(pnames.json, pid→이름)를 1회 로딩 */
+async function sqEnsureNames(meta, lineups) {
+  if (meta.pnames) return meta;
+  const missing = lineups.some((lu) => (lu || []).some((pl) => !meta.players[pl.spId]));
+  if (missing) meta.pnames = (await loadJSON("data/meta/pnames.json").catch(() => null)) || {};
+  return meta;
+}
+
 /* 저장된 라인업(spId·spPosition·spGrade) → 화면 카드 + 선발/교체 분리
    spId 앞 3자리 = 시즌 id, 뒤 6자리 = 선수 고유 pid */
 function sqBuildTeam(lineup, meta) {
@@ -30,7 +39,7 @@ function sqBuildTeam(lineup, meta) {
     const season = meta.seasons[Math.floor(pl.spId / 1000000)] || {};
     return {
       spId: pl.spId, pid,
-      name: meta.players[pl.spId] || `선수 ${pid}`,   // 메타 누락 시 대체 표기
+      name: meta.players[pl.spId] || (meta.pnames && meta.pnames[pid]) || `선수 ${pid}`,   // 메타 누락 시 대체 표기
       pos: pl.spPosition, posName: meta.posName[pl.spPosition] || "",
       grade: pl.spGrade,
       seasonName: season.name || "", seasonImg: season.img || ""

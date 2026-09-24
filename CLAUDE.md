@@ -212,6 +212,8 @@ C:\Projects\dor6-club\
 - **`internal.json`**: 양측 모두 클럽원(ouid ∈ members)인 매치만 추출 → `{ matches:[...], headToHead:{ "ouidA|ouidB": {aWin,bWin,draw} } }`.
 - **`hall.json`**: 시즌별 최다 판수/최다 승/최고 승률 등 자동 선정.
 - **`squads.json`**: `{ [ouid]: { matchId, matchDate, matchType, result, goalFor, goalAgainst, opponentNick, lineup } }` — 회원별 최근 수집 경기 라인업 원본(넥슨은 현재 스쿼드 미제공). 선수 카드·포메이션 변환은 화면 `js/squad.js`(sqBuildTeam·sqFormation) 한 곳에서 처리. 선수/시즌 메타는 `data/meta/players.json`·`seasonid.json`(수집된 모든 경기 양팀 선수만 추림).
+- **`internal.json` 매치의 `aLineup`/`bLineup`**: 내전 당시 양팀 스쿼드(A 기록의 lineup/oppLineup). 내전 페이지 행 탭 → 양팀 스쿼드 모달.
+- **전적 검색 캐시**: 검색 결과는 브라우저 localStorage(`dor6.search.<닉 소문자>`)에 저장, [최신 업데이트]로만 Worker 재조회. 검색 유저는 cron 수집 대상 아님. 클럽 밖 선수 이름은 `data/meta/pnames.json`(pid→이름, collect.js가 매 실행 갱신)에서 필요 시 로딩.
 - **`matches/{ouid}.json`의 `oppLineup`**: 상대 라인업(형식은 `lineup`과 동일). 전적 페이지 '양팀 스쿼드' 모달에 사용. 도입 이전 매치는 collect.js가 회당 `config.oppLineupBackfillPerRun`건씩 백필(넥슨 4xx 응답 시 빈 배열로 표시).
 
 ---

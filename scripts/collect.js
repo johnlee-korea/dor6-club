@@ -179,6 +179,11 @@ async function saveSquadMeta(active) {
       seasonMeta[s.seasonId] = { name: shortSeasonName(s.className), img: s.seasonImg };
     }
     writeJSON(p("data", "meta", "players.json"), players);
+    // 전적 검색(클럽 밖 유저)용 전체 이름표 — 이름은 시즌과 무관하게 pid별로 같아 pid→이름으로 압축(약 0.9MB)
+    // 들여쓰기 없이 저장, 검색 화면에서 누락 이름이 있을 때만 로딩
+    const pnames = {};
+    for (const s of spids) pnames[s.id % 1000000] = s.name;
+    fs.writeFileSync(p("data", "meta", "pnames.json"), JSON.stringify(pnames) + "\n");
     writeJSON(p("data", "meta", "seasonid.json"), seasonMeta);
     const unknownSeasons = [...used].map(seasonIdOf).filter((id) => !seasonMeta[id]);
     if (unknownSeasons.length) console.warn(`  시즌 메타 없음: ${[...new Set(unknownSeasons)]}`);
