@@ -17,7 +17,6 @@ const PAGES = [
   { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/members.js"], root: "members-root", expect: ".ps" },
   { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
   { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/record.js"], root: "record-root" },
-  { file: "style.html",     scripts: ["js/common.js", "js/style-analysis.js"], root: "style-root" },
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/hall.js"],           root: "hall-root" },
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },

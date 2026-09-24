@@ -63,7 +63,7 @@ C:\Projects\dor6-club\
 ├── members.html               # ① 클럽원 명단
 ├── dashboard.html             # ② 시즌 판수 대시보드
 ├── record.html                # ③ 클럽원 전적 (개별)
-├── style.html                 # ④ 플레이스타일 분석
+├── style.html                 # (v1.7.2 폐지) members.html로 리다이렉트만
 ├── internal.html              # ⑤ 클럽 내전 기록
 ├── hall.html                  # ⑥ 명예의 전당
 ├── rules.html                 # ⑦ 규칙·공지
@@ -85,7 +85,6 @@ C:\Projects\dor6-club\
 │   ├── members.js            # 명단 렌더 (부클럽장별 그룹)
 │   ├── dashboard.js          # 판수 진행률·중간점검 미달·휴식 제외
 │   ├── record.js             # 개별 전적·라인업 렌더
-│   ├── style-analysis.js     # 성향 통계·태그 계산 렌더
 │   ├── internal.js           # 내전 추출·상대전적표
 │   ├── hall.js               # 명예의 전당 렌더
 │   ├── auth.js               # 관리자 로그인 상태 관리(세션)
@@ -95,7 +94,7 @@ C:\Projects\dor6-club\
 │   ├── members.json          # ★수동 관리 (명단·역할·담당·휴식)
 │   ├── seasons.json          # ★수동 관리 (시즌·중간점검·종료일)
 │   ├── dashboard.json        # 자동 집계 (시즌별 판수)
-│   ├── stats.json            # 자동 집계 (플레이스타일 누적)
+│   ├── playstyles.json       # 자동 집계 (명단 플레이스타일, 랭커 대비)
 │   ├── internal.json         # 자동 집계 (내전·상대전적)
 │   ├── hall.json             # 자동 집계 (명예의 전당)
 │   └── matches\
@@ -208,7 +207,7 @@ C:\Projects\dor6-club\
 
 ### 4-5. 자동 집계 산출물
 - **`dashboard.json`**: `{ seasonId, rows:[{ouid, playedGames, target, mid, restDays, prorated, status}] }` — 진행률·중간점검 미달·휴식 제외·비례 기준 반영.
-- **`stats.json`**: `{ [ouid]: { games, avgPossession, avgShoot, passSuccessRate, tags:["점유형"] } }` — 성향 태그는 수치 임계값 기반.
+- ~~`stats.json`~~: v1.7.2에서 폐지(플레이스타일 탭 제거, 명단 `playstyles.json`으로 대체).
 - **`internal.json`**: 양측 모두 클럽원(ouid ∈ members)인 매치만 추출 → `{ matches:[...], headToHead:{ "ouidA|ouidB": {aWin,bWin,draw} } }`.
 - **`hall.json`**: 시즌별 최다 판수/최다 승/최고 승률 등 자동 선정.
 - **`squads.json`**: `{ [ouid]: { matchId, matchDate, matchType, result, goalFor, goalAgainst, opponentNick, lineup } }` — 회원별 최근 수집 경기 라인업 원본(넥슨은 현재 스쿼드 미제공). 선수 카드·포메이션 변환은 화면 `js/squad.js`(sqBuildTeam·sqFormation) 한 곳에서 처리. 선수/시즌 메타는 `data/meta/players.json`·`seasonid.json`(수집된 모든 경기 양팀 선수만 추림).
@@ -229,7 +228,7 @@ C:\Projects\dor6-club\
 | ① | members.html | 인게임닉·최고등급·역할(운영진+클럽원 평면), **🎭 플레이스타일**(랭커 대비 ▲▼ 지표·한 줄 스타일), **[스쿼드] 최근 경기 포메이션 모달** | members.json, profiles.json, squads.json, playstyles.json |
 | ② | dashboard.html | 클럽원별 현재판수/기준판수 **진행률 바**, 상반기 중간점검 **미달자 표시**, **휴식자 제외**, 부클럽장별 담당 인원 현황 | dashboard.json |
 | ③ | record.html | 회원 선택 → 최근 경기 목록(승/무/패·스코어·상대), 탭하면 **양팀 스쿼드 모달** | matches/{ouid}.json, meta/* |
-| ④ | style.html | 평균 점유율·슈팅·패스성공률 누적 통계, **수치 기반 성향 태그**(점유형/역습형 등) | stats.json |
+| ④ | ~~style.html~~ | **v1.7.2 폐지** — 명단 플레이스타일로 통합, 기존 주소는 members.html로 리다이렉트 | - |
 | ⑤ | internal.html | 클럽원끼리 경기만 추출, **클럽원 간 상대 전적표** | internal.json |
 | ⑥ | hall.html | 시즌별 최다판수·최다승·최고승률 **자동 선정** | hall.json |
 | ⑦ | rules.html | 클럽 운영 수칙·개편 공지(정적 콘텐츠) | (하드코딩/rules.json) |

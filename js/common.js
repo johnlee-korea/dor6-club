@@ -23,7 +23,6 @@ const DOR6_SECTIONS = {
       { key: "members",   label: "클럽원",     href: "members.html" },
       { key: "dashboard", label: "판수",       href: "dashboard.html" },
       { key: "record",    label: "전적",       href: "record.html" },
-      { key: "style",     label: "플레이스타일", href: "style.html" },
       { key: "internal",  label: "내전",       href: "internal.html" },
       { key: "hall",      label: "명예의전당",  href: "hall.html" },
       { key: "rules",     label: "규칙·공지",   href: "rules.html" }

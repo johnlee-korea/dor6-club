@@ -1,7 +1,7 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, stats.json, internal.json, hall.json, squads.json, playstyles.json
+   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json
    ============================================================ */
 
 import fs from "node:fs";
@@ -56,47 +56,7 @@ function buildDashboard() {
   return cur;
 }
 
-/* ---------- ② 플레이스타일 (누적) ---------- */
-function avg(arr) { const v = arr.filter((x) => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
-
-function styleTags(st) {
-  const t = config.styleTagThresholds || {};
-  const tags = [];
-  if (st.avgPossession != null) {
-    if (st.avgPossession >= (t.possessionHigh || 55)) tags.push("점유형");
-    else if (st.avgPossession <= (t.possessionLow || 45)) tags.push("역습형");
-    else tags.push("밸런스형");
-  }
-  if (st.avgShoot != null && st.avgShoot >= (t.shootHigh || 15)) tags.push("多슈팅");
-  if (st.passSuccessRate != null && st.passSuccessRate >= (t.passRateHigh || 85)) tags.push("정교패스");
-  return tags;
-}
-
-function buildStats() {
-  const players = {};
-  for (const m of members) {
-    const ms = matchesByOuid[m.ouid].filter((x) => counted.includes(x.matchType));
-    if (!ms.length) { players[m.ouid] = { games: 0, tags: [] }; continue; }
-    const st = {
-      games: ms.length,
-      wins: ms.filter((x) => x.result === "win").length,
-      draws: ms.filter((x) => x.result === "draw").length,
-      loses: ms.filter((x) => x.result === "lose").length,
-      avgPossession: round1(avg(ms.map((x) => x.stats.possession))),
-      avgShoot: round1(avg(ms.map((x) => x.stats.shootTotal))),
-      avgEffectiveShoot: round1(avg(ms.map((x) => x.stats.effectiveShoot))),
-      avgFoul: round1(avg(ms.map((x) => x.stats.foul))),
-      goalPerGame: round1(avg(ms.map((x) => x.goalFor)))
-    };
-    const passTry = ms.reduce((a, x) => a + (x.stats.passTry || 0), 0);
-    const passOk = ms.reduce((a, x) => a + (x.stats.passSuccess || 0), 0);
-    st.passSuccessRate = passTry ? round1((passOk / passTry) * 100) : null;
-    st.winRate = st.games ? round1((st.wins / st.games) * 100) : null;
-    st.tags = styleTags(st);
-    players[m.ouid] = st;
-  }
-  writeJSON(p("data", "stats.json"), { updated: now.toISOString(), players });
-}
+/* (구 ② 플레이스타일 탭·stats.json은 v1.7.2에서 제거 — 명단 플레이스타일(⑥ buildPlaystyles)로 대체) */
 
 /* ---------- ③ 내전 ---------- */
 function buildInternal() {
@@ -210,10 +170,9 @@ function round1(n) { return n == null ? null : Math.round(n * 10) / 10; }
 
 /* ---------- 실행 ---------- */
 const cur = buildDashboard();
-buildStats();
 buildInternal();
 buildHall();
 const squadCount = buildSquads();
 const styleCount = buildPlaystyles();
 console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, ` +
-  `dashboard/stats/internal/hall/squads/playstyles.json 갱신`);
+  `dashboard/internal/hall/squads/playstyles.json 갱신`);

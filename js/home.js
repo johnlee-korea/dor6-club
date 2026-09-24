@@ -1,10 +1,9 @@
 /* home.js — 홈: 이번 시즌 요약 + 바로가기 */
 
 const QUICK = [
-  { label: "클럽원 명단",   desc: "부클럽장별 그룹·역할·최고등급", href: "members.html",   emoji: "👥" },
+  { label: "클럽원 명단",   desc: "역할·최고등급·플레이스타일·스쿼드", href: "members.html",   emoji: "👥" },
   { label: "시즌 판수",     desc: "달성률·중간점검 미달자 확인",   href: "dashboard.html", emoji: "🎯" },
   { label: "클럽원 전적",   desc: "최근 경기·라인업",             href: "record.html",    emoji: "📜" },
-  { label: "플레이스타일",  desc: "성향 태그·누적 통계",           href: "style.html",     emoji: "⚽" },
   { label: "클럽 내전",     desc: "클럽원 간 상대 전적",           href: "internal.html",  emoji: "⚔️" },
   { label: "명예의 전당",   desc: "시즌별 최다판수·최다승",         href: "hall.html",      emoji: "🏆" },
   { label: "규칙·공지",     desc: "운영 수칙·개편 공지",           href: "rules.html",     emoji: "📋" }
