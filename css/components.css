@@ -378,3 +378,13 @@ button.tn-slot:hover { background: var(--surface-3); }
 .streak-badge { font-size: var(--fs-xs); font-weight: 800; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
 .streak-badge.hot { background: rgba(255,120,60,.16); color: #ff9a5c; }
 .streak-badge.cold { background: rgba(120,180,255,.14); color: #8fc3ff; }
+
+/* ---------- 클럽 내전 라이벌 (v1.13.0) ---------- */
+.rv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+.rv-box { background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--sp-3); min-width: 0; }
+.rv-label { font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); }
+.rv-nick { font-size: var(--fs-lg); font-weight: 800; margin: 2px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rv-rec { font-size: var(--fs-xs); }
+.rv-freq-title { font-weight: 700; font-size: var(--fs-sm); margin: var(--sp-3) 0 var(--sp-1); }
+.rv-row { display: flex; justify-content: space-between; gap: var(--sp-2); font-size: var(--fs-sm); padding: 4px 0; border-bottom: 1px solid var(--border); }
+.rv-row:last-child { border-bottom: none; }

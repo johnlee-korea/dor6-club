@@ -1,5 +1,5 @@
 {
-  "_comment": "도륙 클럽 운영 파라미터. 넥슨 매치유형 코드 참고: 30리그친선 40클래식1on1 50공식경기 52감독모드 60공식친선 / 204·214·224·234볼타",
+  "_comment": "도륙 클럽 운영 파라미터. collectMatchTypes의 40(클래식 1on1)은 클럽원끼리 내전용 — 판수(countedMatchTypes)에는 미포함. 넥슨 매치유형 코드 참고: 30리그친선 40클래식1on1 50공식경기 52감독모드 60공식친선 / 204·214·224·234볼타",
   "countedMatchTypes": [
     50,
     60,
@@ -8,7 +8,8 @@
   "collectMatchTypes": [
     50,
     60,
-    30
+    30,
+    40
   ],
   "matchListLimit": 100,
   "apiCallIntervalMs": 250,

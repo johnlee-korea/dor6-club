@@ -1,7 +1,42 @@
 /* record.js — 클럽원 개별 전적 (닉네임 검색 → 시즌 인사이트 + 최근 경기, 탭하면 양팀 스쿼드 모달) */
 
-const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "1on1" };
+const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "클래식" };
+const COUNTED_TYPES = [50, 60, 30]; // 판수 인정 매치 (config.json countedMatchTypes와 동일)
 let membersCache = [];
+
+/* ============================================================
+   😈 천적 · 🍖 먹잇감 (v1.13.0) — 클럽원끼리 경기(주로 클래식 1on1) 3판 이상 상대 기준
+   데이터: data/activity.json players[ouid].rivals (aggregate.js buildActivity)
+   ============================================================ */
+let _activityPromise = null;
+const loadActivity = () => (_activityPromise ||= loadJSON("data/activity.json").catch(() => null));
+
+async function renderRivals(ouid) {
+  const box = document.getElementById("rival-root");
+  const act = await loadActivity();
+  const r = act && act.players && act.players[ouid] && act.players[ouid].rivals;
+  if (!box || !r) return;
+  const rec = (o) => `<span class="wl win">${o.win}승</span> <span class="wl draw">${o.draw}무</span> <span class="wl lose">${o.lose}패</span>`;
+  const big = (label, o, emptyMsg) => `
+    <div class="rv-box">
+      <div class="rv-label">${label}</div>
+      ${o ? `<div class="rv-nick">${escapeHtml(o.nick)}</div><div class="rv-rec">${rec(o)} <span class="in-dim">· 승점률 ${o.rate}%</span></div>`
+          : `<div class="in-dim">${emptyMsg}</div>`}
+    </div>`;
+  const freq = r.frequent.length
+    ? r.frequent.map((o) => `<div class="rv-row"><span>${escapeHtml(o.nick)}</span><span>${o.games}판 · ${rec(o)}</span></div>`).join("")
+    : `<div class="in-dim">클럽원과 3판 이상 붙은 기록이 아직 없어요.</div>`;
+  box.innerHTML = `
+    <div class="section-title">🆚 내전 라이벌 <span class="in-note">· 클럽원끼리 ${r.internalGames}경기 · 3판 이상 상대</span></div>
+    <div class="card in-card" style="margin-bottom:var(--sp-4);">
+      <div class="rv-grid">
+        ${big("😈 천적", r.nemesis, "천적 없음 — 아무도 무섭지 않다")}
+        ${big("🍖 먹잇감", r.prey, "먹잇감 없음 — 아직 사냥 전")}
+      </div>
+      <div class="rv-freq-title">🔁 자주 붙은 상대</div>
+      ${freq}
+    </div>`;
+}
 
 async function initRecord() {
   const [membersFile] = await loadAll(["data/members.json"]);
@@ -52,15 +87,16 @@ async function showMember(ouid, member) {
     return;
   }
   const matches = store.matches;
-  const recent = matches.slice(0, 30);
+  const recent = matches.slice(0, 30);   // 목록은 클래식(내전) 포함 전체
 
-  // 요약 (전체 기준)
-  const w = matches.filter((m) => m.result === "win").length;
-  const d = matches.filter((m) => m.result === "draw").length;
-  const l = matches.filter((m) => m.result === "lose").length;
-  const rate = matches.length ? Math.round((w / matches.length) * 100) : 0;
+  // 요약·최근 15경기 점은 판수 인정 매치만 (클래식 1on1 내전은 제외 — 판수 규칙과 동일)
+  const counted = matches.filter((m) => COUNTED_TYPES.includes(m.matchType));
+  const w = counted.filter((m) => m.result === "win").length;
+  const d = counted.filter((m) => m.result === "draw").length;
+  const l = counted.filter((m) => m.result === "lose").length;
+  const rate = counted.length ? Math.round((w / counted.length) * 100) : 0;
 
-  const strip = matches.slice(0, 15).map((m) =>
+  const strip = counted.slice(0, 15).map((m) =>
     `<span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>`).join("");
 
   root.innerHTML = `
@@ -69,17 +105,19 @@ async function showMember(ouid, member) {
         <span style="font-weight:800;font-size:var(--fs-lg);">${escapeHtml(member.ingameNick)}</span>
         <span style="font-size:var(--fs-sm);color:var(--text-muted);">
           <span class="wl win">${w}승</span> <span class="wl draw">${d}무</span> <span class="wl lose">${l}패</span>
-          · 승률 <b>${rate}%</b> · 누적 ${matches.length}경기
+          · 승률 <b>${rate}%</b> · 누적 ${counted.length}경기
         </span>
       </div>
       <div style="margin-top:var(--sp-3);">${strip}</div>
-      <div style="font-size:var(--fs-xs);color:var(--text-dim);margin-top:var(--sp-1);">최근 15경기 (왼쪽이 최신)</div>
+      <div style="font-size:var(--fs-xs);color:var(--text-dim);margin-top:var(--sp-1);">최근 15경기 (왼쪽이 최신) · 공식·공식친선·리그친선 기준, 클래식 내전 제외</div>
     </div>
+    <div id="rival-root"></div>
     <div id="insight-root"></div>
     <div class="section-title">최근 경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
     <div class="card">${recent.map(matchRow).join("")}</div>
   `;
 
+  renderRivals(ouid).catch((e) => console.error("천적 표시 실패:", e));
   renderInsights(ouid, matches).catch((e) => console.error("인사이트 표시 실패:", e));
 
   // 선수 메타(이름·시즌)는 첫 탭 때 로딩(sqLoadMeta 내부 캐시)

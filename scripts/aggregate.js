@@ -298,11 +298,12 @@ function buildInsights() {
   return Object.values(players).filter((x) => x.games).length;
 }
 
-/* ---------- ⑧ 활동·폼 (v1.12.0) ---------- */
+/* ---------- ⑧ 활동·폼·천적 (v1.12.0 / 천적 v1.13.0) ---------- */
 /* 인정 매치(counted) 기준. 시즌과 무관하게 '지금' 흐름을 보여주는 용도
    - form: 최근 10경기 결과(최신이 앞), streak: 최신부터 같은 결과 연속(무승부는 연승·연패를 끊음)
    - week: 지금부터 7일 이내 판수 TOP5 (동률 시 승률)
-   ※ 천적·먹잇감은 보류: 매칭이 무작위라 같은 상대와 3번 이상 만난 경우가 거의 없음(1,536쌍 중 2쌍) */
+   - rivals: 클럽원끼리 경기만(클래식 1on1 수집 후). 클럽 밖 상대는 매칭이 무작위라 재대결이 거의 없어 제외 */
+const RIVAL_MIN_GAMES = 3;
 function buildActivity() {
   const weekFrom = now.getTime() - 7 * 86400000;
   const players = {}, weekRows = [];
@@ -323,7 +324,27 @@ function buildActivity() {
       weekRows.push({ ouid: m.ouid, nick: m.ingameNick, games: wk.length, wins: w, winRate: Math.round((w / wk.length) * 100) });
     }
 
-    players[m.ouid] = { games: ms.length, form, streak };
+    // 😈 천적 · 🍖 먹잇감 — 클럽원끼리 경기(내전, 주로 클래식 1on1)만, 모든 매치유형
+    // 상대 클럽원별 승무패 → 3판 이상인 상대 중 승점률(승3·무1) 최저 = 천적(50% 미만), 최고 = 먹잇감(50% 초과)
+    const vs = new Map();
+    for (const x of matchesByOuid[m.ouid]) {
+      if (!x.opponentOuid || !memberByOuid[x.opponentOuid] || x.opponentOuid === m.ouid) continue;
+      const o = vs.get(x.opponentOuid) || { ouid: x.opponentOuid, nick: memberByOuid[x.opponentOuid].ingameNick,
+        games: 0, win: 0, draw: 0, lose: 0 };
+      o.games++; o[x.result]++;
+      vs.set(x.opponentOuid, o);
+    }
+    const rivalList = [...vs.values()].filter((o) => o.games >= RIVAL_MIN_GAMES)
+      .map((o) => ({ ...o, rate: Math.round(((o.win * 3 + o.draw) / (o.games * 3)) * 100) }));
+    const byRate = [...rivalList].sort((a, b) => a.rate - b.rate || b.games - a.games);
+    const rivals = {
+      nemesis: byRate.find((o) => o.rate < 50) || null,
+      prey: [...byRate].reverse().find((o) => o.rate > 50) || null,
+      frequent: [...rivalList].sort((a, b) => b.games - a.games || b.rate - a.rate).slice(0, 3),
+      internalGames: [...vs.values()].reduce((s, o) => s + o.games, 0)
+    };
+
+    players[m.ouid] = { games: ms.length, form, streak, rivals };
   }
   const week = {
     from: new Date(weekFrom).toISOString(),

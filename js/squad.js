@@ -82,7 +82,7 @@ const SQ_IMG = {
   face:   (pid)  => `https://fco.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${pid}.png`
 };
 
-const SQ_MATCH_TYPE = { 50: "공식경기", 60: "공식친선", 30: "리그친선" };
+const SQ_MATCH_TYPE = { 50: "공식경기", 60: "공식친선", 30: "리그친선", 40: "클래식 1on1" };
 
 /* spPosition → 필드 좌표(%) — x: 왼쪽→오른쪽, y: 위(공격)→아래(골키퍼)
    L/C/R 3자리가 함께 있는 라인은 renderPitch에서 좌우를 더 벌림 */
