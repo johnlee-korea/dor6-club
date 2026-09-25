@@ -14,6 +14,7 @@ import {
 } from "./lib/nexon-api.js";
 import { seasonIdOf, shortSeasonName } from "./lib/squad.js";
 import { styleRaw } from "./lib/playstyle.js";
+import { insightRaw } from "./lib/insight.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -57,7 +58,8 @@ function summarize(detail, ouid, matchType) {
     },
     lineup: toLineup(me),
     oppLineup: toLineup(opp),  // 상대 스쿼드 — 전적 화면 '양팀 포메이션' 표시용
-    styleRaw: styleRaw(me, opp) // 플레이스타일 지표용 원본 카운트 (lib/playstyle.js)
+    styleRaw: styleRaw(me, opp), // 플레이스타일 지표용 원본 카운트 (lib/playstyle.js)
+    ...insightRaw(me, opp)        // 인사이트: ctrl·cards·pStats·shots·oppGoals (lib/insight.js)
   };
 }
 
@@ -68,11 +70,11 @@ function toLineup(side) {
   }));
 }
 
-/* 상대 라인업·스타일 원본 저장 이전에 수집된 매치 보충(백필)
+/* 상대 라인업·스타일 원본·인사이트 필드 저장 이전에 수집된 매치 보충(백필)
    - 회당 상한(limit)까지만 조회해 CI 실행 시간을 제한, 남은 건 다음 실행에서 이어서 처리
    - 같은 매치를 두 회원이 공유(내전)하면 matchId 캐시로 1회만 조회
    - 4xx(보관 기간 만료 등 복구 불가)는 빈 배열로 표시해 재시도하지 않음, 429/5xx·네트워크는 다음 실행에 재시도 */
-async function backfillOppLineups(active, limit) {
+async function backfillDetails(active, limit) {
   const cache = new Map();
   let fetched = 0, remaining = 0;
   for (const m of active) {
@@ -81,7 +83,7 @@ async function backfillOppLineups(active, limit) {
     if (!store) continue;
     let dirty = false;
     for (const match of store.matches) {
-      if (match.oppLineup !== undefined && match.styleRaw !== undefined) continue;
+      if (match.oppLineup !== undefined && match.styleRaw !== undefined && match.shots !== undefined) continue;
       if (!cache.has(match.matchId)) {
         if (fetched >= limit) { remaining++; continue; }
         fetched++;
@@ -96,12 +98,14 @@ async function backfillOppLineups(active, limit) {
       const info = detail.matchInfo || [];
       const opp = info.find((i) => i.ouid !== m.ouid);
       if (match.oppLineup === undefined) match.oppLineup = toLineup(opp);
-      match.styleRaw = styleRaw(info.find((i) => i.ouid === m.ouid), opp); // 조회 불가(4xx)면 null
+      const me = info.find((i) => i.ouid === m.ouid);
+      match.styleRaw = styleRaw(me, opp);          // 조회 불가(4xx)면 null
+      Object.assign(match, insightRaw(me, opp));   // 조회 불가(4xx)면 각 필드 null
       dirty = true;
     }
     if (dirty) writeJSON(file, store);
   }
-  if (fetched || remaining) console.log(`🔁 상대 라인업·스타일 백필 — 조회 ${fetched}건, 남은 ${remaining}건`);
+  if (fetched || remaining) console.log(`🔁 상세 필드 백필 — 조회 ${fetched}건, 남은 ${remaining}건`);
 }
 
 async function collectMember(member, config) {
@@ -227,6 +231,13 @@ async function main() {
     console.log(`⚠ ouid 없는 회원 ${skipped.length}명 스킵: ${skipped.map((m) => m.ingameNick).join(", ")}`);
   }
 
+  // 새 저장 필드 도입 직후 1회용: 신규 수집 없이 기존 매치 전체 백필만 (node --env-file=.env scripts/collect.js --backfill-all)
+  if (process.argv.includes("--backfill-all")) {
+    await backfillDetails(active, Infinity);
+    console.log("✅ 전체 백필 완료");
+    return;
+  }
+
   // 등급 메타데이터 (divisionId → 이름)
   let divisionMeta = [];
   try { divisionMeta = await getMeta("division"); }
@@ -246,7 +257,7 @@ async function main() {
     profiles[m.ouid] = await collectProfile(m, divisionMeta);
   }
   writeJSON(p("data", "profiles.json"), { updated: new Date().toISOString(), profiles });
-  await backfillOppLineups(active, config.oppLineupBackfillPerRun ?? 300);
+  await backfillDetails(active, config.detailBackfillPerRun ?? 300);
   await saveSquadMeta(active);
   console.log(`✅ 수집 완료 — 신규 매치 총 ${total}건, 프로필 ${Object.keys(profiles).length}명`);
 }

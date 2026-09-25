@@ -15,12 +15,12 @@ FC 온라인 클럽 **도륙(Dor6)** 클럽원 전용 정보 사이트.
 | 페이지 | 내용 |
 |--------|------|
 | 홈 | 이번 시즌 요약(달성률·중간점검 미달) |
-| 클럽원 명단 | 운영진·클럽원, 역할·최고등급, **🎭 플레이스타일**(랭커 대비 ▲▼ 지표 3개씩 + 한 줄 스타일), **[스쿼드]** 최근 경기 포메이션 모달 |
+| 클럽원 명단 | 운영진·클럽원, 역할·최고등급, 주 컨트롤러(🎮/⌨️), **🎭 플레이스타일**(랭커 대비 ▲▼ 지표 3개씩 + 한 줄 스타일), **[스쿼드]** 최근 경기 포메이션 모달 |
 | 시즌 판수 | 진행률 바, 중간점검 미달자, 휴식 제외, 가입일 비례 |
-| 클럽원 전적 | 최근 경기(승/무/패·스코어·상대)·라인업 |
+| 클럽원 전적 | **시즌 인사이트**(⚽ 에이스 선수 TOP3 · ⏱ 골 시간대 득실·역전승·극장골 · 🎯 슈팅맵), 최근 경기(탭하면 양팀 스쿼드) |
 | 클럽 내전 | 클럽원 간 상대 전적표 |
 | 토너먼트 | 1회성 대회 진행기 — 명단 등록 → 🎲 추첨(부전승 자동) → 이긴 선수 클릭으로 진출 → 🏆 우승 (저장 없음) |
-| 명예의 전당 | 시즌별 최다판수·최다승·최고승률 |
+| 명예의 전당 | 시즌별 최다판수·최다승·최고승률 + 클럽 득점왕·도움왕 선수, 역전의 명수, 극장골 제조기, 신사상, 터프가이상 |
 | 규칙·공지 | 운영 수칙 |
 | 🔒 관리자 | 로그인 후 클럽원 등록/삭제 |
 
@@ -83,11 +83,13 @@ npx serve .         # 또는 python -m http.server
 
 ## 자동화 흐름
 ```
-GitHub Actions (2시간마다)
+Cloudflare Worker Cron (2시간마다, UTC 짝수시 05분) → workflow_dispatch
+  (GitHub 자체 schedule은 6시간 예비용 — 누락이 잦아 정시 실행은 Worker 담당)
+GitHub Actions
   → collect.js  (신규 matchid만 상세 조회·누적)
   → ranker-baseline.js (랭커 기준값, 7일 지났을 때만 갱신)
   → aggregate.js(집계 JSON 생성)
-  → data/ 커밋 → Pages 자동 반영
+  → data/ 커밋(실행 중 다른 커밋이 있으면 rebase 후 재시도) → Pages 자동 반영
 ```
 
 ---
@@ -106,8 +108,8 @@ GitHub Actions (2시간마다)
 - **라이브**: https://johnlee-korea.github.io/dor6-club/
 - **저장소**: `johnlee-korea/dor6-club` (GitHub Pages, main 브랜치)
 - **넥슨 키**: 정식 `live_` 키 사용. **3곳 동기화 필요** — 로컬 `.env`(비커밋) · GitHub Secret `NEXON_API_KEY` · Worker Secret `NEXON_API_KEY`.
-- **관리자 백엔드**: Cloudflare Worker (URL은 `js/common.js`의 `workerUrl` 참조). Secret: `NEXON_API_KEY`, `JWT_SECRET`, `ADMIN_PASSWORD`.
-- **자동 수집**: `.github/workflows/collect.yml` 이 2시간마다 실행 → data 커밋 → Pages 반영.
+- **관리자 백엔드**: Cloudflare Worker (URL은 `js/common.js`의 `workerUrl` 참조). Secret: `NEXON_API_KEY`, `JWT_SECRET`, `ADMIN_PASSWORD`, `GH_TOKEN`(fine-grained PAT `dor6-club-worker`: 이 레포만 · Contents + Actions 읽기/쓰기 · 무기한 — 삭제·만료 시 관리자 등록과 정시 수집이 멈춤).
+- **자동 수집**: Worker Cron(`worker/wrangler.toml`)이 2시간마다 `.github/workflows/collect.yml` 실행 → data 커밋 → Pages 반영. collect.yml 자체 schedule(6시간)은 예비용.
 
 ### 클럽원 (25명)
 - 운영진: 곽철용(회장, *닉 색인 반영 대기 → collect.js 자동 등록*), 문선생(클럽장), 쌌따(부클럽장)
@@ -118,11 +120,12 @@ GitHub Actions (2시간마다)
 - 시즌 50판 / 중간점검(전반기 종료) 25판. 가입일·휴식 비례 자동.
 
 ### 남은 작업 (TODO)
-1. **관리자 등록/삭제 활성화** — Worker에 `GH_TOKEN`(repo contents 쓰기용 fine-grained PAT) 시크릿 추가 필요. (로그인·검색은 이미 동작)
-2. **시즌 시작·종료 정확일** — `data/seasons.json` `s5`의 start/end는 추정값(중간점검 2026-10-01만 확정). 확인되면 수정.
-3. **팀컬러 현황판** — 보류. 넥슨이 선수→구단 데이터 미제공. 대안으로 '회원별 스쿼드 보기'(v1.4.0) 먼저 반영. 선수→구단 매핑은 별도 데이터 필요.
+1. **시즌 시작·종료 정확일** — `data/seasons.json` `s5`의 start/end는 추정값(중간점검 2026-10-01만 확정). 확인되면 수정.
+2. **팀컬러 현황판** — 보류. 넥슨이 선수→구단 데이터 미제공. 대안으로 '회원별 스쿼드 보기'(v1.4.0) 먼저 반영. 선수→구단 매핑은 별도 데이터 필요.
 
 ## 변경 이력
+- **v1.9.0** (2026-09-25): **경기 상세 인사이트** — 이미 받던 매치 상세에서 선수별 골·도움·평점(`pStats`), 슈팅 상세(`shots`: 시각·좌표·결과·유형·도움), 상대 골 시각(`oppGoals`), 컨트롤러(`ctrl`), 카드(`cards`)를 추가 저장(API 호출 증가 없음, 기존 1,553경기 전체 백필 · data/matches 7.3→9.9MB). `aggregate.js` → `data/insights.json`(현재 시즌). 전적: 에이스 선수 TOP3·골 시간대(7구간)·역전승·극장골(80분 이후 동점→리드 결승골)·슈팅맵(SVG, 전체/골만). 명단: 🎮/⌨️. 명예의 전당: 득점왕·도움왕 선수, 역전의 명수, 극장골 제조기, 신사상·터프가이상(경기당 카드×3+파울). 판정 로직 단일 소스 `scripts/lib/insight.js`. 백필 설정 `oppLineupBackfillPerRun` → `detailBackfillPerRun`, 전체 백필 `collect.js --backfill-all`.
+- **운영** (2026-09-25): 전적 갱신 지연(GitHub schedule 누락, 하루 ~4회) → **Cloudflare Worker Cron**이 2시간마다 수집 워크플로 실행. Worker `GH_TOKEN` 등록으로 관리자 클럽원 등록/삭제도 활성화. 수집 커밋 push 전 rebase·재시도.
 - **v1.8.0** (2026-09-24): **토너먼트** 페이지(`tournament.html`, `js/tournament.js`) 추가 — 클럽원 선택 + 게스트 닉 추가 → 랜덤 추첨(대진 크기 = 인원 이상 최소 2의 제곱수, 부전승 1라운드 균등 분산·자동 진출) → 1라운드 순차 공개 → 이긴 선수 클릭으로 다음 라운드 진출(변경 시 이후 라운드 연쇄 초기화) → 우승·준우승 카드. 서버·저장 없는 1회성 도구(진행 중 새로고침 경고). 다시 추첨은 첫 결과 입력 전까지만.
 - **v1.7.2** (2026-09-24): **플레이스타일 탭 제거** — 명단 플레이스타일과 중복. 네비·홈 바로가기에서 빼고 `style.html`은 명단으로 리다이렉트(기존 북마크 대응). `js/style-analysis.js`·`data/stats.json`·집계 `buildStats`·`config.styleTagThresholds` 삭제.
 - **v1.7.1** (2026-09-24): 플레이스타일 판정을 **화면에 보이는 ▲3·▼3 지표 안에서만** 하도록 변경 — 두 지표가 함께 있으면 조합 스타일(56종), 없으면 가장 두드러진 지표 하나의 단일 스타일(25지표×높음/낮음=50종). 근거 지표는 ★칩으로 강조, 명단 상단에 '지표 기준 보기'(지표별 계산식) 추가. `playstyles.json`에 `metrics`(label·desc), 칩에 `key`, 스타일에 `basis` 추가.

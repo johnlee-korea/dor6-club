@@ -3,11 +3,14 @@
 const ROLE_ORDER = { "회장": 0, "클럽장": 1, "부클럽장": 2, "클럽원": 3 };
 let SQUADS = {}; // ouid → 최근 경기 라인업 (data/squads.json)
 let STYLES = null; // data/playstyles.json (랭커 대비 지표·스타일, aggregate.js 산출)
+let INSIGHTS = {}; // ouid → 인사이트(컨트롤러 등, data/insights.json)
+const CTRL_ICON = { keyboard: ["⌨️", "키보드"], gamepad: ["🎮", "패드"] };
 
 async function initMembers() {
   const root = document.getElementById("members-root");
-  const [membersFile, profilesFile, squadsFile, stylesFile] =
-    await loadAll(["data/members.json", "data/profiles.json", "data/squads.json", "data/playstyles.json"]);
+  const [membersFile, profilesFile, squadsFile, stylesFile, insightsFile] =
+    await loadAll(["data/members.json", "data/profiles.json", "data/squads.json", "data/playstyles.json", "data/insights.json"]);
+  INSIGHTS = (insightsFile && insightsFile.players) || {};
   SQUADS = (squadsFile && squadsFile.squads) || {};
   STYLES = stylesFile;
 
@@ -48,6 +51,9 @@ function memberRow(m, profiles) {
   const level = prof && prof.level ? `Lv.${prof.level}` : "";
   const pending = !m.ouid ? `<span class="badge warn" title="넥슨 조회 대기">닉 확인중</span>` : "";
   const sub = m.isSub ? `<span class="badge">부계정</span>` : "";
+  // 최근 20경기 주 사용 컨트롤러
+  const ci = m.ouid && INSIGHTS[m.ouid] && CTRL_ICON[INSIGHTS[m.ouid].ctrl];
+  const ctrl = ci ? `<span class="ctrl-ico" title="주 컨트롤러: ${ci[1]}">${ci[0]}</span>` : "";
   // 최근 경기 기록이 있는 회원만 스쿼드 보기 가능
   const squadBtn = m.ouid && SQUADS[m.ouid]
     ? `<button class="btn sm" type="button" data-squad="${escapeHtml(m.ouid)}" data-nick="${escapeHtml(m.ingameNick)}">스쿼드</button>`
@@ -55,7 +61,7 @@ function memberRow(m, profiles) {
   return `
     <div class="member-row">
       <div class="info">
-        <div class="nick">${escapeHtml(m.ingameNick)} ${roleBadge(m.role)} ${sub} ${pending}</div>
+        <div class="nick">${escapeHtml(m.ingameNick)} ${ctrl} ${roleBadge(m.role)} ${sub} ${pending}</div>
         ${styleBlock(m.ouid)}
       </div>
       <div class="meta">

@@ -134,6 +134,15 @@ function sqFace(p) {
     </div>`;
 }
 
+/* spId 하나 → 작은 선수 칩(얼굴·시즌·이름) — 전적 에이스 선수·명예의 전당 득점왕 등 목록용 */
+function sqPlayerChip(spId, meta) {
+  const p = sqBuildTeam([{ spId, spPosition: 0, spGrade: 0 }], meta).starters[0];
+  const season = p.seasonImg
+    ? `<img class="sq-season" src="${escapeHtml(p.seasonImg)}" alt="${escapeHtml(p.seasonName)}" title="${escapeHtml(p.seasonName)}">`
+    : `<span class="sq-season-txt">${escapeHtml(p.seasonName || "-")}</span>`;
+  return `<span class="sq-chip">${sqFace(p)}${season}<span class="sq-chip-name">${escapeHtml(p.name)}</span></span>`;
+}
+
 function sqMeta(p) {
   const season = p.seasonImg
     ? `<img class="sq-season" src="${escapeHtml(p.seasonImg)}" alt="${escapeHtml(p.seasonName)}" title="${escapeHtml(p.seasonName)}">`

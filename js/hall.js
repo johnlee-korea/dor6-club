@@ -1,9 +1,11 @@
-/* hall.js — 명예의 전당 (시즌별 최다판수·최다승·최고승률) */
+/* hall.js — 명예의 전당 (시즌별 최다판수·최다승·최고승률 + v1.9.0 경기 상세 6부문: 현재 시즌만) */
 
 async function initHall() {
   const root = document.getElementById("hall-root");
   const bar = document.getElementById("season-bar");
-  const hall = await loadJSON("data/hall.json").catch(() => null);
+  const [hall, insights] = await loadAll(["data/hall.json", "data/insights.json"]);
+  // 선수 이름·시즌 이미지(득점왕·도움왕 선수 칩용)
+  const meta = insights ? await sqLoadMeta() : null;
 
   if (!hall || !hall.seasons || !hall.seasons.length) {
     bar.innerHTML = "";
@@ -39,16 +41,33 @@ async function initHall() {
       ${board("🎮 최다 판수", s.mostGames, (x) => `${x.games}판`)}
       ${board("🏅 최다 승", s.mostWins, (x) => `${x.wins}승`)}
       ${board(`📈 최고 승률`, s.bestWinRate, (x) => `${x.winRate}% <span style="color:var(--text-dim);font-size:var(--fs-xs);">(${x.games}판)</span>`, `최소 ${minGames}판`)}
+      ${insights && insights.seasonId === s.seasonId ? insightBoards(insights, meta) : ""}
     `;
   }
 }
 
-function board(title, list, valueFn, note = "") {
+/* 경기 상세 인사이트 6부문 (data/insights.json clubTop) */
+function insightBoards(ins, meta) {
+  const t = ins.clubTop || {};
+  const dim = (s) => `<span style="color:var(--text-dim);font-size:var(--fs-xs);">${s}</span>`;
+  const withPlayer = (x) => `${escapeHtml(x.nick)}<div style="margin-top:4px;">${sqPlayerChip(x.spId, meta)}</div>`;
+  const manner = (x) => `${x.score} ${dim(`경기당 · 카드 ${x.yellow + x.red} · 파울 ${x.foul}`)}`;
+  return `
+    ${board("⚽ 클럽 득점왕 선수", t.topScorers || [], (x) => `${x.goals}골 ${dim(`(${x.games}경기)`)}`, "클럽원별 선수 카드 기준", withPlayer)}
+    ${board("🅰️ 도움왕 선수", t.topAssists || [], (x) => `${x.assists}도움 ${dim(`(${x.games}경기)`)}`, "", withPlayer)}
+    ${board("🔄 역전의 명수", t.comebackKing || [], (x) => `${x.comebacks}회`, "지고 있다가 뒤집은 승리")}
+    ${board("🎭 극장골 제조기", t.lateHero || [], (x) => `${x.lateWinners}회`, "80분 이후 결승골로 승리")}
+    ${board("😇 신사상", t.gentleman || [], manner, `(카드×3+파울)÷경기 최저 · 최소 ${ins.minGames}판`)}
+    ${board("💪 터프가이상", t.toughGuy || [], manner, `(카드×3+파울)÷경기 최고 · 최소 ${ins.minGames}판`)}
+  `;
+}
+
+function board(title, list, valueFn, note = "", nameFn = (x) => escapeHtml(x.nick)) {
   const rows = list.length
     ? list.map((x, i) => `
       <div class="member-row">
         <span class="rank r${i + 1}">${i + 1}</span>
-        <div class="info"><span class="nick">${escapeHtml(x.nick)}</span></div>
+        <div class="info"><span class="nick">${nameFn(x)}</span></div>
         <div class="meta" style="color:var(--silver);font-weight:700;">${valueFn(x)}</div>
       </div>`).join("")
     : `<div class="empty" style="padding:var(--sp-4);">해당 없음</div>`;

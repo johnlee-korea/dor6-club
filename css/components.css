@@ -308,3 +308,55 @@ button.tn-slot:hover { background: var(--surface-3); }
 @keyframes tn-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .tn-champ-name { font-size: 26px; font-weight: 800; color: #ffd479; margin: var(--sp-2) 0; }
 .tn-runner { margin: var(--sp-2) 0 var(--sp-3); color: var(--silver); }
+
+/* ---------- 경기 상세 인사이트 (v1.9.0) — 전적 페이지 카드 3종 + 명예의 전당 선수 칩 ---------- */
+.in-note { font-size: var(--fs-xs); color: var(--text-dim); font-weight: 400; }
+.in-grid { display: grid; gap: var(--sp-3); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-bottom: var(--sp-4); }
+.in-grid .card + .card { margin-top: 0; }
+.in-title { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); flex-wrap: wrap;
+  font-weight: 800; margin-bottom: var(--sp-3); }
+.in-dim { font-size: var(--fs-xs); color: var(--text-dim); font-weight: 400; }
+.in-filter { gap: 4px; }
+.in-filter .chip { padding: 2px 10px; font-size: var(--fs-xs); min-height: 0; }
+
+/* 선수 칩 (얼굴·시즌·이름) */
+.sq-chip { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.sq-chip .sq-face { width: 34px; height: 34px; flex: none; }
+.sq-chip-name { font-weight: 700; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ① 에이스 */
+.in-ace { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; border-bottom: 1px solid var(--border); }
+.in-ace:last-child { border-bottom: none; }
+.in-ace .sq-chip { flex: 1; }
+.in-ace-stat { text-align: right; font-size: var(--fs-sm); white-space: nowrap; line-height: 1.3; }
+
+/* ② 골 시간대 */
+.in-legend { font-size: var(--fs-xs); color: var(--text-muted); }
+.in-legend .win { color: var(--win); } .in-legend .lose { color: var(--lose); }
+.in-chart { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: var(--sp-2); }
+.in-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.in-num { font-size: 10px; height: 13px; color: var(--win); font-variant-numeric: tabular-nums; }
+.in-num.lose { color: var(--lose); }
+.in-bar-up, .in-bar-down { width: 70%; height: 48px; display: flex; }
+.in-bar-up { align-items: flex-end; border-bottom: 1px solid var(--silver-dim); }
+.in-bar-down { align-items: flex-start; }
+.in-bar-up i, .in-bar-down i { display: block; width: 100%; border-radius: 2px; }
+.in-bar-up i { background: var(--win); }
+.in-bar-down i { background: var(--lose); opacity: .8; }
+.in-lbl { font-size: 9px; color: var(--text-dim); margin-top: 2px; white-space: nowrap; }
+.in-badges { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-top: var(--sp-3); }
+.in-badge { background: var(--surface-3); border-radius: var(--radius-sm); padding: 4px 10px; font-size: var(--fs-sm); }
+
+/* ③ 슈팅맵 */
+.shotmap { width: 100%; max-width: 360px; display: block; margin: 0 auto; }
+.sm-pitch { fill: #1d3a26; stroke: #cfd8d2; stroke-width: .3; }
+.sm-line { fill: none; stroke: #cfd8d2; stroke-width: .3; }
+.sm-goalpost { fill: #cfd8d2; }
+.sm-dot { fill: #cfd8d2; }
+.sm-goal { fill: #ffd479; stroke: #1d3a26; stroke-width: .25; }
+.sm-on { fill: none; stroke: #8fd0ff; stroke-width: .35; }
+.sm-off { stroke: #ff8a80; stroke-width: .35; opacity: .75; }
+.sm-k.goal { color: #ffd479; } .sm-k.on { color: #8fd0ff; } .sm-k.off { color: #ff8a80; }
+
+/* 명단 컨트롤러 아이콘 */
+.ctrl-ico { font-size: 13px; opacity: .85; cursor: help; }

@@ -61,9 +61,12 @@ async function showMember(ouid, member) {
       <div style="margin-top:var(--sp-3);">${strip}</div>
       <div style="font-size:var(--fs-xs);color:var(--text-dim);margin-top:var(--sp-1);">최근 15경기 (왼쪽이 최신)</div>
     </div>
+    <div id="insight-root"></div>
     <div class="section-title">최근 경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
     <div class="card">${recent.map(matchRow).join("")}</div>
   `;
+
+  renderInsights(ouid, matches).catch((e) => console.error("인사이트 표시 실패:", e));
 
   // 선수 메타(이름·시즌)는 첫 탭 때 로딩(sqLoadMeta 내부 캐시)
   root.querySelectorAll(".match-row").forEach((row, i) => {
@@ -72,6 +75,126 @@ async function showMember(ouid, member) {
       openMatchModal(recent[i], meta, member.ingameNick);
     });
   });
+}
+
+/* ============================================================
+   경기 상세 인사이트 (v1.9.0) — 에이스 선수 · 골 시간대 · 슈팅맵
+   집계값은 data/insights.json(현재 시즌), 슈팅맵은 회원 매치 파일의 shots를 같은 범위로 걸러 그림
+   ============================================================ */
+let _insightsPromise = null;
+const loadInsights = () => (_insightsPromise ||= loadJSON("data/insights.json").catch(() => null));
+
+async function renderInsights(ouid, matches) {
+  const box = document.getElementById("insight-root");
+  const ins = await loadInsights();
+  const me = ins && ins.players && ins.players[ouid];
+  if (!box || !ins) return;
+  if (!me || !me.games) {
+    box.innerHTML = `<div class="card in-card"><div class="in-title">📊 ${escapeHtml(ins.seasonName)} 인사이트</div>
+      <div class="empty" style="padding:var(--sp-3);">이번 시즌 분석할 경기가 아직 없어요. 데이터 모으는 중…</div></div>`;
+    return;
+  }
+  const meta = await sqLoadMeta();
+  const startT = new Date(ins.seasonStart + "T00:00:00").getTime();
+  const endT = new Date(ins.seasonEnd + "T23:59:59").getTime();
+  const shots = matches
+    .filter((m) => Array.isArray(m.shots) && ins.countedTypes.includes(m.matchType) &&
+      m.styleRaw && m.styleRaw.end === 0 &&
+      new Date(m.matchDate).getTime() >= startT && new Date(m.matchDate).getTime() <= endT)
+    .flatMap((m) => m.shots);
+
+  const note = `<span class="in-note">· ${escapeHtml(ins.seasonName)} ${me.games}경기 기준</span>`;
+  box.innerHTML = `
+    <div class="section-title">📊 시즌 인사이트 ${note}</div>
+    <div class="in-grid">
+      ${aceCard(me.ace, meta)}
+      ${goalTimeCard(me, ins.buckets)}
+      <div class="card in-card" id="shotmap-card"></div>
+    </div>`;
+
+  // 슈팅맵 필터(전체/골만) — 카드 안에서만 다시 그림
+  const mapCard = document.getElementById("shotmap-card");
+  let onlyGoals = false;
+  const draw = () => { mapCard.innerHTML = shotMapCard(shots, onlyGoals); };
+  mapCard.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-shotfilter]");
+    if (!b) return;
+    onlyGoals = b.dataset.shotfilter === "goal";
+    draw();
+  });
+  draw();
+}
+
+/* ① 에이스 선수 TOP3 (골+도움 순, 동률 시 평점) */
+function aceCard(ace, meta) {
+  const rows = (ace || []).map((a, i) => `
+    <div class="in-ace">
+      <span class="rank r${i + 1}">${i + 1}</span>
+      ${sqPlayerChip(a.spId, meta)}
+      <span class="in-ace-stat"><b>${a.goals}</b>골 <b>${a.assists}</b>도움<br>
+        <span class="in-dim">평점 ${a.rating} · ${a.games}경기</span></span>
+    </div>`).join("");
+  return `<div class="card in-card"><div class="in-title">⚽ 에이스 선수</div>
+    ${rows || `<div class="empty" style="padding:var(--sp-3);">기록 없음</div>`}</div>`;
+}
+
+/* ② 골 시간대 — 위(득점)·아래(실점) 대칭 막대 + 역전승·극장골 배지 */
+function goalTimeCard(me, buckets) {
+  const f = me.goalMins.for, a = me.goalMins.against;
+  const max = Math.max(1, ...f, ...a);
+  const cols = buckets.map((label, i) => `
+    <div class="in-col" title="${label}분 득점 ${f[i]} · 실점 ${a[i]}">
+      <span class="in-num">${f[i] || ""}</span>
+      <div class="in-bar-up"><i style="height:${(f[i] / max) * 100}%"></i></div>
+      <div class="in-bar-down"><i style="height:${(a[i] / max) * 100}%"></i></div>
+      <span class="in-num lose">${a[i] || ""}</span>
+      <span class="in-lbl">${label}</span>
+    </div>`).join("");
+  const sum = (arr) => arr.reduce((s, v) => s + v, 0);
+  return `<div class="card in-card"><div class="in-title">⏱ 골 시간대
+      <span class="in-dim">득점 ${sum(f)} · 실점 ${sum(a)}</span></div>
+    <div class="in-legend"><span class="win">■ 득점</span> <span class="lose">■ 실점</span></div>
+    <div class="in-chart">${cols}</div>
+    <div class="in-badges">
+      <span class="in-badge">🔄 역전승 <b>${me.comebacks}</b></span>
+      <span class="in-badge" title="80분 이후 동점→리드 골로 승리">🎭 극장골 <b>${me.lateWinners}</b></span>
+    </div></div>`;
+}
+
+/* ③ 슈팅맵 — 공격 하프 코트(세로, 위가 상대 골문). 넥슨 좌표 x: 0 내 골문 → 1 상대 골문, y: 0~1 좌우
+   SVG 단위 = 미터(가로 68 × 세로 52.5) */
+function shotMapCard(shots, onlyGoals) {
+  const W = 68, H = 52.5, L = 105;
+  const list = onlyGoals ? shots.filter((s) => s[3] === 3) : shots;
+  const marks = list.map(([t, x, y, res]) => {
+    const px = (y * W).toFixed(1), py = Math.min(H - 0.8, (1 - x) * L).toFixed(1);
+    const min = Math.floor(t / 60) + 1;
+    if (res === 3) return `<circle class="sm-goal" cx="${px}" cy="${py}" r="1.1"><title>골 ${min}분</title></circle>`;
+    if (res === 1) return `<circle class="sm-on" cx="${px}" cy="${py}" r="0.9"><title>유효슈팅 ${min}분</title></circle>`;
+    return `<path class="sm-off" d="M${px - 0.7} ${py - 0.7}l1.4 1.4m0-1.4l-1.4 1.4"><title>빗나감 ${min}분</title></path>`;
+  }).join("");
+  const goals = shots.filter((s) => s[3] === 3);
+  const onT = shots.filter((s) => s[3] !== 2).length;
+  const boxGoals = goals.filter((s) => s[1] >= 1 - 16.5 / L && s[2] >= 0.204 && s[2] <= 0.796).length;
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+  return `
+    <div class="in-title">🎯 슈팅맵
+      <span class="chip-row in-filter">
+        <button class="chip ${onlyGoals ? "" : "active"}" data-shotfilter="all">전체</button>
+        <button class="chip ${onlyGoals ? "active" : ""}" data-shotfilter="goal">골만</button>
+      </span></div>
+    <svg class="shotmap" viewBox="-1 -1 ${W + 2} ${H + 2}" role="img" aria-label="슈팅 위치">
+      <rect class="sm-pitch" x="0" y="0" width="${W}" height="${H}"/>
+      <rect class="sm-line" x="${(W - 40.32) / 2}" y="0" width="40.32" height="16.5"/>
+      <rect class="sm-line" x="${(W - 18.32) / 2}" y="0" width="18.32" height="5.5"/>
+      <rect class="sm-goalpost" x="${(W - 7.32) / 2}" y="-1" width="7.32" height="1"/>
+      <circle class="sm-dot" cx="${W / 2}" cy="11" r="0.3"/>
+      <path class="sm-line" d="M${W / 2 - 7.3} 16.5 A9.15 9.15 0 0 0 ${W / 2 + 7.3} 16.5"/>
+      <path class="sm-line" d="M${W / 2 - 9.15} ${H} A9.15 9.15 0 0 1 ${W / 2 + 9.15} ${H}"/>
+      ${marks}
+    </svg>
+    <div class="in-legend"><span class="sm-k goal">●</span> 골 <span class="sm-k on">○</span> 유효 <span class="sm-k off">×</span> 빗나감</div>
+    <div class="in-dim" style="margin-top:var(--sp-1);">슈팅 ${shots.length} · 유효 ${pct(onT, shots.length)}% · 결정력 ${pct(goals.length, shots.length)}% · 박스 안 골 ${pct(boxGoals, goals.length)}%</div>`;
 }
 
 function matchRow(m) {

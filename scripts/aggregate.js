@@ -1,7 +1,7 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json
+   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json, insights.json
    ============================================================ */
 
 import fs from "node:fs";
@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
 import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
+import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow } from "./lib/insight.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -166,6 +167,98 @@ function buildPlaystyles() {
   return Object.values(players).filter((x) => x.style).length;
 }
 
+/* ---------- ⑦ 경기 상세 인사이트 (v1.9.0, 현재 시즌) ---------- */
+/* 집계 범위: 현재 시즌 · 인정 매치유형 · 정상 종료(styleRaw.end === 0) · 인사이트 필드(shots) 저장된 경기
+   회원별: 컨트롤러·에이스 선수·골 시간대·역전승·극장골·매너 / 클럽 전체: 명예의 전당 6부문 */
+function buildInsights() {
+  const season = (seasonsFile.seasons || []).find((s) => s.id === (seasonsFile.meta || {}).currentSeasonId)
+    || (seasonsFile.seasons || []).slice(-1)[0];
+  if (!season) return 0;
+  const minGames = (config.playstyle && config.playstyle.minGames) || 10;
+  const startT = toDate(season.start).getTime();
+  const endT = toDate(season.end).getTime() + (86400000 - 1000);
+  const players = {};
+  const scorerRows = [], assistRows = [], flowRows = [], mannerRows = [];
+
+  for (const m of members) {
+    const all = matchesByOuid[m.ouid];
+    // 컨트롤러: 시즌 무관 최근 20경기 최빈값
+    const ctrls = all.filter((x) => x.ctrl).slice(0, 20).map((x) => x.ctrl);
+    const ctrl = ctrls.length ? mode(ctrls) : null;
+
+    const ms = all.filter((x) => {
+      const t = toDate(x.matchDate).getTime();
+      return t >= startT && t <= endT && counted.includes(x.matchType) &&
+        Array.isArray(x.shots) && x.styleRaw && x.styleRaw.end === 0;
+    });
+    if (!ms.length) { players[m.ouid] = { ctrl, games: 0 }; continue; }
+
+    // 에이스 선수 — 같은 선수라도 시즌 카드(spId)별로 구분
+    const bySp = new Map();
+    for (const x of ms) for (const [spId, g, a, r] of x.pStats || []) {
+      const s = bySp.get(spId) || { spId, games: 0, goals: 0, assists: 0, ratingSum: 0 };
+      s.games++; s.goals += g; s.assists += a; s.ratingSum += r;
+      bySp.set(spId, s);
+    }
+    const spList = [...bySp.values()].map((s) => ({ spId: s.spId, games: s.games, goals: s.goals,
+      assists: s.assists, rating: round1(s.ratingSum / s.games) }));
+    const ace = [...spList].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.rating - a.rating).slice(0, 3);
+    for (const s of spList) {
+      if (s.goals) scorerRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, goals: s.goals, games: s.games });
+      if (s.assists) assistRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, assists: s.assists, games: s.games });
+    }
+
+    // 골 시간대·역전승·극장골
+    const goalFor = GOAL_BUCKETS.map(() => 0), goalAgainst = GOAL_BUCKETS.map(() => 0);
+    let comebacks = 0, lateWinners = 0;
+    for (const x of ms) {
+      for (const s of x.shots) if (s[3] === SHOT_RESULT.GOAL) goalFor[bucketOf(s[0])]++;
+      for (const t of x.oppGoals || []) goalAgainst[bucketOf(t)]++;
+      const flow = goalFlow(x);
+      if (flow && flow.comeback) comebacks++;
+      if (flow && flow.lateWinner) lateWinners++;
+    }
+    flowRows.push({ ouid: m.ouid, nick: m.ingameNick, comebacks, lateWinners, games: ms.length });
+
+    // 매너: 카드(옐로+레드)·파울
+    const manner = { games: ms.length, yellow: 0, red: 0, foul: 0 };
+    for (const x of ms) {
+      manner.yellow += (x.cards && x.cards.y) || 0;
+      manner.red += (x.cards && x.cards.r) || 0;
+      manner.foul += (x.stats && x.stats.foul) || 0;
+    }
+    // 매너 점수 = 경기당 (카드×3 + 파울) — 낮을수록 신사
+    manner.score = Math.round(((manner.yellow + manner.red) * 3 + manner.foul) / ms.length * 100) / 100;
+    if (ms.length >= minGames) mannerRows.push({ ouid: m.ouid, nick: m.ingameNick, ...manner });
+
+    players[m.ouid] = { ctrl, games: ms.length, ace, goalMins: { for: goalFor, against: goalAgainst },
+      comebacks, lateWinners, manner };
+  }
+
+  const top = (arr, cmp, n) => [...arr].sort(cmp).slice(0, n);
+  const clubTop = {
+    topScorers: top(scorerRows, (a, b) => b.goals - a.goals || a.games - b.games, 5),
+    topAssists: top(assistRows, (a, b) => b.assists - a.assists || a.games - b.games, 5),
+    comebackKing: top(flowRows.filter((r) => r.comebacks), (a, b) => b.comebacks - a.comebacks, 3),
+    lateHero: top(flowRows.filter((r) => r.lateWinners), (a, b) => b.lateWinners - a.lateWinners, 3),
+    gentleman: top(mannerRows, (a, b) => a.score - b.score || b.games - a.games, 3),
+    toughGuy: top(mannerRows.filter((r) => r.score > 0), (a, b) => b.score - a.score, 3)
+  };
+  writeJSON(p("data", "insights.json"), {
+    updated: now.toISOString(), seasonId: season.id, seasonName: season.name,
+    seasonStart: season.start, seasonEnd: season.end, countedTypes: counted,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
+    minGames, buckets: GOAL_BUCKETS, players, clubTop
+  });
+  return Object.values(players).filter((x) => x.games).length;
+}
+
+/* 최빈값 (동률이면 먼저 나온 값 = 최신 경기 쪽) */
+function mode(arr) {
+  const cnt = new Map();
+  for (const v of arr) cnt.set(v, (cnt.get(v) || 0) + 1);
+  return [...cnt.entries()].sort((a, b) => b[1] - a[1])[0][0];
+}
+
 function round1(n) { return n == null ? null : Math.round(n * 10) / 10; }
 
 /* ---------- 실행 ---------- */
@@ -174,5 +267,6 @@ buildInternal();
 buildHall();
 const squadCount = buildSquads();
 const styleCount = buildPlaystyles();
-console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, ` +
-  `dashboard/internal/hall/squads/playstyles.json 갱신`);
+const insightCount = buildInsights();
+console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, 인사이트 ${insightCount}명, ` +
+  `dashboard/internal/hall/squads/playstyles/insights.json 갱신`);

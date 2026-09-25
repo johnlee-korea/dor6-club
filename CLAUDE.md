@@ -99,6 +99,7 @@ C:\Projects\dor6-club\
 │   ├── playstyles.json       # 자동 집계 (명단 플레이스타일, 랭커 대비)
 │   ├── internal.json         # 자동 집계 (내전·상대전적)
 │   ├── hall.json             # 자동 집계 (명예의 전당)
+│   ├── insights.json         # 자동 집계 (v1.9.0 경기 상세 인사이트, 현재 시즌)
 │   └── matches\
 │       └── {ouid}.json       # 자동 수집 (회원별 매치 요약 누적)
 │
@@ -218,7 +219,7 @@ C:\Projects\dor6-club\
 - **`playstyles.json`** (v1.7.0): `{ baselineUpdated, baselineSource, recentGames, minGames, players:{ [ouid]: { games, style:{name,line,conds}, highs:[{k,label,unit,v,avg,z}×3], lows:[…×3] } } }`. 최근 인정 경기 `config.playstyle.recentGames`판(정상 종료만)의 지표를 `data/meta/ranker-baseline.json`(지표별 mean·sd)과 Z점수 비교. 판정 규칙·스타일·지표 정의(desc 포함)는 `scripts/lib/playstyle.js` 단일 소스. v1.7.1부터 스타일은 **표시된 ▲3·▼3 칩 안에서만** 판정: `COMBO_STYLES`(두 조건 모두 칩에 있을 때, 편차 합 최대) → 없으면 `SINGLE_STYLES`(지표×방향 50종, 최대 편차 칩) → 최대 편차 0.5σ 미만이면 '무난함의 정석'. 근거 칩은 `key:true`(화면 ★). `minGames` 미만 회원은 `{games}`만 → 화면에 '분석 대기'.
 - **랭커 기준값** `data/meta/ranker-baseline.json`: `scripts/ranker-baseline.js`가 FC온라인 데이터센터 랭킹 HTML(`rank_inner?rt=manager&n4pageno=`)에서 닉 샘플 → 넥슨 API로 공식경기 상세 조회 → 지표별 평균·표준편차. `config.rankerBaseline.refreshDays`(7일) 이내면 건너뜀, 유효 표본 20명 미만이면 기존 값 유지. 랭킹 페이지 구조가 바뀌면 이 스크립트의 정규식만 수정.
 - **`matches/{ouid}.json`의 `styleRaw`**: 플레이스타일용 경기별 원본 카운트(짧은 키, `lib/playstyle.js` styleRaw 참고). 도입 이전 경기는 oppLineup과 같은 백필 루틴에서 채움(4xx면 null).
-- **`matches/{ouid}.json`의 `oppLineup`**: 상대 라인업(형식은 `lineup`과 동일). 전적 페이지 '양팀 스쿼드' 모달에 사용. 도입 이전 매치는 collect.js가 회당 `config.oppLineupBackfillPerRun`건씩 백필(넥슨 4xx 응답 시 빈 배열로 표시).
+- **`matches/{ouid}.json`의 `oppLineup`**: 상대 라인업(형식은 `lineup`과 동일). 전적 페이지 '양팀 스쿼드' 모달에 사용. 도입 이전 매치는 collect.js가 회당 `config.detailBackfillPerRun`건씩 백필(넥슨 4xx 응답 시 빈 배열로 표시).
 
 ---
 
@@ -362,3 +363,68 @@ C:\Projects\dor6-club\
 - 스코어·경기 방식 입력 없음, 새로고침/닫기 시 진행 중이면 경고(beforeunload)
 
 **파일**: `tournament.html`, `js/tournament.js`(상태·추첨·진출 로직 + 렌더), `css/components.css`(.tn-*). 네비 '토너먼트'·홈 바로가기 추가.
+
+---
+
+## 12. v1.9.0 경기 상세 인사이트 (2026-09-25 기획·사용자 승인)
+
+**목적**: 넥슨 매치 상세에 이미 들어 있지만 버리던 값(선수별 기록·슈팅 상세·컨트롤러·카드)을 저장해 **API 호출 증가 없이** 개인 전적·명예의 전당을 풍성하게.
+
+### 12-1. 추가 저장 필드 (`matches/{ouid}.json` 매치별, 짧은 키로 용량 절약)
+```jsonc
+{
+  "ctrl": "keyboard",                 // matchDetail.controller (keyboard | gamepad | 기타)
+  "cards": { "y": 1, "r": 0 },         // 옐로·레드 (파울은 기존 stats.foul)
+  "pStats": [                          // 내 출전 선수별 기록 — 교체 벤치(spPosition 28) 미출전은 제외
+    [spId, 골, 도움, 평점]              // 예: [250206534, 1, 0, 7.8]
+  ],
+  "shots": [                           // 내 슈팅 전부
+    [초, x, y, 결과, 유형, spId, 도움spId|0]   // 킥오프 기준 경기 시각(초), x·y 소수 2자리, 결과 1유효·2빗나감·3골, 승부차기 제외
+  ],
+  "oppGoals": [699, 1210]              // 상대 골 시각(초) — 역전·실점 시간대 판정용 (같은 분 안의 순서까지 보존하려고 초 단위)
+}
+```
+- **골 시각 변환**: 넥슨 `goalTime`은 초 단위 + 하프 오프셋(2^24 = 후반, 2^25 = 연장 전반, …) → `경기 시각(초) = 하프 시작(0/45/90/105분) + 하프 내 초`, 승부차기(2^26~)는 제외. 변환은 `scripts/lib/insight.js` 단일 소스.
+- **용량**: 실측 data/matches 7.3MB → 9.9MB (1,553경기).
+- **백필**: 기존 백필 루틴(`backfillOppLineups` → `backfillDetails`로 일반화)에서 새 필드가 없는 매치를 회당 `config.detailBackfillPerRun`건씩 채움. 최초 1회 로컬 전체 백필 완료(`node --env-file=.env scripts/collect.js --backfill-all`, 1,553건 모두 성공·골 시각 수 = 스코어 100% 일치).
+
+### 12-2. 집계 (`aggregate.js` → 신규 `data/insights.json`)
+집계 범위: **현재 시즌 · 인정 매치유형(50/60/30) · 정상 종료 경기**(플레이스타일과 동일 기준).
+```jsonc
+{
+  "seasonId": "s5", "seasonStart", "seasonEnd", "countedTypes",   // 전적 슈팅맵이 같은 범위로 거르도록
+  "players": { "[ouid]": {
+    "ctrl": "keyboard",                               // 최근 20경기 최빈값
+    "ace": [{ "spId", "games", "goals", "assists", "rating" }],   // 골+도움 상위 3명(동률 시 평점)
+    "goalMins": { "for": [0-15,16-30,31-45,46-60,61-75,76-90,90+], "against": [...] },  // 7구간 득실
+    "comebacks": 3,                                   // 역전승: 한 번이라도 뒤졌다가 승리
+    "lateWinners": 2,                                 // 극장골: 80분 이후 골로 동점→리드 되며 그대로 승리
+    "manner": { "games", "yellow", "red", "foul" }
+  } },
+  "clubTop": {                                        // 명예의 전당용 (시즌 전체 클럽원 합산)
+    "topScorers":  [{ "ouid", "spId", "goals" }] ×5,  // 클럽 득점왕 선수 카드 (클럽원×선수 단위)
+    "topAssists":  [...] ×5,
+    "comebackKing": [...] ×3, "lateHero": [...] ×3,
+    "gentleman": [...] ×3,    // 경기당 (카드×3 + 파울) 최저, minGames 이상
+    "toughGuy":  [...] ×3     // 경기당 (카드×3 + 파울) 최고, minGames 이상
+  }
+}
+```
+
+### 12-3. 화면
+| 페이지 | 추가 내용 |
+|---|---|
+| **record.html** (전적) | 선택한 클럽원 상단에 **인사이트 카드 3개**: ① ⚽ 에이스 선수 TOP3(선수 카드·골·도움·평점) ② ⏱ 골 시간대 막대(득점/실점 7구간) + 역전승·극장골 배지 ③ 🎯 **슈팅맵**(SVG 하프 코트, 골 ●·유효 ○·빗나감 ×, 필터 [전체/골만]) |
+| **members.html** (명단) | 닉 옆 컨트롤러 아이콘 🎮 / ⌨️ |
+| **hall.html** (명예의 전당) | 기존 3부문 아래 **⚽ 클럽 득점왕 선수 · 🅰️ 도움왕 선수 · 🔄 역전의 명수 · 🎭 극장골 제조기 · 😇 신사상 · 💪 터프가이상** |
+
+- 슈팅맵 좌표: 넥슨 x(0 자기 골문 → 1 상대 골문), y(0~1 좌우) → 공격 방향 하프 코트(x ≥ 0.5)만 그림. 모바일 폭에 맞춰 SVG viewBox 스케일.
+- 선수 이름·카드는 기존 `js/squad.js` 메타 변환 재사용.
+- 새 필드 없는 옛 데이터·`minGames` 미만은 "데이터 모으는 중" 표시.
+
+### 12-4. 개발 순서
+1. `scripts/lib/insight.js`(골 시각 변환·pStats/shots 추출·역전/극장골 판정) + collect.js 저장 + 백필 일반화
+2. 로컬 전체 백필 → 커밋
+3. aggregate.js `buildInsights()` → `insights.json`
+4. 화면: 전적 인사이트 카드 → 명단 아이콘 → 명예의 전당 6부문
+5. `npm test` 스모크 테스트에 insights 렌더 추가, README 변경 이력
