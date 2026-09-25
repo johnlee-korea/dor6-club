@@ -210,12 +210,18 @@ function buildInsights() {
     }
     const spList = [...bySp.values()];
 
-    // 에이스 (v1.10.0): (선수, 포지션그룹) 단위로 같은 그룹 랭커 선수 분포 대비 가장 돋보이는 지표(Z) →
-    // 선수 중복 없이 Z 상위 3명. Z ≥ TITLE_Z면 칭호(lib/insight.js TITLES)
-    const bestBySp = new Map();
+    // 에이스 (v1.10.0): 선수마다 '주 포지션 그룹'(선발 최다) 하나로만 판정 →
+    // 같은 그룹 랭커 선수 분포 대비 가장 돋보이는 지표(Z), 선수 중복 없이 Z 상위 3명. Z ≥ TITLE_Z면 칭호
+    // (포메이션에 따라 RDM↔RCM처럼 표기만 바뀌는 경우, 덜 뛴 포지션의 기록이 대표로 뽑히지 않도록)
+    const mainBySp = new Map();
     for (const u of unitAverages(pRows).values()) {
+      const cur = mainBySp.get(u.spId);
+      if (!cur || u.games > cur.games) mainBySp.set(u.spId, u);
+    }
+    const bestBySp = new Map();
+    for (const u of mainBySp.values()) {
       const b = bestMetric(u, posBaseline);
-      if (b && (!bestBySp.has(b.spId) || b.z > bestBySp.get(b.spId).z)) bestBySp.set(b.spId, b);
+      if (b) bestBySp.set(b.spId, b);
     }
     const ace = [...bestBySp.values()].sort((a, b) => b.z - a.z).slice(0, 3).map((b) => {
       const s = bySp.get(b.spId);

@@ -149,7 +149,7 @@ function aceCard(ace, meta, ins) {
   }).join("");
   return `<div class="card in-card"><div class="in-title">⚽ 에이스 선수</div>
     ${rows || `<div class="empty" style="padding:var(--sp-3);">한 포지션에서 선발 5경기 이상 뛴 선수가 아직 없어요.</div>`}
-    <div class="in-dim" style="margin-top:var(--sp-2);">같은 포지션 랭커 선수 평균 대비 가장 돋보이는 지표 기준 · 칭호는 눈에 띄게 높을 때만</div></div>`;
+    <div class="in-dim" style="margin-top:var(--sp-2);">선수별 주 포지션(선발 최다)에서 같은 포지션 랭커 선수 평균 대비 가장 돋보이는 지표 기준 · 칭호는 눈에 띄게 높을 때만</div></div>`;
 }
 
 /* ② 골 시간대 — 위(득점)·아래(실점) 대칭 막대 + 역전승·극장골 배지 */
