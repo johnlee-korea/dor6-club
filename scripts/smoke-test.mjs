@@ -16,7 +16,9 @@ const PAGES = [
   { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".streak-badge, #activity .member-row" },
   { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: ".form-dots" },
   { file: "dashboard.html", scripts: ["js/common.js", "js/activity-ui.js", "js/dashboard.js"],      root: "dash-root" },
-  { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/record.js"], root: "record-root", expect: ".in-card" },
+  { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/record.js"], root: "record-root", expect: ".in-card",
+    // 자동 선택 없음 → 검색창에 닉 일부 입력 후 Enter (첫 후보 선택)
+    act: (w) => { const q = w.document.getElementById("member-q"); q.value = "Dor6"; q.dispatchEvent(new w.Event("input")); q.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Enter" })); } },
   { file: "tournament.html", scripts: ["js/common.js", "js/tournament.js"], root: "tn-root", expect: ".tn-pick" },
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/squad.js", "js/hall.js"], root: "hall-root", expect: ".sq-chip" },
@@ -51,6 +53,7 @@ for (const pg of PAGES) {
     window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   } catch (e) { errors.push("eval: " + e.message); }
   await sleep(400);
+  if (pg.act) { try { pg.act(window); } catch (e) { errors.push("act: " + e.message); } await sleep(400); }
 
   const hasHeader = !!window.document.querySelector(".app-header");
   const nav = window.document.querySelectorAll(".app-nav a").length;

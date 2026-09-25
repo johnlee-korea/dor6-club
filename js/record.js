@@ -1,4 +1,4 @@
-/* record.js — 클럽원 개별 전적 (최근 경기 + 탭하면 양팀 스쿼드 모달) */
+/* record.js — 클럽원 개별 전적 (닉네임 검색 → 시즌 인사이트 + 최근 경기, 탭하면 양팀 스쿼드 모달) */
 
 const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "1on1" };
 let membersCache = [];
@@ -13,19 +13,33 @@ async function initRecord() {
     document.getElementById("record-root").innerHTML = emptyState("조회 가능한 클럽원이 없습니다.", "📜");
     return;
   }
-  picker.innerHTML = membersCache.map((m, i) =>
-    `<button class="chip" data-ouid="${m.ouid}" data-i="${i}">${escapeHtml(m.ingameNick)}</button>`).join("");
+  // 처음엔 비어 있음 → 닉네임 검색(부분 일치·대소문자 무시)으로 후보를 띄우고 선택 (자동 선택 없음)
+  const input = document.getElementById("member-q");
+  const renderPicks = () => {
+    const q = input.value.trim().toLowerCase();
+    const hits = q ? membersCache.map((m, i) => [m, i]).filter(([m]) => m.ingameNick.toLowerCase().includes(q)) : [];
+    picker.innerHTML = q && !hits.length
+      ? `<span style="font-size:var(--fs-sm);color:var(--text-dim);">'${escapeHtml(input.value.trim())}'와(과) 일치하는 클럽원이 없어요.</span>`
+      : hits.map(([m, i]) =>
+        `<button class="chip" data-ouid="${m.ouid}" data-i="${i}">${escapeHtml(m.ingameNick)}</button>`).join("");
+  };
+  const pick = (btn) => {
+    const member = membersCache[btn.dataset.i];
+    input.value = member.ingameNick;
+    picker.innerHTML = "";   // 선택 후 후보 목록 닫기
+    input.blur();
+    showMember(btn.dataset.ouid, member);
+  };
+  input.addEventListener("input", renderPicks);
+  input.addEventListener("keydown", (e) => {   // Enter = 첫 번째 후보 선택
+    if (e.key !== "Enter") return;
+    const first = picker.querySelector(".chip");
+    if (first) pick(first);
+  });
   picker.addEventListener("click", (e) => {
     const btn = e.target.closest(".chip");
-    if (!btn) return;
-    picker.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
-    btn.classList.add("active");
-    showMember(btn.dataset.ouid, membersCache[btn.dataset.i]);
+    if (btn) pick(btn);
   });
-
-  // 첫 회원 자동 선택
-  const first = picker.querySelector(".chip");
-  if (first) first.click();
 }
 
 async function showMember(ouid, member) {
