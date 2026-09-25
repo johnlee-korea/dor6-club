@@ -30,6 +30,7 @@ async function initDashboard() {
         ${dday ? `<span class="badge ${dday.cls}">${dday.label}</span>` : ""}
       </div>
       <div style="color:var(--text-muted);font-size:var(--fs-sm);">기준 ${cur.targetGames}판 · 중간점검 ${cur.midTargetGames}판 · 갱신 ${fmt.dateTime(dash.updated)}</div>
+      <button class="btn sm" type="button" data-dash-share style="margin-top:var(--sp-3);">📸 전체 판수 이미지 (카톡 공유용 한 장)</button>
     </div>
     <div class="stat-row" style="margin-bottom:var(--sp-5);">
       <div class="stat-tile"><div class="value">${rows.length}</div><div class="label">전체</div></div>
@@ -38,6 +39,8 @@ async function initDashboard() {
       <div class="stat-tile"><div class="value" style="background:none;color:${midMiss ? "var(--danger)" : "var(--text)"};">${midMiss}</div><div class="label">중간점검 미달</div></div>
     </div>
   `;
+  // 📸 전체 판수 한 장 이미지 (share.js) — 운영진 카톡 공유용
+  bar.querySelector("[data-dash-share]").addEventListener("click", (e) => shareDashboardImage(dash, e.currentTarget));
 
   // 운영진 + 클럽원 평면 (담당 그룹 없음). 판수 많은 순 정렬.
   const staff = rows.filter((r) => r.role !== "클럽원");

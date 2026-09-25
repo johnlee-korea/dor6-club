@@ -3,23 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>클럽원 전적 · 도륙 Dor6</title>
-  <link rel="icon" href="dor6.png">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/components.css">
+  <title>클럽원 · 도륙 Dor6</title>
+  <!-- v2.0.0: 전적 탭은 클럽원 탭(검색 → 개인 프로필)으로 통합. 예전 링크 호환용 이동 페이지 -->
+  <meta http-equiv="refresh" content="0; url=members.html">
+  <script>location.replace("members.html");</script>
 </head>
-<body data-page="record">
-  <main class="page">
-    <h1 class="page-title">클럽원 전적</h1>
-    <p class="page-desc">클럽원 닉네임을 검색하면 시즌 인사이트와 최근 경기를 봅니다.</p>
-    <input id="member-q" class="input" type="search" placeholder="🔍 클럽원 닉네임 검색 (일부만 입력해도 돼요)" autocomplete="off" style="margin-bottom:var(--sp-3);">
-    <div id="member-picker" class="chip-row"></div>
-    <div id="record-root"></div>
-  </main>
-  <script src="js/common.js"></script>
-  <script src="js/squad.js"></script>
-  <script src="js/insight-ui.js"></script>
-  <script src="js/record.js"></script>
+<body>
+  <p>클럽원 탭으로 이동합니다… <a href="members.html">바로 가기</a></p>
 </body>
 </html>

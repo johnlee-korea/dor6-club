@@ -192,25 +192,29 @@ function renderSubs(subs) {
     <div class="sq-subs">${cards}</div>`;
 }
 
-/* 회원 스쿼드 (명단 페이지) — 최근 경기 라인업 1팀 */
-function openSquadModal(nick, squad, meta) {
+/* 회원 스쿼드 본문 — 최근 경기 라인업 1팀 (프로필 스쿼드 탭은 그대로, 모달은 닫기 버튼을 붙여 사용) */
+function sqSquadHtml(nick, squad, meta, closeBtn = false) {
   const type = SQ_MATCH_TYPE[squad.matchType] || "경기";
   const score = `${fmt.wl(squad.result)} ${squad.goalFor}:${squad.goalAgainst}`;
   const vs = squad.opponentNick ? ` vs ${escapeHtml(squad.opponentNick)}` : "";
   const { starters, subs } = sqBuildTeam(squad.lineup, meta);
-
-  sqShowModal(`${nick} 스쿼드`, `
+  return `
       <div class="sq-head">
         <div>
           <div class="sq-title">${escapeHtml(nick)} <span class="badge">${escapeHtml(sqFormation(starters) || "-")}</span></div>
           <div class="sq-dim">기준: ${fmt.dateTime(squad.matchDate)} ${type}${vs}
             · <span class="wl ${squad.result}">${score}</span></div>
         </div>
-        <button class="sq-close" type="button" aria-label="닫기">✕</button>
+        ${closeBtn ? `<button class="sq-close" type="button" aria-label="닫기">✕</button>` : ""}
       </div>
       ${renderPitch(starters)}
       ${renderSubs(subs)}
-      <p class="sq-note">※ 넥슨 API는 현재 스쿼드를 제공하지 않아, 가장 최근 수집된 경기의 출전 명단으로 표시합니다.</p>`);
+      <p class="sq-note">※ 넥슨 API는 현재 스쿼드를 제공하지 않아, 가장 최근 수집된 경기의 출전 명단으로 표시합니다.</p>`;
+}
+
+/* 회원 스쿼드 모달 (전적 검색 등) */
+function openSquadModal(nick, squad, meta) {
+  sqShowModal(`${nick} 스쿼드`, sqSquadHtml(nick, squad, meta, true));
 }
 
 /* 한 경기 양팀 스쿼드 (전적 페이지) — 넓은 화면은 좌우, 모바일은 위아래 */

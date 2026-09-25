@@ -12,13 +12,19 @@ import { JSDOM } from "jsdom";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
+const FIRST_OUID = JSON.parse(rd("data/members.json")).members.find((m) => m.ouid).ouid;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const PAGES = [
   { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".streak-badge, #activity .member-row" },
-  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: ".form-dots" },
-  { file: "dashboard.html", scripts: ["js/common.js", "js/activity-ui.js", "js/dashboard.js"],      root: "dash-root" },
-  { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/record.js"], root: "record-root", expect: ".in-card",
-    // 자동 선택 없음 → 검색창에 닉 일부 입력 후 Enter (첫 후보 선택)
-    act: (w) => { const q = w.document.getElementById("member-q"); q.value = "Dor6"; q.dispatchEvent(new w.Event("input")); q.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Enter" })); } },
+  // 클럽원 탭: 검색 우선 + 접힌 전체 명단(행 = 프로필 링크)
+  { file: "members.html",   scripts: ["js/common.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: "a.ms-row",
+    act: (w) => { const q = w.document.getElementById("member-q"); q.value = "dor6"; q.dispatchEvent(new w.Event("input")); } },
+  // 개인 프로필: 실제 회원 ouid로 열고 탭 5개를 차례로 전환해 오류 없는지 확인
+  { file: "member.html", url: "http://localhost/member.html?id=" + FIRST_OUID,
+    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/share.js", "js/member.js"], root: "profile-root", expect: ".pf-tab.active",
+    act: async (w) => { for (const t of ["insight", "squad", "rival", "matches", "overview"]) { w.location.hash = t; w.dispatchEvent(new w.HashChangeEvent("hashchange")); await sleep(250); } } },
+  { file: "dashboard.html", scripts: ["js/common.js", "js/squad.js", "js/activity-ui.js", "js/share.js", "js/dashboard.js"], root: "dash-root", expect: "[data-dash-share]" },
   { file: "tournament.html", scripts: ["js/common.js", "js/tournament.js"], root: "tn-root", expect: ".tn-pick" },
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/squad.js", "js/hall.js"], root: "hall-root", expect: ".sq-chip" },
@@ -27,7 +33,6 @@ const PAGES = [
   { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null }
 ];
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const localFetch = async (url) => {
   const p = String(url).replace(/^https?:\/\/localhost\//, "").replace(/^\//, "").split("?")[0];
   try {
@@ -38,7 +43,7 @@ const localFetch = async (url) => {
 
 let pass = 0, fail = 0;
 for (const pg of PAGES) {
-  const dom = new JSDOM(rd(pg.file), { url: "http://localhost/", pretendToBeVisual: true, runScripts: "outside-only" });
+  const dom = new JSDOM(rd(pg.file), { url: pg.url || "http://localhost/", pretendToBeVisual: true, runScripts: "outside-only" });
   const { window } = dom;
   const errors = [];
   window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
@@ -53,7 +58,7 @@ for (const pg of PAGES) {
     window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
   } catch (e) { errors.push("eval: " + e.message); }
   await sleep(400);
-  if (pg.act) { try { pg.act(window); } catch (e) { errors.push("act: " + e.message); } await sleep(400); }
+  if (pg.act) { try { await pg.act(window); } catch (e) { errors.push("act: " + e.message); } await sleep(400); }
 
   const hasHeader = !!window.document.querySelector(".app-header");
   const nav = window.document.querySelectorAll(".app-nav a").length;

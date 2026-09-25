@@ -42,6 +42,12 @@ export default {
         return json({ token, expiresIn: TOKEN_TTL });
       }
 
+      // 공개: 넥슨 선수·시즌 이미지 프록시 (v2.0.0 공유 이미지용)
+      // 넥슨 이미지 서버가 CORS를 허용하지 않아 캔버스 캡처 시 이미지가 막힘 → 허용 호스트만 중계 + CORS 헤더
+      if (url.pathname === "/img" && request.method === "GET") {
+        return proxyImage(url.searchParams.get("u"));
+      }
+
       // 공개: 아무 유저 전적 검색 (인증 불필요, 키는 Worker에만)
       if (url.pathname === "/search" && request.method === "POST") {
         const { nickname } = await request.json();
@@ -76,6 +82,24 @@ export default {
     }
   }
 };
+
+/* ---------- 이미지 프록시 ---------- */
+const IMG_HOSTS = ["fco.dn.nexoncdn.co.kr", "ssl.nexon.com"];
+async function proxyImage(u) {
+  let target;
+  try { target = new URL(u); } catch { return new Response("bad url", { status: 400 }); }
+  if (target.protocol !== "https:" || !IMG_HOSTS.includes(target.hostname) || !/\.(png|jpe?g|gif|webp)$/i.test(target.pathname))
+    return new Response("forbidden", { status: 403 });
+  const res = await fetch(target.toString(), { cf: { cacheEverything: true, cacheTtl: 86400 } });
+  const headers = {
+    "Access-Control-Allow-Origin": "*",   // 공개 이미지 — 캔버스 캡처용
+    "Cache-Control": "public, max-age=86400",
+    "Content-Type": res.headers.get("Content-Type") || "image/png"
+  };
+  if (!res.ok || !(headers["Content-Type"] || "").startsWith("image/"))
+    return new Response(null, { status: 404, headers: { "Access-Control-Allow-Origin": "*" } });
+  return new Response(res.body, { status: 200, headers });
+}
 
 /* ---------- 넥슨 API 공통 ---------- */
 const NX = "https://open.api.nexon.com";

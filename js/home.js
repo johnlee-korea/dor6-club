@@ -1,9 +1,8 @@
 /* home.js — 홈: 이번 시즌 요약 + 바로가기 */
 
 const QUICK = [
-  { label: "클럽원 명단",   desc: "역할·최고등급·플레이스타일·스쿼드", href: "members.html",   emoji: "👥" },
-  { label: "시즌 판수",     desc: "달성률·중간점검 미달자 확인",   href: "dashboard.html", emoji: "🎯" },
-  { label: "클럽원 전적",   desc: "최근 경기·라인업",             href: "record.html",    emoji: "📜" },
+  { label: "클럽원 프로필", desc: "검색 → 플레이스타일·에이스·스쿼드·라이벌·경기", href: "members.html", emoji: "👥" },
+  { label: "시즌 판수",     desc: "달성률·중간점검 미달자 · 한 장 이미지", href: "dashboard.html", emoji: "🎯" },
   { label: "클럽 내전",     desc: "클럽원 간 상대 전적",           href: "internal.html",  emoji: "⚔️" },
   { label: "토너먼트",     desc: "명단 등록 → 추첨 → 대진표 진행", href: "tournament.html", emoji: "🏟️" },
   { label: "명예의 전당",   desc: "시즌별 최다판수·최다승",         href: "hall.html",      emoji: "🏆" },

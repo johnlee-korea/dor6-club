@@ -22,7 +22,6 @@ const DOR6_SECTIONS = {
       { key: "home",      label: "홈",         href: "index.html" },
       { key: "members",   label: "클럽원",     href: "members.html" },
       { key: "dashboard", label: "판수",       href: "dashboard.html" },
-      { key: "record",    label: "전적",       href: "record.html" },
       { key: "internal",  label: "내전",       href: "internal.html" },
       { key: "tournament", label: "토너먼트",  href: "tournament.html" },
       { key: "hall",      label: "명예의전당",  href: "hall.html" },
@@ -88,6 +87,23 @@ function renderFooter() {
     데이터: 넥슨 오픈 API`;
   document.body.appendChild(f);
 }
+
+/* ---------- 내 프로필 · 최근 본 프로필 (v2.0.0, 이 브라우저에만 저장) ----------
+   사생활 모드 등에서 저장소가 막혀도 화면은 동작하도록 모두 try/catch */
+const MY_KEY = "dor6.me", RECENT_KEY = "dor6.recentProfiles", RECENT_MAX = 5;
+const myProfile = {
+  get() { try { return localStorage.getItem(MY_KEY); } catch { return null; } },
+  set(ouid) { try { ouid ? localStorage.setItem(MY_KEY, ouid) : localStorage.removeItem(MY_KEY); } catch {} },
+  recent() { try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; } },
+  visit(ouid) {
+    try {
+      const list = [ouid, ...myProfile.recent().filter((o) => o !== ouid)].slice(0, RECENT_MAX);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+    } catch {}
+  }
+};
+/* 프로필 주소 */
+const profileUrl = (ouid, tab) => `member.html?id=${encodeURIComponent(ouid)}${tab ? "#" + tab : ""}`;
 
 /* ---------- 데이터 로딩 ---------- */
 async function loadJSON(path) {
