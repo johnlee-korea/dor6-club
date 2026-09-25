@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25T16:07:32.931Z",
+  "updated": "2026-09-25T17:34:49.622Z",
   "minGames": 5,
   "seasons": [
     {
@@ -9,7 +9,7 @@
         {
           "ouid": "0ec85bc04c006744f49a284cd624bbbb",
           "nick": "땜쟁",
-          "games": 139
+          "games": 145
         },
         {
           "ouid": "ec6b3d922b94994ccd28de27367cf479",
@@ -26,7 +26,13 @@
         {
           "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
           "nick": "멩똘",
-          "games": 105,
+          "games": 108,
+          "wins": 69
+        },
+        {
+          "ouid": "0ec85bc04c006744f49a284cd624bbbb",
+          "nick": "땜쟁",
+          "games": 145,
           "wins": 67
         },
         {
@@ -34,12 +40,6 @@
           "nick": "미드필더",
           "games": 129,
           "wins": 66
-        },
-        {
-          "ouid": "0ec85bc04c006744f49a284cd624bbbb",
-          "nick": "땜쟁",
-          "games": 139,
-          "wins": 64
         }
       ],
       "bestWinRate": [
@@ -53,9 +53,9 @@
         {
           "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
           "nick": "멩똘",
-          "games": 105,
-          "wins": 67,
-          "winRate": 63.8
+          "games": 108,
+          "wins": 69,
+          "winRate": 63.9
         },
         {
           "ouid": "b56e8c1f2e6e414588b06a1e528e510b",
@@ -121,7 +121,7 @@
         {
           "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
           "nick": "멩똘",
-          "games": 105,
+          "games": 108,
           "longestStreak": 11
         },
         {
@@ -139,6 +139,13 @@
       ],
       "busiestDay": [
         {
+          "ouid": "0ec85bc04c006744f49a284cd624bbbb",
+          "nick": "땜쟁",
+          "games": 145,
+          "day": "2026-09-25",
+          "dayGames": 25
+        },
+        {
           "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
           "nick": "Dor6문선생",
           "games": 121,
@@ -150,13 +157,6 @@
           "nick": "진저맨",
           "games": 128,
           "day": "2026-09-23",
-          "dayGames": 22
-        },
-        {
-          "ouid": "0ec85bc04c006744f49a284cd624bbbb",
-          "nick": "땜쟁",
-          "games": 139,
-          "day": "2026-09-13",
           "dayGames": 22
         }
       ]
