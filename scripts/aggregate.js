@@ -1,13 +1,13 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json, insights.json
+   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json, insights.json, activity.json
    ============================================================ */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { computeMemberSeason, toDate } from "./lib/season.js";
+import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
 import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
 import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
@@ -102,21 +102,47 @@ function buildHall() {
       const startT = toDate(season.start).getTime();
       const endT = toDate(season.end).getTime() + (86400000 - 1000);
       const ms = matchesByOuid[m.ouid].filter((x) => {
-        const t = toDate(x.matchDate).getTime();
+        const t = matchTime(x.matchDate).getTime();
         return t >= startT && t <= endT && counted.includes(x.matchType);
       });
       const wins = ms.filter((x) => x.result === "win").length;
+
+      // v1.12.0 확장 부문 — 최다 골 차 승리(회원별 최고 1경기) · 무실점 · 시즌 최장 연승 · 하루 최다 판수(KST)
+      let bigWin = null;
+      for (const x of ms) {
+        const diff = x.goalFor - x.goalAgainst;
+        if (x.result === "win" && (!bigWin || diff > bigWin.diff))
+          bigWin = { diff, goalFor: x.goalFor, goalAgainst: x.goalAgainst, opponentNick: x.opponentNick, matchDate: x.matchDate };
+      }
+      const cleanSheets = ms.filter((x) => x.goalAgainst === 0).length;
+      let longestStreak = 0, run = 0;
+      for (const x of [...ms].sort((a, b) => matchTime(a.matchDate) - matchTime(b.matchDate))) {
+        run = x.result === "win" ? run + 1 : 0;
+        longestStreak = Math.max(longestStreak, run);
+      }
+      const perDay = {};
+      for (const x of ms) { const d = matchDayKST(x.matchDate); perDay[d] = (perDay[d] || 0) + 1; }
+      const busiest = Object.entries(perDay).sort((a, b) => b[1] - a[1])[0] || [null, 0];
+
       return { ouid: m.ouid, nick: m.ingameNick, games: ms.length, wins,
-        winRate: ms.length ? (wins / ms.length) * 100 : 0 };
+        winRate: ms.length ? (wins / ms.length) * 100 : 0,
+        bigWin, cleanSheets, longestStreak, busiestDay: busiest[0], busiestGames: busiest[1] };
     }).filter((s) => s.games > 0);
 
     const top = (arr, key, n = 3) => [...arr].sort((a, b) => b[key] - a[key]).slice(0, n);
+    const pick = ({ ouid, nick, games }) => ({ ouid, nick, games });
     seasons.push({
       seasonId: season.id, seasonName: season.name,
-      mostGames: top(stats, "games"),
-      mostWins: top(stats, "wins"),
+      mostGames: top(stats, "games").map(pick),
+      mostWins: top(stats, "wins").map((s) => ({ ...pick(s), wins: s.wins })),
       bestWinRate: top(stats.filter((s) => s.games >= MIN_GAMES), "winRate")
-        .map((s) => ({ ...s, winRate: round1(s.winRate) }))
+        .map((s) => ({ ...pick(s), wins: s.wins, winRate: round1(s.winRate) })),
+      biggestWin: stats.filter((s) => s.bigWin).sort((a, b) => b.bigWin.diff - a.bigWin.diff).slice(0, 3)
+        .map((s) => ({ ...pick(s), ...s.bigWin })),
+      cleanSheets: top(stats.filter((s) => s.cleanSheets), "cleanSheets").map((s) => ({ ...pick(s), cleanSheets: s.cleanSheets })),
+      longestStreak: top(stats.filter((s) => s.longestStreak >= 2), "longestStreak")
+        .map((s) => ({ ...pick(s), longestStreak: s.longestStreak })),
+      busiestDay: top(stats, "busiestGames").map((s) => ({ ...pick(s), day: s.busiestDay, dayGames: s.busiestGames }))
     });
   }
   writeJSON(p("data", "hall.json"), { updated: now.toISOString(), minGames: MIN_GAMES, seasons });
@@ -193,7 +219,7 @@ function buildInsights() {
     const ctrl = ctrls.length ? mode(ctrls) : null;
 
     const ms = all.filter((x) => {
-      const t = toDate(x.matchDate).getTime();
+      const t = matchTime(x.matchDate).getTime();
       return t >= startT && t <= endT && counted.includes(x.matchType) &&
         Array.isArray(x.shots) && x.styleRaw && x.styleRaw.end === 0;
     });
@@ -272,6 +298,41 @@ function buildInsights() {
   return Object.values(players).filter((x) => x.games).length;
 }
 
+/* ---------- ⑧ 활동·폼 (v1.12.0) ---------- */
+/* 인정 매치(counted) 기준. 시즌과 무관하게 '지금' 흐름을 보여주는 용도
+   - form: 최근 10경기 결과(최신이 앞), streak: 최신부터 같은 결과 연속(무승부는 연승·연패를 끊음)
+   - week: 지금부터 7일 이내 판수 TOP5 (동률 시 승률)
+   ※ 천적·먹잇감은 보류: 매칭이 무작위라 같은 상대와 3번 이상 만난 경우가 거의 없음(1,536쌍 중 2쌍) */
+function buildActivity() {
+  const weekFrom = now.getTime() - 7 * 86400000;
+  const players = {}, weekRows = [];
+  for (const m of members) {
+    const ms = matchesByOuid[m.ouid].filter((x) => counted.includes(x.matchType))
+      .sort((a, b) => matchTime(b.matchDate) - matchTime(a.matchDate));
+    const form = ms.slice(0, 10).map((x) => x.result);
+    let streak = null;
+    if (ms.length && ms[0].result !== "draw") {
+      let n = 0;
+      while (n < ms.length && ms[n].result === ms[0].result) n++;
+      streak = { type: ms[0].result, n };
+    }
+
+    const wk = ms.filter((x) => matchTime(x.matchDate).getTime() >= weekFrom);
+    if (wk.length) {
+      const w = wk.filter((x) => x.result === "win").length;
+      weekRows.push({ ouid: m.ouid, nick: m.ingameNick, games: wk.length, wins: w, winRate: Math.round((w / wk.length) * 100) });
+    }
+
+    players[m.ouid] = { games: ms.length, form, streak };
+  }
+  const week = {
+    from: new Date(weekFrom).toISOString(),
+    rows: weekRows.sort((a, b) => b.games - a.games || b.winRate - a.winRate).slice(0, 5)
+  };
+  writeJSON(p("data", "activity.json"), { updated: now.toISOString(), week, players });
+  return Object.values(players).filter((x) => x.streak && x.streak.n >= 3).length;
+}
+
 /* 최빈값 (동률이면 먼저 나온 값 = 최신 경기 쪽) */
 function mode(arr) {
   const cnt = new Map();
@@ -288,5 +349,6 @@ buildHall();
 const squadCount = buildSquads();
 const styleCount = buildPlaystyles();
 const insightCount = buildInsights();
-console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, 인사이트 ${insightCount}명, ` +
-  `dashboard/internal/hall/squads/playstyles/insights.json 갱신`);
+const streakCount = buildActivity();
+console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, 인사이트 ${insightCount}명, 3연속 기록 ${streakCount}명, ` +
+  `dashboard/internal/hall/squads/playstyles/insights/activity.json 갱신`);

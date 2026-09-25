@@ -41,9 +41,23 @@ async function initHall() {
       ${board("🎮 최다 판수", s.mostGames, (x) => `${x.games}판`)}
       ${board("🏅 최다 승", s.mostWins, (x) => `${x.wins}승`)}
       ${board(`📈 최고 승률`, s.bestWinRate, (x) => `${x.winRate}% <span style="color:var(--text-dim);font-size:var(--fs-xs);">(${x.games}판)</span>`, `최소 ${minGames}판`)}
+      ${recordBoards(s)}
       ${insights && insights.seasonId === s.seasonId ? insightBoards(insights, meta) : ""}
     `;
   }
+}
+
+/* v1.12.0 기록 4부문 (hall.json 시즌별) — 최다 골 차 승리 · 무실점 · 최장 연승 · 하루 최다 판수(KST) */
+function recordBoards(s) {
+  const dim = (x) => `<span style="color:var(--text-dim);font-size:var(--fs-xs);">${x}</span>`;
+  const day = (d) => (d ? `${+d.slice(5, 7)}.${+d.slice(8, 10)}` : "-");
+  return `
+    ${board("💥 최다 골 차 승리", s.biggestWin || [],
+      (x) => `${x.goalFor} : ${x.goalAgainst} ${dim(`<br>vs ${escapeHtml(x.opponentNick || "?")} · ${fmt.date(x.matchDate)}`)}`, "클럽원별 최고 1경기")}
+    ${board("🧤 무실점 경기", s.cleanSheets || [], (x) => `${x.cleanSheets}경기 ${dim(`(${x.games}판 중)`)}`)}
+    ${board("📈 최다 연승 기록", s.longestStreak || [], (x) => `${x.longestStreak}연승`, "시즌 중 최장")}
+    ${board("🗓 하루 최다 판수", s.busiestDay || [], (x) => `${x.dayGames}판 ${dim(day(x.day))}`, "한국 날짜 기준")}
+  `;
 }
 
 /* 경기 상세 인사이트 6부문 (data/insights.json clubTop) */

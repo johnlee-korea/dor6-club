@@ -13,9 +13,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 const PAGES = [
-  { file: "index.html",     scripts: ["js/common.js", "js/home.js"],           root: "summary" },
-  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/members.js"], root: "members-root", expect: ".ps" },
-  { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
+  { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".streak-badge, #activity .member-row" },
+  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: ".form-dots" },
+  { file: "dashboard.html", scripts: ["js/common.js", "js/activity-ui.js", "js/dashboard.js"],      root: "dash-root" },
   { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/record.js"], root: "record-root", expect: ".in-card" },
   { file: "tournament.html", scripts: ["js/common.js", "js/tournament.js"], root: "tn-root", expect: ".tn-pick" },
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },

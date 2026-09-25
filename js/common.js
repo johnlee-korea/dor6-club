@@ -105,16 +105,23 @@ async function loadAll(paths) {
 }
 
 /* ---------- 포맷 유틸 ---------- */
+/* 일시 문자열 → Date. 넥슨 matchDate는 타임존 표기 없는 UTC("2026-09-24T14:58:41")라
+   브라우저가 현지 시각으로 오해하지 않도록 Z를 붙여 해석 (v1.12.0 보정, scripts/lib/season.js matchTime과 동일 규칙) */
+function parseTime(s) {
+  const str = String(s);
+  return new Date(str.length > 10 && !/[zZ]|[+-]\d\d:?\d\d$/.test(str) ? str + "Z" : str);
+}
+
 const fmt = {
   pct: (n) => (n == null ? "-" : Math.round(n) + "%"),
   date: (iso) => {
     if (!iso) return "-";
-    const d = new Date(iso);
+    const d = parseTime(iso);
     return `${d.getMonth() + 1}.${d.getDate()}`;
   },
   dateTime: (iso) => {
     if (!iso) return "-";
-    const d = new Date(iso);
+    const d = parseTime(iso);
     const p = (x) => String(x).padStart(2, "0");
     return `${d.getMonth() + 1}.${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
   },

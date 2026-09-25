@@ -3,7 +3,7 @@
 async function initDashboard() {
   const root = document.getElementById("dash-root");
   const bar = document.getElementById("season-bar");
-  const [dash, membersFile] = await loadAll(["data/dashboard.json", "data/members.json"]);
+  const [dash, membersFile, activity] = await loadAll(["data/dashboard.json", "data/members.json", "data/activity.json"]);
 
   if (!dash || !dash.current || !dash.current.rows.length) {
     bar.innerHTML = "";
@@ -48,6 +48,8 @@ async function initDashboard() {
   let html = "";
   if (staff.length) html += groupBlock("👑 운영진", staff);
   html += groupBlock("👥 클럽원", clubMembers, `달성 ${done}/${clubMembers.length}`);
+  // 📅 최근 7일 활동 TOP5 (activity-ui.js, v1.12.0) — 시즌 판수 아래에 이어서
+  if (activity) html += weekBoard(activity);
   root.innerHTML = html;
 }
 

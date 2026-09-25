@@ -5,12 +5,15 @@ let SQUADS = {}; // ouid → 최근 경기 라인업 (data/squads.json)
 let STYLES = null; // data/playstyles.json (랭커 대비 지표·스타일, aggregate.js 산출)
 let INSIGHTS = {}; // ouid → 인사이트(컨트롤러 등, data/insights.json)
 const CTRL_ICON = { keyboard: ["⌨️", "키보드"], gamepad: ["🎮", "패드"] };
+let ACTIVITY = {}; // ouid → { form, streak } (data/activity.json, v1.12.0)
 
 async function initMembers() {
   const root = document.getElementById("members-root");
-  const [membersFile, profilesFile, squadsFile, stylesFile, insightsFile] =
-    await loadAll(["data/members.json", "data/profiles.json", "data/squads.json", "data/playstyles.json", "data/insights.json"]);
+  const [membersFile, profilesFile, squadsFile, stylesFile, insightsFile, activityFile] =
+    await loadAll(["data/members.json", "data/profiles.json", "data/squads.json", "data/playstyles.json",
+      "data/insights.json", "data/activity.json"]);
   INSIGHTS = (insightsFile && insightsFile.players) || {};
+  ACTIVITY = (activityFile && activityFile.players) || {};
   SQUADS = (squadsFile && squadsFile.squads) || {};
   STYLES = stylesFile;
 
@@ -62,6 +65,7 @@ function memberRow(m, profiles) {
     <div class="member-row">
       <div class="info">
         <div class="nick">${escapeHtml(m.ingameNick)} ${ctrl} ${roleBadge(m.role)} ${sub} ${pending}</div>
+        ${formLine(m.ouid)}
         ${styleBlock(m.ouid)}
       </div>
       <div class="meta">
@@ -88,6 +92,13 @@ function styleNote() {
         <p>▲▼ 순서는 랭커 평균에서 벗어난 정도(표준편차 배수) 기준. ★ 두 지표가 함께 있으면 조합 스타일, 아니면 가장 두드러진 지표 하나의 스타일이 붙어요.</p>
       </details>
     </div>`;
+}
+
+/* 최근 10경기 폼 점 + 🔥연승/🧊연패 배지 (activity-ui.js) */
+function formLine(ouid) {
+  const a = ouid && ACTIVITY[ouid];
+  if (!a || !a.form || !a.form.length) return "";
+  return `<div class="form-line">${formDots(a.form)} ${streakBadge(a.streak)}</div>`;
 }
 
 /* 플레이스타일 블록 그리기는 js/insight-ui.js psBlock (전적 검색과 공용) */

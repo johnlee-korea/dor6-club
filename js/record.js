@@ -95,12 +95,13 @@ async function renderInsights(ouid, matches) {
     return;
   }
   const meta = await sqLoadMeta();
-  const startT = new Date(ins.seasonStart + "T00:00:00").getTime();
-  const endT = new Date(ins.seasonEnd + "T23:59:59").getTime();
+  // 시즌 날짜는 KST, 경기 시각은 UTC(parseTime) — aggregate.js와 같은 범위
+  const startT = new Date(ins.seasonStart + "T00:00:00+09:00").getTime();
+  const endT = new Date(ins.seasonEnd + "T23:59:59+09:00").getTime();
   const shots = matches
     .filter((m) => Array.isArray(m.shots) && ins.countedTypes.includes(m.matchType) &&
       m.styleRaw && m.styleRaw.end === 0 &&
-      new Date(m.matchDate).getTime() >= startT && new Date(m.matchDate).getTime() <= endT)
+      parseTime(m.matchDate).getTime() >= startT && parseTime(m.matchDate).getTime() <= endT)
     .flatMap((m) => m.shots);
 
   const note = `<span class="in-note">· ${escapeHtml(ins.seasonName)} ${me.games}경기 기준</span>`;

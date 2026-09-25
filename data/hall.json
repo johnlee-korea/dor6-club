@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25T13:04:01.400Z",
+  "updated": "2026-09-25T13:30:45.958Z",
   "minGames": 5,
   "seasons": [
     {
@@ -9,46 +9,37 @@
         {
           "ouid": "0ec85bc04c006744f49a284cd624bbbb",
           "nick": "땜쟁",
-          "games": 132,
-          "wins": 62,
-          "winRate": 46.96969696969697
+          "games": 132
         },
         {
           "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
           "nick": "진저맨",
-          "games": 128,
-          "wins": 56,
-          "winRate": 43.75
+          "games": 128
         },
         {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
           "nick": "미드필더",
-          "games": 128,
-          "wins": 65,
-          "winRate": 50.78125
+          "games": 128
         }
       ],
       "mostWins": [
         {
           "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
           "nick": "멩똘",
-          "games": 102,
-          "wins": 66,
-          "winRate": 64.70588235294117
+          "games": 105,
+          "wins": 67
         },
         {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
           "nick": "미드필더",
           "games": 128,
-          "wins": 65,
-          "winRate": 50.78125
+          "wins": 65
         },
         {
           "ouid": "0ec85bc04c006744f49a284cd624bbbb",
           "nick": "땜쟁",
           "games": 132,
-          "wins": 62,
-          "winRate": 46.96969696969697
+          "wins": 62
         }
       ],
       "bestWinRate": [
@@ -62,9 +53,9 @@
         {
           "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
           "nick": "멩똘",
-          "games": 102,
-          "wins": 66,
-          "winRate": 64.7
+          "games": 105,
+          "wins": 67,
+          "winRate": 63.8
         },
         {
           "ouid": "b56e8c1f2e6e414588b06a1e528e510b",
@@ -72,6 +63,101 @@
           "games": 38,
           "wins": 24,
           "winRate": 63.2
+        }
+      ],
+      "biggestWin": [
+        {
+          "ouid": "2dd2edb174f63716078ffc324199edd1",
+          "nick": "미드필더",
+          "games": 128,
+          "diff": 12,
+          "goalFor": 12,
+          "goalAgainst": 0,
+          "opponentNick": "254도8943",
+          "matchDate": "2026-09-06T16:21:48"
+        },
+        {
+          "ouid": "82c59dce895a829f78a8e10c10122249",
+          "nick": "Dor6곽철용",
+          "games": 99,
+          "diff": 7,
+          "goalFor": 7,
+          "goalAgainst": 0,
+          "opponentNick": "United현역",
+          "matchDate": "2026-09-12T16:34:12"
+        },
+        {
+          "ouid": "315d8d350dabea2c99cb2e49af2f1603",
+          "nick": "지브리스튜디오",
+          "games": 44,
+          "diff": 7,
+          "goalFor": 7,
+          "goalAgainst": 0,
+          "opponentNick": "차븀근이",
+          "matchDate": "2026-09-12T06:58:33"
+        }
+      ],
+      "cleanSheets": [
+        {
+          "ouid": "2dd2edb174f63716078ffc324199edd1",
+          "nick": "미드필더",
+          "games": 128,
+          "cleanSheets": 28
+        },
+        {
+          "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
+          "nick": "Dor6문선생",
+          "games": 121,
+          "cleanSheets": 17
+        },
+        {
+          "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
+          "nick": "진저맨",
+          "games": 128,
+          "cleanSheets": 17
+        }
+      ],
+      "longestStreak": [
+        {
+          "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
+          "nick": "멩똘",
+          "games": 105,
+          "longestStreak": 11
+        },
+        {
+          "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
+          "nick": "AUD콜대원",
+          "games": 42,
+          "longestStreak": 10
+        },
+        {
+          "ouid": "82c59dce895a829f78a8e10c10122249",
+          "nick": "Dor6곽철용",
+          "games": 99,
+          "longestStreak": 7
+        }
+      ],
+      "busiestDay": [
+        {
+          "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
+          "nick": "Dor6문선생",
+          "games": 121,
+          "day": "2026-09-22",
+          "dayGames": 22
+        },
+        {
+          "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
+          "nick": "진저맨",
+          "games": 128,
+          "day": "2026-09-23",
+          "dayGames": 22
+        },
+        {
+          "ouid": "0ec85bc04c006744f49a284cd624bbbb",
+          "nick": "땜쟁",
+          "games": 132,
+          "day": "2026-09-13",
+          "dayGames": 22
         }
       ]
     }

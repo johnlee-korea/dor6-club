@@ -25,9 +25,18 @@ function renderQuickLinks() {
 async function initHome() {
   renderQuickLinks();
 
-  const [members, seasons, dashboard] = await loadAll([
-    "data/members.json", "data/seasons.json", "data/dashboard.json"
+  const [members, seasons, dashFile, activity] = await loadAll([
+    "data/members.json", "data/seasons.json", "data/dashboard.json", "data/activity.json"
   ]);
+  // dashboard.json은 { current: { rows }, seasons } 구조 — 현재 시즌만 사용
+  // (v1.12.0 수정: 이전엔 dashboard.rows를 읽어 요약 타일이 항상 '-'로 표시됐음)
+  const dashboard = dashFile && dashFile.current;
+
+  // 🔥 연승 중 · 🧊 연패 중 · 📅 최근 7일 활동 (activity-ui.js)
+  if (activity) {
+    document.getElementById("activity").innerHTML =
+      streakBoards(activity, (members && members.members) || []) + weekBoard(activity);
+  }
 
   const summary = document.getElementById("summary");
   const seasonNameEl = document.getElementById("season-name");

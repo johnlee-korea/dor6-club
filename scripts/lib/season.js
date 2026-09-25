@@ -6,14 +6,27 @@
 
 const DAY = 86400000;
 
-/* 넥슨 매치일시·시즌일자는 KST 기준이며 타임존 표기가 없다.
-   CI 러너(UTC)에서도 일관되게 비교하도록 KST(+09:00)로 명시 파싱한다. */
+/* 설정값 날짜(시즌·중간점검·가입일·휴식)는 KST 기준 — 타임존 표기가 없으므로 KST(+09:00)로 명시 파싱한다.
+   ※ 넥슨 매치일시(matchDate)는 UTC이므로 toDate가 아니라 matchTime으로 파싱할 것 (v1.12.0 보정) */
 export function toDate(s) {
   if (!s) return null;
   let str = String(s);
   if (str.length <= 10) str += "T00:00:00+09:00";                 // 날짜만
   else if (!/[zZ]|[+-]\d\d:?\d\d$/.test(str)) str += "+09:00";     // 시간 있으나 tz 없음
   return new Date(str);
+}
+
+/* 넥슨 매치일시 → Date. 타임존 표기 없는 UTC 문자열(예: "2026-09-24T14:58:41")
+   근거: 저장 경기 시각 분포 피크가 13~15시(=KST 22~24시), 수집 시각과의 선후관계도 UTC일 때만 성립 */
+export function matchTime(s) {
+  if (!s) return null;
+  const str = String(s);
+  return new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(str) ? str : str + "Z");
+}
+
+/* 넥슨 매치일시 → KST 날짜 문자열 "YYYY-MM-DD" (하루 단위 집계용) */
+export function matchDayKST(s) {
+  return new Date(matchTime(s).getTime() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 }
 const daysBetween = (a, b) => Math.max(0, Math.round((b - a) / DAY));
 
@@ -52,7 +65,7 @@ export function countGames(matches = [], season, countedTypes, until = null) {
   const end = (until ? toDate(until) : toDate(season.end)).getTime() + (DAY - 1000);
   const typeSet = new Set(countedTypes);
   return matches.filter((m) => {
-    const t = toDate(m.matchDate).getTime();
+    const t = matchTime(m.matchDate).getTime();
     return t >= start && t <= end && typeSet.has(m.matchType);
   }).length;
 }

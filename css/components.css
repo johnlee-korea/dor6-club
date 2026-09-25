@@ -367,3 +367,14 @@ button.tn-slot:hover { background: var(--surface-3); }
 
 /* 명단 컨트롤러 아이콘 */
 .ctrl-ico { font-size: 13px; opacity: .85; cursor: help; }
+
+/* ---------- 폼·연승 (v1.12.0) ---------- */
+.form-dots { display: inline-flex; gap: 2px; font-style: normal; font-size: 11px; letter-spacing: 0; vertical-align: middle; }
+.form-dots i { font-style: normal; }
+.form-dots i.win { color: var(--win); }
+.form-dots i.lose { color: var(--lose); }
+.form-dots i.draw { color: var(--draw); }
+.form-line { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; margin-top: 2px; }
+.streak-badge { font-size: var(--fs-xs); font-weight: 800; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.streak-badge.hot { background: rgba(255,120,60,.16); color: #ff9a5c; }
+.streak-badge.cold { background: rgba(120,180,255,.14); color: #8fc3ff; }
