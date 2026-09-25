@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25T20:07:24.735Z",
+  "updated": "2026-09-25T21:51:56.891Z",
   "baselineUpdated": "2026-09-25T12:48:20.416Z",
   "baselineSource": "공식 랭킹 1~1000위 샘플, 공식경기 최근 15경기",
   "baselineSampleSize": 85,
@@ -745,11 +745,11 @@
     "0ec85bc04c006744f49a284cd624bbbb": {
       "games": 50,
       "style": {
-        "name": "빌드업 생략파",
-        "line": "미드필더 생략, 골키퍼에서 공격수로 직행",
+        "name": "점유율 롱볼러",
+        "line": "공은 오래 갖고, 찰 땐 멀리 찬다",
         "basis": [
-          "longRatio+",
-          "shortRatio-"
+          "poss+",
+          "longRatio+"
         ]
       },
       "highs": [
@@ -757,57 +757,57 @@
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.079,
+          "v": 0.077,
           "avg": 0.054,
-          "z": 1.07,
+          "z": 0.98,
           "key": true
         },
         {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.902,
-          "avg": 0.881,
-          "z": 0.75,
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 81.18,
+          "avg": 75.164,
+          "z": 0.69,
           "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 52.38,
+          "v": 52.34,
           "avg": 50.08,
-          "z": 0.7,
-          "key": false
+          "z": 0.68,
+          "key": true
         }
       ],
       "lows": [
         {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 9.54,
-          "avg": 13.091,
-          "z": -0.88,
-          "key": false
-        },
-        {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.156,
+          "v": 0.147,
           "avg": 0.232,
-          "z": -0.84,
+          "z": -0.94,
           "key": false
         },
         {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
-          "unit": "%",
-          "v": 0.644,
-          "avg": 0.711,
-          "z": -0.77,
-          "key": true
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 9.36,
+          "avg": 13.091,
+          "z": -0.92,
+          "key": false
+        },
+        {
+          "k": "foul",
+          "label": "파울",
+          "unit": "",
+          "v": 0.58,
+          "avg": 0.852,
+          "z": -0.82,
+          "key": false
         }
       ]
     },
@@ -1377,18 +1377,18 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 22.58,
+          "v": 22.32,
           "avg": 13.091,
-          "z": 2.35,
+          "z": 2.28,
           "key": true
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 3.32,
+          "v": 3.36,
           "avg": 2.423,
-          "z": 1.62,
+          "z": 1.69,
           "key": false
         },
         {
@@ -1406,27 +1406,27 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 45.08,
+          "v": 45.22,
           "avg": 50.08,
-          "z": -1.51,
+          "z": -1.47,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 64.72,
+          "v": 65.06,
           "avg": 75.164,
-          "z": -1.19,
+          "z": -1.16,
           "key": false
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.852,
+          "v": 0.854,
           "avg": 0.881,
-          "z": -1.09,
+          "z": -1.01,
           "key": false
         }
       ]
