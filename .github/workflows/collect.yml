@@ -2,7 +2,7 @@ name: 매치 데이터 수집·집계
 
 on:
   schedule:
-    - cron: "17 */2 * * *"  # 2시간마다 (UTC 기준). 정각은 GitHub 혼잡으로 실행 누락이 잦아 17분으로 비껴 설정
+    - cron: "47 */6 * * *"  # 예비용(6시간마다). 정시 실행은 Cloudflare Worker Cron이 2시간마다 workflow_dispatch로 호출(worker/wrangler.toml)
   workflow_dispatch:          # 수동 실행 버튼
 
 # data/ 에 커밋하기 위한 쓰기 권한

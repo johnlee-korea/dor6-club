@@ -4,11 +4,19 @@
    비밀값(시크릿)은 Worker에만 저장 (브라우저/저장소 노출 0):
      ADMIN_PASSWORD, NEXON_API_KEY, GH_TOKEN, JWT_SECRET
    일반 변수(vars): GH_REPO("owner/repo"), GH_BRANCH("main"), ALLOWED_ORIGIN
+   예약 실행(Cron Trigger): 2시간마다 GitHub Actions 수집 워크플로를 호출
+     → GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 담당
    ============================================================ */
 
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
+const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
 
 export default {
+  /* Cron Trigger 진입점 (wrangler.toml [triggers] crons) */
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(dispatchCollect(env).catch((e) => console.error("[cron] 수집 호출 실패:", e.message)));
+  },
+
   async fetch(request, env) {
     const origin = env.ALLOWED_ORIGIN || "*";
     const cors = {
@@ -208,6 +216,28 @@ async function mutateMembers(body, env) {
   });
   if (!putRes.ok) throw new Error(`커밋 실패 (${putRes.status})`);
   return { ok: true, message, count: current.members.length };
+}
+
+/* ---------- GitHub Actions 수집 워크플로 실행 (workflow_dispatch) ----------
+   GH_TOKEN에 Actions: Read and write 권한 필요. 성공 시 GitHub가 204 응답 */
+async function dispatchCollect(env) {
+  if (!env.GH_TOKEN) throw new Error("GH_TOKEN 미설정");
+  const url = `https://api.github.com/repos/${env.GH_REPO}/actions/workflows/${COLLECT_WORKFLOW}/dispatches`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${env.GH_TOKEN}`,
+      "Accept": "application/vnd.github+json",
+      "User-Agent": "dor6-club-worker",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ ref: env.GH_BRANCH || "main" })
+  });
+  if (res.status !== 204) {
+    const detail = await res.text();
+    throw new Error(`GitHub ${res.status} ${detail.slice(0, 200)}`);
+  }
+  console.log(`[cron] 수집 워크플로 실행 요청 완료 (${new Date().toISOString()})`);
 }
 
 /* ---------- 토큰 (HMAC 서명) ---------- */

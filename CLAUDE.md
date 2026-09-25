@@ -266,8 +266,8 @@ C:\Projects\dor6-club\
 - 호출 간격 조절(`config.apiCallIntervalMs`)·재시도·에러 로깅. **정확한 초당 제한/목록 최대 개수는 개발자센터 문서로 최종 확정 후 반영**.
 - API 키는 GitHub Secrets(`NEXON_API_KEY`)에서만 주입, 프론트·커밋에 노출 금지.
 
-**수집 주기 [사용자 확정]**: **2시간마다** cron 실행 (`0 */2 * * *` UTC 기준, 하루 12회). 매치 보관 30일 대비 충분한 신선도 확보. 개발자센터 초당 호출 제한 확인 후 회당 호출 간격(`apiCallIntervalMs`)만 미세 조정.
-> 참고: GitHub Actions 스케줄은 러너 혼잡 시 수 분~수십 분 지연될 수 있음(정상 동작). 2시간 주기라 실사용 영향 없음.
+**수집 주기 [사용자 확정]**: **2시간마다** 실행 (UTC 짝수시 05분, 하루 12회). 매치 보관 30일 대비 충분한 신선도 확보. 개발자센터 초당 호출 제한 확인 후 회당 호출 간격(`apiCallIntervalMs`)만 미세 조정.
+> 2026-09-25 변경: GitHub Actions 자체 schedule이 하루 4회 수준으로 누락돼, **Cloudflare Worker Cron Trigger**(`5 */2 * * *`)가 GitHub API `workflow_dispatch`로 collect.yml을 호출하도록 전환. GitHub schedule(`47 */6 * * *`)은 예비용. Worker의 `GH_TOKEN`에 **Actions: Read and write** 권한 필요(토큰 만료·권한 누락 시 정시 수집 중단 → 예비 스케줄만 동작).
 
 ---
 

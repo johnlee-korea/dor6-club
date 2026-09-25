@@ -8,8 +8,13 @@ GH_REPO = "johnlee-korea/dor6-club"
 GH_BRANCH = "main"
 ALLOWED_ORIGIN = "https://johnlee-korea.github.io"
 
+# 예약 실행 (UTC) — 2시간마다 05분에 GitHub Actions 수집 워크플로 호출
+# (GitHub 자체 schedule은 누락이 잦아 예비용으로만 사용, collect.yml 참고)
+[triggers]
+crons = ["5 */2 * * *"]
+
 # 비밀값은 코드/설정에 넣지 말고 아래 명령으로 등록:
 #   wrangler secret put ADMIN_PASSWORD
 #   wrangler secret put NEXON_API_KEY
-#   wrangler secret put GH_TOKEN        # repo contents 쓰기 권한 (fine-grained PAT)
+#   wrangler secret put GH_TOKEN        # fine-grained PAT: Contents + Actions 읽기/쓰기
 #   wrangler secret put JWT_SECRET      # 아무 긴 랜덤 문자열

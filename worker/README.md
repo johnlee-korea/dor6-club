@@ -6,7 +6,7 @@
 
 ## 1. 사전 준비
 - Cloudflare 무료 계정
-- GitHub Fine-grained PAT: 이 저장소의 **Contents: Read and write** 권한만 부여
+- GitHub Fine-grained PAT: 이 저장소만 선택, **Contents: Read and write** + **Actions: Read and write** (Actions는 예약 수집 호출용)
 - Node.js 설치 (wrangler 실행용)
 
 ## 2. 설치 & 로그인
@@ -40,6 +40,12 @@ wrangler deploy
 ```js
 workerUrl: "https://dor6-club-admin.<계정>.workers.dev",
 ```
+
+## 예약 수집 (Cron Trigger)
+`wrangler.toml`의 `[triggers] crons = ["5 */2 * * *"]`(UTC)에 따라 2시간마다 GitHub Actions `collect.yml`을 `workflow_dispatch`로 실행합니다.
+GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 맡고, collect.yml의 schedule은 예비용입니다.
+실행 로그: Cloudflare 대시보드 → Workers → dor6-club-admin → Logs, 또는 `wrangler tail`.
+로컬 테스트: `wrangler dev --remote --test-scheduled` 후 `/__scheduled` 호출.
 
 ## 엔드포인트
 | 메서드 | 경로 | 설명 |
