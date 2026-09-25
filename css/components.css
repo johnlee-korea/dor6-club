@@ -327,8 +327,15 @@ button.tn-slot:hover { background: var(--surface-3); }
 /* ① 에이스 */
 .in-ace { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; border-bottom: 1px solid var(--border); }
 .in-ace:last-child { border-bottom: none; }
-.in-ace .sq-chip { flex: 1; }
-.in-ace-stat { text-align: right; font-size: var(--fs-sm); white-space: nowrap; line-height: 1.3; }
+.in-ace { align-items: flex-start; }
+.in-ace .rank { margin-top: 2px; }
+.in-ace-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.in-ace-title { font-weight: 800; color: #ffd479; }
+.in-ace-title.plain { font-weight: 600; color: var(--text-dim); font-size: var(--fs-xs); }
+.in-ace-player { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.in-ace-stat { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.4; }
+.in-ace-stat b { color: var(--text); }
+.in-ace-stat b.in-up { color: var(--win); }
 
 /* ② 골 시간대 */
 .in-legend { font-size: var(--fs-xs); color: var(--text-muted); }

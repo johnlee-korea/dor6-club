@@ -14,7 +14,11 @@ import {
 } from "./lib/nexon-api.js";
 import { seasonIdOf, shortSeasonName } from "./lib/squad.js";
 import { styleRaw } from "./lib/playstyle.js";
-import { insightRaw } from "./lib/insight.js";
+import { insightRaw, P_KEYS } from "./lib/insight.js";
+
+/* pStats가 현재 형식(P_KEYS 길이)인지 — v1.9.0 초기 4칸 형식은 재백필 대상. null(조회 불가)은 재시도 안 함 */
+const pStatsCurrent = (m) => m.pStats === null ||
+  (Array.isArray(m.pStats) && (m.pStats.length === 0 || m.pStats[0].length === P_KEYS.length));
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -83,7 +87,7 @@ async function backfillDetails(active, limit) {
     if (!store) continue;
     let dirty = false;
     for (const match of store.matches) {
-      if (match.oppLineup !== undefined && match.styleRaw !== undefined && match.shots !== undefined) continue;
+      if (match.oppLineup !== undefined && match.styleRaw !== undefined && match.shots !== undefined && pStatsCurrent(match)) continue;
       if (!cache.has(match.matchId)) {
         if (fetched >= limit) { remaining++; continue; }
         fetched++;

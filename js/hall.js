@@ -52,7 +52,17 @@ function insightBoards(ins, meta) {
   const dim = (s) => `<span style="color:var(--text-dim);font-size:var(--fs-xs);">${s}</span>`;
   const withPlayer = (x) => `${escapeHtml(x.nick)}<div style="margin-top:4px;">${sqPlayerChip(x.spId, meta)}</div>`;
   const manner = (x) => `${x.score} ${dim(`경기당 · 카드 ${x.yellow + x.red} · 파울 ${x.foul}`)}`;
+  // 포지션 스페셜리스트: 칭호 + 선수 칩, 값은 '지표 수치 · 랭커 평균 대비 배수'
+  const specialist = (x) => `${escapeHtml(x.nick)}
+    <div style="margin-top:2px;color:#ffd479;font-weight:800;">${x.title.emoji} ${escapeHtml(x.title.name)}</div>
+    <div style="margin-top:4px;">${sqPlayerChip(x.spId, meta)}</div>`;
+  const specialistVal = (x) => {
+    const ratio = x.base > 0 && x.metric !== "rt" ? ` · ${(x.value / x.base).toFixed(1)}배` : "";
+    return `${escapeHtml((ins.metricLabels || {})[x.metric] || x.metric)} ${x.value}
+      ${dim(`<br>랭커 ${escapeHtml((ins.groupLabels || {})[x.group] || x.group)} ${x.base}${ratio}`)}`;
+  };
   return `
+    ${board("🏅 포지션 스페셜리스트", t.specialists || [], specialistVal, "같은 포지션 랭커 대비 가장 돋보이는 선수", specialist)}
     ${board("⚽ 클럽 득점왕 선수", t.topScorers || [], (x) => `${x.goals}골 ${dim(`(${x.games}경기)`)}`, "클럽원별 선수 카드 기준", withPlayer)}
     ${board("🅰️ 도움왕 선수", t.topAssists || [], (x) => `${x.assists}도움 ${dim(`(${x.games}경기)`)}`, "", withPlayer)}
     ${board("🔄 역전의 명수", t.comebackKing || [], (x) => `${x.comebacks}회`, "지고 있다가 뒤집은 승리")}

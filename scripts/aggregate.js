@@ -10,7 +10,8 @@ import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
 import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
-import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow } from "./lib/insight.js";
+import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, unitAverages, bestMetric,
+  GROUP_LABEL, P_METRICS } from "./lib/insight.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => path.join(ROOT, ...s);
@@ -169,7 +170,8 @@ function buildPlaystyles() {
 
 /* ---------- ⑦ 경기 상세 인사이트 (v1.9.0, 현재 시즌) ---------- */
 /* 집계 범위: 현재 시즌 · 인정 매치유형 · 정상 종료(styleRaw.end === 0) · 인사이트 필드(shots) 저장된 경기
-   회원별: 컨트롤러·에이스 선수·골 시간대·역전승·극장골·매너 / 클럽 전체: 명예의 전당 6부문 */
+   회원별: 컨트롤러·에이스 선수(v1.10.0 포지션 랭커 대비)·골 시간대·역전승·극장골·매너
+   클럽 전체: 명예의 전당 6부문 + 포지션 스페셜리스트 */
 function buildInsights() {
   const season = (seasonsFile.seasons || []).find((s) => s.id === (seasonsFile.meta || {}).currentSeasonId)
     || (seasonsFile.seasons || []).slice(-1)[0];
@@ -178,7 +180,11 @@ function buildInsights() {
   const startT = toDate(season.start).getTime();
   const endT = toDate(season.end).getTime() + (86400000 - 1000);
   const players = {};
-  const scorerRows = [], assistRows = [], flowRows = [], mannerRows = [];
+  const scorerRows = [], assistRows = [], flowRows = [], mannerRows = [], specialistRows = [];
+  // 포지션 그룹별 랭커 기준값 (ranker-baseline.js, 없으면 에이스 비움)
+  const rankerBase = readJSON(p("data", "meta", "ranker-baseline.json"), {});
+  const posBaseline = rankerBase.positions || null;
+  if (!posBaseline) console.warn("⚠ 랭커 포지션 기준값 없음 — 에이스 판정 생략");
 
   for (const m of members) {
     const all = matchesByOuid[m.ouid];
@@ -193,16 +199,29 @@ function buildInsights() {
     });
     if (!ms.length) { players[m.ouid] = { ctrl, games: 0 }; continue; }
 
-    // 에이스 선수 — 같은 선수라도 시즌 카드(spId)별로 구분
+    // 선수별 골·도움 합계 (득점왕·도움왕 선수용, 교체 출전 포함) — 같은 선수라도 시즌 카드(spId)별로 구분
+    const pRows = ms.flatMap((x) => x.pStats || []);
     const bySp = new Map();
-    for (const x of ms) for (const [spId, g, a, r] of x.pStats || []) {
-      const s = bySp.get(spId) || { spId, games: 0, goals: 0, assists: 0, ratingSum: 0 };
-      s.games++; s.goals += g; s.assists += a; s.ratingSum += r;
+    for (const r of pRows) {
+      const spId = r[PI.spId];
+      const s = bySp.get(spId) || { spId, games: 0, goals: 0, assists: 0 };
+      s.games++; s.goals += r[PI.gol]; s.assists += r[PI.ast];
       bySp.set(spId, s);
     }
-    const spList = [...bySp.values()].map((s) => ({ spId: s.spId, games: s.games, goals: s.goals,
-      assists: s.assists, rating: round1(s.ratingSum / s.games) }));
-    const ace = [...spList].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.rating - a.rating).slice(0, 3);
+    const spList = [...bySp.values()];
+
+    // 에이스 (v1.10.0): (선수, 포지션그룹) 단위로 같은 그룹 랭커 선수 분포 대비 가장 돋보이는 지표(Z) →
+    // 선수 중복 없이 Z 상위 3명. Z ≥ TITLE_Z면 칭호(lib/insight.js TITLES)
+    const bestBySp = new Map();
+    for (const u of unitAverages(pRows).values()) {
+      const b = bestMetric(u, posBaseline);
+      if (b && (!bestBySp.has(b.spId) || b.z > bestBySp.get(b.spId).z)) bestBySp.set(b.spId, b);
+    }
+    const ace = [...bestBySp.values()].sort((a, b) => b.z - a.z).slice(0, 3).map((b) => {
+      const s = bySp.get(b.spId);
+      return { ...b, goals: s.goals, assists: s.assists };
+    });
+    for (const b of bestBySp.values()) if (b.title) specialistRows.push({ ouid: m.ouid, nick: m.ingameNick, ...b });
     for (const s of spList) {
       if (s.goals) scorerRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, goals: s.goals, games: s.games });
       if (s.assists) assistRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, assists: s.assists, games: s.games });
@@ -242,12 +261,17 @@ function buildInsights() {
     comebackKing: top(flowRows.filter((r) => r.comebacks), (a, b) => b.comebacks - a.comebacks, 3),
     lateHero: top(flowRows.filter((r) => r.lateWinners), (a, b) => b.lateWinners - a.lateWinners, 3),
     gentleman: top(mannerRows, (a, b) => a.score - b.score || b.games - a.games, 3),
-    toughGuy: top(mannerRows.filter((r) => r.score > 0), (a, b) => b.score - a.score, 3)
+    toughGuy: top(mannerRows.filter((r) => r.score > 0), (a, b) => b.score - a.score, 3),
+    specialists: top(specialistRows, (a, b) => b.z - a.z, 5)   // 🏅 포지션 스페셜리스트 (칭호 받은 선수 중 Z 상위)
   };
   writeJSON(p("data", "insights.json"), {
     updated: now.toISOString(), seasonId: season.id, seasonName: season.name,
     seasonStart: season.start, seasonEnd: season.end, countedTypes: counted,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
-    minGames, buckets: GOAL_BUCKETS, players, clubTop
+    minGames, buckets: GOAL_BUCKETS,
+    // 에이스 카드 표기용 — 그룹명·지표명·랭커 표본 수 (정의는 lib/insight.js 단일 소스)
+    groupLabels: GROUP_LABEL, metricLabels: P_METRICS,
+    rankerUnits: posBaseline ? Object.fromEntries(Object.entries(posBaseline).map(([g, b]) => [g, b.n])) : {},
+    players, clubTop
   });
   return Object.values(players).filter((x) => x.games).length;
 }

@@ -4,7 +4,7 @@
          node scripts/ranker-baseline.js                             (CI)
    동작: 공식 랭킹 1~1000위(50페이지)에서 페이지마다 일정 간격으로 샘플링 →
          각 랭커의 최근 공식경기 상세로 지표 계산 → 지표별 평균·표준편차 저장
-   산출: data/meta/ranker-baseline.json
+   산출: data/meta/ranker-baseline.json (stats: 팀 플레이스타일 / positions: 포지션 그룹별 선수 지표 — v1.10.0)
    주기: 기존 파일이 config.rankerBaseline.refreshDays 이내면 건너뜀(API 호출 절약)
    참고: 넥슨 오픈 API에는 랭킹 목록이 없어 FC온라인 데이터센터 랭킹 페이지(HTML)에서 닉네임을 읽는다
    ============================================================ */
@@ -14,6 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setCallInterval, getOuidByNickname, getMatchIds, getMatchDetail } from "./lib/nexon-api.js";
 import { styleRaw, computeMetrics, baselineStats } from "./lib/playstyle.js";
+import { insightRaw, unitAverages, positionBaseline } from "./lib/insight.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "data", "meta", "ranker-baseline.json");
@@ -60,19 +61,26 @@ async function main() {
 
   // 2) 랭커별 지표
   const list = [];
+  const units = []; // 랭커별 (spId, 포지션그룹) 선수 단위 평균 — 랭커끼리 섞지 않도록 랭커마다 따로 계산
   for (const nick of nicks) {
     try {
       const ouid = await getOuidByNickname(nick);
       if (!ouid) continue;
       const ids = await getMatchIds(ouid, 50, 0, opt.matchesPerUser);
-      const raws = [];
+      const raws = [], pRows = [];
       for (const id of ids) {
         const d = await getMatchDetail(id).catch(() => null);
         const info = (d && d.matchInfo) || [];
         const raw = styleRaw(info.find((i) => i.ouid === ouid), info.find((i) => i.ouid !== ouid));
-        if (raw && raw.end === 0 && info.length === 2) raws.push(raw);
+        if (raw && raw.end === 0 && info.length === 2) {
+          raws.push(raw);
+          pRows.push(...(insightRaw(info.find((i) => i.ouid === ouid), null).pStats || []));
+        }
       }
-      if (raws.length >= opt.minMatches) list.push(computeMetrics(raws));
+      if (raws.length >= opt.minMatches) {
+        list.push(computeMetrics(raws));
+        units.push(...unitAverages(pRows).values());
+      }
     } catch (e) { console.warn(`  [${nick}] 실패: ${e.message}`); }
   }
 
@@ -86,7 +94,8 @@ async function main() {
     updated: new Date().toISOString(),
     source: `공식 랭킹 1~${opt.pages * 20}위 샘플, 공식경기 최근 ${opt.matchesPerUser}경기`,
     sampleSize: list.length,
-    stats: baselineStats(list)
+    stats: baselineStats(list),
+    positions: positionBaseline(units)
   }, null, 2) + "\n");
   console.log(`✅ 랭커 기준값 저장 — 유효 랭커 ${list.length}명`);
 }
