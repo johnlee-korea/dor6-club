@@ -451,3 +451,22 @@ a.ms-row:hover { background: var(--surface-2); }
 .sh-dcols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 .sh-preview { display: block; width: 100%; max-height: 60vh; object-fit: contain; border-radius: 8px; margin: var(--sp-3) 0; background: var(--surface-2); }
 .sh-actions { display: flex; gap: var(--sp-2); justify-content: center; flex-wrap: wrap; }
+
+/* ---------- v2.1.0 패치노트 · 저작권 ---------- */
+.pn-btn { margin-top: var(--sp-6); }
+.copyright { margin-top: var(--sp-4); padding: var(--sp-4); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-size: var(--fs-xs); color: var(--text-dim); line-height: 1.6; }
+.copyright-title { font-weight: 800; color: var(--text-muted); margin-bottom: var(--sp-2); }
+.copyright p { margin: 0 0 var(--sp-2); }
+.copyright p:last-child { margin-bottom: 0; }
+.copyright b { color: var(--text-muted); }
+.app-footer a { text-decoration: underline; }
+.pn-day { margin-bottom: var(--sp-5); }
+.pn-date { font-weight: 800; font-size: var(--fs-lg); margin-bottom: var(--sp-2); }
+.pn-title { font-weight: 800; margin-bottom: var(--sp-3); color: var(--silver-bright); }
+.pn-list { list-style: none; margin: 0; padding: 0; }
+.pn-list li { display: flex; gap: var(--sp-2); align-items: flex-start; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: var(--fs-sm); line-height: 1.5; }
+.pn-list li:last-child { border-bottom: none; }
+.pn-tag { flex: none; font-size: var(--fs-xs); font-weight: 700; padding: 1px 8px; border-radius: 999px; white-space: nowrap; margin-top: 1px; }
+.pn-tag.new { background: rgba(63,185,80,.14); color: var(--win); }
+.pn-tag.improve { background: rgba(143,195,255,.14); color: #8fc3ff; }
+.pn-tag.fix { background: rgba(255,154,92,.14); color: #ff9a5c; }

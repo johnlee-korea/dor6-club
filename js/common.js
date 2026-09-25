@@ -84,7 +84,7 @@ function renderFooter() {
   const f = document.createElement("footer");
   f.className = "app-footer";
   f.innerHTML = `도륙(Dor6) 클럽원 전용 · 게임 닉네임·전적 외 개인정보 미수집 ·
-    데이터: 넥슨 오픈 API`;
+    Data based on NEXON Open API<br>© 2026 도륙(Dor6). 무단 복제·배포 금지 · <a href="patchnotes.html">패치노트</a>`;
   document.body.appendChild(f);
 }
 

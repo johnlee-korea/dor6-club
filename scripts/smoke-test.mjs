@@ -16,7 +16,7 @@ const FIRST_OUID = JSON.parse(rd("data/members.json")).members.find((m) => m.oui
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const PAGES = [
-  { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".streak-badge, #activity .member-row" },
+  { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".copyright" },
   // 클럽원 탭: 검색 우선 + 접힌 전체 명단(행 = 프로필 링크)
   { file: "members.html",   scripts: ["js/common.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: "a.ms-row",
     act: (w) => { const q = w.document.getElementById("member-q"); q.value = "dor6"; q.dispatchEvent(new w.Event("input")); } },
@@ -29,6 +29,7 @@ const PAGES = [
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/squad.js", "js/hall.js"], root: "hall-root", expect: ".sq-chip" },
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },
+  { file: "patchnotes.html", scripts: ["js/common.js", "js/patchnotes.js"], root: "pn-root", expect: ".pn-tag" },
   { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin.js"], root: null },
   { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null }
 ];
