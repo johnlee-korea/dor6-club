@@ -130,6 +130,18 @@ export function bestMetric(unit, baseline) {
     z: Math.round(best.z * 100) / 100, title: best.z >= TITLE_Z ? titleFor(best.metric, unit.group) : null };
 }
 
+/* pStats 행 목록 → 선수별 '주 포지션 그룹'(선발 최다) 하나로 판정한 결과, Z 내림차순
+   (포메이션에 따라 RDM↔RCM처럼 표기만 바뀔 때 덜 뛴 포지션 기록이 대표로 뽑히지 않도록)
+   에이스 = 앞에서 3명. 클럽 집계(aggregate.js)와 전적 검색(Worker)이 같은 규칙을 쓰도록 여기 한 곳에 둔다 */
+export function rankPlayers(pRows, baseline) {
+  const main = new Map();
+  for (const u of unitAverages(pRows).values()) {
+    const cur = main.get(u.spId);
+    if (!cur || u.games > cur.games) main.set(u.spId, u);
+  }
+  return [...main.values()].map((u) => bestMetric(u, baseline)).filter(Boolean).sort((a, b) => b.z - a.z);
+}
+
 /* 매치 상세의 한쪽(me) + 상대(opp) → 저장 필드
    pStats: P_KEYS 순서 배열 — 평점 0(미출전 교체)은 제외, 교체 출전은 pos 28로 남김(골·도움 집계용)
    shots : [초, x, y, 결과, 유형, spId, 도움spId|0] — 승부차기 제외, 좌표 소수 2자리

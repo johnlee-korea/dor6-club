@@ -14,15 +14,15 @@ const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 const PAGES = [
   { file: "index.html",     scripts: ["js/common.js", "js/home.js"],           root: "summary" },
-  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/members.js"], root: "members-root", expect: ".ps" },
+  { file: "members.html",   scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/members.js"], root: "members-root", expect: ".ps" },
   { file: "dashboard.html", scripts: ["js/common.js", "js/dashboard.js"],      root: "dash-root" },
-  { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/record.js"], root: "record-root", expect: ".in-card" },
+  { file: "record.html",    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/record.js"], root: "record-root", expect: ".in-card" },
   { file: "tournament.html", scripts: ["js/common.js", "js/tournament.js"], root: "tn-root", expect: ".tn-pick" },
   { file: "internal.html",  scripts: ["js/common.js", "js/squad.js", "js/internal.js"], root: "internal-root" },
   { file: "hall.html",      scripts: ["js/common.js", "js/squad.js", "js/hall.js"], root: "hall-root", expect: ".sq-chip" },
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },
   { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin.js"], root: null },
-  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/search.js"], root: null }
+  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null }
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

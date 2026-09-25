@@ -125,32 +125,7 @@ async function renderInsights(ouid, matches) {
   draw();
 }
 
-/* ① 에이스 선수 TOP3 (v1.10.0) — 같은 포지션 랭커 선수들 대비 가장 돋보이는 지표 순
-   칭호는 랭커 분포보다 1표준편차 이상 높을 때만(aggregate.js·lib/insight.js 판정) */
-function aceCard(ace, meta, ins) {
-  const rows = (ace || []).map((a, i) => {
-    const metric = ins.metricLabels[a.metric] || a.metric;
-    const group = ins.groupLabels[a.group] || a.group;
-    const ratio = a.base > 0 && a.metric !== "rt" ? ` <b class="in-up">${(a.value / a.base).toFixed(1)}배</b>` : "";
-    const title = a.title
-      ? `<span class="in-ace-title">${a.title.emoji} ${escapeHtml(a.title.name)}</span>`
-      : `<span class="in-ace-title plain">돋보인 지표</span>`;
-    return `
-    <div class="in-ace">
-      <span class="rank r${i + 1}">${i + 1}</span>
-      <div class="in-ace-body">
-        ${title}
-        <div class="in-ace-player">${sqPlayerChip(a.spId, meta)}
-          <span class="badge">${escapeHtml(meta.posName[a.pos] || group)}</span></div>
-        <div class="in-ace-stat">${escapeHtml(metric)} <b>${a.value}</b>/경기 · 랭커 ${escapeHtml(group)} 평균 ${a.base}${ratio}
-          <span class="in-dim">· 선발 ${a.games}경기</span></div>
-      </div>
-    </div>`;
-  }).join("");
-  return `<div class="card in-card"><div class="in-title">⚽ 에이스 선수</div>
-    ${rows || `<div class="empty" style="padding:var(--sp-3);">한 포지션에서 선발 5경기 이상 뛴 선수가 아직 없어요.</div>`}
-    <div class="in-dim" style="margin-top:var(--sp-2);">선수별 주 포지션(선발 최다)에서 같은 포지션 랭커 선수 평균 대비 가장 돋보이는 지표 기준 · 칭호는 눈에 띄게 높을 때만</div></div>`;
-}
+/* ① 에이스 카드는 js/insight-ui.js aceCard (전적 검색과 공용) */
 
 /* ② 골 시간대 — 위(득점)·아래(실점) 대칭 막대 + 역전승·극장골 배지 */
 function goalTimeCard(me, buckets) {

@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
 import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
-import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, unitAverages, bestMetric,
+import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
   GROUP_LABEL, P_METRICS } from "./lib/insight.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -210,24 +210,14 @@ function buildInsights() {
     }
     const spList = [...bySp.values()];
 
-    // 에이스 (v1.10.0): 선수마다 '주 포지션 그룹'(선발 최다) 하나로만 판정 →
-    // 같은 그룹 랭커 선수 분포 대비 가장 돋보이는 지표(Z), 선수 중복 없이 Z 상위 3명. Z ≥ TITLE_Z면 칭호
-    // (포메이션에 따라 RDM↔RCM처럼 표기만 바뀌는 경우, 덜 뛴 포지션의 기록이 대표로 뽑히지 않도록)
-    const mainBySp = new Map();
-    for (const u of unitAverages(pRows).values()) {
-      const cur = mainBySp.get(u.spId);
-      if (!cur || u.games > cur.games) mainBySp.set(u.spId, u);
-    }
-    const bestBySp = new Map();
-    for (const u of mainBySp.values()) {
-      const b = bestMetric(u, posBaseline);
-      if (b) bestBySp.set(b.spId, b);
-    }
-    const ace = [...bestBySp.values()].sort((a, b) => b.z - a.z).slice(0, 3).map((b) => {
+    // 에이스 (v1.10.0): 선수별 주 포지션 그룹에서 같은 그룹 랭커 대비 가장 돋보이는 지표(Z) 상위 3명
+    // 판정 규칙은 lib/insight.js rankPlayers 단일 소스 (전적 검색 Worker와 공유)
+    const ranked = rankPlayers(pRows, posBaseline);
+    const ace = ranked.slice(0, 3).map((b) => {
       const s = bySp.get(b.spId);
       return { ...b, goals: s.goals, assists: s.assists };
     });
-    for (const b of bestBySp.values()) if (b.title) specialistRows.push({ ouid: m.ouid, nick: m.ingameNick, ...b });
+    for (const b of ranked) if (b.title) specialistRows.push({ ouid: m.ouid, nick: m.ingameNick, ...b });
     for (const s of spList) {
       if (s.goals) scorerRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, goals: s.goals, games: s.games });
       if (s.assists) assistRows.push({ ouid: m.ouid, nick: m.ingameNick, spId: s.spId, assists: s.assists, games: s.games });

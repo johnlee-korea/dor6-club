@@ -8,6 +8,9 @@
      → GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 담당
    ============================================================ */
 
+import { styleRaw, computeMetrics, judge } from "../../scripts/lib/playstyle.js";
+import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/lib/insight.js";
+
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
 
@@ -45,7 +48,7 @@ export default {
         if (!nickname) return json({ error: "닉네임을 입력하세요." }, 400);
         const ouid = await resolveOuid(nickname, env.NEXON_API_KEY);
         if (!ouid) return json({ error: "해당 닉네임을 찾을 수 없습니다. (닉 변경 직후면 하루 정도 뒤 조회됩니다)" }, 404);
-        const data = await publicSearch(ouid, env.NEXON_API_KEY);
+        const data = await publicSearch(ouid, env);
         return json(data);
       }
 
@@ -111,7 +114,25 @@ const R_MAP = { "승": "win", "무": "draw", "패": "lose" };
 const toLineup = (side) => ((side && side.player) || []).map((pl) => ({
   spId: pl.spId, spPosition: pl.spPosition, spGrade: pl.spGrade
 }));
-async function publicSearch(ouid, key) {
+
+/* 전적 검색 분석(플레이스타일·에이스) 기준 — 클럽 페이지와 같은 판정 로직(scripts/lib)을 번들에 포함 */
+const SEARCH_MATCHES = 30;       // 공식경기 최근 N경기 (서브요청 한도 50 고려: 기본 3~4 + 상세 30 + 기준값 1)
+const SEARCH_BATCH = 5;          // 상세 동시 조회 수 (넥슨 429 방지)
+const STYLE_MIN_GAMES = 10;      // 플레이스타일 최소 경기 (클럽 config.playstyle.minGames와 동일)
+const ANALYSIS_VERSION = 1;      // 화면에서 '최신 업데이트로 조회한 결과'인지 구분
+
+/* 랭커 기준값 (Pages 정적 파일) — isolate 메모리에 6시간 캐시 */
+let _baseline = null, _baselineAt = 0;
+async function rankerBaseline(env) {
+  if (_baseline && Date.now() - _baselineAt < 6 * 3600 * 1000) return _baseline;
+  const res = await fetch(`${env.SITE_URL}/data/meta/ranker-baseline.json`, { cf: { cacheTtl: 3600 } });
+  if (!res.ok) throw new Error(`기준값 ${res.status}`);
+  _baseline = await res.json(); _baselineAt = Date.now();
+  return _baseline;
+}
+
+async function publicSearch(ouid, env) {
+  const key = env.NEXON_API_KEY;
   const out = { ouid, nickname: null, level: null, maxDivision: "-", matches: [] };
   try { const b = await nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key); out.nickname = b.nickname; out.level = b.level; } catch {}
   try {
@@ -121,31 +142,56 @@ async function publicSearch(ouid, key) {
   } catch {}
 
   let ids = [];
-  try { ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=50&offset=0&limit=8`, key); } catch {}
-  for (const id of ids) {
-    try {
-      const d = await nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key);
-      const me = (d.matchInfo || []).find((i) => i.ouid === ouid);
-      if (!me) continue;
-      const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
-      const md = me.matchDetail || {}, sh = me.shoot || {};
-      out.matches.push({
-        matchId: d.matchId,
-        matchType: 50,
-        matchDate: d.matchDate,
-        result: R_MAP[md.matchResult] || "draw",
-        goalFor: sh.goalTotal ?? 0,
-        goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
-        opponentNick: opp ? opp.nickname : "?",
-        possession: md.possession ?? null,
-        lineup: toLineup(me),       // 양팀 스쿼드 모달용 (선수 id·포지션·강화만)
-        oppLineup: toLineup(opp)
-      });
-    } catch {}
+  try { ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=50&offset=0&limit=${SEARCH_MATCHES}`, key); } catch {}
+  // 상세는 SEARCH_BATCH개씩 병렬 조회 (순서 유지)
+  const details = [];
+  for (let i = 0; i < ids.length; i += SEARCH_BATCH) {
+    const chunk = ids.slice(i, i + SEARCH_BATCH);
+    details.push(...await Promise.all(chunk.map((id) =>
+      nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key, 1).catch(() => null))));
+  }
+  const raws = [], pRows = [];
+  for (const d of details) {
+    if (!d) continue;
+    const me = (d.matchInfo || []).find((i) => i.ouid === ouid);
+    if (!me) continue;
+    const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
+    const md = me.matchDetail || {}, sh = me.shoot || {};
+    out.matches.push({
+      matchId: d.matchId,
+      matchType: 50,
+      matchDate: d.matchDate,
+      result: R_MAP[md.matchResult] || "draw",
+      goalFor: sh.goalTotal ?? 0,
+      goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
+      opponentNick: opp ? opp.nickname : "?",
+      possession: md.possession ?? null,
+      lineup: toLineup(me),       // 양팀 스쿼드 모달용 (선수 id·포지션·강화만)
+      oppLineup: toLineup(opp)
+    });
+    // 분석용 원본 — 정상 종료 경기만 (클럽 집계와 같은 기준)
+    const raw = styleRaw(me, opp);
+    if (raw && raw.end === 0 && d.matchInfo.length === 2) {
+      raws.push(raw);
+      pRows.push(...(insightRaw(me, opp).pStats || []));
+    }
   }
   const w = out.matches.filter((m) => m.result === "win").length;
   out.summary = { games: out.matches.length, wins: w,
     winRate: out.matches.length ? Math.round((w / out.matches.length) * 100) : null };
+
+  // 플레이스타일·에이스 판정 (기준값 조회 실패 시 분석만 생략, 전적은 그대로 응답)
+  try {
+    const base = await rankerBaseline(env);
+    out.analysis = {
+      version: ANALYSIS_VERSION, games: raws.length, minGames: STYLE_MIN_GAMES,
+      playstyle: raws.length >= STYLE_MIN_GAMES ? judge(computeMetrics(raws), base.stats) : null,
+      ace: base.positions ? rankPlayers(pRows, base.positions).slice(0, 3) : [],
+      groupLabels: GROUP_LABEL, metricLabels: P_METRICS
+    };
+  } catch (e) {
+    console.error("[search] 분석 실패:", e.message);
+  }
   return out;
 }
 

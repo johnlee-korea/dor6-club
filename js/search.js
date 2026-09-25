@@ -138,7 +138,7 @@ async function onResultClick(e) {
 
 function renderResult(root, d, fetchedAt) {
   const s = d.summary || {};
-  const strip = (d.matches || []).map((m) =>
+  const strip = (d.matches || []).slice(0, 15).map((m) =>
     `<span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>`).join("");
   const hasSquad = !!latestWithLineup(d);
 
@@ -171,9 +171,33 @@ function renderResult(root, d, fetchedAt) {
           마지막 업데이트 ${fetchedAt ? fmt.dateTime(fetchedAt) : "-"}</span>
       </div>
     </div>
+    <div id="search-analysis"></div>
     <div class="section-title">최근 공식경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
     <div class="card">${rows}</div>
   `;
+  renderAnalysis(d).catch((e) => console.error("검색 분석 표시 실패:", e));
+}
+
+/* 🎭 플레이스타일 + ⚽ 에이스 (v1.11.0) — Worker가 판정한 d.analysis를 그리기만 함(js/insight-ui.js 공용)
+   이전 버전으로 조회해 저장된 결과(analysis 없음)는 [최신 업데이트] 안내만 표시 */
+async function renderAnalysis(d) {
+  const box = document.getElementById("search-analysis");
+  if (!box) return;
+  const a = d.analysis;
+  if (!a) {
+    box.innerHTML = `<div class="ps-note" style="margin-bottom:var(--sp-4);">🔄 <b>최신 업데이트</b>를 누르면 🎭 플레이스타일과 ⚽ 에이스 선수가 표시돼요.</div>`;
+    return;
+  }
+  // 선수 이름: 클럽 경기 선수표 + 없는 선수만 전체 이름표(pnames) 보충
+  const meta = await sqEnsureNames(await sqLoadMeta(), [(a.ace || []).map((x) => ({ spId: x.spId }))]);
+  const style = a.playstyle ? { games: a.games, ...a.playstyle } : { games: a.games };
+  box.innerHTML = `
+    <div class="section-title">📊 분석 <span class="in-note">· 공식경기 최근 ${d.summary ? d.summary.games : a.games}경기 중 정상 종료 ${a.games}경기 기준</span></div>
+    <div class="card in-card" style="margin-bottom:var(--sp-3);"><div class="in-title">🎭 플레이스타일</div>
+      ${psBlock(style, a.minGames)}
+      <div class="in-dim" style="margin-top:var(--sp-2);">랭커 평균 대비 가장 높은 지표 ▲3 · 낮은 지표 ▼3 (★ = 스타일 근거)</div></div>
+    ${aceCard(a.ace, meta, a, "선수별 주 포지션(선발 최다)에서 같은 포지션 랭커 선수 평균 대비 · 선발 5경기 이상 · 칭호는 눈에 띄게 높을 때만")}
+    <div style="height:var(--sp-4);"></div>`;
 }
 
 document.addEventListener("DOMContentLoaded", initSearch);

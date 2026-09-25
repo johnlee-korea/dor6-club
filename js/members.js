@@ -90,27 +90,10 @@ function styleNote() {
     </div>`;
 }
 
-/* 지표 값 표시 — '%'는 0~1 비율, 'avg%'는 이미 % 값, 그 외는 경기당 수치 */
-function psVal(v, unit) {
-  if (unit === "%") return `${(v * 100).toFixed(1)}%`;
-  if (unit === "avg%") return `${v.toFixed(1)}%`;
-  return v.toFixed(2);
-}
-
-function psChip(x, dir) {
-  const tip = `나 ${psVal(x.v, x.unit)} · 랭커 평균 ${psVal(x.avg, x.unit)}`;
-  return `<span class="ps-chip ${dir}${x.key ? " key" : ""}" title="${escapeHtml(tip)}">${x.key ? "★" : dir === "up" ? "▲" : "▼"} ${escapeHtml(x.label)} <b>${psVal(x.v, x.unit)}</b></span>`;
-}
-
+/* 플레이스타일 블록 그리기는 js/insight-ui.js psBlock (전적 검색과 공용) */
 function styleBlock(ouid) {
   const ps = STYLES && ouid ? STYLES.players[ouid] : null;
-  if (!ps) return "";
-  if (!ps.style) return `<div class="ps"><span class="ps-wait">🎭 스타일 분석 대기 (${ps.games}/${STYLES.minGames}경기)</span></div>`;
-  return `
-    <div class="ps">
-      <div><span class="ps-name">🎭 ${escapeHtml(ps.style.name)}</span> <span class="ps-line">“${escapeHtml(ps.style.line)}”</span></div>
-      <div class="ps-chips">${ps.highs.map((x) => psChip(x, "up")).join("")}${ps.lows.map((x) => psChip(x, "down")).join("")}</div>
-    </div>`;
+  return psBlock(ps, STYLES && STYLES.minGames);
 }
 
 /* [스쿼드] 버튼 — 행마다 리스너를 달지 않고 루트에서 이벤트 위임 */

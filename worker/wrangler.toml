@@ -7,6 +7,7 @@ compatibility_date = "2025-01-01"
 GH_REPO = "johnlee-korea/dor6-club"
 GH_BRANCH = "main"
 ALLOWED_ORIGIN = "https://johnlee-korea.github.io"
+SITE_URL = "https://johnlee-korea.github.io/dor6-club"   # 전적 검색 분석용 랭커 기준값(data/meta/ranker-baseline.json) 위치
 
 # 예약 실행 (UTC) — 2시간마다 05분에 GitHub Actions 수집 워크플로 호출
 # (GitHub 자체 schedule은 누락이 잦아 예비용으로만 사용, collect.yml 참고)
