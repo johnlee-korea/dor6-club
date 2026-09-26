@@ -127,7 +127,7 @@ async function makeAndPreview(btn, build, fileName, title) {
     const blob = await build();
     if (!blob) throw new Error("이미지 변환 결과 없음");
     console.info(`[공유] ${fileName} ${Math.round(blob.size / 1024)}KB · ${Math.round(performance.now() - t0)}ms`);
-    showSharePreview(blob, fileName, title);
+    await showSharePreview(blob, fileName, title);
   } catch (e) {
     console.error("공유 이미지 생성 실패:", e);
     alert("이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요.");
@@ -136,21 +136,38 @@ async function makeAndPreview(btn, build, fileName, title) {
   }
 }
 
-/* 미리보기 창 — [공유하기](지원 시) · [이미지 저장] · 닫기 */
-function showSharePreview(blob, fileName, title) {
+/* 카카오톡 인앱 브라우저 — 다운로드 링크(blob)를 막아 '지원하지 않는 형식'으로 실패(사용자 제보 2026-09-27)
+   → 저장 버튼 대신 외부 브라우저로 여는 버튼 + 길게 눌러 저장(미리보기를 data URL로) 안내 */
+const SH_IN_KAKAO = /KAKAOTALK/i.test(navigator.userAgent || "");
+const shOpenExternalUrl = () => `kakaotalk://web/openExternal?url=${encodeURIComponent(location.href)}`;
+const blobToDataUrl = (blob) => new Promise((resolve) => {
+  const r = new FileReader();
+  r.onload = () => resolve(r.result);
+  r.onerror = () => resolve(null);
+  r.readAsDataURL(blob);
+});
+
+/* 미리보기 창 — [공유하기](지원 시) · [이미지 저장] · 닫기 (카톡 안에서는 [브라우저로 열기]) */
+async function showSharePreview(blob, fileName, title) {
   const url = URL.createObjectURL(blob);
   const file = new File([blob], fileName, { type: "image/png" });
-  const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+  const canShare = !SH_IN_KAKAO && !!(navigator.canShare && navigator.canShare({ files: [file] }));
+  const imgSrc = SH_IN_KAKAO ? (await blobToDataUrl(blob)) || url : url;   // 길게 눌러 저장은 data URL이 더 잘 됨
+  const guide = SH_IN_KAKAO
+    ? "카카오톡 안에서는 바로 저장이 안 돼요. <b>이미지를 길게 눌러 저장</b>하거나, 아래 버튼으로 크롬·사파리에서 열어 📸를 다시 눌러 주세요."
+    : canShare ? "공유하기를 누르면 카톡 등으로 바로 보낼 수 있어요." : "이미지 저장 후 카톡방에 올려 주세요. (길게 눌러 저장해도 돼요)";
   sqShowModal("공유 이미지", `
     <div class="sq-head">
       <div><div class="sq-title">📸 공유 이미지</div>
-        <div class="sq-dim">${canShare ? "공유하기를 누르면 카톡 등으로 바로 보낼 수 있어요." : "이미지 저장 후 카톡방에 올려 주세요. (길게 눌러 저장해도 돼요)"}</div></div>
+        <div class="sq-dim">${guide}</div></div>
       <button class="sq-close" type="button" aria-label="닫기">✕</button>
     </div>
-    <img class="sh-preview" src="${url}" alt="${escapeHtml(title)}">
+    <img class="sh-preview" src="${imgSrc}" alt="${escapeHtml(title)}">
     <div class="sh-actions">
       ${canShare ? `<button class="btn primary" type="button" data-sh-share>📤 공유하기</button>` : ""}
-      <a class="btn" href="${url}" download="${escapeHtml(fileName)}">💾 이미지 저장</a>
+      ${SH_IN_KAKAO
+        ? `<a class="btn primary" href="${shOpenExternalUrl()}">🌐 크롬·사파리로 열기</a>`
+        : `<a class="btn" href="${url}" download="${escapeHtml(fileName)}">💾 이미지 저장</a>`}
     </div>`);
   const shareBtn = document.querySelector("[data-sh-share]");
   if (shareBtn) shareBtn.addEventListener("click", async () => {
