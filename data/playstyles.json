@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26T20:07:27.807Z",
+  "updated": "2026-09-26T21:37:12.282Z",
   "baselineUpdated": "2026-09-26T15:38:01.927Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1059,42 +1059,42 @@
       ]
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
-      "games": 33,
+      "games": 38,
       "style": {
-        "name": "관중석 기념품 배달부",
-        "line": "중거리 한 방이 관중석으로 선물",
+        "name": "땅볼 정직파",
+        "line": "감지도 띄우지도 않고 깔아 찬다",
         "basis": [
-          "longShot+",
-          "finish-"
+          "lowShot+",
+          "finesse-"
         ]
       },
       "highs": [
         {
-          "k": "foul",
-          "label": "파울",
-          "unit": "",
-          "v": 1.455,
-          "avg": 0.928,
-          "z": 1.56,
-          "key": false
-        },
-        {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.224,
+          "v": 0.221,
           "avg": 0.106,
-          "z": 1.56,
-          "key": false
+          "z": 1.52,
+          "key": true
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.269,
+          "v": 0.288,
           "avg": 0.2,
-          "z": 0.96,
-          "key": true
+          "z": 1.23,
+          "key": false
+        },
+        {
+          "k": "foul",
+          "label": "파울",
+          "unit": "",
+          "v": 1.342,
+          "avg": 0.928,
+          "z": 1.23,
+          "key": false
         }
       ],
       "lows": [
@@ -1102,28 +1102,28 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.132,
+          "v": 0.127,
           "avg": 0.285,
-          "z": -2.16,
+          "z": -2.22,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.395,
+          "v": 0.402,
           "avg": 0.481,
-          "z": -1.24,
-          "key": true
+          "z": -1.14,
+          "key": false
         },
         {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.848,
-          "avg": 3.302,
-          "z": -0.83,
-          "key": false
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.232,
+          "avg": 0.312,
+          "z": -0.68,
+          "key": true
         }
       ]
     },

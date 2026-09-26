@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26T20:07:27.807Z",
+  "updated": "2026-09-26T21:37:12.282Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1120,39 +1120,23 @@
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
       "ctrl": "keyboard",
-      "games": 30,
+      "games": 35,
       "ace": [
-        {
-          "spId": 851234112,
-          "group": "FB",
-          "pos": 3,
-          "games": 12,
-          "metric": "win",
-          "value": 4.08,
-          "base": 2.25,
-          "z": 3.1,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 2
-        },
         {
           "spId": 861190046,
           "group": "AM",
           "pos": 18,
-          "games": 12,
+          "games": 17,
           "metric": "drb",
-          "value": 17.33,
+          "value": 16.88,
           "base": 9.05,
-          "z": 2.45,
+          "z": 2.32,
           "title": {
             "emoji": "🪄",
             "name": "드리블 마법사"
           },
-          "goals": 8,
-          "assists": 7
+          "goals": 14,
+          "assists": 12
         },
         {
           "spId": 851224371,
@@ -1169,36 +1153,52 @@
           },
           "goals": 19,
           "assists": 12
+        },
+        {
+          "spId": 851234112,
+          "group": "FB",
+          "pos": 3,
+          "games": 17,
+          "metric": "win",
+          "value": 3.35,
+          "base": 2.25,
+          "z": 1.86,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
+          "assists": 2
         }
       ],
       "goalMins": {
         "for": [
-          10,
-          10,
-          14,
+          11,
+          15,
           17,
-          16,
-          12,
-          8
+          20,
+          19,
+          14,
+          10
         ],
         "against": [
-          10,
-          14,
-          10,
-          23,
-          18,
-          14,
-          7
+          12,
+          16,
+          11,
+          25,
+          19,
+          16,
+          8
         ]
       },
-      "comebacks": 6,
+      "comebacks": 7,
       "lateWinners": 2,
       "manner": {
-        "games": 30,
-        "yellow": 2,
+        "games": 35,
+        "yellow": 3,
         "red": 0,
-        "foul": 45,
-        "score": 1.7
+        "foul": 48,
+        "score": 1.63
       }
     },
     "4847ecb3209142c9a9a423b8adb3b2cb": {
@@ -1891,11 +1891,11 @@
       {
         "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
         "nick": "chelse굴리트",
-        "games": 30,
-        "yellow": 2,
+        "games": 35,
+        "yellow": 3,
         "red": 0,
-        "foul": 45,
-        "score": 1.7
+        "foul": 48,
+        "score": 1.63
       },
       {
         "ouid": "0b4adfde6411fa08e6339ceaa3ed1942",
