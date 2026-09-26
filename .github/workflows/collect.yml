@@ -31,13 +31,7 @@ jobs:
           NEXON_API_KEY: ${{ secrets.NEXON_API_KEY }}
         run: node scripts/collect.js
 
-      # 플레이스타일 비교 기준(랭커 평균) — 7일 지난 경우에만 실제 조회(약 10분), 실패해도 집계는 계속
-      - name: 랭커 기준값 갱신(주 1회)
-        continue-on-error: true
-        timeout-minutes: 25
-        env:
-          NEXON_API_KEY: ${{ secrets.NEXON_API_KEY }}
-        run: node scripts/ranker-baseline.js
+      # 랭커 기준값은 baseline.yml(주 1회)로 분리 — v2.2.0
 
       - name: 집계 실행
         run: node scripts/aggregate.js

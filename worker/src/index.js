@@ -10,6 +10,7 @@
 
 import { styleRaw, computeMetrics, judge } from "../../scripts/lib/playstyle.js";
 import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/lib/insight.js";
+import { compactMatch } from "../../scripts/lib/manage.js";
 
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
@@ -58,6 +59,13 @@ export default {
         return json(data);
       }
 
+      // 공개: 구단운영(모드별 선수 진단, v2.2.0) — 조회만 중계하고 분석은 브라우저가 함
+      if (url.pathname.startsWith("/manage/") && request.method === "POST") {
+        const body = await request.json();
+        const data = await manageRoute(url.pathname.slice(8), body, env);
+        return json(data, data.error ? 404 : 200);
+      }
+
       // 이하 인증 필요
       const payload = await requireAuth(request, env);
       if (!payload) return json({ error: "인증이 필요합니다. 다시 로그인하세요." }, 401);
@@ -78,6 +86,8 @@ export default {
 
       return json({ error: "알 수 없는 요청" }, 404);
     } catch (e) {
+      if (e instanceof UserError) return json({ error: e.message }, 400);
+      console.error("[worker] 처리 실패:", e);
       return json({ error: "서버 오류: " + e.message }, 500);
     }
   }
@@ -217,6 +227,68 @@ async function publicSearch(ouid, env) {
     console.error("[search] 분석 실패:", e.message);
   }
   return out;
+}
+
+/* ---------- 구단운영 (v2.2.0) ----------
+   무료 플랜 한도(요청당 외부 호출 50개·CPU 10ms) 때문에 100경기를 한 번에 조회할 수 없어
+   브라우저가 overview → details(30경기씩) → ranker 순으로 나눠 호출하고, 계산은 브라우저에서 한다(scripts/lib/manage.js) */
+const MANAGE_TYPES = [50, 60, 30, 52];     // 공식·공식친선·리그친선·감독모드
+const MANAGE_DETAIL_MAX = 30;              // details 1회 최대 경기 수 (재시도 여유 포함 서브요청 50 이내)
+const MANAGE_PARALLEL = 8;                 // 상세 동시 조회 수
+const MANAGE_RANKER_CHUNK = 20;            // ranker-stats 1회 선수 수 (실측 22명까지 정상)
+const OUID_RE = /^[0-9a-f]{32}$/i, MATCHID_RE = /^[0-9a-f]{24}$/i;
+class UserError extends Error {}
+
+async function manageRoute(action, body, env) {
+  const key = env.NEXON_API_KEY;
+  if (action === "overview") {
+    const nickname = String(body.nickname || "").trim();
+    if (!nickname) throw new UserError("닉네임을 입력하세요.");
+    const ouid = await resolveOuid(nickname, key);
+    if (!ouid) return { error: "해당 닉네임을 찾을 수 없습니다. (닉 변경 직후면 하루 정도 뒤 조회됩니다)" };
+    const out = { ouid, nickname, level: null, maxDivision: {}, ids: {} };
+    const [basic, divs, ...lists] = await Promise.all([
+      nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key).catch(() => null),
+      nexonGet(`/fconline/v1/user/maxdivision?ouid=${ouid}`, key).catch(() => []),
+      ...MANAGE_TYPES.map((t) => nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=${t}&offset=0&limit=100`, key).catch(() => []))
+    ]);
+    if (basic) { out.nickname = basic.nickname; out.level = basic.level; }
+    for (const d of divs || []) out.maxDivision[d.matchType] = await divisionName(d.division);
+    MANAGE_TYPES.forEach((t, i) => { out.ids[t] = Array.isArray(lists[i]) ? lists[i] : []; });
+    return out;
+  }
+  if (action === "ids") {   // [더 불러오기] — 한 매치유형의 다음 목록
+    const { ouid, type, offset } = body;
+    if (!OUID_RE.test(ouid || "") || !MANAGE_TYPES.includes(+type)) throw new UserError("잘못된 요청");
+    const off = Math.max(0, Math.min(1000, +offset || 0));
+    const ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=${+type}&offset=${off}&limit=100`, key).catch(() => []);
+    return { ids: Array.isArray(ids) ? ids : [] };
+  }
+  if (action === "details") {
+    const { ouid } = body;
+    const ids = (body.ids || []).filter((id) => MATCHID_RE.test(id)).slice(0, MANAGE_DETAIL_MAX);
+    if (!OUID_RE.test(ouid || "")) throw new UserError("잘못된 요청");
+    const rows = [];
+    for (let i = 0; i < ids.length; i += MANAGE_PARALLEL) {
+      const chunk = await Promise.all(ids.slice(i, i + MANAGE_PARALLEL).map((id) =>
+        nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key, 1).catch(() => null)));
+      for (const d of chunk) { const r = d && compactMatch(d, ouid); if (r) rows.push(r); }
+    }
+    return { rows, missing: ids.length - rows.length };
+  }
+  if (action === "ranker") {
+    const type = +body.matchtype;
+    if (![50, 52].includes(type)) throw new UserError("랭커 통계는 공식경기·감독모드만 제공됩니다.");
+    const players = (body.players || []).filter((p) => Number.isInteger(p.id) && Number.isInteger(p.po)).slice(0, 60);
+    const out = {};
+    const chunks = [];
+    for (let i = 0; i < players.length; i += MANAGE_RANKER_CHUNK) chunks.push(players.slice(i, i + MANAGE_RANKER_CHUNK));
+    const results = await Promise.all(chunks.map((c) =>
+      nexonGet(`/fconline/v1/ranker-stats?matchtype=${type}&players=${encodeURIComponent(JSON.stringify(c))}`, key).catch(() => [])));
+    for (const list of results) for (const r of list || []) out[`${r.spId ?? r.spid}|${r.spPosition}`] = r.status;
+    return { ranker: out };
+  }
+  throw new UserError("알 수 없는 요청");
 }
 
 /* ---------- GitHub members.json 등록/삭제 ---------- */

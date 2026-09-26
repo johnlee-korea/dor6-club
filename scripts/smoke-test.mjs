@@ -70,5 +70,51 @@ for (const pg of PAGES) {
   [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
   ok ? pass++ : fail++;
 }
+/* ---------- 구단운영 (v2.2.0) ----------
+   js/manage.js는 ES 모듈이라 eval 불가 → import 줄을 미리 불러온 lib 객체로 바꿔 실행.
+   Worker(/manage/*)는 픽스처(실데이터 40경기 압축 행)로 흉내 내고, 모드 탭 3개를 모두 열어 본다 */
+{
+  const lib = await import(new URL("./lib/manage.js", import.meta.url));
+  const fx = JSON.parse(rd("scripts/fixtures/manage-rows.json"));
+  const workerFetch = async (url, opt) => {
+    const u = String(url);
+    if (!u.includes("/manage/")) return localFetch(url);
+    const body = JSON.parse(opt.body || "{}");
+    let data;
+    if (u.endsWith("/overview")) data = { ouid: fx.ouid, nickname: fx.nickname, level: 1, maxDivision: { 50: "챔피언스", 52: "슈퍼 챔피언스" },
+      ids: { 50: [], 60: [], 30: [], 52: fx.rows.map((r) => r.id) } };
+    else if (u.endsWith("/details")) data = { rows: fx.rows.filter((r) => body.ids.includes(r.id)) };
+    else if (u.endsWith("/ranker")) data = { ranker: {} };
+    else data = { ids: [] };
+    return { ok: true, status: 200, json: async () => data };
+  };
+  const dom = new JSDOM(rd("manage.html"), { url: "http://localhost/manage.html?q=" + encodeURIComponent(fx.nickname), pretendToBeVisual: true, runScripts: "outside-only" });
+  const { window } = dom;
+  const errors = [];
+  window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
+  window.addEventListener("unhandledrejection", (e) => errors.push("reject: " + (e.reason?.message || e.reason)));
+  window.fetch = workerFetch;
+  window.__mgLib = lib;
+  const src = rd("js/manage.js").replace(/^import \{([^}]+)\} from "[^"]+";$/m, "const {$1} = window.__mgLib;");
+  const bundle = ["js/common.js", "js/auth.js", "js/squad.js"].map((s) => rd(s)).join("\n;\n") + "\n;\n{\n" + src + "\n}";   // 블록으로 모듈 스코프 흉내
+  try {
+    window.eval(bundle);
+    window.DOR6.workerUrl = window.DOR6.workerUrl || "https://worker.test";
+    window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+  } catch (e) { errors.push("eval: " + e.message); }
+  await sleep(1500);
+  const rowsShown = window.document.querySelectorAll(".mg-row").length;
+  if (process.env.MG_DEBUG) console.log(window.document.getElementById("mg-root").textContent.replace(/s+/g, " ").slice(0, 600));
+  const click = (sel) => { const el = window.document.querySelector(sel); if (el) el.dispatchEvent(new window.MouseEvent("click", { bubbles: true })); };
+  click(".mg-row"); await sleep(200);
+  const detail = window.document.querySelectorAll(".mg-detail").length;
+  for (const m of ["official", "friendly", "manager"]) { click(`.pf-tab[data-mode="${m}"]`); await sleep(500); }
+  const hasHeader = !!window.document.querySelector(".app-header");
+  const ok = errors.length === 0 && hasHeader && rowsShown > 0 && detail > 0;
+  console.log(`${ok ? "✅" : "❌"} ${"manage.html".padEnd(15)} header:${hasHeader} 진단 행:${rowsShown} 상세:${detail}`);
+  [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
+  ok ? pass++ : fail++;
+}
+
 console.log(`\n결과: ${pass} 통과, ${fail} 실패`);
 process.exit(fail ? 1 : 0);

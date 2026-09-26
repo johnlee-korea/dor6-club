@@ -470,3 +470,54 @@ a.ms-row:hover { background: var(--surface-2); }
 .pn-tag.new { background: rgba(63,185,80,.14); color: var(--win); }
 .pn-tag.improve { background: rgba(143,195,255,.14); color: #8fc3ff; }
 .pn-tag.fix { background: rgba(255,154,92,.14); color: #ff9a5c; }
+
+/* ---------- 구단운영 (v2.2.0, manage.html) ---------- */
+.mg-cnt { font-size: 11px; font-weight: 600; opacity: .7; }
+.mg-progress { display: flex; flex-direction: column; gap: var(--sp-2); font-size: var(--fs-sm); }
+.mg-range { margin-bottom: var(--sp-3); }
+.mg-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); margin: var(--sp-3) 0 var(--sp-2); }
+.mg-stats div { background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--sp-2); text-align: center; }
+.mg-stats span { display: block; font-size: 11px; color: var(--text-muted); }
+.mg-stats b { font-size: var(--fs-lg); font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) { .mg-stats { grid-template-columns: repeat(2, 1fr); } }
+.mg-forms { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--sp-2); }
+.in-up { color: var(--win); }
+.in-down { color: var(--lose); }
+.mg-row { border-bottom: 1px solid var(--border); padding: var(--sp-2) 0; cursor: pointer; }
+.mg-row:last-of-type { border-bottom: none; }
+.mg-row.dim .mg-row-main { opacity: .6; }
+.mg-row-main { display: flex; align-items: flex-start; gap: var(--sp-2); }
+.mg-row-main .sq-face { width: 40px; height: 40px; flex: none; }
+.mg-row-info { flex: 1; min-width: 0; }
+.mg-row-name { font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mg-ref { font-weight: 400; opacity: .75; }
+.mg-verdict { flex: none; white-space: nowrap; }
+.badge.dim { color: var(--text-dim); }
+.mg-detail { margin: var(--sp-3) 0 var(--sp-1); padding: var(--sp-3); background: var(--surface-2); border-radius: var(--radius-sm); cursor: default; font-size: var(--fs-sm); display: flex; flex-direction: column; gap: var(--sp-2); }
+.mg-line { font-weight: 700; }
+.mg-line.warn { color: var(--warn); }
+.mg-line.danger { color: var(--danger); }
+.mg-metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-3); }
+.mg-metric-h { font-weight: 700; font-size: var(--fs-xs); margin-bottom: 2px; }
+.mg-bar { display: grid; grid-template-columns: 64px 1fr 38px; align-items: center; gap: 6px; font-size: 11px; }
+.mg-bar-l { color: var(--text-muted); }
+.mg-bar-t { height: 8px; background: var(--surface-3); border-radius: 4px; overflow: hidden; }
+.mg-bar-t i { display: block; height: 100%; border-radius: 4px; }
+.mg-bar-t i.me.up { background: var(--win); }
+.mg-bar-t i.me.down { background: var(--lose); }
+.mg-bar-t i.card { background: #8fc3ff; }
+.mg-bar-t i.pos { background: var(--silver-dim); }
+.mg-bar b { text-align: right; font-variant-numeric: tabular-nums; }
+.mg-extra { display: flex; flex-direction: column; gap: 4px; }
+.mg-spark svg { width: 100%; height: 40px; display: block; }
+.mg-spark polyline { fill: none; stroke: var(--silver); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.mg-lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: var(--sp-2) 0; padding: 4px; border: 1px solid rgba(255,255,255,.18); border-bottom-width: 3px; border-radius: var(--radius-sm); background: #14301f; }
+.mg-lane { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--sp-3) 4px; border-radius: 6px; background: rgba(229,83,75,var(--a)); text-align: center; }
+.mg-lane b { font-size: var(--fs-xl); }
+.mg-lane span { font-size: 11px; color: var(--text-muted); }
+.mg-lane em { font-style: normal; font-size: var(--fs-xs); font-weight: 700; }
+.mg-lane.hot { outline: 2px solid var(--danger); }
+.mg-notes { margin: 0; padding-left: 18px; font-size: var(--fs-sm); }
+.mg-foot { margin-top: var(--sp-4); display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2); }
+.mg-pending { margin-top: var(--sp-2); border-top: 1px dashed var(--border); padding-top: var(--sp-2); }
+.mg-pending > summary { cursor: pointer; font-size: var(--fs-sm); color: var(--text-muted); padding: var(--sp-2) 0; }
