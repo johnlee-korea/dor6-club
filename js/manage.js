@@ -24,6 +24,12 @@ const STORE_VER = 1;
 const MODE_KEYS = Object.keys(MODES);
 const LANE_MIN_GAMES = 20;    // 실점 루트 결론(점검 안내)을 보여줄 최소 정상 종료 경기
 const RANGES = [["all", "전체"], ["n30", "최근 30경기"], ["d7", "최근 7일"], ["d30", "최근 30일"]];
+/* 분석 범위 직접 입력 (v2.5.3, 사용자 요청: 100판 기준이면 스쿼드 바꾸기 전 선수가 섞임)
+   'n숫자' = 최근 N판. 고른 범위는 기기에 기억해 다음에도 그대로 */
+const RANGE_KEY = "dor6.manage.range";
+const CUSTOM_MIN = 5;
+const rangeCount = (r) => { const m = /^n(\d+)$/.exec(r || ""); return m ? +m[1] : null; };
+const rangeLabel = (r) => (RANGES.find(([k]) => k === r) || [])[1] || (rangeCount(r) ? `최근 ${rangeCount(r)}경기` : "전체");
 
 /* ---------- 브라우저 저장소 (사생활 모드·용량 초과에도 화면은 동작) ---------- */
 const LS = {
@@ -51,7 +57,7 @@ function saveStore(ouid, store) {
 /* ---------- 상태 (한 화면에 부품 하나) ----------
    token: mount마다 증가 — 조회 중 다른 탭·다른 사람으로 옮기면 이전 조회는 저장만 하고 화면은 건드리지 않음 */
 const S = { root: null, who: null, token: 0, ov: null, mode: null, store: null, meta: null, base: null, xg: null,
-  range: "all", openKey: null, filter: "all", busy: false };
+  range: LS.get(RANGE_KEY) || "all", openKey: null, filter: "all", busy: false };
 const $ = (sel) => (S.root ? S.root.querySelector(sel) : null);
 
 /* ---------- 붙이기 ---------- */
@@ -62,6 +68,7 @@ async function mount(container, who, { force = false } = {}) {
   const tok = S.token;
   if (!container.dataset.mgBound) {           // 같은 컨테이너에 이벤트 중복 방지
     container.addEventListener("click", onRootClick);
+    container.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.closest("[data-range-input]")) applyCustomRange(); });
     container.dataset.mgBound = "1";
   }
   if (!window.DOR6.workerUrl) { container.innerHTML = errorState("구단운영은 Worker 연결 후 이용할 수 있어요."); return; }
@@ -131,7 +138,7 @@ function renderShell(warn = "") {
 }
 
 /* ---------- 모드 표시 (필요하면 넥슨 조회) ---------- */
-async function showMode(mode, { refresh = false, more = false } = {}) {
+async function showMode(mode, { refresh = false, more = false, moreCount = PAGE } = {}) {
   const tok = S.token;
   S.mode = mode;
   LS.set(`dor6.manage.last.${S.ov.ouid}`, mode);
@@ -150,7 +157,7 @@ async function showMode(mode, { refresh = false, more = false } = {}) {
     body.innerHTML = progressHtml(0, needFirst || more ? PAGE : 0, "경기 기록 가져오는 중…");
     try {
       if (needNewer) await loadNewer(store);
-      if (needFirst || more) await loadOlder(store, Math.min(PAGE, MAX_ROWS - store.rows.length));
+      if (needFirst || more) await loadOlder(store, Math.min(needFirst ? PAGE : moreCount, MAX_ROWS - store.rows.length));
       store.tried = true;
       await ensureRanker(store);
       saveStore(ouid, store);
@@ -275,7 +282,7 @@ async function ensureRanker(store) {
 /* ---------- 분석 범위 필터 ---------- */
 function rowsInRange(rows) {
   const sorted = [...rows].sort((a, b) => String(b.d).localeCompare(String(a.d)));
-  if (S.range === "n30") return sorted.slice(0, 30);
+  if (rangeCount(S.range)) return sorted.slice(0, rangeCount(S.range));
   const days = { d7: 7, d30: 30 }[S.range];
   if (!days) return sorted;
   const from = Date.now() - days * 86400000;
@@ -293,6 +300,14 @@ async function renderMode() {
   const bl = S.base;
   const base = (bl.modes && bl.modes[def.baseMode] && bl.modes[def.baseMode].positions) || (def.baseMode === "official" ? bl.positions : null);
   const xgm = S.xg.modes ? S.xg.modes[def.baseMode] : null;
+  // 입력한 판수가 저장된 경기보다 많고 더 가져올 수 있으면 모자란 만큼 자동으로 불러옴
+  const want = rangeCount(S.range);
+  const hasMore = def.types.some((t) => store.pending[t].length || store.cursor[t] < store.ids[t].length || !store.end[t]);
+  if (want && want > store.rows.length && store.rows.length < MAX_ROWS && hasMore && !S.busy && !S.autoMore) {
+    S.autoMore = true;   // 가져온 뒤에도 모자라면(기록이 원래 적음) 반복하지 않도록 한 번만
+    showMode(S.mode, { more: true, moreCount: want - store.rows.length }).finally(() => { S.autoMore = false; });
+    return;
+  }
   const rows = rowsInRange(store.rows);
   const a = analyze(rows, { base, xg: xgm, lanesBase: xgm ? xgm.lanes : null, ranker: store.ranker });
   S.analysis = a;
@@ -303,7 +318,12 @@ async function renderMode() {
   body.innerHTML = `
     ${rows.length ? shBarHtml() : ""}
     <div class="chip-row mg-range">${RANGES.map(([k, l]) =>
-      `<button class="chip ${S.range === k ? "active" : ""}" type="button" data-range="${k}">${l}</button>`).join("")}</div>
+      `<button class="chip ${S.range === k ? "active" : ""}" type="button" data-range="${k}">${l}</button>`).join("")}
+      <span class="mg-custom ${rangeCount(S.range) && S.range !== "n30" ? "active" : ""}">최근
+        <input class="input" type="number" inputmode="numeric" min="${CUSTOM_MIN}" max="${MAX_ROWS}" data-range-input
+          value="${rangeCount(S.range) && S.range !== "n30" ? rangeCount(S.range) : ""}" placeholder="판수" aria-label="분석할 최근 판수">판
+        <button class="btn sm" type="button" data-range-apply>적용</button></span></div>
+    ${rangeCount(S.range) && rows.length < rangeCount(S.range) ? `<div class="in-dim" style="margin:-4px 0 var(--sp-2);">기록이 ${rows.length}경기뿐이라 ${rows.length}경기로 분석했어요.</div>` : ""}
     ${!rows.length ? emptyState("이 기간에는 경기가 없어요.", "📭") : `
     ${summaryCard(a, def)}
     ${playersCard(a, def, base)}
@@ -497,13 +517,27 @@ function lanesCard(a) {
 /* 📸 모드 탭 캡처 (v2.3.0, share.js) — 범위 칩·더 불러오기·'참고' 접힌 칸은 빼고 보이는 그대로 */
 function captureMode(btn) {
   const def = MODES[S.mode], s = S.analysis.summary;
-  const range = (RANGES.find(([k]) => k === S.range) || [])[1];
+  const range = rangeLabel(S.range);
   const div = S.ov.maxDivision && S.ov.maxDivision[def.types.includes(52) ? 52 : 50];
   shareSection($("#mg-body"), {
     btn, nick: S.ov.nickname, tab: `구단운영 · ${def.label}`, fileTag: `구단운영_${def.label}`,
     sub: [div, `${range} ${s.games}경기 (${fmt.date(s.from)}~${fmt.date(s.to)})`].filter(Boolean).join(" · "),
     strip: [".mg-range", ".mg-foot", ".mg-pending"]
   });
+}
+
+/* 범위 바꾸기 — 기기에 기억 */
+function setRange(r) {
+  S.range = r;
+  LS.set(RANGE_KEY, r);
+  renderMode();
+}
+/* 직접 입력한 판수 적용 (5~300) */
+function applyCustomRange() {
+  const input = $("[data-range-input]");
+  const n = Math.round(Number(input && input.value));
+  if (!n || n < CUSTOM_MIN) { if (input) { input.value = ""; input.placeholder = `${CUSTOM_MIN}판 이상`; input.focus(); } return; }
+  setRange(`n${Math.min(n, MAX_ROWS)}`);
 }
 
 /* ---------- 클릭 (부품 컨테이너에 위임) ---------- */
@@ -514,7 +548,8 @@ async function onRootClick(e) {
   if (tab) { if (!S.busy && tab.dataset.mode !== S.mode) showMode(tab.dataset.mode); return; }
   if (e.target.closest("[data-more]")) { if (!S.busy) showMode(S.mode, { more: true }); return; }
   const rg = e.target.closest("[data-range]");
-  if (rg) { S.range = rg.dataset.range; renderMode(); return; }
+  if (rg) { setRange(rg.dataset.range); return; }
+  if (e.target.closest("[data-range-apply]")) { applyCustomRange(); return; }
   const fl = e.target.closest("[data-filter]");
   if (fl) { S.filter = fl.dataset.filter; renderMode(); return; }
   const sum = e.target.closest(".mg-pending > summary");
