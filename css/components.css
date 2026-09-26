@@ -521,3 +521,5 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-3); }
 .mg-modes { margin-bottom: var(--sp-3); }
 .mg-modes .chip { font-weight: 700; }
+/* 레어 3조합 스타일 (v2.5.0) */
+.ps-rare { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; color: #2a1e00; background: linear-gradient(135deg, #ffe08a, #d4a017); vertical-align: 1px; }

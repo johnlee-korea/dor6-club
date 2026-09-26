@@ -100,7 +100,7 @@ function row(m) {
       <div class="info">
         <div class="nick">${escapeHtml(m.ingameNick)} ${ci ? `<span class="ctrl-ico" title="주 컨트롤러: ${ci[1]}">${ci[0]}</span>` : ""} ${roleBadge(m.role)} ${badges}</div>
         <div class="form-line">${act ? formDots(act.form) + " " + streakBadge(act.streak) : ""}
-          ${ps && ps.style ? `<span class="ms-style">🎭 ${escapeHtml(ps.style.name)}</span>` : ""}</div>
+          ${ps && ps.style ? `<span class="ms-style">🎭 ${escapeHtml(ps.style.name)}${ps.style.rare ? " ✨" : ""}</span>` : ""}</div>
       </div>
       <div class="meta">
         <div style="color:var(--silver);font-weight:700;">${escapeHtml(prof.maxDivisionName || "-")}</div>

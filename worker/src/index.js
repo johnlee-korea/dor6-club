@@ -8,7 +8,7 @@
      → GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 담당
    ============================================================ */
 
-import { styleRaw, computeMetrics, judge } from "../../scripts/lib/playstyle.js";
+import { styleRaw, withShots, computeMetrics, judge } from "../../scripts/lib/playstyle.js";
 import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/lib/insight.js";
 import { compactMatch } from "../../scripts/lib/manage.js";
 
@@ -206,8 +206,9 @@ async function publicSearch(ouid, env) {
     // 분석용 원본 — 정상 종료 경기만 (클럽 집계와 같은 기준)
     const raw = styleRaw(me, opp);
     if (raw && raw.end === 0 && d.matchInfo.length === 2) {
-      raws.push(raw);
-      pRows.push(...(insightRaw(me, opp).pStats || []));
+      const ins = insightRaw(me, opp);
+      raws.push(withShots(raw, ins.shots));   // v2.5.0 슈팅 유형 지표 포함 (클럽 집계와 같은 계산)
+      pRows.push(...(ins.pStats || []));
     }
   }
   const w = out.matches.filter((m) => m.result === "win").length;

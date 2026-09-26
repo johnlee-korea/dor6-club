@@ -23,7 +23,7 @@ function psBlock(ps, minGames) {
   if (!ps.style) return `<div class="ps"><span class="ps-wait">🎭 스타일 분석 대기 (${ps.games}/${minGames}경기)</span></div>`;
   return `
     <div class="ps">
-      <div><span class="ps-name">🎭 ${escapeHtml(ps.style.name)}</span> <span class="ps-line">“${escapeHtml(ps.style.line)}”</span></div>
+      <div><span class="ps-name">🎭 ${escapeHtml(ps.style.name)}</span>${ps.style.rare ? ` <span class="ps-rare" title="세 가지 특징이 모두 맞아야 나오는 레어 스타일">✨ 레어</span>` : ""} <span class="ps-line">“${escapeHtml(ps.style.line)}”</span></div>
       <div class="ps-chips">${ps.highs.map((x) => psChip(x, "up")).join("")}${ps.lows.map((x) => psChip(x, "down")).join("")}</div>
     </div>`;
 }

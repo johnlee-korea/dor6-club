@@ -18,7 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setCallInterval, getOuidByNickname, getMatchIds, getMatchDetail } from "./lib/nexon-api.js";
-import { styleRaw, computeMetrics, baselineStats } from "./lib/playstyle.js";
+import { styleRaw, withShots, computeMetrics, baselineStats } from "./lib/playstyle.js";
 import { insightRaw, unitAverages, positionBaseline } from "./lib/insight.js";
 import { buildXgModel, laneShares } from "./lib/manage.js";
 
@@ -79,8 +79,9 @@ async function buildMode(mode) {
         const me = info.find((i) => i.ouid === ouid), opp = info.find((i) => i.ouid !== ouid);
         const raw = styleRaw(me, opp);
         if (!raw || raw.end !== 0 || info.length !== 2) continue;
-        raws.push(raw);
-        pRows.push(...(insightRaw(me, opp).pStats || []));
+        const ins = insightRaw(me, opp);
+        raws.push(withShots(raw, ins.shots));   // v2.5.0 슈팅 유형 지표 포함
+        pRows.push(...(ins.pStats || []));
         const sh = (side) => (side.shootDetail || []).map((x) => [x.x, x.y, x.type, x.result,
           x.assist ? x.assistX : null, x.assist ? x.assistY : null]);
         if (!seen.has(id)) { seen.add(id); shots.push(...sh(me), ...sh(opp)); }
@@ -95,6 +96,8 @@ async function buildMode(mode) {
   }
   // 표본이 너무 적으면 이 모드는 기존 값 유지 (랭킹 페이지 구조 변경 등 대비)
   if (ok < 20) { console.warn(`⚠ [${mode}] 유효 랭커 ${ok}명 — 표본 부족, 기존 기준값 유지`); return null; }
+  // 검수용: STYLE_DUMP=경로 이면 랭커별 플레이스타일 지표를 저장(스타일 분포 확인)
+  if (process.env.STYLE_DUMP && def.styles) fs.writeFileSync(process.env.STYLE_DUMP, JSON.stringify(styleList));
   const xg = buildXgModel(shots);
   const lanes = laneShares(conceded, xg).share;
   console.log(`✅ [${mode}] 유효 랭커 ${ok}명 · 경기 ${seen.size} · 슈팅 ${shots.length}`);

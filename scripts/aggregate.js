@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
 import { latestLineupMatch } from "./lib/squad.js";
-import { computeMetrics, judge, METRICS } from "./lib/playstyle.js";
+import { computeMetrics, judge, METRICS, withShots } from "./lib/playstyle.js";
 import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
   GROUP_LABEL, P_METRICS } from "./lib/insight.js";
 
@@ -180,7 +180,7 @@ function buildPlaystyles() {
       .filter((x) => counted.includes(x.matchType) && x.styleRaw && x.styleRaw.end === 0)
       .sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate))
       .slice(0, opt.recentGames)
-      .map((x) => x.styleRaw);
+      .map((x) => withShots(x.styleRaw, x.shots));   // v2.5.0 슈팅 유형 지표 포함
     if (raws.length < opt.minGames) { players[m.ouid] = { games: raws.length }; continue; }
     players[m.ouid] = { games: raws.length, ...judge(computeMetrics(raws), baseline.stats) };
   }
