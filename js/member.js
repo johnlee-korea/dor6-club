@@ -3,7 +3,7 @@
    한 사람의 정보를 한 곳에: 헤더(닉·등급·폼·시즌 판수) + 탭 5개
      개요(전적 요약·플레이스타일) · 인사이트(에이스·골 시간대·슈팅맵) · 스쿼드 · 라이벌 · 경기
    선택한 탭은 주소 #탭에 반영 → 카톡 공유 링크·뒤로가기가 그대로 동작
-   화면 조각은 공용 파일 재사용: insight-ui.js · activity-ui.js · squad.js, 이미지 공유는 share.js
+   화면 조각은 공용 파일 재사용: insight-ui.js · activity-ui.js · squad.js, 이미지 공유는 share.js(탭마다 📸 — v2.3.0)
    ============================================================ */
 
 const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "클래식" };
@@ -77,7 +77,6 @@ function renderHead() {
         · 승률 <b>${rate}%</b> <span class="in-dim">· 인정 매치 누적 ${counted.length}경기</span></div>
       <div class="pf-actions">
         <button class="btn sm ${isMe ? "primary" : ""}" type="button" data-me>${isMe ? "⭐ 내 프로필" : "☆ 내 프로필로 설정"}</button>
-        <button class="btn sm" type="button" data-share>📸 이미지로 공유</button>
       </div>
     </div>`;
   const head = document.getElementById("pf-head");
@@ -85,7 +84,6 @@ function renderHead() {
     myProfile.set(myProfile.get() === m.ouid ? null : m.ouid);   // 다시 누르면 해제
     renderHead();
   });
-  head.querySelector("[data-share]").addEventListener("click", (e) => shareProfileImage(PF, e.currentTarget));
 }
 
 /* ---------- 탭 전환 ---------- */
@@ -96,10 +94,24 @@ function showTab() {
   const body = document.getElementById("pf-body");
   const render = { overview: tabOverview, insight: tabInsight, squad: tabSquad, rival: tabRival, matches: tabMatches }[tab];
   body.innerHTML = `<div class="loading">불러오는 중…</div>`;
-  Promise.resolve(render(body)).catch((e) => {
+  Promise.resolve(render(body)).then(() => addCaptureBar(body, tab)).catch((e) => {
     console.error(`프로필 탭(${tab}) 표시 실패:`, e);
     body.innerHTML = errorState("이 탭을 표시하지 못했어요. 잠시 후 다시 시도해 주세요.");
   });
+}
+
+/* 📸 탭별 캡처 (v2.3.0) — 탭 본문 맨 위 버튼, 보이는 그대로 이미지로 (share.js shareSection)
+   빈 탭(경기 없음 등)에는 버튼을 달지 않음 */
+function addCaptureBar(body, tab) {
+  if (body.querySelector(".empty") && body.children.length === 1) return;
+  body.insertAdjacentHTML("afterbegin", shBarHtml());
+  shWarmImages(body);
+  const label = (PF_TABS.find(([k]) => k === tab) || [])[1] || tab;
+  const m = PF.member, prof = PF.prof;
+  body.querySelector("[data-capture]").addEventListener("click", (e) => shareSection(body, {
+    btn: e.currentTarget, nick: m.ingameNick, tab: label, fileTag: tab,
+    sub: [prof.maxDivisionName, prof.level ? `Lv.${prof.level}` : "", m.role].filter(Boolean).join(" · ")
+  }));
 }
 
 /* 개요: 최근 15경기(인정 매치) + 🎭 플레이스타일 */

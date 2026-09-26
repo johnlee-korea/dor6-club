@@ -22,7 +22,7 @@ const PAGES = [
     act: (w) => { const q = w.document.getElementById("member-q"); q.value = "dor6"; q.dispatchEvent(new w.Event("input")); } },
   // 개인 프로필: 실제 회원 ouid로 열고 탭 5개를 차례로 전환해 오류 없는지 확인
   { file: "member.html", url: "http://localhost/member.html?id=" + FIRST_OUID,
-    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/share.js", "js/member.js"], root: "profile-root", expect: ".pf-tab.active",
+    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/share.js", "js/member.js"], root: "profile-root", expect: ".pf-tab.active + * [data-capture], #pf-body [data-capture]",   // 탭마다 📸 버튼 (v2.3.0)
     act: async (w) => { for (const t of ["insight", "squad", "rival", "matches", "overview"]) { w.location.hash = t; w.dispatchEvent(new w.HashChangeEvent("hashchange")); await sleep(250); } } },
   { file: "dashboard.html", scripts: ["js/common.js", "js/squad.js", "js/activity-ui.js", "js/share.js", "js/dashboard.js"], root: "dash-root", expect: "[data-dash-share]" },
   { file: "tournament.html", scripts: ["js/common.js", "js/tournament.js"], root: "tn-root", expect: ".tn-pick" },
@@ -96,7 +96,7 @@ for (const pg of PAGES) {
   window.fetch = workerFetch;
   window.__mgLib = lib;
   const src = rd("js/manage.js").replace(/^import \{([^}]+)\} from "[^"]+";$/m, "const {$1} = window.__mgLib;");
-  const bundle = ["js/common.js", "js/auth.js", "js/squad.js"].map((s) => rd(s)).join("\n;\n") + "\n;\n{\n" + src + "\n}";   // 블록으로 모듈 스코프 흉내
+  const bundle = ["js/common.js", "js/auth.js", "js/squad.js", "js/share.js"].map((s) => rd(s)).join("\n;\n") + "\n;\n{\n" + src + "\n}";   // 블록으로 모듈 스코프 흉내
   try {
     window.eval(bundle);
     window.DOR6.workerUrl = window.DOR6.workerUrl || "https://worker.test";
@@ -110,8 +110,9 @@ for (const pg of PAGES) {
   const detail = window.document.querySelectorAll(".mg-detail").length;
   for (const m of ["official", "friendly", "manager"]) { click(`.pf-tab[data-mode="${m}"]`); await sleep(500); }
   const hasHeader = !!window.document.querySelector(".app-header");
-  const ok = errors.length === 0 && hasHeader && rowsShown > 0 && detail > 0;
-  console.log(`${ok ? "✅" : "❌"} ${"manage.html".padEnd(15)} header:${hasHeader} 진단 행:${rowsShown} 상세:${detail}`);
+  const capBtn = window.document.querySelectorAll("#mg-body [data-capture]").length;   // 모드 탭 📸 (v2.3.0)
+  const ok = errors.length === 0 && hasHeader && rowsShown > 0 && detail > 0 && capBtn > 0;
+  console.log(`${ok ? "✅" : "❌"} ${"manage.html".padEnd(15)} header:${hasHeader} 진단 행:${rowsShown} 상세:${detail} 📸:${capBtn}`);
   [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
   ok ? pass++ : fail++;
 }

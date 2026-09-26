@@ -1,66 +1,118 @@
 /* ============================================================
-   share.js — 이미지로 공유 (v2.0.0)
-   - shareProfileImage(PF, btn): 프로필 공유 카드 (닉·등급·시즌 판수·폼·플레이스타일·에이스 3명)
+   share.js — 이미지로 공유 (v2.0.0 → v2.3.0 탭별 캡처)
+   - shareSection(node, opts): 보이는 탭 본문을 그대로 복제해 이미지로 (프로필 5탭 · 구단운영 모드 탭)
    - shareDashboardImage(dash, btn): 전체 판수 한 장 (30명 초과 시 2단)
-   방식: 화면 밖에 공유 전용 카드 DOM을 만들고 html-to-image(jsdelivr, 클릭 시에만 로딩)로 PNG 변환
-   선수 얼굴·시즌 아이콘은 넥슨 서버가 CORS를 허용하지 않아 Worker /img 프록시로 받아 data URL로 넣는다
-   공유: 미리보기 창의 [공유하기] 버튼(새 탭 동작 → 모바일 공유 시트·카톡) / [이미지 저장](다운로드)
+   방식: 화면 밖에 카드 DOM을 만들고 html-to-image로 캔버스 → UPNG.js로 256색 PNG(파일 크기 절반 이하)
+     · 라이브러리는 페이지가 한가할 때 미리 받아 둠(첫 클릭 대기 제거)
+     · 넥슨 이미지는 CORS 미허용 → Worker /img 프록시로 받아 data URL로 넣고, 페이지 메모리에 캐시(다른 탭 재사용)
+     · 양자화 도구를 못 받으면 일반 PNG로 대체 — 공유는 항상 가능
+   공유: 미리보기 창의 [공유하기](모바일 공유 시트·카톡) / [이미지 저장](다운로드)
      ※ 변환이 끝난 뒤 바로 navigator.share를 부르면 iOS에서 '사용자 동작 없음'으로 막히므로 한 번 더 누르게 함
-   의존: common.js · squad.js(sqLoadMeta·sqBuildTeam·SQ_IMG) · activity-ui.js · insight-ui.js(psChip)
+   의존: common.js(escapeHtml·fmt·progressStatus) · squad.js(SQ_IMG·sqShowModal)
    ============================================================ */
 
-const H2I_SRC = "https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js";
-let _h2iPromise = null;
-function loadHtmlToImage() {
-  if (window.htmlToImage) return Promise.resolve(window.htmlToImage);
-  if (!_h2iPromise) {
-    _h2iPromise = new Promise((resolve, reject) => {
+const SH_LIBS = {
+  h2i:  "https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js",
+  pako: "https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js",     // UPNG가 전역 pako를 씀 → 먼저 로딩
+  upng: "https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.js"
+};
+const SH_COLORS = 256;           // 팔레트 색 수 (어두운 단색 배경·글자 위주라 256색으로 충분)
+const SH_PIXEL_RATIO = 2;        // 폭 480px → 이미지 960px
+const SH_TAB_WIDTH = 480;
+const SH_IMG_PARALLEL = 8;       // 프록시 동시 요청 수
+
+/* ---------- 외부 스크립트 로딩 (한 번만) ---------- */
+const _shScripts = {};
+function shLoadScript(src) {
+  if (!_shScripts[src]) {
+    _shScripts[src] = new Promise((resolve, reject) => {
       const s = document.createElement("script");
-      s.src = H2I_SRC;
-      s.onload = () => resolve(window.htmlToImage);
-      s.onerror = () => { _h2iPromise = null; reject(new Error("이미지 도구 로딩 실패")); };
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = () => { delete _shScripts[src]; reject(new Error(`스크립트 로딩 실패: ${src}`)); };
       document.head.appendChild(s);
     });
   }
-  return _h2iPromise;
+  return _shScripts[src];
+}
+const loadHtmlToImage = () => shLoadScript(SH_LIBS.h2i).then(() => window.htmlToImage);
+/* 양자화 도구 — 실패해도 null (일반 PNG로 대체) */
+const loadUpng = () => shLoadScript(SH_LIBS.pako).then(() => shLoadScript(SH_LIBS.upng))
+  .then(() => window.UPNG || null)
+  .catch((e) => { console.warn("[공유] 256색 변환 도구 로딩 실패 — 일반 PNG로 만듭니다:", e.message); return null; });
+
+/* 페이지가 뜬 뒤 한가할 때 미리 받아 둠 */
+function shPreload() {
+  loadHtmlToImage().catch((e) => console.warn("[공유] 미리 로딩 실패:", e.message));
+  loadUpng();
+}
+if (typeof window !== "undefined") {
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 2500));
+  window.addEventListener("load", () => idle(shPreload, { timeout: 4000 }));
 }
 
-/* 넥슨 이미지 → data URL (Worker 프록시 경유). 실패하면 null */
-async function proxiedDataUrl(url) {
-  try {
-    const res = await fetch(`${window.DOR6.workerUrl}/img?u=${encodeURIComponent(url)}`);
-    if (!res.ok) return null;
-    const blob = await res.blob();
-    return await new Promise((resolve) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.onerror = () => resolve(null);
-      r.readAsDataURL(blob);
-    });
-  } catch { return null; }
+/* ---------- 넥슨 이미지 → data URL (Worker 프록시, 페이지 메모리 캐시) ---------- */
+const _shImgCache = new Map();   // url → Promise<dataURL|null>
+function proxiedDataUrl(url) {
+  if (!_shImgCache.has(url)) {
+    _shImgCache.set(url, (async () => {
+      try {
+        const res = await fetch(`${window.DOR6.workerUrl}/img?u=${encodeURIComponent(url)}`);
+        if (!res.ok) return null;
+        const blob = await res.blob();
+        return await new Promise((resolve) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result);
+          r.onerror = () => resolve(null);
+          r.readAsDataURL(blob);
+        });
+      } catch { return null; }
+    })());
+  }
+  return _shImgCache.get(url);
 }
 
-/* 카드 안 넥슨 이미지 채우기: data-img(1순위) → data-img2(대체) → 없으면 요소 제거 */
+/* 카드 안 넥슨 이미지 채우기: data-img(1순위) → data-img2(대체) → 없으면 요소 제거. 동시 요청 제한 */
 async function inlineImages(node) {
-  await Promise.all([...node.querySelectorAll("img[data-img]")].map(async (img) => {
-    const data = await proxiedDataUrl(img.dataset.img) || (img.dataset.img2 && await proxiedDataUrl(img.dataset.img2));
-    if (data) img.src = data; else img.remove();
-  }));
+  const imgs = [...node.querySelectorAll("img[data-img]")];
+  let i = 0;
+  const worker = async () => {
+    while (i < imgs.length) {
+      const img = imgs[i++];
+      const data = await proxiedDataUrl(img.dataset.img) || (img.dataset.img2 && await proxiedDataUrl(img.dataset.img2));
+      if (data) img.src = data; else img.remove();
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(SH_IMG_PARALLEL, imgs.length) }, worker));
 }
 
-/* 공통: 카드 DOM → PNG Blob */
-async function renderCard(html, width) {
+/* ---------- 캔버스 → PNG Blob (256색 우선) ---------- */
+async function encodePng(canvas) {
+  const UPNG = await loadUpng();
+  if (UPNG) {
+    try {
+      const { width: w, height: h } = canvas;
+      const rgba = canvas.getContext("2d").getImageData(0, 0, w, h).data.buffer;
+      return new Blob([UPNG.encode([rgba], w, h, SH_COLORS)], { type: "image/png" });
+    } catch (e) { console.warn("[공유] 256색 변환 실패 — 일반 PNG로 만듭니다:", e); }
+  }
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+}
+
+/* 공통: 카드 HTML(또는 노드) → PNG Blob */
+async function renderCard(content, width) {
   const h2i = await loadHtmlToImage();
   const wrap = document.createElement("div");
   wrap.className = "sh-stage";
-  wrap.innerHTML = html;
+  if (typeof content === "string") wrap.innerHTML = content; else wrap.appendChild(content);
   const card = wrap.firstElementChild;
   card.style.width = width + "px";
   document.body.appendChild(wrap);
   try {
     await inlineImages(card);
     const bg = getComputedStyle(document.body).backgroundColor;
-    return await h2i.toBlob(card, { pixelRatio: 2, backgroundColor: bg, skipFonts: true, cacheBust: false });
+    const canvas = await h2i.toCanvas(card, { pixelRatio: SH_PIXEL_RATIO, backgroundColor: bg, skipFonts: true, cacheBust: false });
+    return await encodePng(canvas);
   } finally {
     wrap.remove();
   }
@@ -71,8 +123,10 @@ async function makeAndPreview(btn, build, fileName, title) {
   const label = btn ? btn.textContent : "";
   if (btn) { btn.disabled = true; btn.textContent = "⏳ 이미지 만드는 중…"; }
   try {
+    const t0 = performance.now();
     const blob = await build();
     if (!blob) throw new Error("이미지 변환 결과 없음");
+    console.info(`[공유] ${fileName} ${Math.round(blob.size / 1024)}KB · ${Math.round(performance.now() - t0)}ms`);
     showSharePreview(blob, fileName, title);
   } catch (e) {
     console.error("공유 이미지 생성 실패:", e);
@@ -108,69 +162,76 @@ function showSharePreview(blob, fileName, title) {
 const shDate = () => { const d = new Date(), p = (x) => String(x).padStart(2, "0");
   return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; };
 const shFileDate = () => new Date().toISOString().slice(0, 10);
+const shSafe = (s) => String(s).replace(/[\\/:*?"<>|\s]+/g, "_");
 
-/* ---------- 📸 프로필 카드 ---------- */
-async function shareProfileImage(PF, btn) {
-  await makeAndPreview(btn, async () => {
-    const meta = await sqLoadMeta();
-    return renderCard(profileCardHtml(PF, meta), 540);
-  }, `dor6_${PF.member.ingameNick}_${shFileDate()}.png`, `${PF.member.ingameNick} 프로필`);
-}
-
-function profileCardHtml(PF, meta) {
-  const { member: m, prof, act, style, insMe, ins, season, counted } = PF;
-  const w = counted.filter((x) => x.result === "win").length;
-  const d = counted.filter((x) => x.result === "draw").length;
-  const l = counted.filter((x) => x.result === "lose").length;
-  const rate = counted.length ? Math.round((w / counted.length) * 100) : 0;
-  const row = season && season.row;
-  const ctrl = insMe && { keyboard: "⌨️ 키보드", gamepad: "🎮 패드" }[insMe.ctrl];
-
-  const styleHtml = style && style.style ? `
-    <div class="sh-sec">
-      <div class="sh-sec-t">🎭 플레이스타일</div>
-      <div class="sh-style">${escapeHtml(style.style.name)}</div>
-      <div class="sh-line">“${escapeHtml(style.style.line)}”</div>
-      <div class="ps-chips">${style.highs.map((x) => psChip(x, "up")).join("")}${style.lows.map((x) => psChip(x, "down")).join("")}</div>
-    </div>` : "";
-
-  const aces = (insMe && insMe.ace) || [];
-  const aceHtml = aces.length ? `
-    <div class="sh-sec">
-      <div class="sh-sec-t">⚽ 에이스 선수 <span class="sh-dim">같은 포지션 랭커 대비</span></div>
-      ${aces.map((a) => {
-        const card = sqBuildTeam([{ spId: a.spId, spPosition: a.pos, spGrade: 0 }], meta).starters[0];
-        const metric = (ins.metricLabels || {})[a.metric] || a.metric;
-        const group = (ins.groupLabels || {})[a.group] || a.group;
-        const ratio = a.base > 0 && a.metric !== "rt" ? ` · ${(a.value / a.base).toFixed(1)}배` : "";
-        return `
-        <div class="sh-ace">
-          <div class="sh-face"><img data-img="${SQ_IMG.action(a.spId)}" data-img2="${SQ_IMG.face(card.pid)}" alt=""></div>
-          <div class="sh-ace-b">
-            <div class="sh-ace-title">${a.title ? `${a.title.emoji} ${escapeHtml(a.title.name)}` : "돋보인 지표"}</div>
-            <div class="sh-ace-name">${card.seasonImg ? `<img class="sh-season" data-img="${escapeHtml(card.seasonImg)}" alt="">` : ""}${escapeHtml(card.name)}
-              <span class="badge">${escapeHtml(meta.posName[a.pos] || group)}</span></div>
-            <div class="sh-dim">${escapeHtml(metric)} ${a.value}/경기 · 랭커 ${escapeHtml(group)} ${a.base}${ratio}</div>
-          </div>
-        </div>`;
-      }).join("")}
-    </div>` : "";
-
-  return `
-    <div class="sh-card">
-      <div class="sh-top"><img class="sh-logo" src="dor6.png" alt=""><span>도륙 · Dor6</span></div>
-      <div class="sh-nick">${escapeHtml(m.ingameNick)} ${roleBadge(m.role)}</div>
-      <div class="sh-sub">${escapeHtml(prof.maxDivisionName || "-")}${prof.level ? ` · Lv.${prof.level}` : ""}${ctrl ? ` · ${ctrl}` : ""}</div>
-      <div class="sh-stats">
-        ${row ? `<div><b>${row.played}</b><span>/${row.target} ${escapeHtml(season.name)} 판수</span></div>` : ""}
-        <div><b>${w}-${d}-${l}</b><span>승률 ${rate}%</span></div>
+/* ---------- 📸 탭 캡처 (v2.3.0) ----------
+   source: 화면의 탭 본문 노드 — 복제해서 쓰므로 화면은 그대로
+   opts: { btn, nick, sub, tab, fileTag, strip } — strip: 복제본에서 추가로 뺄 선택자
+   복제본 정리: 조작 요소(버튼·필터 칩·접힌 설명) 제거, 넥슨 이미지는 프록시 data URL로 교체 */
+const SH_STRIP = ["button", ".btn", ".in-filter", "details:not([open])", ".sh-bar", "[data-no-capture]"];
+function shareSection(source, { btn, nick, sub = "", tab, fileTag, strip = [] }) {
+  return makeAndPreview(btn, () => {
+    const body = source.cloneNode(true);
+    body.removeAttribute("id");
+    inlineSvgStyles(source, body);
+    body.querySelectorAll([...SH_STRIP, ...strip].join(",")).forEach((el) => el.remove());
+    body.querySelectorAll("img").forEach((img) => {
+      const src = img.getAttribute("src") || "";
+      img.removeAttribute("onerror");
+      img.removeAttribute("loading");
+      if (img.classList.contains("sq-noimg") || !src) { img.remove(); return; }
+      if (/^https:\/\/(fco\.dn\.nexoncdn\.co\.kr|ssl\.nexon\.com)\//.test(src)) {
+        img.dataset.img = src;
+        if (img.dataset.pid) img.dataset.img2 = SQ_IMG.face(img.dataset.pid);   // 시즌 액션 이미지가 없으면 기본 얼굴
+        img.removeAttribute("src");
+      }
+    });
+    const card = document.createElement("div");
+    card.className = "sh-card sh-tab";
+    card.innerHTML = `
+      <div class="sh-tabhead">
+        <img class="sh-logo" src="dor6.png" alt="">
+        <div class="sh-tabhead-b"><div class="sh-tabnick">${escapeHtml(nick)}</div>
+          <div class="sh-dim">${escapeHtml(sub)}</div></div>
+        <span class="sh-tabname">${escapeHtml(tab)}</span>
       </div>
-      <div class="sh-form">${act ? formDots(act.form) + " " + streakBadge(act.streak) : ""}</div>
-      ${styleHtml}
-      ${aceHtml}
-      <div class="sh-foot">johnlee-korea.github.io/dor6-club · ${shDate()}</div>
-    </div>`;
+      <div class="sh-tabbody"></div>
+      <div class="sh-foot">도륙 · Dor6 · johnlee-korea.github.io/dor6-club · ${shDate()}</div>`;
+    card.querySelector(".sh-tabbody").appendChild(body);
+    return renderCard(card, SH_TAB_WIDTH);
+  }, `dor6_${shSafe(nick)}_${shSafe(fileTag || tab)}_${shFileDate()}.png`, `${nick} ${tab}`);
 }
+
+/* SVG(슈팅맵·평점 추이) 안 요소는 CSS 클래스로 색을 입히는데, html-to-image가 이를 옮기지 못해 검게 나옴(실측)
+   → 화면에 그려진 원본의 계산된 스타일을 복제본에 인라인으로 복사 (복제 직후라 요소 순서가 같음) */
+const SH_SVG_PROPS = ["fill", "fill-opacity", "stroke", "stroke-width", "stroke-opacity", "stroke-dasharray", "opacity", "vector-effect"];
+function inlineSvgStyles(source, clone) {
+  const src = source.querySelectorAll("svg, svg *"), dst = clone.querySelectorAll("svg, svg *");
+  src.forEach((el, i) => {
+    const d = dst[i];
+    if (!d) return;
+    const cs = getComputedStyle(el);
+    for (const p of SH_SVG_PROPS) d.style.setProperty(p, cs.getPropertyValue(p));
+  });
+}
+
+/* 탭을 보고 있는 동안 한가할 때 그 탭의 넥슨 이미지를 미리 받아 둠 → 📸 누를 때 대기 없음
+   (프록시 첫 조회는 Cloudflare 캐시가 비어 있으면 느림 — 실측 스쿼드 탭 6초 → 미리 받으면 1초 안팎) */
+const SH_WARM_MAX = 40;
+function shWarmImages(node) {
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+  idle(() => {
+    const urls = [...new Set([...node.querySelectorAll("img")].map((i) => i.getAttribute("src") || "")
+      .filter((u) => /^https:\/\/(fco\.dn\.nexoncdn\.co\.kr|ssl\.nexon\.com)\//.test(u)))].slice(0, SH_WARM_MAX);
+    let i = 0;
+    const next = () => { if (i < urls.length) proxiedDataUrl(urls[i++]).then(next); };
+    for (let k = 0; k < 4; k++) next();   // 동시 4개로 천천히
+  }, { timeout: 3000 });
+}
+
+/* 탭 본문 맨 위에 붙일 📸 버튼 줄 */
+const shBarHtml = (label = "📸 이 탭 이미지로") =>
+  `<div class="sh-bar"><button class="btn sm" type="button" data-capture>${label}</button></div>`;
 
 /* ---------- 📸 전체 판수 한 장 ---------- */
 async function shareDashboardImage(dash, btn) {

@@ -8,7 +8,7 @@
      4) scripts/lib/manage.js analyze() 로 계산 → 그리기만
    저장(이 브라우저만): 검색 요약 dor6.manage.ov.<닉>, 모드별 경기 dor6.manage.<ouid>.<mode>, 랭커 dor6.manage.rk.<유형>
    [최신 업데이트]를 눌렀을 때만 넥슨 조회, 새 경기만 추가(증분)
-   의존: common.js(escapeHtml·fmt·loadJSON·myProfile·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴)
+   의존: common.js(escapeHtml·fmt·loadJSON·myProfile·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴), share.js(📸 모드 탭 캡처)
    ============================================================ */
 
 import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES } from "../scripts/lib/manage.js";
@@ -336,6 +336,7 @@ async function renderMode() {
   const canMore = store.rows.length < MAX_ROWS &&
     def.types.some((t) => store.pending[t].length || store.cursor[t] < store.ids[t].length || !store.end[t]);
   body.innerHTML = `
+    ${rows.length ? shBarHtml() : ""}
     <div class="chip-row mg-range">${RANGES.map(([k, l]) =>
       `<button class="chip ${S.range === k ? "active" : ""}" type="button" data-range="${k}">${l}</button>`).join("")}</div>
     ${!rows.length ? emptyState("이 기간에는 경기가 없어요.", "📭") : `
@@ -346,6 +347,7 @@ async function renderMode() {
       ${canMore ? `<button class="btn sm" type="button" data-more>📥 과거 경기 ${Math.min(PAGE, MAX_ROWS - store.rows.length)}경기 더 불러오기</button>` : ""}
       <div class="in-dim">저장된 ${def.label} ${store.rows.length}경기 (최대 ${MAX_ROWS}) · ${footNote(def)}</div>
     </div>`;
+  if (rows.length) shWarmImages(body);   // 📸 캡처 대비 선수 이미지 미리 받기 (share.js)
 }
 
 function footNote(def) {
@@ -527,6 +529,18 @@ function lanesCard(a) {
     </div>`;
 }
 
+/* 📸 모드 탭 캡처 (v2.3.0, share.js) — 범위 칩·더 불러오기·'참고' 접힌 칸은 빼고 보이는 그대로 */
+function captureMode(btn) {
+  const def = MODES[S.mode], s = S.analysis.summary;
+  const range = (RANGES.find(([k]) => k === S.range) || [])[1];
+  const div = S.ov.maxDivision && S.ov.maxDivision[def.types.includes(52) ? 52 : 50];
+  shareSection(document.getElementById("mg-body"), {
+    btn, nick: S.ov.nickname, tab: `구단운영 · ${def.label}`, fileTag: `구단운영_${def.label}`,
+    sub: [div, `${range} ${s.games}경기 (${fmt.date(s.from)}~${fmt.date(s.to)})`].filter(Boolean).join(" · "),
+    strip: [".mg-range", ".mg-foot", ".mg-pending"]
+  });
+}
+
 /* ---------- 클릭 ---------- */
 async function onRootClick(e) {
   if (e.target.closest("[data-refresh]")) { if (!S.busy) search(S.ov.nickname, true); return; }
@@ -539,6 +553,8 @@ async function onRootClick(e) {
   if (fl) { S.filter = fl.dataset.filter; renderMode(); return; }
   const sum = e.target.closest(".mg-pending > summary");
   if (sum) { S.pendingOpen = !sum.parentElement.open; return; }   // 다시 그려도 펼침 상태 유지
+  const cap = e.target.closest("[data-capture]");
+  if (cap) { captureMode(cap); return; }
   const row = e.target.closest("[data-player]");
   if (row && !e.target.closest(".mg-detail")) {
     S.openKey = S.openKey === row.dataset.player ? null : row.dataset.player;
