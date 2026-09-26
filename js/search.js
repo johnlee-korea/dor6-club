@@ -158,6 +158,19 @@ function srShowTab() {
   }
 }
 
+/* 클럽 가입 문의 배너 (v2.5.2) — 검색 결과 맨 위, 캡처 이미지에는 안 들어감(결과 탭 밖) */
+function recruitBanner() {
+  const url = window.DOR6.recruitUrl;
+  if (!url) return "";
+  return `
+    <a class="recruit" href="${escapeHtml(url)}" target="_blank" rel="noopener">
+      <img class="recruit-logo" src="dor6.png" alt="">
+      <span class="recruit-b"><b>FC온라인 클럽 도륙(Dor6) 클럽원 모집 중</b>
+        <span>이 분석은 도륙 클럽 사이트에서 제공해요 · 가입 문의는 오픈채팅으로</span></span>
+      <span class="recruit-go">가입 문의 →</span>
+    </a>`;
+}
+
 function renderResult(root, d, fetchedAt) {
   const s = d.summary || {};
   const strip = (d.matches || []).slice(0, 15).map((m) =>
@@ -175,6 +188,7 @@ function renderResult(root, d, fetchedAt) {
     : emptyState("최근 공식경기 기록이 없습니다.");
 
   root.innerHTML = `
+    ${recruitBanner()}
     <div class="pf-tabs" role="tablist">
       <a href="#record" class="pf-tab" data-srtab="record" role="tab">📋 전적</a>
       <a href="#manage" class="pf-tab" data-srtab="manage" role="tab">🩺 구단운영</a>

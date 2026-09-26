@@ -10,7 +10,9 @@ window.DOR6 = {
   /* Cloudflare Worker URL (전적검색·관리자 백엔드) */
   workerUrl: "https://dor6-club-admin.dor6club.workers.dev",
   /* GitHub Pages base path (레포명). 로컬 file:// 열람 시 자동 무시 */
-  basePath: "/dor6-club"
+  basePath: "/dor6-club",
+  /* 클럽 가입 문의 카톡 오픈채팅 — 일반 정보 검색 결과 배너(search.js) */
+  recruitUrl: "https://open.kakao.com/o/gnA2tXOi"
 };
 
 /* 섹션 구조: 클럽 / 일반 정보 (각 섹션은 자체 서브네비를 가짐) */

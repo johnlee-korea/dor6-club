@@ -523,3 +523,10 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-modes .chip { font-weight: 700; }
 /* 레어 3조합 스타일 (v2.5.0) */
 .ps-rare { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; color: #2a1e00; background: linear-gradient(135deg, #ffe08a, #d4a017); vertical-align: 1px; }
+/* 클럽 가입 문의 배너 (v2.5.2, 일반 정보 검색 결과 맨 위) */
+.recruit { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3); margin-bottom: var(--sp-3); border-radius: var(--radius); border: 1px solid #d4a01766; background: linear-gradient(135deg, rgba(212,160,23,.14), rgba(212,160,23,.04)); color: var(--text); text-decoration: none; }
+.recruit:hover { border-color: #d4a017; }
+.recruit-logo { width: 36px; height: 36px; flex: none; }
+.recruit-b { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-sm); }
+.recruit-b span { font-size: var(--fs-xs); color: var(--text-muted); }
+.recruit-go { flex: none; font-size: var(--fs-xs); font-weight: 800; padding: 6px 10px; border-radius: 999px; background: #d4a017; color: #2a1e00; white-space: nowrap; }
