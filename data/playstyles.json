@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26T00:07:14.740Z",
+  "updated": "2026-09-26T02:07:39.622Z",
   "baselineUpdated": "2026-09-25T12:48:20.416Z",
   "baselineSource": "공식 랭킹 1~1000위 샘플, 공식경기 최근 15경기",
   "baselineSampleSize": 85,
@@ -1293,75 +1293,6 @@
         }
       ]
     },
-    "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 50,
-      "style": {
-        "name": "박스 안 포식자",
-        "line": "골대 앞 3m만 믿는 냉혈 사냥꾼",
-        "basis": [
-          "boxGoal+",
-          "longShot-"
-        ]
-      },
-      "highs": [
-        {
-          "k": "boxGoal",
-          "label": "박스안골 비율",
-          "unit": "%",
-          "v": 0.93,
-          "avg": 0.871,
-          "z": 0.93,
-          "key": true
-        },
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 16.72,
-          "avg": 13.091,
-          "z": 0.9,
-          "key": false
-        },
-        {
-          "k": "foul",
-          "label": "파울",
-          "unit": "",
-          "v": 1.12,
-          "avg": 0.852,
-          "z": 0.81,
-          "key": false
-        }
-      ],
-      "lows": [
-        {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 67.22,
-          "avg": 75.164,
-          "z": -0.91,
-          "key": false
-        },
-        {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 5.54,
-          "avg": 6.754,
-          "z": -0.87,
-          "key": false
-        },
-        {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
-          "unit": "%",
-          "v": 0.155,
-          "avg": 0.232,
-          "z": -0.85,
-          "key": true
-        }
-      ]
-    },
     "0b4adfde6411fa08e6339ceaa3ed1942": {
       "games": 50,
       "style": {
@@ -1497,6 +1428,75 @@
           "avg": 75.164,
           "z": -0.69,
           "key": false
+        }
+      ]
+    },
+    "b80a06acac01ad21b0aa609c2699d58b": {
+      "games": 50,
+      "style": {
+        "name": "박스 안 포식자",
+        "line": "골대 앞 3m만 믿는 냉혈 사냥꾼",
+        "basis": [
+          "boxGoal+",
+          "longShot-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "boxGoal",
+          "label": "박스안골 비율",
+          "unit": "%",
+          "v": 0.93,
+          "avg": 0.871,
+          "z": 0.93,
+          "key": true
+        },
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 16.72,
+          "avg": 13.091,
+          "z": 0.9,
+          "key": false
+        },
+        {
+          "k": "foul",
+          "label": "파울",
+          "unit": "",
+          "v": 1.12,
+          "avg": 0.852,
+          "z": 0.81,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 67.22,
+          "avg": 75.164,
+          "z": -0.91,
+          "key": false
+        },
+        {
+          "k": "shots",
+          "label": "경기당 슈팅",
+          "unit": "",
+          "v": 5.54,
+          "avg": 6.754,
+          "z": -0.87,
+          "key": false
+        },
+        {
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
+          "unit": "%",
+          "v": 0.155,
+          "avg": 0.232,
+          "z": -0.85,
+          "key": true
         }
       ]
     }

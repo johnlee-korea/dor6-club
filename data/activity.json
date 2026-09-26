@@ -1,14 +1,14 @@
 {
-  "updated": "2026-09-26T00:07:14.740Z",
+  "updated": "2026-09-26T02:07:39.622Z",
   "week": {
-    "from": "2026-09-19T00:07:14.740Z",
+    "from": "2026-09-19T02:07:39.622Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 72,
-        "wins": 32,
-        "winRate": 44
+        "games": 69,
+        "wins": 30,
+        "winRate": 43
       },
       {
         "ouid": "0b4adfde6411fa08e6339ceaa3ed1942",
@@ -27,9 +27,9 @@
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
-        "games": 49,
+        "games": 47,
         "wins": 20,
-        "winRate": 41
+        "winRate": 43
       },
       {
         "ouid": "e284ee0351d4364549fb7d8ef56fecc1",
@@ -147,7 +147,7 @@
       "rivals": {
         "nemesis": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-          "nick": "AUD똘콩스",
+          "nick": "Dor6똘콩스",
           "games": 5,
           "win": 1,
           "draw": 1,
@@ -175,7 +175,7 @@
           },
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-            "nick": "AUD똘콩스",
+            "nick": "Dor6똘콩스",
             "games": 5,
             "win": 1,
             "draw": 1,
@@ -377,7 +377,7 @@
         "frequent": [
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-            "nick": "AUD똘콩스",
+            "nick": "Dor6똘콩스",
             "games": 44,
             "win": 13,
             "draw": 11,
@@ -517,7 +517,7 @@
           },
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-            "nick": "AUD똘콩스",
+            "nick": "Dor6똘콩스",
             "games": 9,
             "win": 3,
             "draw": 1,
@@ -558,7 +558,7 @@
         },
         "prey": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-          "nick": "AUD똘콩스",
+          "nick": "Dor6똘콩스",
           "games": 4,
           "win": 3,
           "draw": 0,
@@ -783,6 +783,74 @@
         "internalGames": 0
       }
     },
+    "0b4adfde6411fa08e6339ceaa3ed1942": {
+      "games": 120,
+      "form": [
+        "win",
+        "lose",
+        "win",
+        "win",
+        "draw",
+        "win",
+        "lose",
+        "lose",
+        "win",
+        "win"
+      ],
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
+      "rivals": {
+        "nemesis": null,
+        "prey": {
+          "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
+          "nick": "AUD콜대원",
+          "games": 3,
+          "win": 2,
+          "draw": 0,
+          "lose": 1,
+          "rate": 67
+        },
+        "frequent": [
+          {
+            "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
+            "nick": "AUD콜대원",
+            "games": 3,
+            "win": 2,
+            "draw": 0,
+            "lose": 1,
+            "rate": 67
+          }
+        ],
+        "internalGames": 3
+      }
+    },
+    "e284ee0351d4364549fb7d8ef56fecc1": {
+      "games": 110,
+      "form": [
+        "win",
+        "win",
+        "lose",
+        "win",
+        "win",
+        "lose",
+        "lose",
+        "draw",
+        "lose",
+        "win"
+      ],
+      "streak": {
+        "type": "win",
+        "n": 2
+      },
+      "rivals": {
+        "nemesis": null,
+        "prey": null,
+        "frequent": [],
+        "internalGames": 0
+      }
+    },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "games": 101,
       "form": [
@@ -850,74 +918,6 @@
           }
         ],
         "internalGames": 37
-      }
-    },
-    "0b4adfde6411fa08e6339ceaa3ed1942": {
-      "games": 120,
-      "form": [
-        "win",
-        "lose",
-        "win",
-        "win",
-        "draw",
-        "win",
-        "lose",
-        "lose",
-        "win",
-        "win"
-      ],
-      "streak": {
-        "type": "win",
-        "n": 1
-      },
-      "rivals": {
-        "nemesis": null,
-        "prey": {
-          "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
-          "nick": "AUD콜대원",
-          "games": 3,
-          "win": 2,
-          "draw": 0,
-          "lose": 1,
-          "rate": 67
-        },
-        "frequent": [
-          {
-            "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
-            "nick": "AUD콜대원",
-            "games": 3,
-            "win": 2,
-            "draw": 0,
-            "lose": 1,
-            "rate": 67
-          }
-        ],
-        "internalGames": 3
-      }
-    },
-    "e284ee0351d4364549fb7d8ef56fecc1": {
-      "games": 110,
-      "form": [
-        "win",
-        "win",
-        "lose",
-        "win",
-        "win",
-        "lose",
-        "lose",
-        "draw",
-        "lose",
-        "win"
-      ],
-      "streak": {
-        "type": "win",
-        "n": 2
-      },
-      "rivals": {
-        "nemesis": null,
-        "prey": null,
-        "frequent": [],
-        "internalGames": 0
       }
     }
   }
