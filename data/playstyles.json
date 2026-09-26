@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26T04:07:40.857Z",
+  "updated": "2026-09-26T05:31:49.696Z",
   "baselineUpdated": "2026-09-25T12:48:20.416Z",
   "baselineSource": "공식 랭킹 1~1000위 샘플, 공식경기 최근 15경기",
   "baselineSampleSize": 85,
@@ -754,31 +754,31 @@
       },
       "highs": [
         {
-          "k": "longRatio",
-          "label": "롱패스 비율",
-          "unit": "%",
-          "v": 0.076,
-          "avg": 0.054,
-          "z": 0.93,
-          "key": true
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 82.54,
+          "avg": 75.164,
+          "z": 0.84,
+          "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 52.58,
+          "v": 52.8,
           "avg": 50.08,
-          "z": 0.76,
+          "z": 0.82,
           "key": true
         },
         {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 81.64,
-          "avg": 75.164,
-          "z": 0.74,
-          "key": false
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.073,
+          "avg": 0.054,
+          "z": 0.8,
+          "key": true
         }
       ],
       "lows": [
@@ -786,27 +786,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.139,
+          "v": 0.14,
           "avg": 0.232,
-          "z": -1.03,
+          "z": -1.02,
           "key": false
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.16,
+          "v": 9.08,
           "avg": 13.091,
-          "z": -0.97,
+          "z": -0.99,
           "key": false
         },
         {
           "k": "foul",
           "label": "파울",
           "unit": "",
-          "v": 0.56,
+          "v": 0.58,
           "avg": 0.852,
-          "z": -0.88,
+          "z": -0.82,
           "key": false
         }
       ]
