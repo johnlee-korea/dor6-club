@@ -1,14 +1,17 @@
 /* ============================================================
-   manage.js — 구단운영 (v2.2.0)  manage.html[?sec=general]#official|friendly|manager
-   닉네임 검색 → 모드 탭(공식경기·친선·감독모드)별 선수 진단
+   manage.js — 구단운영 부품 (v2.2.0 페이지 → v2.4.0 부품)
+   붙이는 곳: 개인 프로필 #manage 탭(member.js, ouid로 조회) · 전적 검색 구단운영 탭(search.js, 닉네임으로 조회)
+   사용: window.Dor6Manage.mount(container, { ouid?, nickname? })  — ES 모듈이라 준비되면 'dor6-manage-ready' 이벤트
+   모드 칩(공식경기·친선·감독모드)별 선수 진단
    흐름
-     1) Worker /manage/overview : ouid·등급·매치 ID 목록(유형별 최신 100)
+     1) Worker /manage/overview : ouid·등급·매치 ID 목록(유형별 최신 100) — ouid가 있으면 닉 조회 생략
      2) Worker /manage/details  : 30경기씩 압축 행 (브라우저가 나눠 호출 — Worker 무료 한도)
      3) Worker /manage/ranker   : 같은 카드·같은 포지션 랭커 평균 (24시간 캐시)
      4) scripts/lib/manage.js analyze() 로 계산 → 그리기만
-   저장(이 브라우저만): 검색 요약 dor6.manage.ov.<닉>, 모드별 경기 dor6.manage.<ouid>.<mode>, 랭커 dor6.manage.rk.<유형>
-   [최신 업데이트]를 눌렀을 때만 넥슨 조회, 새 경기만 추가(증분)
-   의존: common.js(escapeHtml·fmt·loadJSON·myProfile·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴), share.js(📸 모드 탭 캡처)
+   저장(이 브라우저만): 요약 dor6.manage.ov.id.<ouid> (닉 검색은 dor6.manage.ov.<닉>), 모드별 경기 dor6.manage.<ouid>.<mode>,
+     랭커 dor6.manage.rk.<유형>, 마지막 모드 dor6.manage.last.<ouid>
+   처음 열 때 저장된 결과가 없으면 조회, 이후엔 [최신 업데이트]를 눌렀을 때만 새 경기 추가(증분)
+   의존: common.js(escapeHtml·fmt·loadJSON·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴), share.js(📸 캡처)
    ============================================================ */
 
 import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES } from "../scripts/lib/manage.js";
@@ -17,7 +20,6 @@ const MAX_ROWS = 300;          // 모드별 저장 최대 경기
 const PAGE = 100;              // 처음·더 불러오기 단위
 const DETAIL_CHUNK = 30;       // Worker details 1회 경기 수 (worker MANAGE_DETAIL_MAX와 동일)
 const RANKER_TTL = 24 * 3600 * 1000;
-const MG_RECENT_KEY = "dor6.manage.recent", MG_RECENT_MAX = 5;
 const STORE_VER = 1;
 const MODE_KEYS = Object.keys(MODES);
 const LANE_MIN_GAMES = 20;    // 실점 루트 결론(점검 안내)을 보여줄 최소 정상 종료 경기
@@ -31,7 +33,7 @@ const LS = {
     catch (e) { console.warn(`[구단운영] 저장 실패(${k}):`, e.name); return false; }
   }
 };
-const ovKey = (nick) => `dor6.manage.ov.${nick.toLowerCase()}`;
+const ovKey = (who) => who.ouid ? `dor6.manage.ov.id.${who.ouid}` : `dor6.manage.ov.${who.nickname.toLowerCase()}`;
 const storeKey = (ouid, mode) => `dor6.manage.${ouid}.${mode}`;
 const rkKey = (type) => `dor6.manage.rk.${type}`;
 
@@ -46,86 +48,52 @@ function saveStore(ouid, store) {
   console.warn("[구단운영] 저장 공간 부족 — 이번 결과는 새로고침하면 사라집니다.");
 }
 
-/* ---------- 상태 ---------- */
-const S = { ov: null, mode: null, store: null, meta: null, base: null, xg: null, range: "all", openKey: null, filter: "all", busy: false };
+/* ---------- 상태 (한 화면에 부품 하나) ----------
+   token: mount마다 증가 — 조회 중 다른 탭·다른 사람으로 옮기면 이전 조회는 저장만 하고 화면은 건드리지 않음 */
+const S = { root: null, who: null, token: 0, ov: null, mode: null, store: null, meta: null, base: null, xg: null,
+  range: "all", openKey: null, filter: "all", busy: false };
+const $ = (sel) => (S.root ? S.root.querySelector(sel) : null);
 
-/* ---------- 초기화 ---------- */
-async function init() {
-  const btn = document.getElementById("mg-btn"), input = document.getElementById("mg-q");
-  btn.addEventListener("click", () => search(input.value));
-  input.addEventListener("keydown", (e) => { if (e.key === "Enter") search(input.value); });
-  document.getElementById("mg-recent").addEventListener("click", (e) => {
-    const chip = e.target.closest("[data-nick]");
-    if (chip) { input.value = chip.dataset.nick; search(chip.dataset.nick); }
-  });
-  document.getElementById("mg-root").addEventListener("click", onRootClick);
-  window.addEventListener("hashchange", () => {
-    const m = modeFromHash();
-    if (S.ov && m && m !== S.mode) showMode(m);
-  });
-  renderRecent();
-
-  if (!window.DOR6.workerUrl) {
-    document.getElementById("mg-msg").textContent = "⚙️ 검색 백엔드(Worker)가 아직 연결되지 않았습니다.";
-    return;
+/* ---------- 붙이기 ---------- */
+async function mount(container, who, { force = false } = {}) {
+  S.root = container;
+  S.who = { ouid: who.ouid || null, nickname: String(who.nickname || "").trim() };
+  S.token++; S.busy = false; S.openKey = null;
+  const tok = S.token;
+  if (!container.dataset.mgBound) {           // 같은 컨테이너에 이벤트 중복 방지
+    container.addEventListener("click", onRootClick);
+    container.dataset.mgBound = "1";
   }
-  // 주소 ?q= → 바로 검색, 클럽 섹션이면 ⭐내 프로필 닉 자동 입력
-  const q = new URLSearchParams(location.search).get("q");
-  if (q) { input.value = q; search(q); return; }
-  if (document.body.dataset.section === "club" && myProfile.get()) {
-    const mf = await loadJSON("data/members.json").catch(() => null);
-    const me = mf && (mf.members || []).find((m) => m.ouid === myProfile.get());
-    if (me) { input.value = me.ingameNick; search(me.ingameNick); }
-  }
-}
+  if (!window.DOR6.workerUrl) { container.innerHTML = errorState("구단운영은 Worker 연결 후 이용할 수 있어요."); return; }
+  if (!S.who.ouid && !S.who.nickname) { container.innerHTML = emptyState("닉네임을 먼저 검색하세요.", "🔍"); return; }
 
-const modeFromHash = () => { const h = (location.hash || "").slice(1); return MODE_KEYS.includes(h) ? h : null; };
-
-function renderRecent() {
-  const list = LS.get(MG_RECENT_KEY) || [];
-  document.getElementById("mg-recent").innerHTML = list.length
-    ? `<div class="chip-row" style="margin:var(--sp-3) 0 0;">${list.map((n) =>
-        `<button class="chip" type="button" data-nick="${escapeHtml(n)}">${escapeHtml(n)}</button>`).join("")}</div>`
-    : "";
-}
-function pushRecent(nick) {
-  const list = (LS.get(MG_RECENT_KEY) || []).filter((n) => n.toLowerCase() !== nick.toLowerCase());
-  LS.set(MG_RECENT_KEY, [nick, ...list].slice(0, MG_RECENT_MAX));
-  renderRecent();
-}
-
-/* ---------- 검색 ---------- */
-async function search(raw, force = false) {
-  const nick = String(raw || "").trim();
-  const msg = document.getElementById("mg-msg"), root = document.getElementById("mg-root");
-  if (!nick) { msg.textContent = "닉네임을 입력하세요."; return; }
-  if (S.busy) return;
-  msg.textContent = "";
-  let ov = force ? null : LS.get(ovKey(nick));
+  let ov = force ? null : LS.get(ovKey(S.who));
+  let warn = "";
   if (!ov) {
-    root.innerHTML = `<div class="loading">🔍 ${force ? "최신 정보 가져오는 중…" : "조회 중…"}</div>`;
+    container.innerHTML = `<div class="loading">🔍 ${force ? "최신 정보 가져오는 중…" : "구단운영 정보 조회 중…"}</div>`;
     try {
-      ov = await auth.call("/manage/overview", { nickname: nick });
+      ov = await auth.call("/manage/overview", S.who.ouid ? { ouid: S.who.ouid } : { nickname: S.who.nickname });
       ov.fetchedAt = new Date().toISOString();
-      LS.set(ovKey(nick), ov);
+      LS.set(ovKey(S.who), ov);
     } catch (e) {
       console.error("[구단운영] 조회 실패:", e);
-      const prev = LS.get(ovKey(nick));
-      if (force && prev) { ov = prev; msg.textContent = `⚠️ 최신 업데이트 실패: ${e.message} (이전 결과를 표시합니다)`; }
-      else { root.innerHTML = errorState(escapeHtml(e.message)); return; }
+      const prev = LS.get(ovKey(S.who));
+      if (force && prev) { ov = prev; warn = `⚠️ 최신 업데이트 실패: ${e.message} (이전 결과를 표시합니다)`; }
+      else { if (tok === S.token) container.innerHTML = errorState(escapeHtml(e.message)); return; }
     }
   }
+  if (tok !== S.token) return;
   S.ov = ov;
-  pushRecent(ov.nickname || nick);
   await loadRefs();
-  // 탭 우선순위: 주소 #모드 → 이 유저를 마지막으로 본 탭 → 경기 수가 가장 많은 모드
+  if (tok !== S.token) return;
+  // 모드 우선순위: 이 유저를 마지막으로 본 모드 → 경기 수가 가장 많은 모드
   const last = LS.get(`dor6.manage.last.${ov.ouid}`);
-  const mode = modeFromHash() || (MODE_KEYS.includes(last) ? last : null) || defaultMode(ov);
-  renderShell();
+  const mode = (MODE_KEYS.includes(last) ? last : null) || defaultMode(ov);
+  renderShell(warn);
   await showMode(mode, { refresh: force });
 }
 
-/* 기본 탭: 경기 수가 가장 많은 모드 */
+/* 기본 모드: 경기 수가 가장 많은 모드 */
 function defaultMode(ov) {
   const n = (m) => MODES[m].types.reduce((s, t) => s + ((ov.ids && ov.ids[t]) || []).length, 0);
   return MODE_KEYS.slice().sort((a, b) => n(b) - n(a))[0];
@@ -142,35 +110,33 @@ async function loadRefs() {
   S.meta = await sqLoadMeta();
 }
 
-/* ---------- 헤더·탭 ---------- */
-function renderShell() {
+/* ---------- 머리줄·모드 칩 ---------- */
+function renderShell(warn = "") {
   const ov = S.ov;
   const count = (m) => {
     const n = MODES[m].types.reduce((s, t) => s + ((ov.ids && ov.ids[t]) || []).length, 0);
     return n >= 100 * MODES[m].types.length ? `${n}+` : n;
   };
   const div = (t) => (ov.maxDivision && ov.maxDivision[t]) || "-";
-  document.getElementById("mg-root").innerHTML = `
-    <div class="card pf-head">
-      <div class="pf-name">${escapeHtml(ov.nickname || "?")}</div>
-      <div class="pf-sub">${ov.level ? `Lv.${ov.level} · ` : ""}최고 등급 공식 <b style="color:var(--silver);">${escapeHtml(div(50))}</b> · 감독 <b style="color:var(--silver);">${escapeHtml(div(52))}</b></div>
-      <div class="pf-actions" style="align-items:center;">
-        <button class="btn sm" type="button" data-refresh>🔄 최신 업데이트</button>
-        <span class="in-dim" style="flex:1;text-align:right;">마지막 업데이트 ${fmt.dateTime(ov.fetchedAt)}</span>
-      </div>
+  S.root.innerHTML = `
+    <div class="mg-head">
+      <div class="in-dim">최고 등급 공식 <b style="color:var(--silver);">${escapeHtml(div(50))}</b> · 감독 <b style="color:var(--silver);">${escapeHtml(div(52))}</b>
+        · 마지막 업데이트 ${fmt.dateTime(ov.fetchedAt)}</div>
+      <button class="btn sm" type="button" data-refresh>🔄 최신 업데이트</button>
     </div>
-    <div class="pf-tabs" role="tablist">${MODE_KEYS.map((m) =>
-      `<a href="#${m}" class="pf-tab" data-mode="${m}" role="tab">${MODES[m].label} <span class="mg-cnt">${count(m)}</span></a>`).join("")}</div>
+    ${warn ? `<div class="in-dim" style="margin-bottom:var(--sp-2);">${escapeHtml(warn)}</div>` : ""}
+    <div class="chip-row mg-modes" role="tablist">${MODE_KEYS.map((m) =>
+      `<button class="chip" type="button" data-mode="${m}" role="tab">${MODES[m].label} <span class="mg-cnt">${count(m)}</span></button>`).join("")}</div>
     <div id="mg-body"></div>`;
 }
 
 /* ---------- 모드 표시 (필요하면 넥슨 조회) ---------- */
 async function showMode(mode, { refresh = false, more = false } = {}) {
+  const tok = S.token;
   S.mode = mode;
   LS.set(`dor6.manage.last.${S.ov.ouid}`, mode);
-  if (location.hash.slice(1) !== mode) history.replaceState(null, "", `#${mode}`);
-  document.querySelectorAll(".pf-tab").forEach((a) => a.classList.toggle("active", a.dataset.mode === mode));
-  const body = document.getElementById("mg-body");
+  S.root.querySelectorAll("[data-mode]").forEach((a) => a.classList.toggle("active", a.dataset.mode === mode));
+  const body = $("#mg-body");
   const ouid = S.ov.ouid;
   let store = LS.get(storeKey(ouid, mode));
   if (!store || store.v !== STORE_VER) store = newStore(mode);
@@ -190,15 +156,14 @@ async function showMode(mode, { refresh = false, more = false } = {}) {
       saveStore(ouid, store);
     } catch (e) {
       console.error("[구단운영] 경기 조회 실패:", e);
-      body.innerHTML = errorState(`경기 기록을 가져오지 못했어요: ${escapeHtml(e.message)}`);
-      S.busy = false;
+      if (tok === S.token) { S.busy = false; body.innerHTML = errorState(`경기 기록을 가져오지 못했어요: ${escapeHtml(e.message)}`); }
       if (!store.rows.length) return;
     }
-    S.busy = false;
+    if (tok === S.token) S.busy = false;
   } else {
     await ensureRanker(store).catch((e) => console.warn("[구단운영] 랭커 통계 조회 실패:", e));
   }
-  if (S.mode !== mode) return;   // 조회 중 다른 탭으로 이동
+  if (tok !== S.token || S.mode !== mode) return;   // 조회 중 다른 탭·다른 모드로 이동
   renderMode();
 }
 
@@ -218,8 +183,8 @@ function progressHtml(done, total, label) {
     <div class="in-dim">처음 분석은 100경기 기준 5~10초 걸려요. 다음부터는 새 경기만 가져옵니다.</div></div>`;
 }
 function setProgress(done, total) {
-  const body = document.getElementById("mg-body");
-  if (body) body.innerHTML = progressHtml(done, total, "경기 기록 가져오는 중…");
+  const body = $("#mg-body");
+  if (body && S.busy) body.innerHTML = progressHtml(done, total, "경기 기록 가져오는 중…");
 }
 
 async function fetchDetails(ids) {
@@ -319,7 +284,7 @@ function rowsInRange(rows) {
 
 /* ---------- 모드 화면 ---------- */
 async function renderMode() {
-  const body = document.getElementById("mg-body");
+  const body = $("#mg-body");
   const mode = S.mode, def = MODES[mode], store = S.store;
   if (!store.rows.length) {
     body.innerHTML = emptyState(`${def.label} 기록이 없어요.`, "📭");
@@ -534,18 +499,19 @@ function captureMode(btn) {
   const def = MODES[S.mode], s = S.analysis.summary;
   const range = (RANGES.find(([k]) => k === S.range) || [])[1];
   const div = S.ov.maxDivision && S.ov.maxDivision[def.types.includes(52) ? 52 : 50];
-  shareSection(document.getElementById("mg-body"), {
+  shareSection($("#mg-body"), {
     btn, nick: S.ov.nickname, tab: `구단운영 · ${def.label}`, fileTag: `구단운영_${def.label}`,
     sub: [div, `${range} ${s.games}경기 (${fmt.date(s.from)}~${fmt.date(s.to)})`].filter(Boolean).join(" · "),
     strip: [".mg-range", ".mg-foot", ".mg-pending"]
   });
 }
 
-/* ---------- 클릭 ---------- */
+/* ---------- 클릭 (부품 컨테이너에 위임) ---------- */
 async function onRootClick(e) {
-  if (e.target.closest("[data-refresh]")) { if (!S.busy) search(S.ov.nickname, true); return; }
-  const tab = e.target.closest(".pf-tab");
-  if (tab) { e.preventDefault(); if (!S.busy && tab.dataset.mode !== S.mode) showMode(tab.dataset.mode); return; }
+  if (e.currentTarget !== S.root) return;
+  if (e.target.closest("[data-refresh]")) { if (!S.busy) mount(S.root, S.who, { force: true }); return; }
+  const tab = e.target.closest("[data-mode]");
+  if (tab) { if (!S.busy && tab.dataset.mode !== S.mode) showMode(tab.dataset.mode); return; }
   if (e.target.closest("[data-more]")) { if (!S.busy) showMode(S.mode, { more: true }); return; }
   const rg = e.target.closest("[data-range]");
   if (rg) { S.range = rg.dataset.range; renderMode(); return; }
@@ -563,5 +529,6 @@ async function onRootClick(e) {
   }
 }
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-else init();
+/* 일반 스크립트(member.js·search.js)에서 쓰도록 내보냄 */
+window.Dor6Manage = { mount };
+window.dispatchEvent(new Event("dor6-manage-ready"));

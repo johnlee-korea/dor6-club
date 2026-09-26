@@ -22,7 +22,6 @@ const DOR6_SECTIONS = {
       { key: "home",      label: "홈",         href: "index.html" },
       { key: "members",   label: "클럽원",     href: "members.html" },
       { key: "dashboard", label: "판수",       href: "dashboard.html" },
-      { key: "manage",    label: "구단운영",   href: "manage.html" },
       { key: "internal",  label: "내전",       href: "internal.html" },
       { key: "tournament", label: "토너먼트",  href: "tournament.html" },
       { key: "hall",      label: "명예의전당",  href: "hall.html" },
@@ -33,8 +32,7 @@ const DOR6_SECTIONS = {
     label: "일반 정보",
     home: "search.html",
     nav: [
-      { key: "search",    label: "전적 검색",  href: "search.html" },
-      { key: "manage",    label: "구단운영",   href: "manage.html?sec=general" }
+      { key: "search",    label: "전적 검색",  href: "search.html" }
     ]
   }
 };

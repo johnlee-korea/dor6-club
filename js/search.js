@@ -113,6 +113,9 @@ const latestWithLineup = (d) => (d.matches || []).find((m) => (m.lineup || []).l
 
 async function onResultClick(e) {
   if (!current) return;
+  const tab = e.target.closest("[data-srtab]");
+  if (tab) { e.preventDefault(); history.replaceState(null, "", "#" + tab.dataset.srtab); srShowTab(); return; }
+  if (e.target.closest("#sr-manage")) return;   // 구단운영 부품(js/manage.js)이 자체 처리
   const d = current.data;
   const nick = d.nickname || current.nick;
 
@@ -136,6 +139,25 @@ async function onResultClick(e) {
   }
 }
 
+/* 📋 전적 | 🩺 구단운영 탭 (v2.4.0) — 주소 #record/#manage. 구단운영은 탭을 처음 열 때만 넥슨 조회 */
+const srReady = () => window.Dor6Manage ? Promise.resolve(window.Dor6Manage)
+  : new Promise((r) => window.addEventListener("dor6-manage-ready", () => r(window.Dor6Manage), { once: true }));
+function srShowTab() {
+  const rec = document.getElementById("sr-record"), mg = document.getElementById("sr-manage");
+  if (!rec || !mg || !current) return;
+  const tab = location.hash === "#manage" ? "manage" : "record";
+  document.querySelectorAll("[data-srtab]").forEach((a) => a.classList.toggle("active", a.dataset.srtab === tab));
+  rec.hidden = tab !== "record";
+  mg.hidden = tab !== "manage";
+  const d = current.data;
+  if (tab === "manage" && mg.dataset.mounted !== d.ouid) {
+    mg.dataset.mounted = d.ouid;
+    mg.innerHTML = `<div class="loading">불러오는 중…</div>`;
+    srReady().then((m) => m.mount(mg, { ouid: d.ouid, nickname: d.nickname || current.nick }))
+      .catch((e) => { console.error("구단운영 표시 실패:", e); mg.innerHTML = errorState("구단운영을 표시하지 못했어요."); });
+  }
+}
+
 function renderResult(root, d, fetchedAt) {
   const s = d.summary || {};
   const strip = (d.matches || []).slice(0, 15).map((m) =>
@@ -153,6 +175,11 @@ function renderResult(root, d, fetchedAt) {
     : emptyState("최근 공식경기 기록이 없습니다.");
 
   root.innerHTML = `
+    <div class="pf-tabs" role="tablist">
+      <a href="#record" class="pf-tab" data-srtab="record" role="tab">📋 전적</a>
+      <a href="#manage" class="pf-tab" data-srtab="manage" role="tab">🩺 구단운영</a>
+    </div>
+    <div id="sr-record">
     <div class="card" style="margin-bottom:var(--sp-4);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:var(--sp-2);">
         <span style="font-weight:800;font-size:var(--fs-xl);">${escapeHtml(d.nickname || "?")}</span>
@@ -174,7 +201,10 @@ function renderResult(root, d, fetchedAt) {
     <div id="search-analysis"></div>
     <div class="section-title">최근 공식경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
     <div class="card">${rows}</div>
+    </div>
+    <div id="sr-manage" hidden></div>
   `;
+  srShowTab();
   renderAnalysis(d).catch((e) => console.error("검색 분석 표시 실패:", e));
 }
 
@@ -200,4 +230,5 @@ async function renderAnalysis(d) {
     <div style="height:var(--sp-4);"></div>`;
 }
 
+window.addEventListener("hashchange", srShowTab);
 document.addEventListener("DOMContentLoaded", initSearch);

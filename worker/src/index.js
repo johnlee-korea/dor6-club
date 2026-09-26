@@ -242,9 +242,11 @@ class UserError extends Error {}
 async function manageRoute(action, body, env) {
   const key = env.NEXON_API_KEY;
   if (action === "overview") {
+    // 클럽원 프로필은 ouid를 이미 알고 있어 닉 조회 생략 (닉 변경 직후에도 동작, v2.4.0)
     const nickname = String(body.nickname || "").trim();
-    if (!nickname) throw new UserError("닉네임을 입력하세요.");
-    const ouid = await resolveOuid(nickname, key);
+    if (body.ouid != null && !OUID_RE.test(body.ouid)) throw new UserError("잘못된 요청");
+    if (!body.ouid && !nickname) throw new UserError("닉네임을 입력하세요.");
+    const ouid = body.ouid || await resolveOuid(nickname, key);
     if (!ouid) return { error: "해당 닉네임을 찾을 수 없습니다. (닉 변경 직후면 하루 정도 뒤 조회됩니다)" };
     const out = { ouid, nickname, level: null, maxDivision: {}, ids: {} };
     const [basic, divs, ...lists] = await Promise.all([

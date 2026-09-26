@@ -1,14 +1,14 @@
 /* ============================================================
    member.js — 클럽원 개인 프로필 (v2.0.0)  member.html?id=<ouid>#<탭>
-   한 사람의 정보를 한 곳에: 헤더(닉·등급·폼·시즌 판수) + 탭 5개
-     개요(전적 요약·플레이스타일) · 인사이트(에이스·골 시간대·슈팅맵) · 스쿼드 · 라이벌 · 경기
+   한 사람의 정보를 한 곳에: 헤더(닉·등급·폼·시즌 판수) + 탭 6개
+     개요(전적 요약·플레이스타일) · 인사이트(에이스·골 시간대·슈팅맵) · 스쿼드 · 라이벌 · 경기 · 구단운영(v2.4.0, js/manage.js 부품)
    선택한 탭은 주소 #탭에 반영 → 카톡 공유 링크·뒤로가기가 그대로 동작
    화면 조각은 공용 파일 재사용: insight-ui.js · activity-ui.js · squad.js, 이미지 공유는 share.js(탭마다 📸 — v2.3.0)
    ============================================================ */
 
 const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "클래식" };
 const COUNTED_TYPES = [50, 60, 30]; // 판수 인정 매치 (config.json countedMatchTypes와 동일)
-const PF_TABS = [["overview", "개요"], ["insight", "인사이트"], ["squad", "스쿼드"], ["rival", "라이벌"], ["matches", "경기"]];
+const PF_TABS = [["overview", "개요"], ["insight", "인사이트"], ["squad", "스쿼드"], ["rival", "라이벌"], ["matches", "경기"], ["manage", "구단운영"]];
 const PF_CTRL = { keyboard: ["⌨️", "키보드"], gamepad: ["🎮", "패드"] };
 
 let PF = null; // 현재 프로필 컨텍스트 (share.js도 사용)
@@ -91,8 +91,11 @@ function showTab() {
   const key = (location.hash || "").slice(1);
   const tab = PF_TABS.some(([k]) => k === key) ? key : "overview";
   document.querySelectorAll(".pf-tab").forEach((a) => a.classList.toggle("active", a.dataset.tab === tab));
+  // 탭이 화면 폭보다 많으면(6개) 선택한 탭이 보이도록 가로 스크롤만 이동
+  const bar = document.querySelector(".pf-tabs"), act = bar && bar.querySelector(".pf-tab.active");
+  if (act) bar.scrollLeft = Math.max(0, act.offsetLeft - (bar.clientWidth - act.offsetWidth) / 2);
   const body = document.getElementById("pf-body");
-  const render = { overview: tabOverview, insight: tabInsight, squad: tabSquad, rival: tabRival, matches: tabMatches }[tab];
+  const render = { overview: tabOverview, insight: tabInsight, squad: tabSquad, rival: tabRival, matches: tabMatches, manage: tabManage }[tab];
   body.innerHTML = `<div class="loading">불러오는 중…</div>`;
   Promise.resolve(render(body)).then(() => addCaptureBar(body, tab)).catch((e) => {
     console.error(`프로필 탭(${tab}) 표시 실패:`, e);
@@ -103,6 +106,7 @@ function showTab() {
 /* 📸 탭별 캡처 (v2.3.0) — 탭 본문 맨 위 버튼, 보이는 그대로 이미지로 (share.js shareSection)
    빈 탭(경기 없음 등)에는 버튼을 달지 않음 */
 function addCaptureBar(body, tab) {
+  if (tab === "manage") return;   // 구단운영은 모드별로 자체 📸 버튼이 있음
   if (body.querySelector(".empty") && body.children.length === 1) return;
   body.insertAdjacentHTML("afterbegin", shBarHtml());
   shWarmImages(body);
@@ -112,6 +116,17 @@ function addCaptureBar(body, tab) {
     btn: e.currentTarget, nick: m.ingameNick, tab: label, fileTag: tab,
     sub: [prof.maxDivisionName, prof.level ? `Lv.${prof.level}` : "", m.role].filter(Boolean).join(" · ")
   }));
+}
+
+/* 🩺 구단운영 (v2.4.0) — js/manage.js 부품을 ouid로 붙임. 모듈이 늦게 준비될 수 있어 이벤트로 대기 */
+const mgReady = () => window.Dor6Manage ? Promise.resolve(window.Dor6Manage)
+  : new Promise((r) => window.addEventListener("dor6-manage-ready", () => r(window.Dor6Manage), { once: true }));
+async function tabManage(body) {
+  body.innerHTML = `<div class="loading">불러오는 중…</div>`;
+  const mg = await mgReady();
+  if ((location.hash || "").slice(1) !== "manage") return;   // 준비 중 다른 탭으로 이동
+  body.innerHTML = `<div class="mg-mount"></div>`;   // 탭 본문(#pf-body)은 다른 탭과 공유 → 전용 칸에 붙여 클릭 처리가 섞이지 않게
+  await mg.mount(body.firstElementChild, { ouid: PF.member.ouid, nickname: PF.member.ingameNick });
 }
 
 /* 개요: 최근 15경기(인정 매치) + 🎭 플레이스타일 */

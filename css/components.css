@@ -411,7 +411,7 @@ a.ms-row:hover { background: var(--surface-2); }
 .pf-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--border); }
 .pf-tabs { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; overflow-x: auto; background: var(--bg); padding: var(--sp-2) 0; margin-bottom: var(--sp-3); scrollbar-width: none; }
 .pf-tabs::-webkit-scrollbar { display: none; }
-.pf-tab { flex: 1 0 auto; text-align: center; padding: 8px 12px; border-radius: 999px; font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); white-space: nowrap; }
+.pf-tab { flex: 1 0 auto; text-align: center; padding: 8px 10px; border-radius: 999px; font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); white-space: nowrap; }
 .pf-tab.active { background: var(--silver); color: var(--bg); border-color: var(--silver); }
 .rv-box a.rv-nick, .rv-row a { color: inherit; }
 
@@ -517,3 +517,7 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-foot { margin-top: var(--sp-4); display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2); }
 .mg-pending { margin-top: var(--sp-2); border-top: 1px dashed var(--border); padding-top: var(--sp-2); }
 .mg-pending > summary { cursor: pointer; font-size: var(--fs-sm); color: var(--text-muted); padding: var(--sp-2) 0; }
+/* 구단운영 부품 (v2.4.0 — 프로필·검색 탭 안) */
+.mg-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-3); }
+.mg-modes { margin-bottom: var(--sp-3); }
+.mg-modes .chip { font-weight: 700; }

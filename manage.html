@@ -5,32 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>구단운영 · 도륙 Dor6</title>
   <link rel="icon" href="dor6.png">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/components.css">
+  <!-- v2.4.0: 구단운영은 개인 프로필(#manage)·전적 검색(#manage) 탭으로 옮김. 예전(카톡 공유) 링크 호환용 이동 페이지 -->
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search).get("q");
+      location.replace("search.html" + (q ? "?q=" + encodeURIComponent(q) : "") + "#manage");
+    })();
+  </script>
 </head>
-<body data-page="manage" data-section="club">
-  <!-- 같은 페이지를 클럽·일반 정보 두 메뉴에서 연다: ?sec=general이면 일반 정보 헤더 -->
-  <script>if (new URLSearchParams(location.search).get("sec") === "general") document.body.dataset.section = "general";</script>
-  <main class="page">
-    <h1 class="page-title">구단운영</h1>
-    <p class="page-desc">내 닉네임을 검색하면 공식경기·친선·감독모드별로 선수마다 <b>유지 / 관찰 / 교체 고려</b>를 진단해요. 같은 카드를 쓰는 랭커, 같은 포지션 랭커와 비교합니다. 결과는 이 기기에 저장되고, [최신 업데이트]를 눌러야 새 경기를 가져옵니다.</p>
-
-    <div class="card" style="margin-bottom:var(--sp-4);">
-      <div style="display:flex;gap:var(--sp-2);">
-        <input id="mg-q" class="input" placeholder="인게임 닉네임 입력" autocomplete="off">
-        <button id="mg-btn" class="btn primary" style="flex:0 0 auto;">검색</button>
-      </div>
-      <div id="mg-msg" style="margin-top:var(--sp-2);font-size:var(--fs-sm);color:var(--text-muted);"></div>
-      <div id="mg-recent"></div>
-    </div>
-
-    <div id="mg-root"></div>
-  </main>
-  <script src="js/common.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/squad.js"></script>
-  <script src="js/share.js"></script>
-  <script type="module" src="js/manage.js"></script>
+<body>
+  <p style="font-family:sans-serif;padding:24px;">구단운영은 <a href="search.html#manage">전적 검색</a>으로 옮겨졌어요. 이동 중…</p>
 </body>
 </html>
