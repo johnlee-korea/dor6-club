@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-27T04:07:37.668Z",
+  "updated": "2026-09-27T05:49:03.625Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -215,7 +215,7 @@
     },
     "ec6b3d922b94994ccd28de27367cf479": {
       "ctrl": "keyboard",
-      "games": 104,
+      "games": 107,
       "ace": [
         {
           "spId": 237020170,
@@ -237,11 +237,11 @@
           "spId": 861001615,
           "group": "CB",
           "pos": 6,
-          "games": 86,
+          "games": 89,
           "metric": "pas",
-          "value": 7.62,
+          "value": 7.61,
           "base": 5.43,
-          "z": 1.8,
+          "z": 1.79,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -253,11 +253,11 @@
           "spId": 854241486,
           "group": "CB",
           "pos": 4,
-          "games": 104,
+          "games": 107,
           "metric": "pas",
-          "value": 7.34,
+          "value": 7.35,
           "base": 5.43,
-          "z": 1.57,
+          "z": 1.58,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -268,32 +268,32 @@
       ],
       "goalMins": {
         "for": [
-          45,
-          38,
+          47,
           40,
-          52,
           42,
-          38,
-          12
+          53,
+          43,
+          39,
+          13
         ],
         "against": [
-          32,
-          37,
-          35,
-          38,
-          47,
-          49,
+          33,
+          39,
+          36,
+          39,
+          48,
+          52,
           13
         ]
       },
-      "comebacks": 13,
+      "comebacks": 14,
       "lateWinners": 5,
       "manner": {
-        "games": 104,
+        "games": 107,
         "yellow": 7,
         "red": 1,
-        "foul": 78,
-        "score": 0.98
+        "foul": 80,
+        "score": 0.97
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
@@ -590,7 +590,7 @@
     },
     "2dd2edb174f63716078ffc324199edd1": {
       "ctrl": "keyboard",
-      "games": 111,
+      "games": 113,
       "ace": [
         {
           "spId": 867223334,
@@ -628,11 +628,11 @@
           "spId": 877182521,
           "group": "CM",
           "pos": 15,
-          "games": 9,
+          "games": 10,
           "metric": "ast",
-          "value": 1,
+          "value": 0.9,
           "base": 0.41,
-          "z": 2.11,
+          "z": 1.75,
           "title": {
             "emoji": "🎯",
             "name": "킬패스 장인"
@@ -643,32 +643,32 @@
       ],
       "goalMins": {
         "for": [
-          34,
-          43,
+          35,
           44,
-          58,
-          38,
-          56,
+          45,
+          60,
+          40,
+          57,
           19
         ],
         "against": [
           39,
-          43,
-          48,
-          55,
-          45,
           44,
+          50,
+          55,
+          46,
+          47,
           17
         ]
       },
       "comebacks": 15,
       "lateWinners": 9,
       "manner": {
-        "games": 111,
-        "yellow": 4,
+        "games": 113,
+        "yellow": 5,
         "red": 1,
-        "foul": 116,
-        "score": 1.18
+        "foul": 118,
+        "score": 1.2
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
@@ -843,8 +843,40 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 149,
+      "games": 156,
       "ace": [
+        {
+          "spId": 852001088,
+          "group": "CB",
+          "pos": 4,
+          "games": 7,
+          "metric": "win",
+          "value": 4.43,
+          "base": 2.77,
+          "z": 2.59,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 1,
+          "assists": 0
+        },
+        {
+          "spId": 867220502,
+          "group": "W",
+          "pos": 16,
+          "games": 7,
+          "metric": "pas",
+          "value": 12.71,
+          "base": 8.51,
+          "z": 1.91,
+          "title": {
+            "emoji": "📨",
+            "name": "패스 마스터"
+          },
+          "goals": 2,
+          "assists": 4
+        },
         {
           "spId": 861005661,
           "group": "ST",
@@ -860,68 +892,36 @@
           },
           "goals": 88,
           "assists": 18
-        },
-        {
-          "spId": 868190045,
-          "group": "AM",
-          "pos": 18,
-          "games": 30,
-          "metric": "pas",
-          "value": 17.63,
-          "base": 11.54,
-          "z": 1.42,
-          "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
-          },
-          "goals": 33,
-          "assists": 11
-        },
-        {
-          "spId": 848190042,
-          "group": "W",
-          "pos": 12,
-          "games": 30,
-          "metric": "drb",
-          "value": 9,
-          "base": 6.68,
-          "z": 1.38,
-          "title": {
-            "emoji": "🏃",
-            "name": "측면 돌파왕"
-          },
-          "goals": 9,
-          "assists": 15
         }
       ],
       "goalMins": {
         "for": [
-          40,
-          56,
-          64,
-          73,
-          53,
-          76,
-          26
+          41,
+          58,
+          68,
+          78,
+          54,
+          79,
+          28
         ],
         "against": [
-          57,
-          69,
-          61,
-          74,
-          52,
+          58,
+          71,
+          64,
+          76,
           53,
-          26
+          53,
+          29
         ]
       },
-      "comebacks": 27,
+      "comebacks": 30,
       "lateWinners": 17,
       "manner": {
-        "games": 149,
+        "games": 156,
         "yellow": 5,
         "red": 0,
-        "foul": 90,
-        "score": 0.7
+        "foul": 93,
+        "score": 0.69
       }
     },
     "b56e8c1f2e6e414588b06a1e528e510b": {
@@ -1734,8 +1734,8 @@
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
         "spId": 100001625,
-        "goals": 121,
-        "games": 104
+        "goals": 122,
+        "games": 107
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -1745,18 +1745,18 @@
         "games": 94
       },
       {
+        "ouid": "2dd2edb174f63716078ffc324199edd1",
+        "nick": "미드필더",
+        "spId": 848037576,
+        "goals": 89,
+        "games": 85
+      },
+      {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "spId": 861005661,
         "goals": 88,
         "games": 63
-      },
-      {
-        "ouid": "2dd2edb174f63716078ffc324199edd1",
-        "nick": "미드필더",
-        "spId": 848037576,
-        "goals": 86,
-        "games": 84
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -1779,7 +1779,7 @@
         "nick": "미드필더",
         "spId": 848037576,
         "assists": 55,
-        "games": 84
+        "games": 85
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -1792,8 +1792,8 @@
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
         "spId": 848189505,
-        "assists": 52,
-        "games": 104
+        "assists": 53,
+        "games": 107
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -1807,9 +1807,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 27,
+        "comebacks": 30,
         "lateWinners": 17,
-        "games": 149
+        "games": 156
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1830,9 +1830,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 27,
+        "comebacks": 30,
         "lateWinners": 17,
-        "games": 149
+        "games": 156
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1862,11 +1862,11 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 149,
+        "games": 156,
         "yellow": 5,
         "red": 0,
-        "foul": 90,
-        "score": 0.7
+        "foul": 93,
+        "score": 0.69
       },
       {
         "ouid": "a657df6cfcd103e150c3ae1145cd51a8",
