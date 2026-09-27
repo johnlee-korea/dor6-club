@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-27T10:07:51.223Z",
+  "updated": "2026-09-27T12:07:56.701Z",
   "baselineUpdated": "2026-09-26T15:38:01.927Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -486,7 +486,7 @@
       ]
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
-      "games": 30,
+      "games": 35,
       "style": {
         "name": "저격형 수비수",
         "line": "가끔 들어가서 확실하게, 대신 거칠게",
@@ -502,18 +502,18 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.697,
+          "v": 0.682,
           "avg": 0.529,
-          "z": 3.44,
+          "z": 3.13,
           "key": true
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.274,
+          "v": 0.257,
           "avg": 0.15,
-          "z": 2.73,
+          "z": 2.37,
           "key": false
         },
         {
@@ -531,27 +531,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 7.6,
+          "v": 8,
           "avg": 15.897,
-          "z": -2.24,
+          "z": -2.13,
           "key": true
-        },
-        {
-          "k": "lateGoal",
-          "label": "후반 득점 비율",
-          "unit": "%",
-          "v": 0.457,
-          "avg": 0.572,
-          "z": -1.59,
-          "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.787,
+          "v": 0.785,
           "avg": 0.881,
-          "z": -1.53,
+          "z": -1.56,
+          "key": false
+        },
+        {
+          "k": "lateGoal",
+          "label": "후반 득점 비율",
+          "unit": "%",
+          "v": 0.467,
+          "avg": 0.572,
+          "z": -1.45,
           "key": false
         }
       ]
@@ -1342,12 +1342,14 @@
     "0b4adfde6411fa08e6339ceaa3ed1942": {
       "games": 50,
       "style": {
-        "name": "막 차는 축구",
-        "line": "점유도 패스도 포기, 몸으로 부딪힌다",
+        "name": "거친 역습대",
+        "line": "뺏고 부딪히며 역습, 점유율은 관심 없음",
         "basis": [
           "poss-",
-          "passRate-"
-        ]
+          "tackleTry+",
+          "foul+"
+        ],
+        "rare": true
       },
       "highs": [
         {
@@ -1363,19 +1365,19 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 20.74,
+          "v": 20.64,
           "avg": 15.897,
-          "z": 1.31,
-          "key": false
+          "z": 1.28,
+          "key": true
         },
         {
-          "k": "ga",
-          "label": "경기당 실점",
+          "k": "foul",
+          "label": "파울",
           "unit": "",
-          "v": 3.42,
-          "avg": 2.809,
-          "z": 1.08,
-          "key": false
+          "v": 1.28,
+          "avg": 0.928,
+          "z": 1.04,
+          "key": true
         }
       ],
       "lows": [
@@ -1383,9 +1385,9 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 44.86,
+          "v": 44.76,
           "avg": 50.594,
-          "z": -1.76,
+          "z": -1.79,
           "key": true
         },
         {
@@ -1394,16 +1396,16 @@
           "unit": "%",
           "v": 0.862,
           "avg": 0.895,
-          "z": -1.72,
-          "key": true
+          "z": -1.73,
+          "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 65.7,
+          "v": 65.32,
           "avg": 79.13,
-          "z": -1.49,
+          "z": -1.54,
           "key": false
         }
       ]
@@ -1482,11 +1484,11 @@
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
       "games": 50,
       "style": {
-        "name": "터프한 플레이메이커",
-        "line": "스루는 날카롭게, 몸싸움은 거칠게",
+        "name": "건너뛰는 패서",
+        "line": "옆 패스는 건너뛰고 바로 뒷공간",
         "basis": [
           "throughRatio+",
-          "cards+"
+          "shortRatio-"
         ]
       },
       "highs": [
@@ -1494,27 +1496,27 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.257,
+          "v": 0.253,
           "avg": 0.15,
-          "z": 2.36,
-          "key": true
-        },
-        {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.16,
-          "avg": 0.037,
-          "z": 1.79,
+          "z": 2.28,
           "key": true
         },
         {
           "k": "foul",
           "label": "파울",
           "unit": "",
-          "v": 1.5,
+          "v": 1.44,
           "avg": 0.928,
-          "z": 1.69,
+          "z": 1.52,
+          "key": false
+        },
+        {
+          "k": "cards",
+          "label": "카드",
+          "unit": "",
+          "v": 0.14,
+          "avg": 0.037,
+          "z": 1.5,
           "key": false
         }
       ],
@@ -1523,27 +1525,27 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.595,
+          "v": 0.602,
           "avg": 0.709,
-          "z": -1.73,
-          "key": false
+          "z": -1.63,
+          "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 67.16,
+          "v": 68.42,
           "avg": 79.13,
-          "z": -1.33,
+          "z": -1.19,
           "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.724,
+          "v": 0.735,
           "avg": 0.796,
-          "z": -1.3,
+          "z": -1.11,
           "key": false
         }
       ]
