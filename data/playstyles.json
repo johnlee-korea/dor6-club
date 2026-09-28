@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-28T12:07:29.430Z",
+  "updated": "2026-09-28T14:07:26.886Z",
   "baselineUpdated": "2026-09-26T15:38:01.927Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1133,10 +1133,10 @@
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "원터치 중거리",
-        "line": "잡자마자 박스 밖에서 바로 슛",
+        "name": "안전제일 공무원",
+        "line": "리스크 제로, 칼퇴 보장 공무원 축구",
         "basis": [
-          "longShot+",
+          "passRate+",
           "dribble-"
         ]
       },
@@ -1145,27 +1145,27 @@
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.164,
+          "v": 0.179,
           "avg": 0.084,
-          "z": 1.13,
+          "z": 1.35,
           "key": false
-        },
-        {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
-          "unit": "%",
-          "v": 0.277,
-          "avg": 0.2,
-          "z": 1.08,
-          "key": true
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.915,
+          "v": 0.914,
           "avg": 0.895,
-          "z": 0.99,
+          "z": 0.97,
+          "key": true
+        },
+        {
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
+          "unit": "%",
+          "v": 0.269,
+          "avg": 0.2,
+          "z": 0.96,
           "key": false
         }
       ],
@@ -1174,27 +1174,27 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.1,
+          "v": 0.099,
           "avg": 0.312,
-          "z": -1.81,
+          "z": -1.82,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 68.02,
+          "v": 68.2,
           "avg": 79.13,
-          "z": -1.24,
+          "z": -1.21,
           "key": true
         },
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
-          "unit": "%",
-          "v": 0.211,
-          "avg": 0.285,
-          "z": -1.04,
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.24,
+          "avg": 0.485,
+          "z": -1.13,
           "key": false
         }
       ]
