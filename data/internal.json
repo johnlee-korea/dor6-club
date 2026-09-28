@@ -1,110 +1,33 @@
 {
-  "updated": "2026-09-28T20:07:42.470Z",
+  "updated": "2026-09-28T22:07:23.237Z",
   "matches": [
     {
       "matchId": "6abaad073ddafe22bd397c55",
       "matchDate": "2026-09-28T18:18:45",
       "matchType": 40,
-      "aOuid": "b80a06acac01ad21b0aa609c2699d58b",
-      "aNick": "Dor6똘콩스",
-      "bOuid": "2dd2edb174f63716078ffc324199edd1",
-      "bNick": "미드필더",
-      "result": "win",
-      "goalFor": 3,
-      "goalAgainst": 2,
+      "aOuid": "2dd2edb174f63716078ffc324199edd1",
+      "aNick": "미드필더",
+      "bOuid": "b80a06acac01ad21b0aa609c2699d58b",
+      "bNick": "Dor6똘콩스",
+      "result": "lose",
+      "goalFor": 2,
+      "goalAgainst": 3,
       "aLineup": [
         {
-          "spId": 272005099,
-          "spPosition": 28,
-          "spGrade": 5
-        },
-        {
-          "spId": 273189332,
-          "spPosition": 28,
-          "spGrade": 5
-        },
-        {
-          "spId": 280212831,
-          "spPosition": 28,
-          "spGrade": 8
-        },
-        {
-          "spId": 300243830,
-          "spPosition": 0,
-          "spGrade": 13
-        },
-        {
-          "spId": 815206585,
-          "spPosition": 28,
-          "spGrade": 13
-        },
-        {
-          "spId": 272005003,
-          "spPosition": 3,
-          "spGrade": 13
-        },
-        {
-          "spId": 241210257,
-          "spPosition": 28,
-          "spGrade": 13
-        },
-        {
-          "spId": 866239580,
-          "spPosition": 4,
+          "spId": 866177003,
+          "spPosition": 13,
           "spGrade": 11
         },
         {
-          "spId": 101190043,
-          "spPosition": 18,
-          "spGrade": 8
-        },
-        {
-          "spId": 810258648,
-          "spPosition": 7,
-          "spGrade": 13
-        },
-        {
-          "spId": 867001040,
-          "spPosition": 11,
+          "spId": 866239053,
+          "spPosition": 15,
           "spGrade": 11
         },
         {
-          "spId": 868037576,
-          "spPosition": 25,
-          "spGrade": 10
-        },
-        {
-          "spId": 877107715,
+          "spId": 866241637,
           "spPosition": 6,
           "spGrade": 11
         },
-        {
-          "spId": 867176676,
-          "spPosition": 9,
-          "spGrade": 11
-        },
-        {
-          "spId": 861247553,
-          "spPosition": 16,
-          "spGrade": 11
-        },
-        {
-          "spId": 821000570,
-          "spPosition": 28,
-          "spGrade": 8
-        },
-        {
-          "spId": 877028130,
-          "spPosition": 12,
-          "spGrade": 10
-        },
-        {
-          "spId": 284041236,
-          "spPosition": 28,
-          "spGrade": 8
-        }
-      ],
-      "bLineup": [
         {
           "spId": 868045674,
           "spPosition": 28,
@@ -146,11 +69,6 @@
           "spGrade": 11
         },
         {
-          "spId": 866177003,
-          "spPosition": 13,
-          "spGrade": 11
-        },
-        {
           "spId": 100005003,
           "spPosition": 28,
           "spGrade": 10
@@ -176,16 +94,6 @@
           "spGrade": 11
         },
         {
-          "spId": 866239053,
-          "spPosition": 15,
-          "spGrade": 11
-        },
-        {
-          "spId": 866241637,
-          "spPosition": 6,
-          "spGrade": 11
-        },
-        {
           "spId": 100010264,
           "spPosition": 28,
           "spGrade": 10
@@ -194,6 +102,294 @@
           "spId": 877182521,
           "spPosition": 28,
           "spGrade": 11
+        }
+      ],
+      "bLineup": [
+        {
+          "spId": 815206585,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 272005003,
+          "spPosition": 3,
+          "spGrade": 13
+        },
+        {
+          "spId": 241210257,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 866239580,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 821000570,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 877028130,
+          "spPosition": 12,
+          "spGrade": 10
+        },
+        {
+          "spId": 284041236,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 101190043,
+          "spPosition": 18,
+          "spGrade": 8
+        },
+        {
+          "spId": 810258648,
+          "spPosition": 7,
+          "spGrade": 13
+        },
+        {
+          "spId": 867001040,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 868037576,
+          "spPosition": 25,
+          "spGrade": 10
+        },
+        {
+          "spId": 877107715,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 867176676,
+          "spPosition": 9,
+          "spGrade": 11
+        },
+        {
+          "spId": 861247553,
+          "spPosition": 16,
+          "spGrade": 11
+        },
+        {
+          "spId": 272005099,
+          "spPosition": 28,
+          "spGrade": 5
+        },
+        {
+          "spId": 273189332,
+          "spPosition": 28,
+          "spGrade": 5
+        },
+        {
+          "spId": 280212831,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 300243830,
+          "spPosition": 0,
+          "spGrade": 13
+        }
+      ]
+    },
+    {
+      "matchId": "6abaaa8bc6b6a4c8e5492808",
+      "matchDate": "2026-09-28T18:07:47",
+      "matchType": 40,
+      "aOuid": "2dd2edb174f63716078ffc324199edd1",
+      "aNick": "미드필더",
+      "bOuid": "b80a06acac01ad21b0aa609c2699d58b",
+      "bNick": "Dor6똘콩스",
+      "result": "draw",
+      "goalFor": 3,
+      "goalAgainst": 3,
+      "aLineup": [
+        {
+          "spId": 877007763,
+          "spPosition": 15,
+          "spGrade": 11
+        },
+        {
+          "spId": 877224232,
+          "spPosition": 3,
+          "spGrade": 11
+        },
+        {
+          "spId": 815234102,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 868107715,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 848238794,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 861001109,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 280226268,
+          "spPosition": 7,
+          "spGrade": 13
+        },
+        {
+          "spId": 877135455,
+          "spPosition": 10,
+          "spGrade": 11
+        },
+        {
+          "spId": 867223334,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 848184941,
+          "spPosition": 23,
+          "spGrade": 11
+        },
+        {
+          "spId": 867001419,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 100005099,
+          "spPosition": 28,
+          "spGrade": 10
+        },
+        {
+          "spId": 868045674,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 101167135,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 861191189,
+          "spPosition": 13,
+          "spGrade": 11
+        },
+        {
+          "spId": 861001114,
+          "spPosition": 27,
+          "spGrade": 11
+        },
+        {
+          "spId": 848037576,
+          "spPosition": 25,
+          "spGrade": 11
+        },
+        {
+          "spId": 834235840,
+          "spPosition": 0,
+          "spGrade": 13
+        }
+      ],
+      "bLineup": [
+        {
+          "spId": 272005099,
+          "spPosition": 28,
+          "spGrade": 5
+        },
+        {
+          "spId": 821000570,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 877028130,
+          "spPosition": 12,
+          "spGrade": 10
+        },
+        {
+          "spId": 815206585,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 866239580,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 867001040,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 273189332,
+          "spPosition": 28,
+          "spGrade": 5
+        },
+        {
+          "spId": 101190043,
+          "spPosition": 18,
+          "spGrade": 8
+        },
+        {
+          "spId": 861247553,
+          "spPosition": 16,
+          "spGrade": 11
+        },
+        {
+          "spId": 284041236,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 877107715,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 810258648,
+          "spPosition": 7,
+          "spGrade": 13
+        },
+        {
+          "spId": 300243830,
+          "spPosition": 0,
+          "spGrade": 13
+        },
+        {
+          "spId": 868037576,
+          "spPosition": 25,
+          "spGrade": 10
+        },
+        {
+          "spId": 867176676,
+          "spPosition": 9,
+          "spGrade": 11
+        },
+        {
+          "spId": 272005003,
+          "spPosition": 3,
+          "spGrade": 13
+        },
+        {
+          "spId": 241210257,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 280212831,
+          "spPosition": 28,
+          "spGrade": 8
         }
       ]
     },
@@ -37500,7 +37696,7 @@
       "b": "b80a06acac01ad21b0aa609c2699d58b",
       "aWin": 19,
       "bWin": 25,
-      "draw": 11
+      "draw": 12
     },
     {
       "a": "0ec85bc04c006744f49a284cd624bbbb",
