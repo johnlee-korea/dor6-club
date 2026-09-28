@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-28T10:07:32.350Z",
+  "updated": "2026-09-28T12:07:29.430Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1006,22 +1006,22 @@
     },
     "3dc0730dd24290345883c55c1c5d4d97": {
       "ctrl": "gamepad",
-      "games": 4,
+      "games": 5,
       "ace": [],
       "goalMins": {
         "for": [
           1,
-          1,
+          2,
           1,
           3,
           2,
-          0,
+          1,
           0
         ],
         "against": [
           0,
           0,
-          1,
+          2,
           1,
           1,
           2,
@@ -1029,13 +1029,13 @@
         ]
       },
       "comebacks": 0,
-      "lateWinners": 0,
+      "lateWinners": 1,
       "manner": {
-        "games": 4,
+        "games": 5,
         "yellow": 0,
         "red": 0,
-        "foul": 5,
-        "score": 1.25
+        "foul": 6,
+        "score": 1.2
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
@@ -1572,8 +1572,24 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 94,
+      "games": 95,
       "ace": [
+        {
+          "spId": 272005003,
+          "group": "FB",
+          "pos": 3,
+          "games": 5,
+          "metric": "int",
+          "value": 1.8,
+          "base": 0.95,
+          "z": 2.09,
+          "title": {
+            "emoji": "🦅",
+            "name": "볼 사냥꾼"
+          },
+          "goals": 0,
+          "assists": 0
+        },
         {
           "spId": 856220901,
           "group": "GK",
@@ -1591,60 +1607,50 @@
           "assists": 0
         },
         {
-          "spId": 867248146,
-          "group": "AM",
-          "pos": 18,
-          "games": 31,
-          "metric": "pas",
-          "value": 15.52,
-          "base": 11.54,
-          "z": 0.93,
-          "title": null,
-          "goals": 26,
-          "assists": 25
-        },
-        {
-          "spId": 866241236,
-          "group": "AM",
-          "pos": 18,
-          "games": 32,
-          "metric": "pas",
-          "value": 15.47,
-          "base": 11.54,
-          "z": 0.91,
-          "title": null,
-          "goals": 32,
-          "assists": 13
+          "spId": 861166691,
+          "group": "W",
+          "pos": 12,
+          "games": 5,
+          "metric": "sht",
+          "value": 1,
+          "base": 0.62,
+          "z": 1.22,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 0,
+          "assists": 1
         }
       ],
       "goalMins": {
         "for": [
           28,
-          28,
-          35,
+          29,
           37,
+          38,
           36,
           37,
           11
         ],
         "against": [
           22,
-          39,
-          37,
+          41,
+          38,
           48,
           32,
           47,
           14
         ]
       },
-      "comebacks": 14,
+      "comebacks": 15,
       "lateWinners": 6,
       "manner": {
-        "games": 94,
+        "games": 95,
         "yellow": 1,
         "red": 0,
-        "foul": 91,
-        "score": 1
+        "foul": 93,
+        "score": 1.01
       }
     },
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
