@@ -181,6 +181,9 @@ export const POS_CAT_W = {
   CB: { pas: 25, def: 45, air: 30 },
   GK: { sav: 50, gkp: 40, pas: 10 }
 };
+/* 묶음 안 지표 가중치 예외 — 이 묶음은 '잘하는 방식 인정' 대신 가중 평균
+   CB·DM 패스 성공 '수'는 선수보다 팀 점유 스타일에 좌우됨(감독모드 랭커 CB 경기당 10.8 vs 공식 5.5, 실측) → 성공률 위주 */
+const CAT_KEY_W = { CB: { pas: { pasR: 0.7, pas: 0.3 } }, DM: { pas: { pasR: 0.7, pas: 0.3 } } };
 /* 성공률 지표: [성공, 시도, 최소 시도 합] — 시도가 적으면 비율이 튀어 제외 */
 const RATE_KEYS = { drbR: ["drb", "dTry", 10], pasR: ["pas", "pTry", 50], airR: ["air", "aTry", 10] };
 /* 랭커 평균이 이보다 작으면 제외(1~2개로 튀는 노이즈). null = 제한 없음(비율·차이 지표) */
@@ -194,7 +197,8 @@ export const d6Index = (score) => (score == null ? null : Math.round(Math.max(0,
 /* ranker-stats status 키 ↔ 우리 지표 (카드 대비 비교에 쓰는 것만) */
 export const RANKER_KEY = { gol: "goal", ast: "assist", esh: "effectiveShoot", pas: "passSuccess", drb: "dribbleSuccess", int: "tackle", blk: "block" };
 export const SHRINK_K = 10;          // 표본 보정 Z × n/(n+K)
-export const LOW = -0.4;             // 보정 후 점수가 이보다 낮으면 '낮음' (도륙 지수 42 미만)
+export const LOW = -0.4;             // 카드 대비 '낮음' 기준 · 포지션 기준선(_low)이 없을 때 대체값
+export const LOW_PCT = { official: 0.1, manager: 0.05 };   // 포지션 대비 '낮음' = 같은 포지션 랭커 하위 N%보다 낮음 (사용자 결정: 공식 10%, 감독모드 5%)
 export const MIN_JUDGE_GAMES = 10;   // 미만이면 '참고'(배지 판정 안 함)
 export const CONF = (n) => (n < MIN_JUDGE_GAMES ? "참고" : n < 30 ? "보통" : "높음");
 const ZCLIP = 3;
@@ -218,28 +222,37 @@ export function playerUnits(rows, xg) {
       const g = posGroup(p[PSI.pos]);
       if (!g) continue;
       const key = `${p[PSI.spId]}|${g}`;
-      const u = units.get(key) || { spId: p[PSI.spId], group: g, games: 0, posCount: {}, grade: {}, sum: {} };
+      const u = units.get(key) || { spId: p[PSI.spId], group: g, games: 0, posCount: {}, grade: {}, sum: {}, sq: {} };
       u.games++;
       u.posCount[p[PSI.pos]] = (u.posCount[p[PSI.pos]] || 0) + 1;
       u.grade[p[PSI.grade]] = (u.grade[p[PSI.grade]] || 0) + 1;
-      for (const k of SUM_KEYS) u.sum[k] = (u.sum[k] || 0) + (p[PSI[k]] ?? 0);
+      // 경기당 값의 합·제곱합 — 제곱합은 '표본이 적어 생기는 흔들림' 추정용(d6Baseline 우연 편차 제거)
+      const add = (k, v) => { u.sum[k] = (u.sum[k] || 0) + v; u.sq[k] = (u.sq[k] || 0) + v * v; };
+      for (const k of SUM_KEYS) add(k, p[PSI[k]] ?? 0);
       const x = sh.get(p[PSI.spId]);
-      for (const k of ["xg", "kp", "xa", "wkp"]) u.sum[k] = (u.sum[k] || 0) + (x ? x[k] : 0);
-      if (g === "GK") u.sum.gkp = (u.sum.gkp || 0) + (oppXg - m.ga);
+      for (const k of ["xg", "kp", "xa", "wkp"]) add(k, x ? x[k] : 0);
+      add("fin", (p[PSI.gol] ?? 0) - (x ? x.xg : 0));
+      if (g === "GK") add("gkp", oppXg - m.ga);
       units.set(key, u);
     }
   }
   const main = new Map();
   for (const u of units.values()) {
     const n = u.games, s = u.sum;
-    u.avg = {};
-    for (const k of [...SUM_KEYS, "xg", "kp", "xa", "wkp"]) u.avg[k] = (s[k] || 0) / n;
-    u.avg.fin = ((s.gol || 0) - (s.xg || 0)) / n;
-    u.avg.gkp = u.group === "GK" ? (s.gkp || 0) / n : null;
-    for (const [k, [ok, tr, min]] of Object.entries(RATE_KEYS)) u.avg[k] = (s[tr] || 0) >= min ? (s[ok] || 0) / s[tr] : null;
+    u.avg = {}; u.noise = {};   // noise[k] = 평균값의 표본 분산(경기당 분산 ÷ 경기 수)
+    for (const k of [...SUM_KEYS, "xg", "kp", "xa", "wkp", "fin", "gkp"]) {
+      if (s[k] == null) continue;
+      u.avg[k] = s[k] / n;
+      u.noise[k] = Math.max(0, u.sq[k] / n - u.avg[k] ** 2) / n;
+    }
+    if (u.group !== "GK") u.avg.gkp = null;
+    for (const [k, [ok, tr, min]] of Object.entries(RATE_KEYS)) {
+      const t = s[tr] || 0, p = t >= min ? (s[ok] || 0) / t : null;
+      u.avg[k] = p; u.noise[k] = p == null ? null : (p * (1 - p)) / t;   // 성공률은 이항 분산
+    }
     u.pos = +Object.entries(u.posCount).sort((a, b) => b[1] - a[1])[0][0];
     u.grade = +Object.entries(u.grade).sort((a, b) => b[1] - a[1])[0][0];
-    delete u.sum;
+    delete u.sum; delete u.sq;
     const cur = main.get(u.spId);
     if (!cur || u.games > cur.games) main.set(u.spId, u);
   }
@@ -248,7 +261,11 @@ export function playerUnits(rows, xg) {
 
 /* 랭커 선수 단위 목록 → 포지션 그룹별 지표 분포 { GROUP: { n, metric:{mean,sd} } } (ranker-baseline.js) */
 export const D6_MIN_UNIT_GAMES = 5;
-export function d6Baseline(unitList) {
+const SD_FLOOR = 0.35;   // 우연 편차를 빼도 관측 편차의 35% 아래로는 줄이지 않음(과보정 방지)
+/* 우연 편차 제거: 랭커 한 명당 5~15경기 평균이라 관측 편차에는 '실력 차이 + 표본 흔들림'이 섞여 있음
+   → 실력 편차² ≈ 관측 편차² − 평균(표본 분산). 100경기 평균인 우리 선수와 같은 잣대로 비교하기 위함 */
+const r3b = (v) => Math.round(v * 1000) / 1000;
+export function d6Baseline(unitList, { noise = true } = {}) {
   const out = {};
   for (const g of Object.keys(POS_CAT_W)) {
     const us = unitList.filter((u) => u.group === g && u.games >= D6_MIN_UNIT_GAMES);
@@ -257,14 +274,42 @@ export function d6Baseline(unitList) {
     const keys = new Set(["rt"]);
     for (const c of Object.keys(POS_CAT_W[g])) D6_CATS[c].keys.forEach((k) => keys.add(k));
     for (const k of keys) {
-      const vals = us.map((u) => u.avg[k]).filter((v) => v != null);
-      if (vals.length < 5) continue;
+      const ok = us.filter((u) => u.avg[k] != null);
+      if (ok.length < 5) continue;
+      const vals = ok.map((u) => u.avg[k]);
       const mean = vals.reduce((s, v) => s + v, 0) / vals.length;
-      const sd = Math.sqrt(vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length);
-      out[g][k] = { mean: Math.round(mean * 1000) / 1000, sd: Math.round(sd * 1000) / 1000 };
+      const obs = Math.sqrt(vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length);
+      const nz = ok.reduce((s, u) => s + ((u.noise && u.noise[k]) || 0), 0) / ok.length;
+      const sd = noise ? Math.sqrt(Math.max(obs * obs - nz, (SD_FLOOR * obs) ** 2)) : obs;
+      out[g][k] = { mean: r3b(mean), sd: r3b(sd), sdObs: r3b(obs) };
     }
   }
   return out;
+}
+/* 기준점 보정: 랭커 선수들도 같은 방식(잘하는 방식 인정·가산점)으로 채점하면 평균이 0보다 높게 나옴
+   → 그 평균(_mu)을 빼서 '랭커 평균 = 도륙 지수 50'이 되게 함. 표본 보정 전 점수 기준 */
+export function d6Calibrate(base, unitList, lowPct = LOW_PCT.official) {
+  const avg = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+  for (const g of Object.keys(base)) {
+    const us = unitList.filter((u) => u.group === g && u.games >= D6_MIN_UNIT_GAMES).map((u) => ({ ...u, games: 1e9 }));   // 표본 보정 없이
+    if (us.length < 5) continue;
+    delete base[g]._cmu; delete base[g]._mu;
+    const cmu = {};
+    const d1 = us.map((u) => diagnose(u, base, null, { cat: false, total: false }));
+    for (const c of Object.keys(POS_CAT_W[g])) {
+      const v = d1.map((d) => d.cats[c] && d.cats[c].score).filter((x) => x != null);
+      if (v.length >= 5) cmu[c] = r3b(avg(v));
+    }
+    base[g]._cmu = cmu;
+    const raws = us.map((u) => diagnose(u, base, null, { cat: true, total: false }).scoreB).filter((v) => v != null);
+    base[g]._mu = r3b(avg(raws));
+    base[g]._sd = r3b(Math.sqrt(avg(raws.map((v) => (v - base[g]._mu) ** 2))));
+    // 판정선 = 이 포지션 랭커(실제 경기 수로 표본 보정한 점수)의 하위 LOW_PCT — 모드·포지션마다 랭커 분포에 맞춘 같은 잣대
+    const real = unitList.filter((u) => u.group === g && u.games >= D6_MIN_UNIT_GAMES)
+      .map((u) => diagnose(u, base, null).scoreB).filter((v) => v != null).sort((a, b) => a - b);
+    base[g]._low = r3b(real[Math.floor(lowPct * (real.length - 1))]);
+  }
+  return base;
 }
 
 const wmean = (zs) => {
@@ -279,9 +324,9 @@ export const VERDICTS = {
   replace:   { emoji: "🔴", label: "교체 고려", tone: "danger", line: "카드 기준으로도, 포지션 기준으로도 부진" },
   pending:   { emoji: "⚪", label: "참고", tone: "dim", line: `선발 ${MIN_JUDGE_GAMES}경기 미만 — 판정 보류` }
 };
-export function verdictOf(n, scoreA, scoreB) {
+export function verdictOf(n, scoreA, scoreB, lowLine = LOW) {
   if (n < MIN_JUDGE_GAMES || scoreB == null) return "pending";
-  const lowB = scoreB < LOW, lowA = scoreA != null && scoreA < LOW;
+  const lowB = scoreB < lowLine, lowA = scoreA != null && scoreA < LOW;
   if (lowA && lowB) return "replace";
   if (lowB) return "capped";
   if (lowA) return "underused";
@@ -304,7 +349,7 @@ function roleOf(group, cats) {
 /* 선수 한 명 진단
    base: 모드 포지션 분포 { GROUP: { metric:{mean,sd} } } (ranker-baseline modes.*.dor6)
    rankerCard: ranker-stats status (같은 카드·같은 포지션) 또는 null */
-export function diagnose(unit, base, rankerCard) {
+export function diagnose(unit, base, rankerCard, { cat = true, total = true } = {}) {
   const b = base && base[unit.group];
   const cw = POS_CAT_W[unit.group];
   if (!b || !cw) return { ...unit, verdict: "pending", scoreA: null, scoreB: null, index: null, cats: {}, zB: [], zA: [] };
@@ -323,7 +368,11 @@ export function diagnose(unit, base, rankerCard) {
     if (!zs.length) continue;
     const top = zs.reduce((x, y) => (y.z > x.z ? y : x));
     const mean = zs.reduce((s, x) => s + x.z, 0) / zs.length;
-    const score = zs.length === 1 ? top.z : BEST_SHARE * top.z + (1 - BEST_SHARE) * mean;
+    // 묶음 기준점 보정(_cmu): 랭커도 '최고 지표 60%'를 적용하면 평균이 0보다 높아짐 → 그만큼 빼서 랭커 평균 = 50
+    const kw = CAT_KEY_W[unit.group] && CAT_KEY_W[unit.group][c];
+    const base0 = kw ? zs.reduce((t, x) => t + x.z * (kw[x.metric] || 0), 0) / (zs.reduce((t, x) => t + (kw[x.metric] || 0), 0) || 1)
+      : zs.length === 1 ? top.z : BEST_SHARE * top.z + (1 - BEST_SHARE) * mean;
+    const score = base0 - (cat && b._cmu ? b._cmu[c] || 0 : 0);
     cats[c] = { score, w, best: top.metric, index: d6Index(score) };
     zB.push(...zs);
   }
@@ -342,11 +391,12 @@ export function diagnose(unit, base, rankerCard) {
     }
   }
   const rawA = zA.length >= 2 ? wmean(zA) : null;
-  const scoreB = raw == null ? null : (raw + bonus) * shrink;
+  const scoreB = raw == null ? null : (raw + bonus - (total && b._mu ? b._mu : 0)) * shrink;
   const scoreA = rawA == null ? null : rawA * shrink;
   return { ...unit, zA, zB, cats, bonus, scoreA, scoreB, index: d6Index(scoreB), role: roleOf(unit.group, cats),
     rankerGames: rankerCard ? rankerCard.matchCount ?? null : null,
-    verdict: verdictOf(unit.games, scoreA, scoreB) };
+    lowIndex: d6Index(b._low ?? LOW),
+    verdict: verdictOf(unit.games, scoreA, scoreB, b._low ?? LOW) };
 }
 
 /* ---------- 전체 분석 ----------
