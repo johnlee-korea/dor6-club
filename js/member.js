@@ -216,29 +216,105 @@ function tabRival(body) {
     </div>`;
 }
 
-/* 경기: 최근 30경기(클래식 포함) — 탭하면 양팀 스쿼드 */
+/* 경기 (v2.6.0) — [공식경기 | 친선경기 | 감독모드 | 클래식] + [더보기] 10경기씩, 탭하면 양팀 스쿼드
+   공식·친선(공식친선+리그친선)·클래식(내전)은 수집 데이터에서 바로, 감독모드는 수집 대상이 아니라
+   Worker /search/more 로 넥슨에서 10경기씩 조회(전적 검색과 같은 경로). 선택 모드·표시 개수는 이 페이지에서만 유지 */
+const PF_MMODES = [
+  ["official", "공식경기", [50], 30],
+  ["friendly", "친선경기", [60, 30], 10],
+  ["manager", "감독모드", null, 10],
+  ["classic", "클래식", [40], 10]
+];
+const PF_MORE = 10;
+let pfMode = "official";
+const pfShown = {};                                  // 로컬 모드별 표시 개수
+let pfMgr = null, pfMgrLoading = false, pfMgrErr = "";   // 감독모드 { matches, offsets, ended }
+
 function tabMatches(body) {
-  const recent = PF.matches.slice(0, 30);
-  if (!recent.length) { body.innerHTML = emptyState("수집된 경기가 없어요.", "📭"); return; }
   body.innerHTML = `
-    <div class="in-note" style="margin-bottom:var(--sp-2);">최근 ${recent.length}경기 · 탭하면 양팀 스쿼드</div>
-    <div class="card">${recent.map((m) => {
-      const label = MATCH_TYPE_LABEL[m.matchType] || `유형${m.matchType}`;
-      return `
-      <div class="match-row" style="padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer;">
+    <div class="chip-row" role="tablist">${PF_MMODES.map(([k, l]) =>
+      `<button class="chip" type="button" data-mmode="${k}" role="tab">${l}</button>`).join("")}</div>
+    <div id="pf-mlist"></div>`;
+  body.querySelector(".chip-row").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-mmode]");
+    if (b) { pfMode = b.dataset.mmode; renderMatchList(); }
+  });
+  renderMatchList();
+}
+
+function renderMatchList() {
+  const box = document.getElementById("pf-mlist");
+  if (!box) return;
+  document.querySelectorAll("[data-mmode]").forEach((b) => b.classList.toggle("active", b.dataset.mmode === pfMode));
+  const [, label, types, first] = PF_MMODES.find(([k]) => k === pfMode);
+  let list, done, note;
+  if (types) {
+    const all = PF.matches.filter((m) => types.includes(m.matchType));
+    const n = pfShown[pfMode] || first;
+    list = all.slice(0, n);
+    done = n >= all.length;
+    note = "사이트가 모은 기록";
+  } else {
+    if (!pfMgr && !pfMgrLoading && !pfMgrErr) { loadManager(); }
+    if (!pfMgr) {
+      box.innerHTML = pfMgrErr
+        ? `<div class="card">${errorState(escapeHtml(pfMgrErr))}<button class="btn sm" type="button" data-mretry style="width:100%;margin-top:var(--sp-3);">다시 시도</button></div>`
+        : `<div class="card"><div class="loading">넥슨에서 감독모드 기록 불러오는 중…</div></div>`;
+      const r = box.querySelector("[data-mretry]");
+      if (r) r.addEventListener("click", () => { pfMgrErr = ""; renderMatchList(); });
+      return;
+    }
+    list = pfMgr.matches;
+    done = Object.values(pfMgr.ended || {}).every(Boolean);
+    note = "넥슨 실시간 조회";
+  }
+  const rows = list.length ? list.map((m, i) => `
+      <div class="match-row" data-i="${i}" style="padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer;">
         <div style="display:flex;align-items:center;gap:var(--sp-3);">
           <span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>
           <span style="font-weight:700;font-variant-numeric:tabular-nums;">${m.goalFor} : ${m.goalAgainst}</span>
           <span style="flex:1;min-width:0;color:var(--text-muted);font-size:var(--fs-sm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
             vs ${escapeHtml(m.opponentNick || "?")}</span>
-          <span class="badge">${label}</span>
+          ${pfMode === "friendly" ? `<span class="badge">${MATCH_TYPE_LABEL[m.matchType] || "친선"}</span>` : ""}
           <span style="font-size:var(--fs-xs);color:var(--text-dim);white-space:nowrap;">${fmt.date(m.matchDate)}</span>
         </div>
-      </div>`;
-    }).join("")}</div>`;
-  body.querySelectorAll(".match-row").forEach((row, i) => {
-    row.addEventListener("click", async () => openMatchModal(recent[i], await sqLoadMeta(), PF.member.ingameNick));
+      </div>`).join("")
+    : emptyState(`${label} 기록이 없어요.`, "📭");
+  const more = done
+    ? (list.length ? `<div class="in-dim" style="text-align:center;padding-top:var(--sp-3);">${label} 기록을 모두 불러왔어요.</div>` : "")
+    : `<button class="btn sm" type="button" data-mmore style="width:100%;margin-top:var(--sp-3);" ${pfMgrLoading ? "disabled" : ""}>${pfMgrLoading ? "불러오는 중…" : "더보기 (10경기)"}</button>`;
+  box.innerHTML = `<div class="card">${list.length ? `<div class="in-dim" style="margin-bottom:var(--sp-1);">${label} ${list.length}경기 · ${note} · 탭하면 양팀 스쿼드</div>` : ""}${rows}${more}</div>`;
+  box.querySelectorAll(".match-row").forEach((row) => row.addEventListener("click", async () => {
+    const m = list[row.dataset.i];
+    const meta = await sqEnsureNames(await sqLoadMeta(), [m.lineup || [], m.oppLineup || []]);
+    openMatchModal(m, meta, PF.member.ingameNick);
+  }));
+  const mb = box.querySelector("[data-mmore]");
+  if (mb) mb.addEventListener("click", () => {
+    if (types) { pfShown[pfMode] = (pfShown[pfMode] || first) + PF_MORE; renderMatchList(); }
+    else loadManager();
   });
+}
+
+async function loadManager() {
+  if (pfMgrLoading) return;
+  pfMgrLoading = true;
+  if (pfMgr) renderMatchList();
+  const st = pfMgr || { matches: [], offsets: {}, ended: {} };
+  try {
+    const r = await auth.call("/search/more", { ouid: PF.member.ouid, tab: "manager", offsets: st.offsets, ended: st.ended });
+    const seen = new Set(st.matches.map((m) => m.matchId));   // 조회 사이 새 경기로 밀려 겹치는 경기 제거
+    for (const m of r.matches || []) if (!seen.has(m.matchId)) { seen.add(m.matchId); st.matches.push(m); }
+    st.offsets = r.offsets; st.ended = r.ended;
+    pfMgr = st;
+  } catch (e) {
+    console.error("감독모드 경기 조회 실패:", e);
+    if (!pfMgr) pfMgrErr = `감독모드 기록을 불러오지 못했어요. (${e.message})`;
+    else alert(`경기를 더 불러오지 못했어요: ${e.message}`);
+  } finally {
+    pfMgrLoading = false;
+  }
+  if (pfMode === "manager") renderMatchList();
 }
 
 initProfile();
