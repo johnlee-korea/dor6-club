@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-29T14:07:34.683Z",
+  "updated": "2026-09-29T16:07:47.056Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -43,19 +43,19 @@
     "rt": "평점"
   },
   "rankerUnits": {
-    "GK": 155,
-    "CB": 317,
-    "FB": 313,
-    "DM": 276,
-    "CM": 72,
-    "W": 196,
-    "AM": 196,
-    "ST": 233
+    "GK": 157,
+    "CB": 314,
+    "FB": 301,
+    "DM": 275,
+    "CM": 59,
+    "W": 214,
+    "AM": 187,
+    "ST": 216
   },
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
       "ctrl": "gamepad",
-      "games": 100,
+      "games": 103,
       "ace": [
         {
           "spId": 868004000,
@@ -64,8 +64,8 @@
           "games": 93,
           "metric": "sht",
           "value": 2.04,
-          "base": 1.17,
-          "z": 1.22,
+          "base": 1.22,
+          "z": 1.18,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -77,62 +77,65 @@
           "spId": 867224232,
           "group": "W",
           "pos": 16,
-          "games": 77,
+          "games": 78,
           "metric": "win",
-          "value": 1.56,
-          "base": 1.14,
-          "z": 0.92,
-          "title": null,
+          "value": 1.54,
+          "base": 1.13,
+          "z": 1.06,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
           "goals": 30,
-          "assists": 30
+          "assists": 34
         },
         {
-          "spId": 856235840,
-          "group": "GK",
-          "pos": 0,
-          "games": 100,
-          "metric": "sav",
-          "value": 3.51,
-          "base": 2.94,
-          "z": 0.75,
+          "spId": 845231478,
+          "group": "ST",
+          "pos": 25,
+          "games": 6,
+          "metric": "sht",
+          "value": 2.67,
+          "base": 2.1,
+          "z": 0.8,
           "title": null,
-          "goals": 0,
-          "assists": 0
+          "goals": 9,
+          "assists": 5
         }
       ],
       "goalMins": {
         "for": [
-          27,
-          46,
-          60,
-          52,
-          40,
+          28,
+          48,
+          62,
+          54,
           43,
-          27
+          43,
+          29
         ],
         "against": [
-          29,
-          52,
-          43,
+          30,
+          55,
+          45,
           50,
-          35,
-          39,
+          37,
+          41,
           19
         ]
       },
-      "comebacks": 14,
-      "lateWinners": 8,
+      "comebacks": 15,
+      "lateWinners": 9,
       "manner": {
-        "games": 100,
+        "games": 103,
         "yellow": 7,
         "red": 0,
-        "foul": 94,
-        "score": 1.15
+        "foul": 98,
+        "score": 1.16
       }
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "ctrl": "keyboard",
-      "games": 134,
+      "games": 138,
       "ace": [
         {
           "spId": 863192985,
@@ -141,8 +144,8 @@
           "games": 11,
           "metric": "sht",
           "value": 2.27,
-          "base": 0.74,
-          "z": 3.24,
+          "base": 0.85,
+          "z": 3.18,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -151,35 +154,35 @@
           "assists": 3
         },
         {
+          "spId": 863243715,
+          "group": "CB",
+          "pos": 4,
+          "games": 8,
+          "metric": "rt",
+          "value": 6.74,
+          "base": 6.19,
+          "z": 2.07,
+          "title": {
+            "emoji": "⭐",
+            "name": "믿을맨"
+          },
+          "goals": 1,
+          "assists": 0
+        },
+        {
           "spId": 863233096,
           "group": "CB",
           "pos": 4,
           "games": 12,
           "metric": "pas",
           "value": 8.08,
-          "base": 5.43,
-          "z": 2.18,
+          "base": 5.5,
+          "z": 2.06,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
           },
           "goals": 0,
-          "assists": 0
-        },
-        {
-          "spId": 863212218,
-          "group": "CB",
-          "pos": 6,
-          "games": 31,
-          "metric": "drb",
-          "value": 4.58,
-          "base": 2.77,
-          "z": 2.11,
-          "title": {
-            "emoji": "🚜",
-            "name": "전진하는 수비수"
-          },
-          "goals": 2,
           "assists": 0
         }
       ],
@@ -187,35 +190,35 @@
         "for": [
           36,
           49,
-          52,
-          62,
-          51,
-          51,
-          19
+          54,
+          63,
+          54,
+          53,
+          20
         ],
         "against": [
-          53,
+          55,
+          48,
+          45,
+          56,
           47,
-          44,
-          54,
-          46,
-          38,
+          40,
           23
         ]
       },
-      "comebacks": 24,
+      "comebacks": 26,
       "lateWinners": 13,
       "manner": {
-        "games": 134,
+        "games": 138,
         "yellow": 9,
         "red": 1,
-        "foul": 117,
-        "score": 1.1
+        "foul": 121,
+        "score": 1.09
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
       "ctrl": "keyboard",
-      "games": 108,
+      "games": 110,
       "ace": [
         {
           "spId": 237020170,
@@ -224,8 +227,8 @@
           "games": 6,
           "metric": "pas",
           "value": 4.33,
-          "base": 2.3,
-          "z": 3.83,
+          "base": 2.35,
+          "z": 3.38,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -237,11 +240,11 @@
           "spId": 861001615,
           "group": "CB",
           "pos": 6,
-          "games": 90,
+          "games": 92,
           "metric": "pas",
-          "value": 7.66,
-          "base": 5.43,
-          "z": 1.83,
+          "value": 7.74,
+          "base": 5.5,
+          "z": 1.79,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -253,11 +256,11 @@
           "spId": 854241486,
           "group": "CB",
           "pos": 4,
-          "games": 108,
+          "games": 110,
           "metric": "pas",
-          "value": 7.34,
-          "base": 5.43,
-          "z": 1.57,
+          "value": 7.41,
+          "base": 5.5,
+          "z": 1.52,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -268,32 +271,32 @@
       ],
       "goalMins": {
         "for": [
-          48,
-          40,
-          42,
-          55,
+          49,
+          41,
+          44,
+          56,
           44,
           39,
-          13
+          14
         ],
         "against": [
-          34,
-          39,
-          36,
-          39,
-          48,
-          53,
+          35,
+          40,
+          37,
+          40,
+          50,
+          54,
           13
         ]
       },
       "comebacks": 14,
       "lateWinners": 5,
       "manner": {
-        "games": 108,
+        "games": 110,
         "yellow": 7,
         "red": 1,
         "foul": 80,
-        "score": 0.96
+        "score": 0.95
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
@@ -301,30 +304,14 @@
       "games": 20,
       "ace": [
         {
-          "spId": 867235790,
-          "group": "AM",
-          "pos": 18,
-          "games": 20,
-          "metric": "sht",
-          "value": 2.2,
-          "base": 1.17,
-          "z": 1.44,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 18,
-          "assists": 8
-        },
-        {
           "spId": 856232580,
           "group": "CB",
           "pos": 6,
           "games": 8,
           "metric": "rt",
           "value": 6.64,
-          "base": 6.17,
-          "z": 1.43,
+          "base": 6.19,
+          "z": 1.69,
           "title": {
             "emoji": "⭐",
             "name": "믿을맨"
@@ -333,14 +320,30 @@
           "assists": 1
         },
         {
+          "spId": 867235790,
+          "group": "AM",
+          "pos": 18,
+          "games": 20,
+          "metric": "sht",
+          "value": 2.2,
+          "base": 1.22,
+          "z": 1.41,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 18,
+          "assists": 8
+        },
+        {
           "spId": 825206585,
           "group": "GK",
           "pos": 0,
           "games": 20,
           "metric": "rt",
           "value": 6.65,
-          "base": 6.22,
-          "z": 1.1,
+          "base": 6.24,
+          "z": 1.03,
           "title": {
             "emoji": "⭐",
             "name": "믿을맨"
@@ -390,8 +393,8 @@
           "games": 7,
           "metric": "pas",
           "value": 3.57,
-          "base": 2.3,
-          "z": 2.39,
+          "base": 2.35,
+          "z": 2.08,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -407,7 +410,7 @@
           "metric": "sht",
           "value": 1.33,
           "base": 0.58,
-          "z": 2.09,
+          "z": 2.03,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -420,13 +423,13 @@
           "group": "CB",
           "pos": 6,
           "games": 50,
-          "metric": "drb",
-          "value": 4.5,
-          "base": 2.77,
-          "z": 2.01,
+          "metric": "pas",
+          "value": 7.86,
+          "base": 5.5,
+          "z": 1.88,
           "title": {
-            "emoji": "🚜",
-            "name": "전진하는 수비수"
+            "emoji": "⚙️",
+            "name": "빌드업 엔진"
           },
           "goals": 0,
           "assists": 0
@@ -473,8 +476,8 @@
           "games": 7,
           "metric": "win",
           "value": 5.14,
-          "base": 2.77,
-          "z": 3.7,
+          "base": 2.74,
+          "z": 3.94,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
@@ -489,8 +492,8 @@
           "games": 7,
           "metric": "win",
           "value": 3.29,
-          "base": 2.08,
-          "z": 2.22,
+          "base": 2.1,
+          "z": 2.1,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
@@ -506,7 +509,7 @@
           "metric": "sav",
           "value": 4.29,
           "base": 2.94,
-          "z": 1.77,
+          "z": 1.78,
           "title": {
             "emoji": "🧤",
             "name": "수호신"
@@ -626,22 +629,6 @@
       "games": 130,
       "ace": [
         {
-          "spId": 867223334,
-          "group": "DM",
-          "pos": 11,
-          "games": 13,
-          "metric": "int",
-          "value": 1.85,
-          "base": 0.9,
-          "z": 2.56,
-          "title": {
-            "emoji": "🧹",
-            "name": "진공청소기"
-          },
-          "goals": 2,
-          "assists": 5
-        },
-        {
           "spId": 856192119,
           "group": "GK",
           "pos": 0,
@@ -649,7 +636,7 @@
           "metric": "sav",
           "value": 4.85,
           "base": 2.94,
-          "z": 2.51,
+          "z": 2.53,
           "title": {
             "emoji": "🧤",
             "name": "수호신"
@@ -658,14 +645,30 @@
           "assists": 0
         },
         {
+          "spId": 867223334,
+          "group": "DM",
+          "pos": 11,
+          "games": 13,
+          "metric": "int",
+          "value": 1.85,
+          "base": 0.91,
+          "z": 2.39,
+          "title": {
+            "emoji": "🧹",
+            "name": "진공청소기"
+          },
+          "goals": 2,
+          "assists": 5
+        },
+        {
           "spId": 877182521,
           "group": "CM",
           "pos": 15,
           "games": 14,
           "metric": "sht",
           "value": 1.71,
-          "base": 0.74,
-          "z": 2.06,
+          "base": 0.85,
+          "z": 1.93,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -715,8 +718,8 @@
           "games": 7,
           "metric": "sht",
           "value": 2.29,
-          "base": 0.62,
-          "z": 5.29,
+          "base": 0.58,
+          "z": 5.15,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -731,8 +734,8 @@
           "games": 13,
           "metric": "sht",
           "value": 1.38,
-          "base": 0.62,
-          "z": 2.44,
+          "base": 0.58,
+          "z": 2.42,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -747,8 +750,8 @@
           "games": 10,
           "metric": "win",
           "value": 4.2,
-          "base": 2.77,
-          "z": 2.23,
+          "base": 2.74,
+          "z": 2.4,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
@@ -793,17 +796,17 @@
     },
     "49f604d3f58f5f607234ef60c584326a": {
       "ctrl": "keyboard",
-      "games": 15,
+      "games": 21,
       "ace": [
         {
           "spId": 866247819,
           "group": "CB",
           "pos": 6,
-          "games": 15,
+          "games": 21,
           "metric": "pas",
-          "value": 8.2,
-          "base": 5.43,
-          "z": 2.28,
+          "value": 7.67,
+          "base": 5.5,
+          "z": 1.73,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -815,11 +818,11 @@
           "spId": 866229237,
           "group": "CB",
           "pos": 4,
-          "games": 15,
+          "games": 21,
           "metric": "drb",
-          "value": 4.07,
-          "base": 2.77,
-          "z": 1.51,
+          "value": 4.48,
+          "base": 2.91,
+          "z": 1.62,
           "title": {
             "emoji": "🚜",
             "name": "전진하는 수비수"
@@ -828,55 +831,52 @@
           "assists": 1
         },
         {
-          "spId": 840013940,
-          "group": "ST",
-          "pos": 25,
-          "games": 11,
-          "metric": "sht",
-          "value": 2.82,
-          "base": 2.05,
-          "z": 1.11,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 9,
-          "assists": 1
+          "spId": 848188350,
+          "group": "W",
+          "pos": 27,
+          "games": 21,
+          "metric": "drb",
+          "value": 8.48,
+          "base": 6.83,
+          "z": 0.89,
+          "title": null,
+          "goals": 2,
+          "assists": 14
         }
       ],
       "goalMins": {
         "for": [
+          9,
           6,
-          2,
+          6,
+          11,
+          9,
           4,
-          7,
-          5,
-          4,
-          0
+          1
         ],
         "against": [
-          5,
-          7,
-          5,
-          9,
-          5,
           6,
-          2
+          10,
+          7,
+          11,
+          7,
+          9,
+          3
         ]
       },
-      "comebacks": 1,
+      "comebacks": 2,
       "lateWinners": 1,
       "manner": {
-        "games": 15,
+        "games": 21,
         "yellow": 0,
         "red": 0,
-        "foul": 17,
-        "score": 1.13
+        "foul": 20,
+        "score": 0.95
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 206,
+      "games": 210,
       "ace": [
         {
           "spId": 861005661,
@@ -885,8 +885,8 @@
           "games": 63,
           "metric": "sht",
           "value": 3.32,
-          "base": 2.05,
-          "z": 1.83,
+          "base": 2.1,
+          "z": 1.72,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -898,62 +898,62 @@
           "spId": 867224232,
           "group": "DM",
           "pos": 11,
-          "games": 51,
+          "games": 55,
           "metric": "pas",
-          "value": 19.69,
-          "base": 14.28,
-          "z": 1.56,
+          "value": 19.42,
+          "base": 14.35,
+          "z": 1.44,
           "title": {
             "emoji": "🎼",
             "name": "중원의 지휘자"
           },
           "goals": 12,
-          "assists": 19
+          "assists": 22
         },
         {
-          "spId": 848120274,
-          "group": "AM",
-          "pos": 18,
-          "games": 51,
+          "spId": 863210514,
+          "group": "FB",
+          "pos": 3,
+          "games": 31,
           "metric": "pas",
-          "value": 17.96,
-          "base": 11.54,
-          "z": 1.49,
+          "value": 9.19,
+          "base": 6.83,
+          "z": 1.33,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "⚙️",
+            "name": "빌드업 엔진"
           },
-          "goals": 38,
-          "assists": 30
+          "goals": 0,
+          "assists": 1
         }
       ],
       "goalMins": {
         "for": [
           59,
-          82,
+          83,
           85,
-          92,
-          76,
-          99,
+          95,
+          79,
+          100,
           43
         ],
         "against": [
+          77,
+          96,
+          87,
+          99,
           74,
-          94,
-          84,
-          98,
-          74,
-          80,
+          82,
           35
         ]
       },
       "comebacks": 38,
       "lateWinners": 22,
       "manner": {
-        "games": 206,
+        "games": 210,
         "yellow": 5,
         "red": 1,
-        "foul": 130,
+        "foul": 133,
         "score": 0.72
       }
     },
@@ -969,7 +969,7 @@
           "metric": "sht",
           "value": 1.14,
           "base": 0.58,
-          "z": 1.56,
+          "z": 1.52,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -984,24 +984,24 @@
           "games": 21,
           "metric": "sht",
           "value": 1.76,
-          "base": 1.17,
-          "z": 0.83,
+          "base": 1.22,
+          "z": 0.78,
           "title": null,
           "goals": 24,
           "assists": 14
         },
         {
-          "spId": 280201325,
-          "group": "GK",
-          "pos": 0,
-          "games": 21,
+          "spId": 868045674,
+          "group": "DM",
+          "pos": 11,
+          "games": 24,
           "metric": "rt",
-          "value": 6.53,
-          "base": 6.22,
-          "z": 0.79,
+          "value": 7.41,
+          "base": 7.15,
+          "z": 0.76,
           "title": null,
-          "goals": 0,
-          "assists": 0
+          "goals": 8,
+          "assists": 9
         }
       ],
       "goalMins": {
@@ -1045,13 +1045,29 @@
           "games": 8,
           "metric": "int",
           "value": 3.13,
-          "base": 1.73,
-          "z": 2.31,
+          "base": 1.71,
+          "z": 2.45,
           "title": {
             "emoji": "🚧",
             "name": "길목 차단기"
           },
           "goals": 1,
+          "assists": 0
+        },
+        {
+          "spId": 863223671,
+          "group": "CB",
+          "pos": 4,
+          "games": 8,
+          "metric": "win",
+          "value": 3.5,
+          "base": 2.74,
+          "z": 1.25,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
           "assists": 0
         },
         {
@@ -1061,30 +1077,14 @@
           "games": 5,
           "metric": "win",
           "value": 2.8,
-          "base": 2.08,
-          "z": 1.33,
+          "base": 2.1,
+          "z": 1.23,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 2,
           "assists": 3
-        },
-        {
-          "spId": 866267991,
-          "group": "DM",
-          "pos": 9,
-          "games": 8,
-          "metric": "win",
-          "value": 2.75,
-          "base": 2.08,
-          "z": 1.23,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 1
         }
       ],
       "goalMins": {
@@ -1128,8 +1128,8 @@
           "games": 18,
           "metric": "sht",
           "value": 4.06,
-          "base": 2.05,
-          "z": 2.9,
+          "base": 2.1,
+          "z": 2.76,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1144,8 +1144,8 @@
           "games": 23,
           "metric": "int",
           "value": 1.43,
-          "base": 0.9,
-          "z": 1.44,
+          "base": 0.91,
+          "z": 1.34,
           "title": {
             "emoji": "🧹",
             "name": "진공청소기"
@@ -1154,20 +1154,20 @@
           "assists": 7
         },
         {
-          "spId": 855256079,
-          "group": "DM",
-          "pos": 9,
-          "games": 41,
-          "metric": "win",
-          "value": 2.8,
-          "base": 2.08,
-          "z": 1.34,
+          "spId": 515269626,
+          "group": "GK",
+          "pos": 0,
+          "games": 13,
+          "metric": "sav",
+          "value": 3.92,
+          "base": 2.94,
+          "z": 1.3,
           "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
+            "emoji": "🧤",
+            "name": "수호신"
           },
-          "goals": 3,
-          "assists": 8
+          "goals": 0,
+          "assists": 0
         }
       ],
       "goalMins": {
@@ -1211,8 +1211,8 @@
           "games": 24,
           "metric": "sht",
           "value": 2.71,
-          "base": 1.17,
-          "z": 2.15,
+          "base": 1.22,
+          "z": 2.14,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1225,13 +1225,13 @@
           "group": "AM",
           "pos": 18,
           "games": 18,
-          "metric": "drb",
-          "value": 15.56,
-          "base": 9.05,
-          "z": 1.92,
+          "metric": "sht",
+          "value": 2.5,
+          "base": 1.22,
+          "z": 1.84,
           "title": {
-            "emoji": "🪄",
-            "name": "드리블 마법사"
+            "emoji": "🏹",
+            "name": "슈팅 머신"
           },
           "goals": 19,
           "assists": 12
@@ -1244,7 +1244,7 @@
           "metric": "win",
           "value": 3.21,
           "base": 2.25,
-          "z": 1.62,
+          "z": 1.83,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
@@ -1329,7 +1329,7 @@
           "metric": "sht",
           "value": 1.24,
           "base": 0.58,
-          "z": 1.82,
+          "z": 1.77,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1342,13 +1342,13 @@
           "group": "GK",
           "pos": 0,
           "games": 17,
-          "metric": "rt",
-          "value": 6.82,
-          "base": 6.22,
-          "z": 1.53,
+          "metric": "sav",
+          "value": 4.06,
+          "base": 2.94,
+          "z": 1.48,
           "title": {
-            "emoji": "⭐",
-            "name": "믿을맨"
+            "emoji": "🧤",
+            "name": "수호신"
           },
           "goals": 0,
           "assists": 0
@@ -1360,8 +1360,8 @@
           "games": 25,
           "metric": "gol",
           "value": 1.16,
-          "base": 0.59,
-          "z": 1.37,
+          "base": 0.65,
+          "z": 1.15,
           "title": {
             "emoji": "🔫",
             "name": "골 사냥꾼"
@@ -1411,11 +1411,27 @@
           "games": 23,
           "metric": "pas",
           "value": 4.57,
-          "base": 2.3,
-          "z": 4.26,
+          "base": 2.35,
+          "z": 3.78,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
+          },
+          "goals": 0,
+          "assists": 0
+        },
+        {
+          "spId": 829228618,
+          "group": "FB",
+          "pos": 7,
+          "games": 16,
+          "metric": "win",
+          "value": 3.38,
+          "base": 2.25,
+          "z": 2.15,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
           "goals": 0,
           "assists": 0
@@ -1427,30 +1443,14 @@
           "games": 16,
           "metric": "ast",
           "value": 1.06,
-          "base": 0.52,
-          "z": 2.02,
+          "base": 0.54,
+          "z": 1.93,
           "title": {
             "emoji": "🎯",
             "name": "킬패스 장인"
           },
           "goals": 17,
           "assists": 17
-        },
-        {
-          "spId": 829228618,
-          "group": "FB",
-          "pos": 7,
-          "games": 16,
-          "metric": "win",
-          "value": 3.38,
-          "base": 2.25,
-          "z": 1.9,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 0
         }
       ],
       "goalMins": {
@@ -1494,8 +1494,8 @@
           "games": 11,
           "metric": "sht",
           "value": 1.91,
-          "base": 0.62,
-          "z": 4.1,
+          "base": 0.58,
+          "z": 4.01,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1510,8 +1510,8 @@
           "games": 11,
           "metric": "rt",
           "value": 7.2,
-          "base": 6.37,
-          "z": 2.46,
+          "base": 6.4,
+          "z": 2.72,
           "title": {
             "emoji": "⭐",
             "name": "믿을맨"
@@ -1520,20 +1520,20 @@
           "assists": 6
         },
         {
-          "spId": 861190042,
-          "group": "W",
-          "pos": 12,
-          "games": 33,
-          "metric": "drb",
-          "value": 10.36,
-          "base": 6.68,
-          "z": 2.2,
+          "spId": 866237238,
+          "group": "AM",
+          "pos": 18,
+          "games": 44,
+          "metric": "sht",
+          "value": 2.68,
+          "base": 1.22,
+          "z": 2.1,
           "title": {
-            "emoji": "🏃",
-            "name": "측면 돌파왕"
+            "emoji": "🏹",
+            "name": "슈팅 머신"
           },
-          "goals": 10,
-          "assists": 10
+          "goals": 36,
+          "assists": 9
         }
       ],
       "goalMins": {
@@ -1575,32 +1575,16 @@
           "group": "ST",
           "pos": 25,
           "games": 12,
-          "metric": "sht",
-          "value": 5.25,
-          "base": 2.05,
-          "z": 4.62,
+          "metric": "gol",
+          "value": 3.08,
+          "base": 1.16,
+          "z": 4.47,
           "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
+            "emoji": "🔫",
+            "name": "골 사냥꾼"
           },
           "goals": 37,
           "assists": 6
-        },
-        {
-          "spId": 868192181,
-          "group": "ST",
-          "pos": 25,
-          "games": 23,
-          "metric": "sht",
-          "value": 3.91,
-          "base": 2.05,
-          "z": 2.69,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 43,
-          "assists": 18
         },
         {
           "spId": 861001109,
@@ -1609,14 +1593,30 @@
           "games": 57,
           "metric": "win",
           "value": 4.3,
-          "base": 2.77,
-          "z": 2.39,
+          "base": 2.74,
+          "z": 2.56,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 0,
           "assists": 2
+        },
+        {
+          "spId": 868192181,
+          "group": "ST",
+          "pos": 25,
+          "games": 23,
+          "metric": "sht",
+          "value": 3.91,
+          "base": 2.1,
+          "z": 2.56,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 43,
+          "assists": 18
         }
       ],
       "goalMins": {
@@ -1658,32 +1658,32 @@
           "group": "W",
           "pos": 12,
           "games": 7,
-          "metric": "ast",
-          "value": 0.86,
-          "base": 0.44,
-          "z": 1.54,
+          "metric": "rt",
+          "value": 7.71,
+          "base": 7.03,
+          "z": 1.44,
           "title": {
-            "emoji": "🎯",
-            "name": "킬패스 장인"
+            "emoji": "⭐",
+            "name": "믿을맨"
           },
           "goals": 5,
           "assists": 6
         },
         {
-          "spId": 856220901,
-          "group": "GK",
-          "pos": 0,
-          "games": 45,
-          "metric": "pas",
-          "value": 2.98,
-          "base": 2.3,
-          "z": 1.27,
+          "spId": 272005003,
+          "group": "FB",
+          "pos": 3,
+          "games": 12,
+          "metric": "win",
+          "value": 2.92,
+          "base": 2.25,
+          "z": 1.28,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
           "goals": 0,
-          "assists": 0
+          "assists": 1
         },
         {
           "spId": 861166691,
@@ -1692,8 +1692,8 @@
           "games": 5,
           "metric": "sht",
           "value": 1,
-          "base": 0.62,
-          "z": 1.22,
+          "base": 0.58,
+          "z": 1.26,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1744,28 +1744,12 @@
           "metric": "win",
           "value": 1.71,
           "base": 0.7,
-          "z": 2.84,
+          "z": 3.14,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 11,
-          "assists": 0
-        },
-        {
-          "spId": 101214098,
-          "group": "DM",
-          "pos": 11,
-          "games": 7,
-          "metric": "int",
-          "value": 1.86,
-          "base": 0.9,
-          "z": 2.59,
-          "title": {
-            "emoji": "🧹",
-            "name": "진공청소기"
-          },
-          "goals": 1,
           "assists": 0
         },
         {
@@ -1775,14 +1759,30 @@
           "games": 7,
           "metric": "int",
           "value": 3.29,
-          "base": 1.73,
-          "z": 2.57,
+          "base": 1.71,
+          "z": 2.73,
           "title": {
             "emoji": "🚧",
             "name": "길목 차단기"
           },
           "goals": 0,
           "assists": 1
+        },
+        {
+          "spId": 101214098,
+          "group": "DM",
+          "pos": 11,
+          "games": 7,
+          "metric": "int",
+          "value": 1.86,
+          "base": 0.91,
+          "z": 2.42,
+          "title": {
+            "emoji": "🧹",
+            "name": "진공청소기"
+          },
+          "goals": 1,
+          "assists": 0
         }
       ],
       "goalMins": {
@@ -1822,15 +1822,15 @@
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
         "spId": 100001625,
-        "goals": 123,
-        "games": 108
+        "goals": 126,
+        "games": 110
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
         "nick": "Dor6곽철용",
         "spId": 845037576,
-        "goals": 108,
-        "games": 100
+        "goals": 111,
+        "games": 103
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -1881,7 +1881,7 @@
         "nick": "쌌따",
         "spId": 848189505,
         "assists": 54,
-        "games": 108
+        "games": 110
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -1897,14 +1897,14 @@
         "nick": "땜쟁",
         "comebacks": 38,
         "lateWinners": 22,
-        "games": 206
+        "games": 210
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
-        "comebacks": 24,
+        "comebacks": 26,
         "lateWinners": 13,
-        "games": 134
+        "games": 138
       },
       {
         "ouid": "0b4adfde6411fa08e6339ceaa3ed1942",
@@ -1920,14 +1920,14 @@
         "nick": "땜쟁",
         "comebacks": 38,
         "lateWinners": 22,
-        "games": 206
+        "games": 210
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
-        "comebacks": 24,
+        "comebacks": 26,
         "lateWinners": 13,
-        "games": 134
+        "games": 138
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
@@ -1950,10 +1950,10 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 206,
+        "games": 210,
         "yellow": 5,
         "red": 1,
-        "foul": 130,
+        "foul": 133,
         "score": 0.72
       },
       {
@@ -2005,8 +2005,8 @@
         "games": 7,
         "metric": "sht",
         "value": 2.29,
-        "base": 0.62,
-        "z": 5.29,
+        "base": 0.58,
+        "z": 5.15,
         "title": {
           "emoji": "🏹",
           "name": "슈팅 머신"
@@ -2019,29 +2019,13 @@
         "group": "ST",
         "pos": 25,
         "games": 12,
-        "metric": "sht",
-        "value": 5.25,
-        "base": 2.05,
-        "z": 4.62,
+        "metric": "gol",
+        "value": 3.08,
+        "base": 1.16,
+        "z": 4.47,
         "title": {
-          "emoji": "🏹",
-          "name": "슈팅 머신"
-        }
-      },
-      {
-        "ouid": "75278aef5ddb1cb75d88dd114f68f0ab",
-        "nick": "AUD이무기",
-        "spId": 206206585,
-        "group": "GK",
-        "pos": 0,
-        "games": 23,
-        "metric": "pas",
-        "value": 4.57,
-        "base": 2.3,
-        "z": 4.26,
-        "title": {
-          "emoji": "📨",
-          "name": "패스 마스터"
+          "emoji": "🔫",
+          "name": "골 사냥꾼"
         }
       },
       {
@@ -2053,24 +2037,40 @@
         "games": 11,
         "metric": "sht",
         "value": 1.91,
-        "base": 0.62,
-        "z": 4.1,
+        "base": 0.58,
+        "z": 4.01,
         "title": {
           "emoji": "🏹",
           "name": "슈팅 머신"
         }
       },
       {
-        "ouid": "ec6b3d922b94994ccd28de27367cf479",
-        "nick": "쌌따",
-        "spId": 237020170,
+        "ouid": "315d8d350dabea2c99cb2e49af2f1603",
+        "nick": "지브리스튜디오",
+        "spId": 863232488,
+        "group": "CB",
+        "pos": 4,
+        "games": 7,
+        "metric": "win",
+        "value": 5.14,
+        "base": 2.74,
+        "z": 3.94,
+        "title": {
+          "emoji": "🥷",
+          "name": "볼 탈취왕"
+        }
+      },
+      {
+        "ouid": "75278aef5ddb1cb75d88dd114f68f0ab",
+        "nick": "AUD이무기",
+        "spId": 206206585,
         "group": "GK",
         "pos": 0,
-        "games": 6,
+        "games": 23,
         "metric": "pas",
-        "value": 4.33,
-        "base": 2.3,
-        "z": 3.83,
+        "value": 4.57,
+        "base": 2.35,
+        "z": 3.78,
         "title": {
           "emoji": "📨",
           "name": "패스 마스터"
