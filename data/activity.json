@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-29T10:07:49.034Z",
+  "updated": "2026-09-29T12:07:42.613Z",
   "week": {
-    "from": "2026-09-22T10:07:49.034Z",
+    "from": "2026-09-22T12:07:42.613Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -13,22 +13,22 @@
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
-        "games": 85,
-        "wins": 42,
-        "winRate": 49
+        "games": 80,
+        "wins": 38,
+        "winRate": 48
       },
       {
         "ouid": "29e6cf3ac96836f6c5d0d0f64d87ef5b",
         "nick": "23번째ID",
-        "games": 75,
-        "wins": 40,
-        "winRate": 53
+        "games": 72,
+        "wins": 37,
+        "winRate": 51
       },
       {
         "ouid": "0b4adfde6411fa08e6339ceaa3ed1942",
         "nick": "AUD개불곰",
-        "games": 71,
-        "wins": 38,
+        "games": 69,
+        "wins": 37,
         "winRate": 54
       },
       {
@@ -619,8 +619,10 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 72,
+      "games": 74,
       "form": [
+        "lose",
+        "win",
         "win",
         "lose",
         "lose",
@@ -628,19 +630,17 @@
         "win",
         "win",
         "win",
-        "win",
-        "lose",
-        "draw"
+        "win"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
         "nemesis": null,
         "prey": null,
         "frequent": [],
-        "internalGames": 0
+        "internalGames": 2
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -888,7 +888,7 @@
             "rate": 67
           }
         ],
-        "internalGames": 50
+        "internalGames": 52
       }
     },
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
