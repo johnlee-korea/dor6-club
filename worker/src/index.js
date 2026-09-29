@@ -59,6 +59,12 @@ export default {
         return json(data);
       }
 
+      // 공개: 전적 검색 [더보기]·모드 탭 (v2.6.0) — 공식/친선/감독모드 10경기씩
+      if (url.pathname === "/search/more" && request.method === "POST") {
+        const body = await request.json();
+        return json(await searchMore(body, env));
+      }
+
       // 공개: 구단운영(모드별 선수 진단, v2.2.0) — 조회만 중계하고 분석은 브라우저가 함
       if (url.pathname.startsWith("/manage/") && request.method === "POST") {
         const body = await request.json();
@@ -165,6 +171,75 @@ async function rankerBaseline(env) {
   return _baseline;
 }
 
+/* 전적 목록 한 줄 — 양팀 스쿼드 모달용 라인업(선수 id·포지션·강화만) 포함 */
+function searchRow(d, me, opp, matchType) {
+  const md = me.matchDetail || {}, sh = me.shoot || {};
+  return {
+    matchId: d.matchId,
+    matchType,
+    matchDate: d.matchDate,
+    result: R_MAP[md.matchResult] || "draw",
+    goalFor: sh.goalTotal ?? 0,
+    goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
+    opponentNick: opp ? opp.nickname : "?",
+    possession: md.possession ?? null,
+    lineup: toLineup(me),
+    oppLineup: toLineup(opp)
+  };
+}
+
+/* [더보기]·모드 탭 (v2.6.0)
+   한 탭에 매치유형이 여럿(친선 = 공식친선+리그친선)일 수 있어 유형마다 다음 10개씩 받아 날짜순으로 합친 뒤
+   최신 10경기만 돌려준다. 유형별로 실제 사용한 개수만큼만 offset을 올려 다음 페이지와 순서가 어긋나지 않게 함.
+   서브요청: 목록 최대 2(+재시도) + 상세 최대 20(+재시도) → 50 이내 */
+const SEARCH_TABS = { official: [50], friendly: [60, 30], manager: [52] };
+const SEARCH_PAGE = 10;
+async function searchMore(body, env) {
+  const key = env.NEXON_API_KEY;
+  const types = SEARCH_TABS[body.tab];
+  if (!OUID_RE.test(body.ouid || "") || !types) throw new UserError("잘못된 요청");
+  const ouid = body.ouid;
+  const offsets = {}, ended = {};
+  for (const t of types) {
+    offsets[t] = Math.max(0, Math.min(5000, Math.floor(+((body.offsets || {})[t]) || 0)));
+    ended[t] = !!(body.ended || {})[t];
+  }
+  // 유형별 다음 목록
+  const lists = {};
+  await Promise.all(types.filter((t) => !ended[t]).map(async (t) => {
+    const ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=${t}&offset=${offsets[t]}&limit=${SEARCH_PAGE}`, key).catch(() => null);
+    lists[t] = Array.isArray(ids) ? ids : null;   // null = 목록 조회 실패(다음에 다시)
+  }));
+  // 상세 조회 (유형 순서 유지)
+  const items = [];
+  for (const t of types) (lists[t] || []).forEach((id, idx) => items.push({ t, idx, id }));
+  for (let i = 0; i < items.length; i += SEARCH_BATCH) {
+    await Promise.all(items.slice(i, i + SEARCH_BATCH).map(async (it) => {
+      const d = await nexonGet(`/fconline/v1/match-detail?matchid=${it.id}`, key, 1).catch(() => null);
+      const me = d && (d.matchInfo || []).find((x) => x.ouid === ouid);
+      if (me) it.row = searchRow(d, me, (d.matchInfo || []).find((x) => x.ouid !== ouid), it.t);
+    }));
+  }
+  const ok = items.filter((it) => it.row).sort((a, b) => String(b.row.matchDate).localeCompare(String(a.row.matchDate)));
+  const taken = types.length === 1 ? ok : ok.slice(0, SEARCH_PAGE);   // 단일 유형은 받은 만큼 전부
+  // 유형별 소비량 = 채택된 마지막 경기 위치 + 1 (사이의 조회 실패 경기는 건너뜀)
+  for (const t of types) {
+    const list = lists[t];
+    if (!list) continue;
+    const last = Math.max(-1, ...taken.filter((it) => it.t === t).map((it) => it.idx));
+    // 단일 유형이거나 이 유형 목록이 전부 채택됐으면 목록 길이만큼 전진 (전부 조회 실패여도 멈추지 않게)
+    const used = (types.length === 1 || last === list.length - 1) ? list.length : last + 1;
+    offsets[t] += used;
+    if (list.length < SEARCH_PAGE && used === list.length) ended[t] = true;
+  }
+  return {
+    matches: taken.map((it) => it.row),
+    offsets, ended,
+    done: types.every((t) => ended[t]),
+    missing: types.length === 1 ? items.length - ok.length : 0
+  };
+}
+
 async function publicSearch(ouid, env) {
   const key = env.NEXON_API_KEY;
   const out = { ouid, nickname: null, level: null, maxDivision: "-", matches: [] };
@@ -190,19 +265,7 @@ async function publicSearch(ouid, env) {
     const me = (d.matchInfo || []).find((i) => i.ouid === ouid);
     if (!me) continue;
     const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
-    const md = me.matchDetail || {}, sh = me.shoot || {};
-    out.matches.push({
-      matchId: d.matchId,
-      matchType: 50,
-      matchDate: d.matchDate,
-      result: R_MAP[md.matchResult] || "draw",
-      goalFor: sh.goalTotal ?? 0,
-      goalAgainst: (opp && opp.shoot && opp.shoot.goalTotal) ?? 0,
-      opponentNick: opp ? opp.nickname : "?",
-      possession: md.possession ?? null,
-      lineup: toLineup(me),       // 양팀 스쿼드 모달용 (선수 id·포지션·강화만)
-      oppLineup: toLineup(opp)
-    });
+    out.matches.push(searchRow(d, me, opp, 50));
     // 분석용 원본 — 정상 종료 경기만 (클럽 집계와 같은 기준)
     const raw = styleRaw(me, opp);
     if (raw && raw.end === 0 && d.matchInfo.length === 2) {
@@ -211,6 +274,8 @@ async function publicSearch(ouid, env) {
       pRows.push(...(ins.pStats || []));
     }
   }
+  // [더보기]용 다음 위치 (v2.6.0)
+  out.more = { official: { offsets: { 50: ids.length }, ended: { 50: ids.length < SEARCH_MATCHES } } };
   const w = out.matches.filter((m) => m.result === "win").length;
   out.summary = { games: out.matches.length, wins: w,
     winRate: out.matches.length ? Math.round((w / out.matches.length) * 100) : null };

@@ -22,6 +22,11 @@ function cacheSet(nick, data) {
   } catch (e) { console.warn("검색 결과 저장 실패(저장 없이 계속):", e); }
   return entry;
 }
+/* [더보기]로 늘어난 결과만 다시 저장 — '마지막 업데이트' 시각·최근 검색 순서는 그대로 */
+function cacheSave(nick, fetchedAt, data) {
+  try { localStorage.setItem(cacheKey(nick), JSON.stringify({ fetchedAt, data })); }
+  catch (e) { console.warn("더보기 결과 저장 실패(화면에는 표시):", e); }
+}
 function recentList() {
   try { return JSON.parse(localStorage.getItem(SEARCH_RECENT_KEY)) || []; } catch { return []; }
 }
@@ -104,6 +109,8 @@ async function doSearch(force = false) {
 }
 
 function show(nick, entry) {
+  // 다른 유저를 검색하면 경기 기록은 공식경기부터
+  if (!current || current.nick.toLowerCase() !== nick.toLowerCase()) srMode = "official";
   current = { nick, fetchedAt: entry.fetchedAt, data: entry.data };
   renderResult(document.getElementById("search-root"), entry.data, entry.fetchedAt);
 }
@@ -131,9 +138,12 @@ async function onResultClick(e) {
     openSquadModal(nick, last, meta);
     return;
   }
+  const mode = e.target.closest("[data-srmode]");
+  if (mode) { srMode = mode.dataset.srmode; renderMatchList(); return; }
+  if (e.target.closest("[data-more]")) { loadMore(); return; }
   const row = e.target.closest(".search-row");
   if (row) {
-    const m = d.matches[row.dataset.i];
+    const m = srList(d)[row.dataset.i];
     const meta = await sqEnsureNames(await sqLoadMeta(), [m.lineup, m.oppLineup]);
     openMatchModal(m, meta, nick);
   }
@@ -177,16 +187,6 @@ function renderResult(root, d, fetchedAt) {
     `<span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>`).join("");
   const hasSquad = !!latestWithLineup(d);
 
-  const rows = (d.matches || []).length
-    ? d.matches.map((m, i) => `
-      <div class="search-row" data-i="${i}" style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer;">
-        <span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>
-        <span style="font-weight:700;font-variant-numeric:tabular-nums;">${m.goalFor} : ${m.goalAgainst}</span>
-        <span style="flex:1;min-width:0;color:var(--text-muted);font-size:var(--fs-sm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">vs ${escapeHtml(m.opponentNick || "?")}</span>
-        <span style="font-size:var(--fs-xs);color:var(--text-dim);white-space:nowrap;">점유 ${m.possession == null ? "-" : m.possession + "%"} · ${fmt.date(m.matchDate)}</span>
-      </div>`).join("")
-    : emptyState("최근 공식경기 기록이 없습니다.");
-
   root.innerHTML = `
     ${recruitBanner()}
     <div class="pf-tabs" role="tablist">
@@ -213,13 +213,84 @@ function renderResult(root, d, fetchedAt) {
       </div>
     </div>
     <div id="search-analysis"></div>
-    <div class="section-title">최근 공식경기 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
-    <div class="card">${rows}</div>
+    <div class="section-title">경기 기록 <span style="font-size:var(--fs-xs);color:var(--text-dim);font-weight:400;">· 탭하면 양팀 스쿼드</span></div>
+    <div class="chip-row" id="sr-modes" role="tablist">${SR_MODES.map(([k, l]) =>
+      `<button class="chip" type="button" data-srmode="${k}" role="tab">${l}</button>`).join("")}</div>
+    <div id="sr-list"></div>
     </div>
     <div id="sr-manage" hidden></div>
   `;
+  renderMatchList();
   srShowTab();
   renderAnalysis(d).catch((e) => console.error("검색 분석 표시 실패:", e));
+}
+
+/* ---------- 경기 기록: 공식경기 · 친선경기 · 감독모드 + [더보기] (v2.6.0) ----------
+   공식경기 첫 30경기는 /search 결과(d.matches, 분석과 같은 표본). 친선·감독모드는 칩을 처음 누를 때 10경기,
+   [더보기]마다 /search/more 로 10경기씩 이어 받음. 다음 위치는 d.more[모드]에 저장해 새로고침 뒤에도 이어짐 */
+const SR_MODES = [["official", "공식경기"], ["friendly", "친선경기"], ["manager", "감독모드"]];
+let srMode = "official";
+let srLoading = false;
+
+// 모드별 다음 위치 — 예전 버전으로 저장된 결과(more 없음)는 공식경기 30경기 받은 것으로 간주
+function srState(d, mode) {
+  d.more = d.more || {};
+  if (!d.more[mode] && mode === "official")
+    d.more.official = { offsets: { 50: 30 }, ended: { 50: (d.matches || []).length < 30 } };
+  return d.more[mode] || null;
+}
+const srList = (d) => srMode === "official" ? (d.matches || []) : ((d.more && d.more[srMode] && d.more[srMode].matches) || []);
+const srDone = (st) => !!st && Object.values(st.ended || {}).every(Boolean);
+
+function renderMatchList() {
+  const box = document.getElementById("sr-list");
+  if (!box || !current) return;
+  const d = current.data;
+  document.querySelectorAll("[data-srmode]").forEach((b) => b.classList.toggle("active", b.dataset.srmode === srMode));
+  const st = srState(d, srMode);
+  if (!st) {   // 친선·감독모드 첫 진입 → 바로 조회
+    box.innerHTML = `<div class="card"><div class="loading">불러오는 중…</div></div>`;
+    loadMore();
+    return;
+  }
+  const list = srList(d);
+  const label = SR_MODES.find(([k]) => k === srMode)[1];
+  const rows = list.length ? list.map((m, i) => `
+      <div class="search-row" data-i="${i}" style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer;">
+        <span class="wl-dot ${m.result}">${fmt.wl(m.result)}</span>
+        <span style="font-weight:700;font-variant-numeric:tabular-nums;">${m.goalFor} : ${m.goalAgainst}</span>
+        <span style="flex:1;min-width:0;color:var(--text-muted);font-size:var(--fs-sm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${srMode === "friendly" ? `<span class="badge">${escapeHtml(SQ_MATCH_TYPE[m.matchType] || "친선")}</span> ` : ""}vs ${escapeHtml(m.opponentNick || "?")}</span>
+        <span style="font-size:var(--fs-xs);color:var(--text-dim);white-space:nowrap;">점유 ${m.possession == null ? "-" : m.possession + "%"} · ${fmt.date(m.matchDate)}</span>
+      </div>`).join("")
+    : emptyState(`최근 ${label} 기록이 없습니다.`);
+  const more = srDone(st) ? (list.length ? `<div class="in-dim" style="text-align:center;padding-top:var(--sp-3);">넥슨에서 조회되는 ${label} 기록을 모두 불러왔어요.</div>` : "")
+    : `<button class="btn sm" type="button" data-more style="width:100%;margin-top:var(--sp-3);" ${srLoading ? "disabled" : ""}>${srLoading ? "불러오는 중…" : "더보기 (10경기)"}</button>`;
+  box.innerHTML = `<div class="card">${list.length ? `<div class="in-dim" style="margin-bottom:var(--sp-1);">${label} ${list.length}경기</div>` : ""}${rows}${more}</div>`;
+}
+
+async function loadMore() {
+  if (srLoading || !current) return;
+  const entry = current, d = entry.data, mode = srMode;
+  const st = srState(d, mode) || { offsets: {}, ended: {}, matches: [] };
+  srLoading = true;
+  if (d.more[mode]) renderMatchList();
+  try {
+    const r = await auth.call("/search/more", { ouid: d.ouid, tab: mode, offsets: st.offsets, ended: st.ended });
+    const list = mode === "official" ? (d.matches = d.matches || []) : (st.matches = st.matches || []);
+    // 조회 사이에 새 경기를 하면 목록이 밀려 겹칠 수 있음 → matchId로 중복 제거
+    const seen = new Set(list.map((m) => m.matchId));
+    for (const m of r.matches || []) if (!seen.has(m.matchId)) { seen.add(m.matchId); list.push(m); }
+    st.offsets = r.offsets; st.ended = r.ended;
+    d.more[mode] = st;
+    cacheSave(entry.nick, entry.fetchedAt, d);
+  } catch (e) {
+    console.error("경기 더보기 실패:", e);
+    document.getElementById("search-msg").textContent = `⚠️ 경기 기록을 더 불러오지 못했어요: ${e.message}`;
+    if (!d.more[mode]) { srLoading = false; if (current === entry && srMode === mode) srMode = "official"; renderMatchList(); return; }
+  } finally {
+    srLoading = false;
+  }
+  if (current === entry && srMode === mode) renderMatchList();
 }
 
 /* 🎭 플레이스타일 + ⚽ 에이스 (v1.11.0) — Worker가 판정한 d.analysis를 그리기만 함(js/insight-ui.js 공용)
