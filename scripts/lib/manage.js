@@ -27,7 +27,7 @@ export const MODE_OF_TYPE = { 50: "official", 60: "friendly", 30: "friendly", 52
            s : 내 슈팅 [x, y, 유형, 결과, spId, 도움spId|0, 도움x|null, 도움y|null],
            o : 상대 슈팅 [x, y, 유형, 결과, 도움x|null, 도움y|null] }
    좌표: 넥슨 shootDetail 기준(공격 방향 x 0→1, y 0→1 = 공격수 기준 왼쪽→오른쪽 — 실측 확인) */
-export const PS_KEYS = ["spId", "pos", "grade", "gol", "ast", "rt", "sht", "pas", "drb", "int", "win", "blk", "air", "sav", "esh", "pTry", "dTry"];
+export const PS_KEYS = ["spId", "pos", "grade", "gol", "ast", "rt", "sht", "pas", "drb", "int", "win", "blk", "air", "sav", "esh", "pTry", "dTry", "aTry", "yc", "rc"];
 export const PSI = Object.fromEntries(PS_KEYS.map((k, i) => [k, i]));
 export const SUB_POS = 28;
 const R_MAP = { "승": "win", "무": "draw", "패": "lose" };
@@ -43,7 +43,8 @@ export function compactMatch(detail, ouid) {
     const s = pl.status;
     return [pl.spId, pl.spPosition, pl.spGrade ?? 0, s.goal ?? 0, s.assist ?? 0, s.spRating ?? 0, s.shoot ?? 0,
       s.passSuccess ?? 0, s.dribbleSuccess ?? 0, s.intercept ?? 0, s.ballPossesionSuccess ?? 0, s.block ?? 0,
-      s.aerialSuccess ?? 0, s.defending ?? 0, s.effectiveShoot ?? 0, s.passTry ?? 0, s.dribbleTry ?? 0];
+      s.aerialSuccess ?? 0, s.defending ?? 0, s.effectiveShoot ?? 0, s.passTry ?? 0, s.dribbleTry ?? 0,
+      s.aerialTry ?? 0, s.yellowCards ?? 0, s.redCards ?? 0];
   });
   const shot = (x) => [r3(x.x), r3(x.y), x.type, x.result];
   const ast = (x) => (x.assist ? [r3(x.assistX), r3(x.assistY)] : [null, null]);
@@ -138,46 +139,104 @@ export function laneShares(oppShots, model) {
   return { xg: tot, share: tot ? { L: sum.L / tot, C: sum.C / tot, R: sum.R / tot } : null };
 }
 
-/* ---------- 🩺 선수 진단 ----------
-   A 카드 대비: 같은 카드·같은 포지션 랭커 평균(넥슨 ranker-stats) — '이 카드만큼 쓰고 있나'
-   B 포지션 대비: 같은 포지션 그룹 랭커 선수 분포(ranker-baseline) — '이 카드가 이 자리에서 통하나'
-   두 비교 모두 B의 표준편차로 Z 환산(ranker-stats는 평균만 줌) → 같은 척도 */
-export const WEIGHTS = {
-  ST: { gol: 3, sht: 1.5, ast: 1, drb: 1, air: 1, rt: 1 },
-  W:  { gol: 1.5, ast: 2, drb: 2, sht: 1, pas: 1, rt: 1 },
-  AM: { ast: 2, gol: 2, pas: 1.5, drb: 1.5, sht: 1, rt: 1 },
-  CM: { pas: 2, int: 1.5, win: 1.5, ast: 1, drb: 1, rt: 1 },
-  DM: { int: 2.5, win: 2, pas: 1.5, blk: 1, rt: 1 },
-  FB: { int: 2, pas: 1.5, win: 1, ast: 1, drb: 1, rt: 1 },
-  CB: { int: 2.5, air: 2, blk: 1.5, pas: 1, win: 1, rt: 1 },
-  GK: { sav: 3, rt: 1.5, pas: 0.5 }
+/* ---------- 🩺 선수 진단 — 도륙 지수 (v2.7.0, 사용자 승인 기준) ----------
+   B 포지션 대비: 같은 포지션 그룹 랭커 선수 분포(ranker-baseline modes.*.dor6) — '이 카드가 이 자리에서 통하나'
+   A 카드 대비 : 같은 카드·같은 포지션 랭커 평균(넥슨 ranker-stats) — '이 카드만큼 쓰고 있나'
+   계산 순서
+     ① 지표마다 Z = (내 경기당 값 − 랭커 평균) ÷ 랭커 표준편차
+     ② 6묶음(득점·찬스·돌파·패스·수비·제공권, GK는 선방·실점 억제·패스)으로 모으되
+        '잘하는 방식 인정' = 묶음 안 최고 지표 60% + 나머지 평균 40% (예: 도움은 적어도 측면 키패스가 높은 윙어)
+     ③ 포지션별 묶음 비중(POS_CAT_W)으로 가중 평균
+     ④ 가산점: 비중 25% 이상 핵심 묶음이 랭커보다 눈에 띄게 높으면(Z≥1) 묶음마다 +0.2 (최대 +0.4)
+     ⑤ 표본 보정 × n/(n+10) → 도륙 지수 = 50 + 20×점수 (0~100)
+   넥슨은 선수별 크로스 수치를 주지 않음(실측) → 슈팅 상세의 도움 위치로 '키패스'·'측면 키패스'(크로스·컷백 추정)를 계산
+   선수 status.dribble은 팀 합계와 맞지 않아 의미 불명 → 사용하지 않음 */
+export const D6_METRICS = {
+  gol: "골", esh: "유효 슈팅", xg: "기대 득점(xG)", fin: "결정력(골−xG)",
+  ast: "도움", kp: "키패스", xa: "기대 도움(xA)", wkp: "측면 키패스",
+  drb: "드리블 성공", drbR: "드리블 성공률",
+  pas: "패스 성공", pasR: "패스 성공률",
+  int: "가로채기", win: "볼 획득", blk: "슈팅 블록",
+  air: "공중볼 성공", airR: "공중볼 성공률",
+  sav: "선방", gkp: "실점 억제", rt: "평점"
 };
-/* ranker-stats status 키 ↔ 우리 지표 */
-export const RANKER_KEY = { gol: "goal", ast: "assist", sht: "shoot", pas: "passSuccess", drb: "dribbleSuccess", int: "tackle", blk: "block" };
+export const D6_CATS = {
+  fin: { label: "득점", keys: ["gol", "esh", "xg", "fin"] },
+  cre: { label: "찬스", keys: ["ast", "kp", "xa", "wkp"] },
+  drb: { label: "돌파", keys: ["drb", "drbR"] },
+  pas: { label: "패스", keys: ["pas", "pasR"] },
+  def: { label: "수비", keys: ["int", "win", "blk"] },
+  air: { label: "제공권", keys: ["air", "airR"] },
+  sav: { label: "선방", keys: ["sav"] },
+  gkp: { label: "실점 억제", keys: ["gkp"] }
+};
+/* 포지션별 묶음 비중(%) — 사용자 승인 표 그대로 */
+export const POS_CAT_W = {
+  ST: { fin: 40, cre: 15, drb: 15, pas: 10, air: 20 },
+  W:  { fin: 25, cre: 30, drb: 30, pas: 10, def: 5 },
+  AM: { fin: 25, cre: 35, drb: 15, pas: 20, def: 5 },
+  CM: { fin: 10, cre: 20, drb: 10, pas: 35, def: 25 },
+  DM: { cre: 10, pas: 35, def: 45, air: 10 },
+  FB: { cre: 20, drb: 15, pas: 20, def: 35, air: 10 },
+  CB: { pas: 25, def: 45, air: 30 },
+  GK: { sav: 50, gkp: 40, pas: 10 }
+};
+/* 성공률 지표: [성공, 시도, 최소 시도 합] — 시도가 적으면 비율이 튀어 제외 */
+const RATE_KEYS = { drbR: ["drb", "dTry", 10], pasR: ["pas", "pTry", 50], airR: ["air", "aTry", 10] };
+/* 랭커 평균이 이보다 작으면 제외(1~2개로 튀는 노이즈). null = 제한 없음(비율·차이 지표) */
+const MIN_MEAN = { fin: null, gkp: null, drbR: null, pasR: null, airR: null, rt: null, wkp: 0.05, xa: 0.05, xg: 0.05, air: 0.1 };   // 공중볼은 랭커 CB도 경기당 0.15개(실측)라 0.1
+const SUM_KEYS = ["gol", "ast", "rt", "sht", "pas", "drb", "int", "win", "blk", "air", "sav", "esh", "pTry", "dTry", "aTry"];
+const BEST_SHARE = 0.6, CORE_W = 25, BONUS_Z = 1.0, BONUS = 0.2, BONUS_MAX = 0.4;
+/* 측면 키패스: 상대 진영 깊은 곳(x ≥ 0.66)의 측면(y ≤ 0.2 또는 ≥ 0.8)에서 슈팅으로 이어진 패스 */
+const isWide = (x, y) => x != null && y != null && x >= 0.66 && (y <= 0.2 || y >= 0.8);
+export const d6Index = (score) => (score == null ? null : Math.round(Math.max(0, Math.min(100, 50 + 20 * score))));
+
+/* ranker-stats status 키 ↔ 우리 지표 (카드 대비 비교에 쓰는 것만) */
+export const RANKER_KEY = { gol: "goal", ast: "assist", esh: "effectiveShoot", pas: "passSuccess", drb: "dribbleSuccess", int: "tackle", blk: "block" };
 export const SHRINK_K = 10;          // 표본 보정 Z × n/(n+K)
-export const LOW = -0.4;             // 보정 후 점수가 이보다 낮으면 '낮음'
+export const LOW = -0.4;             // 보정 후 점수가 이보다 낮으면 '낮음' (도륙 지수 42 미만)
 export const MIN_JUDGE_GAMES = 10;   // 미만이면 '참고'(배지 판정 안 함)
 export const CONF = (n) => (n < MIN_JUDGE_GAMES ? "참고" : n < 30 ? "보통" : "높음");
 const ZCLIP = 3;
 const clip = (z) => Math.max(-ZCLIP, Math.min(ZCLIP, z));
 
-/* 선발 행 → (spId, 주 포지션 그룹) 단위 경기당 평균 */
-function playerUnits(rows) {
+/* 선발 행 → (spId, 주 포지션 그룹) 단위 경기당 평균 — 브라우저 진단·랭커 기준값 공용
+   xg: xG 표(없으면 xG 계열 0) */
+export function playerUnits(rows, xg) {
   const units = new Map(); // key spId|group
-  for (const m of rows) for (const p of m.ps) {
-    const g = posGroup(p[PSI.pos]);
-    if (!g) continue;
-    const key = `${p[PSI.spId]}|${g}`;
-    const u = units.get(key) || { spId: p[PSI.spId], group: g, games: 0, posCount: {}, grade: {}, sum: {} };
-    u.games++;
-    u.posCount[p[PSI.pos]] = (u.posCount[p[PSI.pos]] || 0) + 1;
-    u.grade[p[PSI.grade]] = (u.grade[p[PSI.grade]] || 0) + 1;
-    for (const k of Object.keys(P_METRICS)) u.sum[k] = (u.sum[k] || 0) + p[PSI[k]];
-    units.set(key, u);
+  for (const m of rows) {
+    // 이 경기 슈팅 → 선수별 xG · 키패스 · xA · 측면 키패스
+    const sh = new Map();
+    const of = (id) => { let x = sh.get(id); if (!x) sh.set(id, (x = { xg: 0, kp: 0, xa: 0, wkp: 0 })); return x; };
+    for (const s of m.s || []) {
+      const v = xgOf(xg, s[0], s[1], s[2]);
+      of(s[4]).xg += v;
+      if (s[5]) { const a = of(s[5]); a.kp++; a.xa += v; if (isWide(s[6], s[7])) a.wkp++; }
+    }
+    const oppXg = (m.o || []).reduce((t, s) => t + xgOf(xg, s[0], s[1], s[2]), 0);
+    for (const p of m.ps) {
+      const g = posGroup(p[PSI.pos]);
+      if (!g) continue;
+      const key = `${p[PSI.spId]}|${g}`;
+      const u = units.get(key) || { spId: p[PSI.spId], group: g, games: 0, posCount: {}, grade: {}, sum: {} };
+      u.games++;
+      u.posCount[p[PSI.pos]] = (u.posCount[p[PSI.pos]] || 0) + 1;
+      u.grade[p[PSI.grade]] = (u.grade[p[PSI.grade]] || 0) + 1;
+      for (const k of SUM_KEYS) u.sum[k] = (u.sum[k] || 0) + (p[PSI[k]] ?? 0);
+      const x = sh.get(p[PSI.spId]);
+      for (const k of ["xg", "kp", "xa", "wkp"]) u.sum[k] = (u.sum[k] || 0) + (x ? x[k] : 0);
+      if (g === "GK") u.sum.gkp = (u.sum.gkp || 0) + (oppXg - m.ga);
+      units.set(key, u);
+    }
   }
   const main = new Map();
   for (const u of units.values()) {
-    u.avg = Object.fromEntries(Object.entries(u.sum).map(([k, v]) => [k, v / u.games]));
+    const n = u.games, s = u.sum;
+    u.avg = {};
+    for (const k of [...SUM_KEYS, "xg", "kp", "xa", "wkp"]) u.avg[k] = (s[k] || 0) / n;
+    u.avg.fin = ((s.gol || 0) - (s.xg || 0)) / n;
+    u.avg.gkp = u.group === "GK" ? (s.gkp || 0) / n : null;
+    for (const [k, [ok, tr, min]] of Object.entries(RATE_KEYS)) u.avg[k] = (s[tr] || 0) >= min ? (s[ok] || 0) / s[tr] : null;
     u.pos = +Object.entries(u.posCount).sort((a, b) => b[1] - a[1])[0][0];
     u.grade = +Object.entries(u.grade).sort((a, b) => b[1] - a[1])[0][0];
     delete u.sum;
@@ -187,22 +246,31 @@ function playerUnits(rows) {
   return [...main.values()];
 }
 
-/* 지표별 Z (B 기준값 필요). ref: 비교 평균 {metric: 값} */
-function zRows(unit, base, ref, keys) {
-  const out = [];
-  for (const k of keys) {
-    const b = base[k];
-    if (!b || !(b.sd > 0) || ref[k] == null) continue;
-    if (k !== "rt" && b.mean < MIN_BASE_MEAN) continue;       // 드문 지표는 노이즈라 제외
-    out.push({ metric: k, value: unit.avg[k], ref: ref[k], z: clip((unit.avg[k] - ref[k]) / b.sd), w: WEIGHTS[unit.group][k] || 0 });
+/* 랭커 선수 단위 목록 → 포지션 그룹별 지표 분포 { GROUP: { n, metric:{mean,sd} } } (ranker-baseline.js) */
+export const D6_MIN_UNIT_GAMES = 5;
+export function d6Baseline(unitList) {
+  const out = {};
+  for (const g of Object.keys(POS_CAT_W)) {
+    const us = unitList.filter((u) => u.group === g && u.games >= D6_MIN_UNIT_GAMES);
+    if (us.length < 5) continue;
+    out[g] = { n: us.length };
+    const keys = new Set(["rt"]);
+    for (const c of Object.keys(POS_CAT_W[g])) D6_CATS[c].keys.forEach((k) => keys.add(k));
+    for (const k of keys) {
+      const vals = us.map((u) => u.avg[k]).filter((v) => v != null);
+      if (vals.length < 5) continue;
+      const mean = vals.reduce((s, v) => s + v, 0) / vals.length;
+      const sd = Math.sqrt(vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length);
+      out[g][k] = { mean: Math.round(mean * 1000) / 1000, sd: Math.round(sd * 1000) / 1000 };
+    }
   }
   return out;
 }
+
 const wmean = (zs) => {
   const w = zs.reduce((s, x) => s + x.w, 0);
   return w ? zs.reduce((s, x) => s + x.z * x.w, 0) / w : null;
 };
-
 /* 판정 매트릭스 */
 export const VERDICTS = {
   keep:      { emoji: "🟢", label: "유지", tone: "ok" },
@@ -220,25 +288,64 @@ export function verdictOf(n, scoreA, scoreB) {
   return "keep";
 }
 
+/* 역할 태그 — 가장 강한 묶음(비중 10% 이상, 점수 0.5 이상) */
+const ROLE_WORD = { fin: "득점형", cre: "찬스메이커", drb: "돌파형", pas: "빌드업형", def: "수비형", air: "제공권형", sav: "선방형", gkp: "안정형" };
+const ATTACK = ["ST", "W", "AM"];
+function roleOf(group, cats) {
+  const top = Object.entries(cats).filter(([, c]) => c.w >= 10 && c.score >= 0.5).sort((a, b) => b[1].score - a[1].score)[0];
+  if (!top) return null;
+  const [k, c] = top;
+  if (k === "cre" && c.best === "wkp") return "크로스형";
+  if (k === "pas" && ATTACK.includes(group)) return "연계형";
+  if (k === "def") return ATTACK.includes(group) ? "수비 가담형" : ["CB", "DM"].includes(group) ? "철벽형" : "수비형";
+  return ROLE_WORD[k];
+}
+
 /* 선수 한 명 진단
-   base: 모드 포지션 기준값 { GROUP: { metric:{mean,sd} } }
+   base: 모드 포지션 분포 { GROUP: { metric:{mean,sd} } } (ranker-baseline modes.*.dor6)
    rankerCard: ranker-stats status (같은 카드·같은 포지션) 또는 null */
 export function diagnose(unit, base, rankerCard) {
   const b = base && base[unit.group];
-  if (!b) return { ...unit, verdict: "pending", scoreA: null, scoreB: null, zB: [], zA: [] };
-  const keys = Object.keys(WEIGHTS[unit.group]);
+  const cw = POS_CAT_W[unit.group];
+  if (!b || !cw) return { ...unit, verdict: "pending", scoreA: null, scoreB: null, index: null, cats: {}, zB: [], zA: [] };
   const shrink = unit.games / (unit.games + SHRINK_K);
-  const zB = zRows(unit, b, Object.fromEntries(keys.map((k) => [k, b[k] ? b[k].mean : null])), keys);
-  let zA = [];
-  if (rankerCard && unit.group !== "GK") {
-    const ref = {};
-    for (const [k, rk] of Object.entries(RANKER_KEY)) if (rankerCard[rk] != null) ref[k] = rankerCard[rk];
-    zA = zRows(unit, b, ref, keys.filter((k) => k in RANKER_KEY)).filter((z) => z.ref >= MIN_BASE_MEAN);
+  const zOf = (k, ref) => clip((unit.avg[k] - ref) / b[k].sd);
+  const usable = (k) => {
+    const bb = b[k];
+    if (!bb || !(bb.sd > 0) || unit.avg[k] == null) return false;
+    const mm = k in MIN_MEAN ? MIN_MEAN[k] : MIN_BASE_MEAN;
+    return mm == null || bb.mean >= mm;
+  };
+  const zB = [], cats = {};
+  for (const [c, w] of Object.entries(cw)) {
+    const keys = D6_CATS[c].keys;
+    const zs = keys.filter(usable).map((k) => ({ metric: k, cat: c, value: unit.avg[k], ref: b[k].mean, z: zOf(k, b[k].mean), w: w / keys.length }));
+    if (!zs.length) continue;
+    const top = zs.reduce((x, y) => (y.z > x.z ? y : x));
+    const mean = zs.reduce((s, x) => s + x.z, 0) / zs.length;
+    const score = zs.length === 1 ? top.z : BEST_SHARE * top.z + (1 - BEST_SHARE) * mean;
+    cats[c] = { score, w, best: top.metric, index: d6Index(score) };
+    zB.push(...zs);
   }
-  const rawB = wmean(zB), rawA = zA.length >= 2 ? wmean(zA) : null;
-  const scoreB = rawB == null ? null : rawB * shrink;
+  const cl = Object.values(cats);
+  const tw = cl.reduce((s, c) => s + c.w, 0);
+  const raw = tw ? cl.reduce((s, c) => s + c.w * c.score, 0) / tw : null;
+  const bonus = Math.min(BONUS_MAX, cl.filter((c) => c.w >= CORE_W && c.score >= BONUS_Z).length * BONUS);
+  // 카드 대비: 랭커가 이 카드를 같은 포지션에 쓴 평균 — 이 포지션 묶음에 들어가는 지표만
+  const zA = [];
+  if (rankerCard && unit.group !== "GK") {
+    for (const [k, rk] of Object.entries(RANKER_KEY)) {
+      const c = Object.keys(cw).find((cc) => D6_CATS[cc].keys.includes(k));
+      const ref = rankerCard[rk];
+      if (!c || ref == null || ref < MIN_BASE_MEAN || !usable(k)) continue;
+      zA.push({ metric: k, cat: c, value: unit.avg[k], ref, z: zOf(k, ref), w: cw[c] / D6_CATS[c].keys.length });
+    }
+  }
+  const rawA = zA.length >= 2 ? wmean(zA) : null;
+  const scoreB = raw == null ? null : (raw + bonus) * shrink;
   const scoreA = rawA == null ? null : rawA * shrink;
-  return { ...unit, zA, zB, scoreA, scoreB, rankerGames: rankerCard ? rankerCard.matchCount ?? null : null,
+  return { ...unit, zA, zB, cats, bonus, scoreA, scoreB, index: d6Index(scoreB), role: roleOf(unit.group, cats),
+    rankerGames: rankerCard ? rankerCard.matchCount ?? null : null,
     verdict: verdictOf(unit.games, scoreA, scoreB) };
 }
 
@@ -273,7 +380,7 @@ export function analyze(rows, ctx) {
 
   // 선수 진단
   const starters = normal.map((m) => ({ ...m, ps: m.ps.filter((p) => p[PSI.pos] !== SUB_POS) }));
-  const players = playerUnits(starters).map((u) => {
+  const players = playerUnits(starters, ctx.xg).map((u) => {
     const d = diagnose(u, ctx.base, ctx.ranker ? ctx.ranker[`${u.spId}|${u.pos}`] : null);
     d.xg = pxg.get(u.spId) || 0; d.goals = pgoal.get(u.spId) || 0; d.shots = pshots.get(u.spId) || 0;
     d.xa = pxa.get(u.spId) || 0;
@@ -343,7 +450,7 @@ function formationCounts(starters) {
 /* ranker-stats 조회 대상: 판정 가능한 선수(주 포지션)만 */
 export function rankerTargets(rows) {
   const starters = rows.filter(isNormal).map((m) => ({ ...m, ps: m.ps.filter((p) => p[PSI.pos] !== SUB_POS) }));
-  return playerUnits(starters).filter((u) => u.group !== "GK").map((u) => ({ id: u.spId, po: u.pos }));
+  return playerUnits(starters, null).filter((u) => u.group !== "GK").map((u) => ({ id: u.spId, po: u.pos }));
 }
 
 export { GROUP_LABEL, P_METRICS };

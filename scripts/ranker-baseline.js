@@ -10,6 +10,8 @@
    산출
      - data/meta/ranker-baseline.json : stats·positions(= official, 기존 화면 호환) + modes.{official,manager}.positions
      - data/meta/xg-model.json        : modes.{official,manager} = xG 표 + 랭커가 허용한 실점 루트 레인 비중
+     - (v2.7.0) ranker-baseline.json modes.*.dor6 : 구단운영 도륙 지수용 포지션 그룹별 지표 분포
+       (키패스·xA·측면 키패스·성공률 등 — xG 표가 있어야 계산돼서 모든 경기를 모은 뒤 마지막에 산출)
    주기: 기존 파일이 config.rankerBaseline.refreshDays 이내면 건너뜀(API 호출 절약)
    참고: 넥슨 오픈 API에는 랭킹 목록이 없어 FC온라인 데이터센터 랭킹 페이지(HTML)에서 닉네임을 읽는다
    ============================================================ */
@@ -20,7 +22,7 @@ import { fileURLToPath } from "node:url";
 import { setCallInterval, getOuidByNickname, getMatchIds, getMatchDetail } from "./lib/nexon-api.js";
 import { styleRaw, withShots, computeMetrics, baselineStats } from "./lib/playstyle.js";
 import { insightRaw, unitAverages, positionBaseline } from "./lib/insight.js";
-import { buildXgModel, laneShares } from "./lib/manage.js";
+import { buildXgModel, laneShares, compactMatch, isNormal, playerUnits, d6Baseline, SUB_POS, PSI } from "./lib/manage.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "data", "meta", "ranker-baseline.json");
@@ -66,13 +68,14 @@ async function buildMode(mode) {
   const shots = [];      // xG 표용 — 양쪽 슈팅 전부 (같은 경기 중복 제외)
   const conceded = [];   // 랭커가 허용한 상대 슈팅 (실점 루트 평균)
   const seen = new Set();
+  const rankerRows = [];   // 랭커별 압축 행(선발만) — 도륙 지수 분포용
   let ok = 0;
   for (const nick of nicks) {
     try {
       const ouid = await getOuidByNickname(nick);
       if (!ouid) continue;
       const ids = await getMatchIds(ouid, def.matchtype, 0, opt.matchesPerUser);
-      const raws = [], pRows = [];
+      const raws = [], pRows = [], cRows = [];
       for (const id of ids) {
         const d = await getMatchDetail(id).catch(() => null);
         const info = (d && d.matchInfo) || [];
@@ -86,11 +89,14 @@ async function buildMode(mode) {
           x.assist ? x.assistX : null, x.assist ? x.assistY : null]);
         if (!seen.has(id)) { seen.add(id); shots.push(...sh(me), ...sh(opp)); }
         conceded.push(...sh(opp));
+        const c = compactMatch(d, ouid);
+        if (c && isNormal(c)) cRows.push({ ...c, ps: c.ps.filter((p) => p[PSI.pos] !== SUB_POS) });
       }
       if (raws.length >= opt.minMatches) {
         ok++;
         if (def.styles) styleList.push(computeMetrics(raws));
         units.push(...unitAverages(pRows).values());   // 랭커끼리 섞지 않도록 랭커마다 따로 평균
+        rankerRows.push(cRows);
       }
     } catch (e) { console.warn(`  [${mode}:${nick}] 실패: ${e.message}`); }
   }
@@ -100,12 +106,14 @@ async function buildMode(mode) {
   if (process.env.STYLE_DUMP && def.styles) fs.writeFileSync(process.env.STYLE_DUMP, JSON.stringify(styleList));
   const xg = buildXgModel(shots);
   const lanes = laneShares(conceded, xg).share;
+  const dor6 = d6Baseline(rankerRows.flatMap((rows) => playerUnits(rows, xg)));
   console.log(`✅ [${mode}] 유효 랭커 ${ok}명 · 경기 ${seen.size} · 슈팅 ${shots.length}`);
   return {
     source: `${def.label} 1~${opt.pages * 20}위 샘플, 최근 ${opt.matchesPerUser}경기`,
     sampleSize: ok, matches: seen.size,
     stats: def.styles ? baselineStats(styleList) : undefined,
     positions: positionBaseline(units),
+    dor6,
     xg: { ...xg, lanes }
   };
 }
@@ -135,7 +143,7 @@ async function main() {
     const r = results[i];
     if (!r) return;
     changed = true;
-    base.modes[m] = { source: r.source, sampleSize: r.sampleSize, matches: r.matches, positions: r.positions };
+    base.modes[m] = { source: r.source, sampleSize: r.sampleSize, matches: r.matches, positions: r.positions, dor6: r.dor6 };
     xgFile.modes[m] = { updated: new Date().toISOString(), source: r.source, ...r.xg };
     if (m === "official") {   // 기존 화면(명단 플레이스타일·에이스·전적 검색) 호환: 최상위 = 공식경기
       base.source = r.source; base.sampleSize = r.sampleSize;

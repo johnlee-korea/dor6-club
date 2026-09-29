@@ -14,13 +14,13 @@
    의존: common.js(escapeHtml·fmt·loadJSON·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴), share.js(📸 캡처)
    ============================================================ */
 
-import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES } from "../scripts/lib/manage.js";
+import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES, D6_METRICS, D6_CATS } from "../scripts/lib/manage.js";
 
 const MAX_ROWS = 300;          // 모드별 저장 최대 경기
 const PAGE = 100;              // 처음·더 불러오기 단위
 const DETAIL_CHUNK = 30;       // Worker details 1회 경기 수 (worker MANAGE_DETAIL_MAX와 동일)
 const RANKER_TTL = 24 * 3600 * 1000;
-const STORE_VER = 1;
+const STORE_VER = 2;   // v2.7.0 압축 행에 공중볼 시도·카드 추가 → 예전 저장분은 자동으로 다시 조회
 const MODE_KEYS = Object.keys(MODES);
 const LANE_MIN_GAMES = 20;    // 실점 루트 결론(점검 안내)을 보여줄 최소 정상 종료 경기
 const RANGES = [["all", "전체"], ["n30", "최근 30경기"], ["d7", "최근 7일"], ["d30", "최근 30일"]];
@@ -298,7 +298,7 @@ async function renderMode() {
     return;
   }
   const bl = S.base;
-  const base = (bl.modes && bl.modes[def.baseMode] && bl.modes[def.baseMode].positions) || (def.baseMode === "official" ? bl.positions : null);
+  const base = (bl.modes && bl.modes[def.baseMode] && bl.modes[def.baseMode].dor6) || null;   // v2.7.0 도륙 지수 분포
   const xgm = S.xg.modes ? S.xg.modes[def.baseMode] : null;
   // 입력한 판수가 저장된 경기보다 많고 더 가져올 수 있으면 모자란 만큼 자동으로 불러옴
   const want = rangeCount(S.range);
@@ -376,8 +376,11 @@ function summaryCard(a, def) {
 }
 
 /* ② 선수 진단 */
-const mLabel = (k) => P_METRICS[k] || k;
+const mLabel = (k) => D6_METRICS[k] || P_METRICS[k] || k;
 const v2 = (v) => (v == null ? "-" : (Math.round(v * 100) / 100).toString());
+/* 지표 표기: 성공률은 %, 결정력·실점 억제는 부호 */
+const mVal = (k, v) => v == null ? "-" : /R$/.test(k) ? Math.round(v * 100) + "%" : (k === "fin" || k === "gkp") ? (v >= 0 ? "+" : "") + v2(v) : v2(v);
+const idxTone = (i) => (i == null ? "" : i >= 60 ? "up" : i < 42 ? "down" : "");
 function playerCardInfo(p) {
   return sqBuildTeam([{ spId: p.spId, spPosition: p.pos, spGrade: p.grade }], S.meta).starters[0];
 }
@@ -407,7 +410,11 @@ function playersCard(a, def, base) {
           <li><b>카드 대비</b>: 같은 선수 카드를 같은 포지션에 쓴 넥슨 랭커 평균과 비교 — 낮으면 <b>운용 문제</b>(포지션·전술)</li>
           <li><b>포지션 대비</b>: 같은 포지션 그룹 랭커 선수들 평균과 비교 — 낮으면 <b>카드 한계</b></li>
           <li>🟢 유지 · 🟡 카드는 좋은데 덜 쓰임 · 🟠 카드 한계치 · 🔴 둘 다 낮음</li>
-          <li>포지션별 핵심 지표에 가중치를 둔 평균이며, 경기 수가 적을수록 판정을 보수적으로 줄여요. 선발 ${MIN_JUDGE_GAMES}경기 미만은 '참고'</li>
+          <li><b>도륙 지수</b>(0~100, 같은 포지션 랭커 평균 = 50): 지표 최대 17개를 6묶음(득점·찬스·돌파·패스·수비·제공권, 골키퍼는 선방·실점 억제·패스)으로 모아 <b>포지션마다 다른 비중</b>으로 합산</li>
+          <li><b>잘하는 방식 인정</b>: 묶음 안에서 가장 잘하는 지표 60% + 나머지 평균 40% — 예) 도움은 적어도 측면 키패스가 많은 윙어는 찬스 점수가 높아요</li>
+          <li><b>가산점</b>: 그 포지션의 핵심 묶음(비중 25% 이상)이 랭커보다 눈에 띄게 높으면 +4점씩(최대 +8)</li>
+          <li><b>키패스</b> = 슈팅으로 이어진 패스, <b>측면 키패스</b> = 상대 진영 측면에서 넣은 키패스(크로스·컷백 추정 — 넥슨은 선수별 크로스 수치를 주지 않아요)</li>
+          <li>경기 수가 적을수록 점수를 50 쪽으로 당겨 판정을 보수적으로 해요. 선발 ${MIN_JUDGE_GAMES}경기 미만은 '참고'</li>
           <li>교체 출전은 뛴 시간을 알 수 없어 선발 경기만 봐요</li>
         </ul></details>
     </div>`;
@@ -418,7 +425,7 @@ function chipsOf(p) {
   if (!all.length) return "";
   const best = all.reduce((x, y) => (y.z > x.z ? y : x));
   const worst = all.reduce((x, y) => (y.z < x.z ? y : x));
-  const chip = (z, dir) => `<span class="ps-chip ${dir}">${dir === "up" ? "▲" : "▼"} ${escapeHtml(mLabel(z.metric))} <b>${v2(z.value)}</b> <span class="mg-ref">/ ${z.src} ${v2(z.ref)}</span></span>`;
+  const chip = (z, dir) => `<span class="ps-chip ${dir}">${dir === "up" ? "▲" : "▼"} ${escapeHtml(mLabel(z.metric))} <b>${mVal(z.metric, z.value)}</b> <span class="mg-ref">/ ${z.src} ${mVal(z.metric, z.ref)}</span></span>`;
   return `<div class="ps-chips">${best.z > 0.2 ? chip(best, "up") : ""}${worst.z < -0.2 ? chip(worst, "down") : ""}</div>`;
 }
 
@@ -434,11 +441,14 @@ function playerRow(p) {
         ${sqFace(c)}
         <div class="mg-row-info">
           <div class="mg-row-name">${escapeHtml(c.name)} <span class="sq-grade ${sqGradeClass(p.grade)}" title="강화 ${p.grade}단계">${p.grade}</span>
-            <span class="badge">${escapeHtml(posName)}</span></div>
+            <span class="badge">${escapeHtml(posName)}</span>${p.role ? `<span class="badge mg-role">🏷 ${escapeHtml(p.role)}</span>` : ""}</div>
           <div class="in-dim">${escapeHtml(c.seasonName || "")} · 선발 ${p.games}경기 · 신뢰도 ${CONF(p.games)}${p.rankerGames == null && p.group !== "GK" ? " · 랭커 사용 기록 없음" : ""}</div>
           ${chipsOf(p)}
         </div>
-        <span class="badge mg-verdict ${v.tone}">${v.emoji} ${v.label}</span>
+        <span class="mg-side">
+          <span class="badge mg-verdict ${v.tone}">${v.emoji} ${v.label}</span>
+          ${p.index != null ? `<span class="mg-index ${idxTone(p.index)}" title="도륙 지수 (랭커 평균 50)"><b>${p.index}</b><i>도륙 지수</i></span>` : ""}
+        </span>
       </div>
       ${open ? playerDetail(p) : ""}
     </div>`;
@@ -447,12 +457,22 @@ function playerRow(p) {
 function playerDetail(p) {
   const v = VERDICTS[p.verdict];
   const aRef = Object.fromEntries(p.zA.map((z) => [z.metric, z.ref]));
+  // 묶음 점수 막대 — 가운데 선 = 포지션 랭커 평균(50), 비중 높은 묶음부터
+  const cats = Object.entries(p.cats || {}).sort((a, b) => b[1].w - a[1].w).map(([k, c]) => `
+      <div class="mg-cat"><span class="mg-cat-l">${escapeHtml(D6_CATS[k].label)} <span class="in-dim">${c.w}%</span></span>
+        <span class="mg-cat-t"><i class="${idxTone(c.index) || "mid"}" style="width:${c.index}%"></i><em></em></span>
+        <b class="${idxTone(c.index) === "up" ? "in-up" : idxTone(c.index) === "down" ? "in-down" : ""}">${c.index}</b></div>`).join("");
   const bars = p.zB.filter((z) => z.w > 0).map((z) => {
+    // 결정력·실점 억제는 음수가 나오는 차이 지표 → 막대 대신 숫자만
+    if (z.metric === "fin" || z.metric === "gkp")
+      return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">/경기</span></div>
+        <div class="mg-bar"><span class="mg-bar-l">나</span><b class="${z.z >= 0 ? "in-up" : "in-down"}" style="text-align:left;">${mVal(z.metric, z.value)}</b><span></span></div>
+        <div class="mg-bar"><span class="mg-bar-l">포지션 평균</span><b style="text-align:left;">${mVal(z.metric, z.ref)}</b><span></span></div></div>`;
     const vals = [z.value, aRef[z.metric], z.ref].filter((x) => x != null);
     const max = Math.max(...vals, 0.01) * 1.1;
     const bar = (val, cls, label) => val == null ? "" :
-      `<div class="mg-bar"><span class="mg-bar-l">${label}</span><span class="mg-bar-t"><i class="${cls}" style="width:${(val / max) * 100}%"></i></span><b>${v2(val)}</b></div>`;
-    return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(mLabel(z.metric))} <span class="in-dim">/경기</span></div>
+      `<div class="mg-bar"><span class="mg-bar-l">${label}</span><span class="mg-bar-t"><i class="${cls}" style="width:${(val / max) * 100}%"></i></span><b>${mVal(z.metric, val)}</b></div>`;
+    return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">${/R$/.test(z.metric) ? "" : "/경기"}</span></div>
       ${bar(z.value, z.z >= 0 ? "me up" : "me down", "나")}${bar(aRef[z.metric], "card", "카드 랭커")}${bar(z.ref, "pos", "포지션 평균")}</div>`;
   }).join("");
   const fin = p.shots >= 10 ? `<div>⚽ 슈팅 ${p.shots} · 골 <b>${p.goals}</b> · 기대 득점 xG ${p.xg.toFixed(1)} →
@@ -468,7 +488,9 @@ function playerDetail(p) {
     <div class="mg-detail">
       ${v.line ? `<div class="mg-line ${v.tone}">${v.emoji} ${escapeHtml(v.line)}</div>` : ""}
       ${p.rankerGames != null ? `<div class="in-dim">카드 랭커 = 넥슨 랭커가 이 카드를 같은 포지션에 쓴 최근 ${p.rankerGames}경기 평균</div>` : ""}
-      <div class="mg-metrics">${bars || `<div class="in-dim">비교 가능한 지표가 없어요.</div>`}</div>
+      ${cats ? `<div class="mg-cats"><div class="mg-metric-h">묶음별 점수 <span class="in-dim">· 가운데 선 = 같은 포지션 랭커 평균(50)${p.bonus ? ` · 핵심 묶음 가산점 +${Math.round(p.bonus * 20)}` : ""}</span></div>${cats}</div>` : ""}
+      <details class="mg-more-metrics"><summary>지표 자세히 (${p.zB.length}개)</summary>
+        <div class="mg-metrics">${bars || `<div class="in-dim">비교 가능한 지표가 없어요.</div>`}</div></details>
       <div class="mg-extra">${fin}${xa}${onoff}</div>
       ${sparkline(p.ratings)}
     </div>`;
