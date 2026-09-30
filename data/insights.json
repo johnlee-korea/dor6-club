@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30T06:07:27.325Z",
+  "updated": "2026-09-30T08:07:38.212Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -138,7 +138,7 @@
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "ctrl": "keyboard",
-      "games": 145,
+      "games": 148,
       "ace": [
         {
           "spId": 863192985,
@@ -191,20 +191,20 @@
       ],
       "goalMins": {
         "for": [
-          40,
-          49,
-          55,
-          65,
-          57,
-          55,
+          41,
+          50,
+          56,
+          66,
+          58,
+          56,
           21
         ],
         "against": [
           58,
-          51,
-          53,
-          59,
-          49,
+          52,
+          54,
+          60,
+          50,
           43,
           23
         ]
@@ -212,11 +212,11 @@
       "comebacks": 26,
       "lateWinners": 14,
       "manner": {
-        "games": 145,
+        "games": 148,
         "yellow": 9,
         "red": 1,
-        "foul": 129,
-        "score": 1.1
+        "foul": 131,
+        "score": 1.09
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
@@ -1171,23 +1171,39 @@
     },
     "001221eab7f2c49f8571511731cc2573": {
       "ctrl": "keyboard",
-      "games": 41,
+      "games": 42,
       "ace": [
         {
           "spId": 866252042,
           "group": "ST",
           "pos": 26,
-          "games": 18,
+          "games": 19,
           "metric": "sht",
-          "value": 4.06,
+          "value": 4.11,
           "base": 2.1,
-          "z": 2.76,
+          "z": 2.83,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 27,
-          "assists": 16
+          "goals": 30,
+          "assists": 17
+        },
+        {
+          "spId": 855256079,
+          "group": "DM",
+          "pos": 9,
+          "games": 42,
+          "metric": "win",
+          "value": 2.88,
+          "base": 2.1,
+          "z": 1.38,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 3,
+          "assists": 8
         },
         {
           "spId": 866247090,
@@ -1204,31 +1220,15 @@
           },
           "goals": 4,
           "assists": 7
-        },
-        {
-          "spId": 515269626,
-          "group": "GK",
-          "pos": 0,
-          "games": 13,
-          "metric": "sav",
-          "value": 3.92,
-          "base": 2.94,
-          "z": 1.3,
-          "title": {
-            "emoji": "🧤",
-            "name": "수호신"
-          },
-          "goals": 0,
-          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
-          19,
-          17,
-          22,
-          22,
+          20,
           18,
+          24,
+          22,
+          20,
           16,
           7
         ],
@@ -1237,7 +1237,7 @@
           23,
           16,
           21,
-          17,
+          18,
           17,
           5
         ]
@@ -1245,11 +1245,11 @@
       "comebacks": 5,
       "lateWinners": 3,
       "manner": {
-        "games": 41,
+        "games": 42,
         "yellow": 2,
         "red": 0,
-        "foul": 41,
-        "score": 1.15
+        "foul": 42,
+        "score": 1.14
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -1956,7 +1956,7 @@
         "nick": "Dor6문선생",
         "comebacks": 26,
         "lateWinners": 14,
-        "games": 145
+        "games": 148
       },
       {
         "ouid": "0b4adfde6411fa08e6339ceaa3ed1942",
@@ -1979,7 +1979,7 @@
         "nick": "Dor6문선생",
         "comebacks": 26,
         "lateWinners": 14,
-        "games": 145
+        "games": 148
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
