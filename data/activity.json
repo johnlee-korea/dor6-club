@@ -1,27 +1,27 @@
 {
-  "updated": "2026-09-30T10:07:42.011Z",
+  "updated": "2026-09-30T12:07:40.494Z",
   "week": {
-    "from": "2026-09-23T10:07:42.011Z",
+    "from": "2026-09-23T12:07:40.494Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 142,
-        "wins": 59,
-        "winRate": 42
+        "games": 139,
+        "wins": 57,
+        "winRate": 41
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
-        "games": 70,
-        "wins": 34,
-        "winRate": 49
+        "games": 69,
+        "wins": 30,
+        "winRate": 43
       },
       {
         "ouid": "29e6cf3ac96836f6c5d0d0f64d87ef5b",
         "nick": "23번째ID",
-        "games": 64,
-        "wins": 34,
+        "games": 62,
+        "wins": 33,
         "winRate": 53
       },
       {
@@ -213,23 +213,20 @@
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
-      "games": 193,
+      "games": 201,
       "form": [
-        "win",
-        "win",
-        "lose",
-        "win",
-        "win",
-        "lose",
-        "win",
+        "draw",
         "lose",
         "lose",
-        "lose"
+        "lose",
+        "draw",
+        "draw",
+        "draw",
+        "draw",
+        "win",
+        "win"
       ],
-      "streak": {
-        "type": "win",
-        "n": 2
-      },
+      "streak": null,
       "rivals": {
         "nemesis": {
           "ouid": "b56e8c1f2e6e414588b06a1e528e510b",
@@ -623,22 +620,22 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 78,
+      "games": 79,
       "form": [
-        "win",
-        "win",
-        "lose",
-        "win",
         "lose",
         "win",
         "win",
         "lose",
+        "win",
         "lose",
-        "win"
+        "win",
+        "win",
+        "lose",
+        "lose"
       ],
       "streak": {
-        "type": "win",
-        "n": 2
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": {
