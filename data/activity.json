@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-30T08:07:38.212Z",
+  "updated": "2026-09-30T10:07:42.011Z",
   "week": {
-    "from": "2026-09-23T08:07:38.212Z",
+    "from": "2026-09-23T10:07:42.011Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -13,9 +13,9 @@
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
-        "games": 71,
+        "games": 70,
         "wins": 34,
-        "winRate": 48
+        "winRate": 49
       },
       {
         "ouid": "29e6cf3ac96836f6c5d0d0f64d87ef5b",
@@ -278,8 +278,11 @@
       }
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
-      "games": 6,
+      "games": 9,
       "form": [
+        "win",
+        "win",
+        "lose",
         "win",
         "win",
         "draw",
@@ -620,28 +623,46 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 75,
+      "games": 78,
       "form": [
         "win",
+        "win",
+        "lose",
+        "win",
         "lose",
         "win",
         "win",
         "lose",
         "lose",
-        "win",
-        "win",
-        "win",
         "win"
       ],
       "streak": {
         "type": "win",
-        "n": 1
+        "n": 2
       },
       "rivals": {
-        "nemesis": null,
+        "nemesis": {
+          "ouid": "b80a06acac01ad21b0aa609c2699d58b",
+          "nick": "Dor6똘콩스",
+          "games": 5,
+          "win": 0,
+          "draw": 2,
+          "lose": 3,
+          "rate": 13
+        },
         "prey": null,
-        "frequent": [],
-        "internalGames": 2
+        "frequent": [
+          {
+            "ouid": "b80a06acac01ad21b0aa609c2699d58b",
+            "nick": "Dor6똘콩스",
+            "games": 5,
+            "win": 0,
+            "draw": 2,
+            "lose": 3,
+            "rate": 13
+          }
+        ],
+        "internalGames": 5
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -852,13 +873,13 @@
           "rate": 25
         },
         "prey": {
-          "ouid": "ec6b3d922b94994ccd28de27367cf479",
-          "nick": "쌌따",
+          "ouid": "001221eab7f2c49f8571511731cc2573",
+          "nick": "ThomasTohell",
           "games": 5,
           "win": 3,
-          "draw": 1,
-          "lose": 1,
-          "rate": 67
+          "draw": 2,
+          "lose": 0,
+          "rate": 73
         },
         "frequent": [
           {
@@ -880,16 +901,16 @@
             "rate": 48
           },
           {
-            "ouid": "ec6b3d922b94994ccd28de27367cf479",
-            "nick": "쌌따",
+            "ouid": "001221eab7f2c49f8571511731cc2573",
+            "nick": "ThomasTohell",
             "games": 5,
             "win": 3,
-            "draw": 1,
-            "lose": 1,
-            "rate": 67
+            "draw": 2,
+            "lose": 0,
+            "rate": 73
           }
         ],
-        "internalGames": 52
+        "internalGames": 55
       }
     },
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
