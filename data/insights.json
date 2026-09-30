@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30T18:07:46.256Z",
+  "updated": "2026-09-30T20:07:39.750Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -925,7 +925,7 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 214,
+      "games": 216,
       "ace": [
         {
           "spId": 861005661,
@@ -978,51 +978,64 @@
       ],
       "goalMins": {
         "for": [
-          60,
-          84,
-          89,
-          98,
+          62,
+          85,
+          92,
+          99,
           82,
           101,
           43
         ],
         "against": [
-          80,
-          97,
+          81,
+          98,
           88,
-          100,
-          76,
-          83,
+          101,
+          77,
+          84,
           37
         ]
       },
       "comebacks": 39,
       "lateWinners": 22,
       "manner": {
-        "games": 214,
+        "games": 216,
         "yellow": 5,
         "red": 1,
-        "foul": 134,
+        "foul": 135,
         "score": 0.71
       }
     },
     "b56e8c1f2e6e414588b06a1e528e510b": {
       "ctrl": "gamepad",
-      "games": 33,
+      "games": 34,
       "ace": [
+        {
+          "spId": 265237942,
+          "group": "FB",
+          "pos": 7,
+          "games": 5,
+          "metric": "win",
+          "value": 2.8,
+          "base": 2.25,
+          "z": 1.05,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
+          "assists": 0
+        },
         {
           "spId": 848241096,
           "group": "DM",
           "pos": 9,
-          "games": 16,
+          "games": 17,
           "metric": "sht",
-          "value": 1,
+          "value": 0.94,
           "base": 0.58,
-          "z": 1.13,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
+          "z": 0.98,
+          "title": null,
           "goals": 7,
           "assists": 6
         },
@@ -1030,27 +1043,14 @@
           "spId": 280201325,
           "group": "GK",
           "pos": 0,
-          "games": 23,
+          "games": 24,
           "metric": "rt",
-          "value": 6.6,
+          "value": 6.59,
           "base": 6.24,
-          "z": 0.88,
+          "z": 0.86,
           "title": null,
           "goals": 0,
           "assists": 0
-        },
-        {
-          "spId": 836188377,
-          "group": "FB",
-          "pos": 3,
-          "games": 29,
-          "metric": "drb",
-          "value": 5.79,
-          "base": 4.7,
-          "z": 0.75,
-          "title": null,
-          "goals": 1,
-          "assists": 2
         }
       ],
       "goalMins": {
@@ -1059,8 +1059,8 @@
           20,
           14,
           19,
-          12,
-          17,
+          13,
+          18,
           3
         ],
         "against": [
@@ -1068,18 +1068,18 @@
           11,
           16,
           12,
-          8,
-          11,
+          9,
+          12,
           5
         ]
       },
       "comebacks": 4,
       "lateWinners": 0,
       "manner": {
-        "games": 33,
+        "games": 34,
         "yellow": 2,
         "red": 0,
-        "foul": 31,
+        "foul": 32,
         "score": 1.12
       }
     },
@@ -1946,7 +1946,7 @@
         "nick": "땜쟁",
         "comebacks": 39,
         "lateWinners": 22,
-        "games": 214
+        "games": 216
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1969,7 +1969,7 @@
         "nick": "땜쟁",
         "comebacks": 39,
         "lateWinners": 22,
-        "games": 214
+        "games": 216
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1999,10 +1999,10 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 214,
+        "games": 216,
         "yellow": 5,
         "red": 1,
-        "foul": 134,
+        "foul": 135,
         "score": 0.71
       },
       {
