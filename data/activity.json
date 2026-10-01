@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-01T06:35:22.138Z",
+  "updated": "2026-10-01T08:08:55.153Z",
   "week": {
-    "from": "2026-09-24T06:35:22.138Z",
+    "from": "2026-09-24T08:08:55.153Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -20,9 +20,9 @@
       {
         "ouid": "29e6cf3ac96836f6c5d0d0f64d87ef5b",
         "nick": "23번째ID",
-        "games": 52,
+        "games": 53,
         "wins": 26,
-        "winRate": 50
+        "winRate": 49
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -281,9 +281,10 @@
       }
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
-      "games": 16,
+      "games": 19,
       "form": [
         "win",
+        "lose",
         "win",
         "win",
         "win",
@@ -291,12 +292,11 @@
         "win",
         "win",
         "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
         "type": "win",
-        "n": 9
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
@@ -921,8 +921,9 @@
       }
     },
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
-      "games": 114,
+      "games": 115,
       "form": [
+        "lose",
         "win",
         "draw",
         "lose",
@@ -931,11 +932,10 @@
         "lose",
         "lose",
         "win",
-        "win",
         "win"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
@@ -958,6 +958,31 @@
         "win",
         "draw",
         "win"
+      ],
+      "streak": {
+        "type": "win",
+        "n": 4
+      },
+      "rivals": {
+        "nemesis": null,
+        "prey": null,
+        "frequent": [],
+        "internalGames": 0
+      }
+    },
+    "2f86358cfed5c31dd83a09bbe42d3586": {
+      "games": 101,
+      "form": [
+        "win",
+        "win",
+        "win",
+        "win",
+        "lose",
+        "win",
+        "lose",
+        "lose",
+        "draw",
+        "lose"
       ],
       "streak": {
         "type": "win",
