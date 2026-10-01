@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01T10:08:26.660Z",
+  "updated": "2026-10-01T12:07:54.566Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -925,22 +925,22 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 219,
+      "games": 223,
       "ace": [
         {
           "spId": 868001109,
           "group": "CB",
           "pos": 6,
-          "games": 5,
+          "games": 9,
           "metric": "rt",
-          "value": 6.78,
+          "value": 6.72,
           "base": 6.19,
-          "z": 2.22,
+          "z": 2.01,
           "title": {
             "emoji": "⭐",
             "name": "믿을맨"
           },
-          "goals": 2,
+          "goals": 3,
           "assists": 0
         },
         {
@@ -978,31 +978,31 @@
       ],
       "goalMins": {
         "for": [
-          62,
+          63,
           85,
-          94,
-          100,
-          85,
+          96,
+          101,
+          86,
           101,
           43
         ],
         "against": [
-          82,
-          100,
+          83,
+          103,
           89,
-          102,
+          103,
           77,
-          86,
-          37
+          88,
+          38
         ]
       },
       "comebacks": 40,
       "lateWinners": 22,
       "manner": {
-        "games": 219,
+        "games": 223,
         "yellow": 5,
         "red": 1,
-        "foul": 136,
+        "foul": 138,
         "score": 0.7
       }
     },
@@ -1866,7 +1866,7 @@
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
       "ctrl": "gamepad",
-      "games": 24,
+      "games": 31,
       "ace": [
         {
           "spId": 848200145,
@@ -1888,63 +1888,63 @@
           "spId": 861190046,
           "group": "AM",
           "pos": 18,
-          "games": 24,
+          "games": 31,
           "metric": "sht",
-          "value": 2.46,
+          "value": 2.42,
           "base": 1.22,
-          "z": 1.78,
+          "z": 1.72,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 24,
-          "assists": 11
+          "goals": 30,
+          "assists": 16
         },
         {
           "spId": 845192190,
           "group": "DM",
           "pos": 9,
-          "games": 16,
+          "games": 23,
           "metric": "sht",
-          "value": 1.19,
+          "value": 1.13,
           "base": 0.58,
-          "z": 1.64,
+          "z": 1.49,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 6,
-          "assists": 2
+          "goals": 8,
+          "assists": 4
         }
       ],
       "goalMins": {
         "for": [
-          5,
-          10,
-          11,
-          18,
+          7,
+          12,
+          17,
+          21,
           13,
-          10,
-          2
+          15,
+          3
         ],
         "against": [
-          5,
-          7,
-          7,
-          8,
-          8,
+          9,
+          10,
+          9,
+          13,
+          11,
           7,
           2
         ]
       },
-      "comebacks": 2,
-      "lateWinners": 0,
+      "comebacks": 4,
+      "lateWinners": 1,
       "manner": {
-        "games": 24,
+        "games": 31,
         "yellow": 0,
         "red": 0,
-        "foul": 11,
-        "score": 0.46
+        "foul": 16,
+        "score": 0.52
       }
     },
     "2f86358cfed5c31dd83a09bbe42d3586": {
@@ -2062,11 +2062,11 @@
         "games": 63
       },
       {
-        "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
-        "nick": "진저맨",
-        "spId": 868247703,
-        "goals": 79,
-        "games": 91
+        "ouid": "0ec85bc04c006744f49a284cd624bbbb",
+        "nick": "땜쟁",
+        "spId": 852233700,
+        "goals": 80,
+        "games": 74
       }
     ],
     "topAssists": [
@@ -2112,7 +2112,7 @@
         "nick": "땜쟁",
         "comebacks": 40,
         "lateWinners": 22,
-        "games": 219
+        "games": 223
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -2135,7 +2135,7 @@
         "nick": "땜쟁",
         "comebacks": 40,
         "lateWinners": 22,
-        "games": 219
+        "games": 223
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -2154,15 +2154,6 @@
     ],
     "gentleman": [
       {
-        "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
-        "nick": "Dor6평정",
-        "games": 24,
-        "yellow": 0,
-        "red": 0,
-        "foul": 11,
-        "score": 0.46
-      },
-      {
         "ouid": "b578e892bd97681f0d6bfbb1106d803a",
         "nick": "AUD무전술",
         "games": 44,
@@ -2172,12 +2163,21 @@
         "score": 0.5
       },
       {
+        "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
+        "nick": "Dor6평정",
+        "games": 31,
+        "yellow": 0,
+        "red": 0,
+        "foul": 16,
+        "score": 0.52
+      },
+      {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "games": 219,
+        "games": 223,
         "yellow": 5,
         "red": 1,
-        "foul": 136,
+        "foul": 138,
         "score": 0.7
       }
     ],
