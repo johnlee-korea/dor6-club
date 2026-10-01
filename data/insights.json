@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01T22:07:49.815Z",
+  "updated": "2026-10-01T22:57:35.716Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -298,7 +298,7 @@
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "ctrl": "gamepad",
-      "games": 31,
+      "games": 35,
       "ace": [
         {
           "spId": 856232580,
@@ -317,6 +317,22 @@
           "assists": 1
         },
         {
+          "spId": 877227236,
+          "group": "CB",
+          "pos": 6,
+          "games": 15,
+          "metric": "win",
+          "value": 3.6,
+          "base": 2.74,
+          "z": 1.42,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
+          "assists": 0
+        },
+        {
           "spId": 867235790,
           "group": "AM",
           "pos": 18,
@@ -331,52 +347,36 @@
           },
           "goals": 18,
           "assists": 8
-        },
-        {
-          "spId": 868049072,
-          "group": "AM",
-          "pos": 18,
-          "games": 11,
-          "metric": "gol",
-          "value": 1.18,
-          "base": 0.65,
-          "z": 1.2,
-          "title": {
-            "emoji": "🔫",
-            "name": "골 사냥꾼"
-          },
-          "goals": 13,
-          "assists": 4
         }
       ],
       "goalMins": {
         "for": [
-          7,
-          20,
           9,
+          22,
+          11,
           14,
-          10,
-          20,
+          13,
+          23,
           4
         ],
         "against": [
-          10,
+          11,
+          16,
           13,
-          12,
-          18,
-          13,
-          6,
+          20,
+          14,
+          9,
           3
         ]
       },
-      "comebacks": 7,
-      "lateWinners": 4,
+      "comebacks": 8,
+      "lateWinners": 5,
       "manner": {
-        "games": 31,
-        "yellow": 1,
+        "games": 35,
+        "yellow": 2,
         "red": 0,
-        "foul": 21,
-        "score": 0.77
+        "foul": 27,
+        "score": 0.94
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
