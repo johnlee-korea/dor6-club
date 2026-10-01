@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30T22:39:48.956Z",
+  "updated": "2026-10-01T00:07:58.614Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1540,6 +1540,75 @@
           "v": 68.7,
           "avg": 80.364,
           "z": -1.22,
+          "key": false
+        }
+      ]
+    },
+    "f607127b51dcfb4f0339aaaf638e70d8": {
+      "games": 22,
+      "style": {
+        "name": "두드려도 안 열리는",
+        "line": "코너킥까지 뽑는데 골문은 안 열린다",
+        "basis": [
+          "corner+",
+          "finish-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "corner",
+          "label": "코너킥",
+          "unit": "",
+          "v": 2.727,
+          "avg": 1.581,
+          "z": 2.38,
+          "key": true
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 56.227,
+          "avg": 50.66,
+          "z": 1.85,
+          "key": false
+        },
+        {
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.796,
+          "avg": 0.706,
+          "z": 1.32,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.348,
+          "avg": 0.49,
+          "z": -2.11,
+          "key": true
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.719,
+          "avg": 0.805,
+          "z": -1.72,
+          "key": false
+        },
+        {
+          "k": "ga",
+          "label": "경기당 실점",
+          "unit": "",
+          "v": 1.909,
+          "avg": 2.741,
+          "z": -1.69,
           "key": false
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30T22:39:48.956Z",
+  "updated": "2026-10-01T00:07:58.614Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1863,6 +1863,89 @@
         "foul": 120,
         "score": 2.1
       }
+    },
+    "f607127b51dcfb4f0339aaaf638e70d8": {
+      "ctrl": "gamepad",
+      "games": 22,
+      "ace": [
+        {
+          "spId": 848200145,
+          "group": "DM",
+          "pos": 9,
+          "games": 8,
+          "metric": "sht",
+          "value": 1.38,
+          "base": 0.58,
+          "z": 2.15,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 2,
+          "assists": 6
+        },
+        {
+          "spId": 861190046,
+          "group": "AM",
+          "pos": 18,
+          "games": 22,
+          "metric": "sht",
+          "value": 2.5,
+          "base": 1.22,
+          "z": 1.84,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 22,
+          "assists": 9
+        },
+        {
+          "spId": 845192190,
+          "group": "DM",
+          "pos": 9,
+          "games": 14,
+          "metric": "sht",
+          "value": 1.14,
+          "base": 0.58,
+          "z": 1.52,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 5,
+          "assists": 2
+        }
+      ],
+      "goalMins": {
+        "for": [
+          5,
+          9,
+          10,
+          17,
+          13,
+          7,
+          1
+        ],
+        "against": [
+          5,
+          7,
+          7,
+          8,
+          7,
+          6,
+          2
+        ]
+      },
+      "comebacks": 2,
+      "lateWinners": 0,
+      "manner": {
+        "games": 22,
+        "yellow": 0,
+        "red": 0,
+        "foul": 11,
+        "score": 0.5
+      }
     }
   },
   "clubTop": {
@@ -1997,6 +2080,15 @@
         "score": 0.5
       },
       {
+        "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
+        "nick": "Dor6평정",
+        "games": 22,
+        "yellow": 0,
+        "red": 0,
+        "foul": 11,
+        "score": 0.5
+      },
+      {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "games": 216,
@@ -2004,15 +2096,6 @@
         "red": 1,
         "foul": 135,
         "score": 0.71
-      },
-      {
-        "ouid": "a657df6cfcd103e150c3ae1145cd51a8",
-        "nick": "혼종",
-        "games": 20,
-        "yellow": 0,
-        "red": 0,
-        "foul": 16,
-        "score": 0.8
       }
     ],
     "toughGuy": [
