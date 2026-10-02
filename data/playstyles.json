@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02T18:07:41.506Z",
+  "updated": "2026-10-02T20:07:38.343Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -637,11 +637,11 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "오프사이드 공장",
-        "line": "스루패스 버튼 닳는 오프사이드 제조기",
+        "name": "건너뛰는 패서",
+        "line": "옆 패스는 건너뛰고 바로 뒷공간",
         "basis": [
           "throughRatio+",
-          "offside+"
+          "shortRatio-"
         ]
       },
       "highs": [
@@ -649,48 +649,39 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.251,
+          "v": 0.265,
           "avg": 0.15,
-          "z": 2.05,
+          "z": 2.33,
           "key": true
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.82,
+          "v": 0.78,
           "avg": 0.502,
-          "z": 1.51,
-          "key": true
+          "z": 1.32,
+          "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.432,
+          "v": 0.384,
           "avg": 0.302,
-          "z": 1.13,
+          "z": 0.72,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.62,
-          "avg": 3.324,
-          "z": -1.28,
-          "key": false
-        },
-        {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.192,
-          "avg": 0.292,
-          "z": -1.26,
-          "key": false
+          "v": 0.611,
+          "avg": 0.706,
+          "z": -1.41,
+          "key": true
         },
         {
           "k": "lowShot",
@@ -699,6 +690,15 @@
           "v": 0.004,
           "avg": 0.099,
           "z": -1.26,
+          "key": false
+        },
+        {
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.196,
+          "avg": 0.292,
+          "z": -1.21,
           "key": false
         }
       ]
@@ -937,18 +937,18 @@
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.158,
+          "v": 0.153,
           "avg": 0.089,
-          "z": 1.1,
+          "z": 1.02,
           "key": true
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.249,
+          "v": 0.251,
           "avg": 0.188,
-          "z": 0.78,
+          "z": 0.81,
           "key": false
         }
       ],
@@ -959,25 +959,25 @@
           "unit": "%",
           "v": 0.726,
           "avg": 0.805,
-          "z": -1.58,
+          "z": -1.59,
           "key": false
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 2.18,
+          "v": 2.12,
           "avg": 2.741,
-          "z": -1.14,
+          "z": -1.26,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.822,
+          "v": 0.827,
           "avg": 0.886,
-          "z": -0.99,
+          "z": -0.92,
           "key": false
         }
       ]
