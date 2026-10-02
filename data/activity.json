@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-02T06:07:43.497Z",
+  "updated": "2026-10-02T06:15:54.370Z",
   "week": {
-    "from": "2026-09-25T06:07:43.497Z",
+    "from": "2026-09-25T06:15:54.370Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -281,20 +281,23 @@
       }
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
-      "games": 25,
+      "games": 26,
       "form": [
-        "draw",
-        "lose",
         "win",
         "draw",
         "lose",
         "win",
-        "win",
+        "draw",
         "lose",
         "win",
+        "win",
+        "lose",
         "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -918,22 +921,22 @@
       }
     },
     "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
-      "games": 121,
+      "games": 123,
       "form": [
         "lose",
+        "win",
+        "lose",
         "lose",
         "lose",
         "lose",
         "lose",
         "win",
         "lose",
-        "win",
-        "draw",
-        "lose"
+        "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 5
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
