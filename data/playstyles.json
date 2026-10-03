@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T21:48:21.932Z",
+  "updated": "2026-10-03T22:07:50.506Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -854,30 +854,30 @@
       },
       "highs": [
         {
-          "k": "tackleRate",
-          "label": "태클 성공률",
-          "unit": "%",
-          "v": 0.614,
-          "avg": 0.53,
-          "z": 1.55,
-          "key": true
-        },
-        {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.213,
+          "v": 0.21,
           "avg": 0.099,
-          "z": 1.5,
+          "z": 1.46,
           "key": false
         },
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
+          "k": "tackleRate",
+          "label": "태클 성공률",
           "unit": "%",
-          "v": 0.355,
-          "avg": 0.292,
-          "z": 0.8,
+          "v": 0.606,
+          "avg": 0.53,
+          "z": 1.39,
+          "key": true
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 52.84,
+          "avg": 50.66,
+          "z": 0.72,
           "key": false
         }
       ],
@@ -886,27 +886,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.84,
+          "v": 9.94,
           "avg": 15.653,
-          "z": -1.73,
+          "z": -1.7,
           "key": true
         },
         {
           "k": "foul",
           "label": "파울",
           "unit": "",
-          "v": 0.6,
+          "v": 0.56,
           "avg": 0.959,
-          "z": -1.13,
+          "z": -1.26,
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.751,
-          "avg": 0.805,
-          "z": -1.08,
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.7,
+          "avg": 3.324,
+          "z": -1.14,
           "key": false
         }
       ]
