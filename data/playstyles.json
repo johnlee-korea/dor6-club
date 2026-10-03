@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T04:07:52.589Z",
+  "updated": "2026-10-03T05:47:09.340Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1197,10 +1197,10 @@
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "안전제일 공무원",
-        "line": "리스크 제로, 칼퇴 보장 공무원 축구",
+        "name": "원터치 티키타카",
+        "line": "짧게 주고 바로 뿌리는 원터치 패스 축구",
         "basis": [
-          "passRate+",
+          "shortRatio+",
           "dribble-"
         ]
       },
@@ -1224,12 +1224,12 @@
           "key": false
         },
         {
-          "k": "passRate",
-          "label": "패스 성공률",
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.913,
-          "avg": 0.896,
-          "z": 0.91,
+          "v": 0.767,
+          "avg": 0.706,
+          "z": 0.9,
           "key": true
         }
       ],
@@ -1238,27 +1238,27 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.113,
+          "v": 0.103,
           "avg": 0.302,
-          "z": -1.64,
+          "z": -1.73,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 65.8,
+          "v": 65.42,
           "avg": 80.364,
-          "z": -1.53,
+          "z": -1.57,
           "key": true
         },
         {
-          "k": "setGoal",
-          "label": "세트피스골",
-          "unit": "",
-          "v": 0,
-          "avg": 0.104,
-          "z": -1.05,
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.206,
+          "avg": 0.292,
+          "z": -1.09,
           "key": false
         }
       ]
