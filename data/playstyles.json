@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02T22:35:35.843Z",
+  "updated": "2026-10-03T00:10:26.842Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -486,7 +486,7 @@
       ]
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
-      "games": 40,
+      "games": 42,
       "style": {
         "name": "저격형 수비수",
         "line": "가끔 들어가서 확실하게, 대신 거칠게",
@@ -502,27 +502,27 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.685,
+          "v": 0.682,
           "avg": 0.53,
-          "z": 2.85,
+          "z": 2.81,
           "key": true
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.25,
+          "v": 0.251,
           "avg": 0.15,
-          "z": 2.03,
+          "z": 2.05,
           "key": false
         },
         {
           "k": "cards",
           "label": "카드",
           "unit": "",
-          "v": 0.175,
+          "v": 0.167,
           "avg": 0.04,
-          "z": 1.68,
+          "z": 1.58,
           "key": true
         }
       ],
@@ -531,27 +531,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 7.925,
+          "v": 8.167,
           "avg": 15.653,
-          "z": -2.3,
+          "z": -2.23,
           "key": true
         },
         {
           "k": "lateGoal",
           "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.458,
+          "v": 0.457,
           "avg": 0.598,
-          "z": -1.71,
+          "z": -1.72,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.788,
+          "v": 0.795,
           "avg": 0.886,
-          "z": -1.52,
+          "z": -1.41,
           "key": false
         }
       ]
@@ -1543,77 +1543,6 @@
         }
       ]
     },
-    "29e6cf3ac96836f6c5d0d0f64d87ef5b": {
-      "games": 50,
-      "style": {
-        "name": "진흙탕 싸움꾼",
-        "line": "뺏고, 부딪히고, 흘린다",
-        "basis": [
-          "tackleTry+",
-          "foul+",
-          "passRate-"
-        ],
-        "rare": true
-      },
-      "highs": [
-        {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
-          "unit": "%",
-          "v": 0.243,
-          "avg": 0.15,
-          "z": 1.89,
-          "key": false
-        },
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 20.48,
-          "avg": 15.653,
-          "z": 1.44,
-          "key": true
-        },
-        {
-          "k": "foul",
-          "label": "파울",
-          "unit": "",
-          "v": 1.4,
-          "avg": 0.959,
-          "z": 1.39,
-          "key": true
-        }
-      ],
-      "lows": [
-        {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.733,
-          "avg": 0.805,
-          "z": -1.45,
-          "key": false
-        },
-        {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
-          "unit": "%",
-          "v": 0.617,
-          "avg": 0.706,
-          "z": -1.33,
-          "key": false
-        },
-        {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.871,
-          "avg": 0.896,
-          "z": -1.3,
-          "key": true
-        }
-      ]
-    },
     "f607127b51dcfb4f0339aaaf638e70d8": {
       "games": 48,
       "style": {
@@ -1748,6 +1677,144 @@
           "v": 0.721,
           "avg": 0.805,
           "z": -1.68,
+          "key": false
+        }
+      ]
+    },
+    "98b03e65d80a972da509e2f5aa8d3bd2": {
+      "games": 24,
+      "style": {
+        "name": "중거리 스나이퍼",
+        "line": "박스 밖이 곧 내 슈팅 존, 실제로 들어간다",
+        "basis": [
+          "longShot+",
+          "longGoal+"
+        ]
+      },
+      "highs": [
+        {
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
+          "unit": "%",
+          "v": 0.396,
+          "avg": 0.188,
+          "z": 2.66,
+          "key": true
+        },
+        {
+          "k": "longGoal",
+          "label": "중거리골 비율",
+          "unit": "%",
+          "v": 0.25,
+          "avg": 0.089,
+          "z": 2.57,
+          "key": true
+        },
+        {
+          "k": "cards",
+          "label": "카드",
+          "unit": "",
+          "v": 0.208,
+          "avg": 0.04,
+          "z": 2.1,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.293,
+          "avg": 0.49,
+          "z": -2.94,
+          "key": false
+        },
+        {
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2,
+          "avg": 3.324,
+          "z": -2.41,
+          "key": false
+        },
+        {
+          "k": "boxGoal",
+          "label": "박스안골 비율",
+          "unit": "%",
+          "v": 0.75,
+          "avg": 0.886,
+          "z": -2.12,
+          "key": false
+        }
+      ]
+    },
+    "40e7eb538cbc1bf73403ace3a75e403b": {
+      "games": 37,
+      "style": {
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
+        "basis": [
+          "longRatio+",
+          "passRate-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.219,
+          "avg": 0.099,
+          "z": 1.58,
+          "key": false
+        },
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.072,
+          "avg": 0.05,
+          "z": 0.95,
+          "key": true
+        },
+        {
+          "k": "shots",
+          "label": "경기당 슈팅",
+          "unit": "",
+          "v": 7.784,
+          "avg": 6.835,
+          "z": 0.91,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.847,
+          "avg": 0.896,
+          "z": -2.56,
+          "key": true
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.382,
+          "avg": 0.49,
+          "z": -1.61,
+          "key": false
+        },
+        {
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 67.432,
+          "avg": 80.364,
+          "z": -1.36,
           "key": false
         }
       ]
