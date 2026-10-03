@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T14:08:08.063Z",
+  "updated": "2026-10-03T16:08:15.367Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -672,7 +672,7 @@
     },
     "2dd2edb174f63716078ffc324199edd1": {
       "ctrl": "keyboard",
-      "games": 164,
+      "games": 165,
       "ace": [
         {
           "spId": 877224232,
@@ -726,7 +726,7 @@
       "goalMins": {
         "for": [
           53,
-          64,
+          65,
           70,
           84,
           57,
@@ -736,8 +736,8 @@
         "against": [
           53,
           70,
-          73,
-          81,
+          74,
+          82,
           62,
           61,
           33
@@ -746,10 +746,10 @@
       "comebacks": 23,
       "lateWinners": 13,
       "manner": {
-        "games": 164,
+        "games": 165,
         "yellow": 8,
         "red": 1,
-        "foul": 173,
+        "foul": 174,
         "score": 1.22
       }
     },
@@ -925,7 +925,7 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 246,
+      "games": 251,
       "ace": [
         {
           "spId": 861005661,
@@ -944,22 +944,6 @@
           "assists": 18
         },
         {
-          "spId": 868001109,
-          "group": "CB",
-          "pos": 6,
-          "games": 32,
-          "metric": "rt",
-          "value": 6.64,
-          "base": 6.19,
-          "z": 1.71,
-          "title": {
-            "emoji": "⭐",
-            "name": "믿을맨"
-          },
-          "goals": 10,
-          "assists": 0
-        },
-        {
           "spId": 852001075,
           "group": "W",
           "pos": 16,
@@ -974,36 +958,52 @@
           },
           "goals": 3,
           "assists": 3
+        },
+        {
+          "spId": 863210514,
+          "group": "FB",
+          "pos": 3,
+          "games": 31,
+          "metric": "pas",
+          "value": 9.19,
+          "base": 6.83,
+          "z": 1.33,
+          "title": {
+            "emoji": "⚙️",
+            "name": "빌드업 엔진"
+          },
+          "goals": 0,
+          "assists": 1
         }
       ],
       "goalMins": {
         "for": [
           72,
-          96,
-          109,
-          112,
           97,
-          120,
+          110,
+          113,
+          100,
+          122,
           46
         ],
         "against": [
-          88,
-          110,
-          101,
-          114,
-          88,
-          99,
+          93,
+          111,
+          103,
+          116,
+          89,
+          104,
           43
         ]
       },
-      "comebacks": 48,
+      "comebacks": 49,
       "lateWinners": 27,
       "manner": {
-        "games": 246,
-        "yellow": 5,
+        "games": 251,
+        "yellow": 6,
         "red": 1,
-        "foul": 150,
-        "score": 0.68
+        "foul": 153,
+        "score": 0.69
       }
     },
     "b56e8c1f2e6e414588b06a1e528e510b": {
@@ -2135,7 +2135,7 @@
         "nick": "땜쟁",
         "spId": 852233700,
         "goals": 117,
-        "games": 97
+        "games": 102
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -2193,9 +2193,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 48,
+        "comebacks": 49,
         "lateWinners": 27,
-        "games": 246
+        "games": 251
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -2209,16 +2209,16 @@
         "nick": "미드필더",
         "comebacks": 23,
         "lateWinners": 13,
-        "games": 164
+        "games": 165
       }
     ],
     "lateHero": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 48,
+        "comebacks": 49,
         "lateWinners": 27,
-        "games": 246
+        "games": 251
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
