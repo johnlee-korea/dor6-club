@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-04T10:08:21.843Z",
+  "updated": "2026-10-04T12:08:18.704Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -922,7 +922,7 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 263,
+      "games": 264,
       "ace": [
         {
           "spId": 861005661,
@@ -977,26 +977,26 @@
         "for": [
           75,
           103,
-          113,
-          121,
-          100,
+          114,
+          122,
+          101,
           128,
           48
         ],
         "against": [
           95,
           114,
-          110,
-          118,
-          93,
-          108,
+          111,
+          119,
+          94,
+          109,
           45
         ]
       },
       "comebacks": 49,
       "lateWinners": 27,
       "manner": {
-        "games": 263,
+        "games": 264,
         "yellow": 6,
         "red": 1,
         "foul": 159,
@@ -1005,75 +1005,78 @@
     },
     "b56e8c1f2e6e414588b06a1e528e510b": {
       "ctrl": "gamepad",
-      "games": 55,
+      "games": 58,
       "ace": [
-        {
-          "spId": 848241096,
-          "group": "DM",
-          "pos": 9,
-          "games": 34,
-          "metric": "win",
-          "value": 2.65,
-          "base": 2.1,
-          "z": 0.96,
-          "title": null,
-          "goals": 9,
-          "assists": 12
-        },
         {
           "spId": 877013128,
           "group": "ST",
           "pos": 25,
-          "games": 24,
+          "games": 27,
           "metric": "ast",
-          "value": 0.79,
+          "value": 0.81,
           "base": 0.54,
-          "z": 0.92,
-          "title": null,
-          "goals": 29,
-          "assists": 19
+          "z": 1.01,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 36,
+          "assists": 22
         },
         {
-          "spId": 810184392,
-          "group": "FB",
-          "pos": 7,
-          "games": 55,
-          "metric": "pas",
-          "value": 8.33,
-          "base": 6.83,
-          "z": 0.84,
+          "spId": 848241096,
+          "group": "DM",
+          "pos": 9,
+          "games": 37,
+          "metric": "win",
+          "value": 2.62,
+          "base": 2.1,
+          "z": 0.92,
           "title": null,
-          "goals": 0,
-          "assists": 3
+          "goals": 9,
+          "assists": 13
+        },
+        {
+          "spId": 861214100,
+          "group": "AM",
+          "pos": 18,
+          "games": 43,
+          "metric": "rt",
+          "value": 7.94,
+          "base": 7.43,
+          "z": 0.83,
+          "title": null,
+          "goals": 52,
+          "assists": 33
         }
       ],
       "goalMins": {
         "for": [
-          22,
-          28,
+          24,
           29,
-          31,
-          21,
-          31,
-          9
+          33,
+          34,
+          22,
+          32,
+          10
         ],
         "against": [
-          11,
-          18,
+          12,
+          19,
           24,
-          17,
+          18,
           15,
-          23,
+          24,
           7
         ]
       },
-      "comebacks": 11,
+      "comebacks": 13,
       "lateWinners": 5,
       "manner": {
-        "games": 55,
+        "games": 58,
         "yellow": 3,
         "red": 0,
-        "foul": 50,
+        "foul": 53,
         "score": 1.07
       }
     },
@@ -2121,8 +2124,8 @@
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "spId": 852233700,
-        "goals": 130,
-        "games": 114
+        "goals": 131,
+        "games": 115
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -2151,8 +2154,8 @@
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "spId": 848120274,
-        "assists": 67,
-        "games": 114
+        "assists": 68,
+        "games": 115
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -2189,7 +2192,7 @@
         "nick": "땜쟁",
         "comebacks": 49,
         "lateWinners": 27,
-        "games": 263
+        "games": 264
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -2212,7 +2215,7 @@
         "nick": "땜쟁",
         "comebacks": 49,
         "lateWinners": 27,
-        "games": 263
+        "games": 264
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
