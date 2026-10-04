@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-04T18:07:58.620Z",
+  "updated": "2026-10-04T20:08:05.802Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -298,24 +298,8 @@
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "ctrl": "gamepad",
-      "games": 40,
+      "games": 43,
       "ace": [
-        {
-          "spId": 866276493,
-          "group": "CB",
-          "pos": 4,
-          "games": 20,
-          "metric": "int",
-          "value": 2.7,
-          "base": 1.71,
-          "z": 1.72,
-          "title": {
-            "emoji": "🚧",
-            "name": "길목 차단기"
-          },
-          "goals": 0,
-          "assists": 1
-        },
         {
           "spId": 856232580,
           "group": "CB",
@@ -330,6 +314,22 @@
             "name": "믿을맨"
           },
           "goals": 1,
+          "assists": 1
+        },
+        {
+          "spId": 866276493,
+          "group": "CB",
+          "pos": 4,
+          "games": 23,
+          "metric": "int",
+          "value": 2.65,
+          "base": 1.71,
+          "z": 1.63,
+          "title": {
+            "emoji": "🚧",
+            "name": "길목 차단기"
+          },
+          "goals": 0,
           "assists": 1
         },
         {
@@ -351,31 +351,31 @@
       ],
       "goalMins": {
         "for": [
-          12,
+          13,
           22,
           11,
+          21,
           17,
-          16,
-          25,
-          4
+          26,
+          5
         ],
         "against": [
-          11,
+          12,
+          18,
+          18,
+          21,
           17,
           15,
-          21,
-          16,
-          14,
           4
         ]
       },
       "comebacks": 8,
       "lateWinners": 5,
       "manner": {
-        "games": 40,
+        "games": 43,
         "yellow": 2,
         "red": 0,
-        "foul": 32,
+        "foul": 35,
         "score": 0.95
       }
     },
