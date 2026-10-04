@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-04T04:08:10.613Z",
+  "updated": "2026-10-04T06:08:13.095Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -215,7 +215,7 @@
     },
     "ec6b3d922b94994ccd28de27367cf479": {
       "ctrl": "keyboard",
-      "games": 124,
+      "games": 125,
       "ace": [
         {
           "spId": 237020170,
@@ -237,11 +237,11 @@
           "spId": 234174543,
           "group": "GK",
           "pos": 0,
-          "games": 7,
+          "games": 8,
           "metric": "pas",
-          "value": 3.86,
+          "value": 3.63,
           "base": 2.35,
-          "z": 2.57,
+          "z": 2.17,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -253,7 +253,7 @@
           "spId": 861001615,
           "group": "CB",
           "pos": 6,
-          "games": 106,
+          "games": 107,
           "metric": "pas",
           "value": 7.62,
           "base": 5.5,
@@ -271,25 +271,25 @@
           54,
           47,
           44,
-          67,
-          50,
+          68,
+          51,
           42,
           15
         ],
         "against": [
           37,
           44,
+          44,
           43,
-          42,
           52,
-          61,
+          62,
           15
         ]
       },
       "comebacks": 15,
       "lateWinners": 5,
       "manner": {
-        "games": 124,
+        "games": 125,
         "yellow": 8,
         "red": 1,
         "foul": 90,
@@ -1165,39 +1165,23 @@
     },
     "001221eab7f2c49f8571511731cc2573": {
       "ctrl": "keyboard",
-      "games": 54,
+      "games": 57,
       "ace": [
         {
           "spId": 866252042,
           "group": "ST",
           "pos": 26,
-          "games": 29,
+          "games": 32,
           "metric": "sht",
-          "value": 3.93,
+          "value": 3.94,
           "base": 2.1,
-          "z": 2.59,
+          "z": 2.6,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 53,
-          "assists": 22
-        },
-        {
-          "spId": 851260247,
-          "group": "W",
-          "pos": 16,
-          "games": 10,
-          "metric": "ast",
-          "value": 0.9,
-          "base": 0.49,
-          "z": 1.52,
-          "title": {
-            "emoji": "🎯",
-            "name": "킬패스 장인"
-          },
-          "goals": 5,
-          "assists": 10
+          "goals": 56,
+          "assists": 24
         },
         {
           "spId": 866247090,
@@ -1214,35 +1198,51 @@
           },
           "goals": 4,
           "assists": 7
+        },
+        {
+          "spId": 851260247,
+          "group": "W",
+          "pos": 16,
+          "games": 11,
+          "metric": "ast",
+          "value": 0.82,
+          "base": 0.49,
+          "z": 1.22,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 5,
+          "assists": 10
         }
       ],
       "goalMins": {
         "for": [
-          26,
-          21,
-          37,
-          29,
+          27,
+          22,
+          39,
+          32,
           28,
-          18,
+          20,
           11
         ],
         "against": [
-          19,
-          27,
           21,
           29,
-          30,
-          19,
+          22,
+          31,
+          32,
+          21,
           6
         ]
       },
-      "comebacks": 7,
+      "comebacks": 8,
       "lateWinners": 5,
       "manner": {
-        "games": 54,
+        "games": 57,
         "yellow": 2,
         "red": 0,
-        "foul": 50,
+        "foul": 53,
         "score": 1.04
       }
     },
@@ -2118,7 +2118,7 @@
         "nick": "쌌따",
         "spId": 100001625,
         "goals": 137,
-        "games": 124
+        "games": 125
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
