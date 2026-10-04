@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-04T06:08:13.095Z",
+  "updated": "2026-10-04T06:23:32.933Z",
   "week": {
-    "from": "2026-09-27T06:08:13.095Z",
+    "from": "2026-09-27T06:23:32.933Z",
     "rows": [
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -34,9 +34,9 @@
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
-        "games": 51,
-        "wins": 21,
-        "winRate": 41
+        "games": 50,
+        "wins": 20,
+        "winRate": 40
       }
     ]
   },
@@ -652,8 +652,10 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 91,
+      "games": 93,
       "form": [
+        "win",
+        "lose",
         "lose",
         "draw",
         "win",
@@ -661,12 +663,10 @@
         "win",
         "lose",
         "lose",
-        "win",
-        "lose",
         "win"
       ],
       "streak": {
-        "type": "lose",
+        "type": "win",
         "n": 1
       },
       "rivals": {
