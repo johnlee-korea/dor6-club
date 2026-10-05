@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T00:07:44.622Z",
+  "updated": "2026-10-05T02:07:59.118Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -344,41 +344,39 @@
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "games": 50,
       "style": {
-        "name": "파상 포격",
-        "line": "코너킥에 중거리까지 다 두드리는데 안 열린다",
+        "name": "발로만 해결",
+        "line": "머리 대신 발, 박스 밖에서도 해결한다",
         "basis": [
           "longShot+",
-          "corner+",
-          "finish-"
-        ],
-        "rare": true
+          "headGoal-"
+        ]
       },
       "highs": [
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.318,
+          "v": 0.312,
           "avg": 0.188,
-          "z": 1.67,
+          "z": 1.59,
           "key": true
         },
         {
-          "k": "corner",
-          "label": "코너킥",
-          "unit": "",
-          "v": 1.9,
-          "avg": 1.581,
-          "z": 0.66,
-          "key": true
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.749,
+          "avg": 0.706,
+          "z": 0.62,
+          "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.561,
+          "v": 0.559,
           "avg": 0.53,
-          "z": 0.56,
+          "z": 0.52,
           "key": false
         }
       ],
@@ -387,10 +385,19 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.388,
+          "v": 0.39,
           "avg": 0.49,
-          "z": -1.51,
-          "key": true
+          "z": -1.49,
+          "key": false
+        },
+        {
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.72,
+          "avg": 3.324,
+          "z": -1.1,
+          "key": false
         },
         {
           "k": "headGoal",
@@ -398,17 +405,8 @@
           "unit": "%",
           "v": 0.007,
           "avg": 0.112,
-          "z": -1.08,
-          "key": false
-        },
-        {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.78,
-          "avg": 3.324,
-          "z": -0.99,
-          "key": false
+          "z": -1.07,
+          "key": true
         }
       ]
     },
@@ -859,27 +857,27 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.643,
+          "v": 0.651,
           "avg": 0.53,
-          "z": 2.09,
+          "z": 2.23,
           "key": true
         },
         {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.245,
+          "v": 0.25,
           "avg": 0.099,
-          "z": 1.92,
+          "z": 1.99,
           "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 53.14,
+          "v": 53.08,
           "avg": 50.66,
-          "z": 0.82,
+          "z": 0.8,
           "key": false
         }
       ],
@@ -888,27 +886,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.36,
+          "v": 9.28,
           "avg": 15.653,
-          "z": -1.88,
+          "z": -1.9,
           "key": true
         },
         {
           "k": "foul",
           "label": "파울",
           "unit": "",
-          "v": 0.48,
+          "v": 0.5,
           "avg": 0.959,
-          "z": -1.51,
+          "z": -1.45,
           "key": false
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 1.02,
+          "v": 0.94,
           "avg": 1.581,
-          "z": -1.16,
+          "z": -1.33,
           "key": false
         }
       ]
