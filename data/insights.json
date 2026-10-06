@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-06T12:07:11.281Z",
+  "updated": "2026-10-06T14:07:16.642Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -842,17 +842,17 @@
     },
     "49f604d3f58f5f607234ef60c584326a": {
       "ctrl": "keyboard",
-      "games": 29,
+      "games": 31,
       "ace": [
         {
           "spId": 866247819,
           "group": "CB",
           "pos": 6,
-          "games": 27,
+          "games": 28,
           "metric": "pas",
-          "value": 7.59,
+          "value": 7.61,
           "base": 5.5,
-          "z": 1.67,
+          "z": 1.68,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -864,11 +864,11 @@
           "spId": 866229237,
           "group": "CB",
           "pos": 4,
-          "games": 29,
+          "games": 31,
           "metric": "drb",
-          "value": 4.21,
+          "value": 4.06,
           "base": 2.91,
-          "z": 1.34,
+          "z": 1.2,
           "title": {
             "emoji": "🚜",
             "name": "전진하는 수비수"
@@ -880,44 +880,44 @@
           "spId": 848188350,
           "group": "W",
           "pos": 27,
-          "games": 27,
+          "games": 28,
           "metric": "rt",
           "value": 7.49,
           "base": 7.03,
           "z": 0.96,
           "title": null,
           "goals": 4,
-          "assists": 19
+          "assists": 20
         }
       ],
       "goalMins": {
         "for": [
-          13,
-          9,
+          14,
+          10,
           8,
-          17,
-          15,
-          6,
+          19,
+          16,
+          8,
           2
         ],
         "against": [
           7,
-          13,
+          14,
           11,
-          15,
+          16,
           10,
-          13,
+          14,
           4
         ]
       },
-      "comebacks": 2,
+      "comebacks": 3,
       "lateWinners": 2,
       "manner": {
-        "games": 29,
+        "games": 31,
         "yellow": 0,
         "red": 0,
-        "foul": 30,
-        "score": 1.03
+        "foul": 33,
+        "score": 1.06
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
@@ -1328,24 +1328,8 @@
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "ctrl": "gamepad",
-      "games": 83,
+      "games": 84,
       "ace": [
-        {
-          "spId": 868005589,
-          "group": "AM",
-          "pos": 19,
-          "games": 14,
-          "metric": "ast",
-          "value": 1.21,
-          "base": 0.58,
-          "z": 2.15,
-          "title": {
-            "emoji": "🎯",
-            "name": "킬패스 장인"
-          },
-          "goals": 7,
-          "assists": 17
-        },
         {
           "spId": 861049072,
           "group": "AM",
@@ -1361,6 +1345,22 @@
           },
           "goals": 36,
           "assists": 8
+        },
+        {
+          "spId": 868005589,
+          "group": "AM",
+          "pos": 19,
+          "games": 15,
+          "metric": "ast",
+          "value": 1.13,
+          "base": 0.58,
+          "z": 1.88,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 7,
+          "assists": 17
         },
         {
           "spId": 856226161,
@@ -1391,10 +1391,10 @@
         ],
         "against": [
           26,
-          35,
-          42,
-          49,
-          31,
+          37,
+          43,
+          50,
+          32,
           38,
           27
         ]
@@ -1402,11 +1402,11 @@
       "comebacks": 16,
       "lateWinners": 5,
       "manner": {
-        "games": 83,
+        "games": 84,
         "yellow": 4,
         "red": 2,
         "foul": 59,
-        "score": 0.93
+        "score": 0.92
       }
     },
     "75278aef5ddb1cb75d88dd114f68f0ab": {
