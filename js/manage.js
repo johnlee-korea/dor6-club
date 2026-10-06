@@ -118,18 +118,25 @@ async function loadRefs() {
 }
 
 /* 모드 한 줄: [아이콘] 현재 등급(순위) · 최고 등급 (v2.8.0)
-   curDivision[t]: {name,rank,icon} = 랭킹 등재 / null = 상위 1만 명 밖 / 없음 = 조회 실패·예전 저장본 → '현재' 생략 */
+   curDivision[t]: {name,rank,score,icon} = 랭킹 등재 / null = 상위 1만 명 밖 / 없음 = 조회 실패·예전 저장본 → '현재' 생략 */
 function divLine(ov, t, label) {
   const max = (ov.maxDivision && ov.maxDivision[t]) || "-";
   const cd = ov.curDivision || {};
   let cur = "";
   if (cd[t]) {
     const icon = cd[t].icon ? `<img class="mg-divico" src="${escapeHtml(cd[t].icon)}" alt="" loading="lazy">` : "";
-    cur = `${icon}현재 <b style="color:var(--silver);">${escapeHtml(cd[t].name || "-")}</b>${cd[t].rank ? ` (${cd[t].rank.toLocaleString()}위)` : ""} · `;
+    cur = `${icon}현재 <b style="color:var(--silver);">${escapeHtml(cd[t].name || "-")}</b>${rankTxt(cd[t])} · `;
   } else if (cd[t] === null) {
     cur = `<span title="데이터센터 랭킹은 모드별 상위 1만 명까지만 공개돼요">현재 랭킹 1만 위 밖</span> · `;
   }
   return `<div class="mg-divline"><span class="mg-divlabel">${label}</span>${cur}최고 <b style="color:var(--silver);">${escapeHtml(max)}</b></div>`;
+}
+
+/* 순위·랭킹 점수(ELO) 괄호 — 있는 값만 */
+function rankTxt(c) {
+  const parts = [c.rank ? `${c.rank.toLocaleString()}위` : "",
+    c.score ? `${c.score.toLocaleString(undefined, { maximumFractionDigits: 2 })}점` : ""].filter(Boolean);
+  return parts.length ? ` (${parts.join(" · ")})` : "";
 }
 
 /* ---------- 머리줄·모드 칩 ---------- */
@@ -560,7 +567,7 @@ function captureMode(btn) {
   const t = def.types.includes(52) ? 52 : 50;
   const max = S.ov.maxDivision && S.ov.maxDivision[t];
   const cur = S.ov.curDivision && S.ov.curDivision[t];
-  const div = [cur && cur.name ? `현재 ${cur.name}` : "", max ? `최고 ${max}` : ""].filter(Boolean).join(" / ");
+  const div = [cur && cur.name ? `현재 ${cur.name}${rankTxt(cur)}` : "", max ? `최고 ${max}` : ""].filter(Boolean).join(" / ");
   shareSection($("#mg-body"), {
     btn, nick: S.ov.nickname, tab: `구단운영 · ${def.label}`, fileTag: `구단운영_${def.label}`,
     sub: [div, `${range} ${s.games}경기 (${fmt.date(s.from)}~${fmt.date(s.to)})`].filter(Boolean).join(" · "),

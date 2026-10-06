@@ -173,6 +173,7 @@ async function currentDivision(matchType, nickname) {
     return {
       name: meta ? meta.divisionName : null,
       rank: +((row.match(/rank_no">\s*(\d+)/) || [])[1]) || null,
+      score: +((row.match(/rank_r_win_point">\s*([\d.]+)/) || [])[1]) || null,   // 랭킹 점수(ELO)
       icon: icon[0]
     };
   }
