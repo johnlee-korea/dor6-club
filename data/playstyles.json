@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-06T02:07:10.045Z",
+  "updated": "2026-10-06T04:07:12.943Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -912,10 +912,9 @@
     "b56e8c1f2e6e414588b06a1e528e510b": {
       "games": 50,
       "style": {
-        "name": "침투 아니면 원더골",
-        "line": "뒷공간 아니면 박스 밖 원더골",
+        "name": "원더골 제조기",
+        "line": "골 하이라이트는 늘 박스 밖에서",
         "basis": [
-          "offside+",
           "longGoal+"
         ]
       },
@@ -924,28 +923,28 @@
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.15,
+          "v": 0.153,
           "avg": 0.089,
-          "z": 0.97,
+          "z": 1.03,
           "key": true
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 53.5,
+          "v": 53.28,
           "avg": 50.66,
-          "z": 0.94,
+          "z": 0.87,
           "key": false
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.68,
-          "avg": 0.502,
-          "z": 0.84,
-          "key": true
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.576,
+          "avg": 0.53,
+          "z": 0.85,
+          "key": false
         }
       ],
       "lows": [
@@ -955,25 +954,25 @@
           "unit": "%",
           "v": 0.735,
           "avg": 0.805,
-          "z": -1.39,
+          "z": -1.41,
           "key": false
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 2.12,
+          "v": 2.1,
           "avg": 2.741,
-          "z": -1.26,
+          "z": -1.3,
           "key": false
         },
         {
-          "k": "lateGoal",
-          "label": "후반 득점 비율",
+          "k": "boxGoal",
+          "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.521,
-          "avg": 0.598,
-          "z": -0.94,
+          "v": 0.822,
+          "avg": 0.886,
+          "z": -1,
           "key": false
         }
       ]
@@ -1259,42 +1258,42 @@
       ]
     },
     "75278aef5ddb1cb75d88dd114f68f0ab": {
-      "games": 35,
+      "games": 38,
       "style": {
-        "name": "쏘기 바쁜 공격수",
-        "line": "슈팅은 많고 수비 가담은 없다",
+        "name": "한 방 태클러",
+        "line": "태클은 가끔, 하면 무조건 뺏는다",
         "basis": [
-          "shots+",
+          "tackleRate+",
           "tackleTry-"
         ]
       },
       "highs": [
         {
-          "k": "finesse",
-          "label": "감아차기 비율",
-          "unit": "%",
-          "v": 0.466,
-          "avg": 0.302,
-          "z": 1.44,
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.816,
+          "avg": 0.502,
+          "z": 1.49,
           "key": false
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 8.257,
-          "avg": 6.835,
-          "z": 1.37,
-          "key": true
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.472,
+          "avg": 0.302,
+          "z": 1.48,
+          "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.601,
+          "v": 0.605,
           "avg": 0.53,
-          "z": 1.3,
-          "key": false
+          "z": 1.38,
+          "key": true
         }
       ],
       "lows": [
@@ -1302,18 +1301,18 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.343,
+          "v": 0.353,
           "avg": 0.49,
-          "z": -2.2,
+          "z": -2.04,
           "key": false
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.229,
+          "v": 8.921,
           "avg": 15.653,
-          "z": -1.91,
+          "z": -2.01,
           "key": true
         },
         {
@@ -1322,7 +1321,7 @@
           "unit": "%",
           "v": 0.002,
           "avg": 0.013,
-          "z": -1.18,
+          "z": -1.17,
           "key": false
         }
       ]
