@@ -558,3 +558,25 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-custom.active { border-color: var(--silver); color: var(--text); }
 .mg-custom .input { width: 58px; padding: 4px 6px; text-align: center; font-size: var(--fs-sm); }
 .mg-custom .btn.sm { padding: 4px 10px; }
+
+/* 📈 등급 기록 그래프 (v2.8.0, js/manage.js rankHistHtml) — 단일 선, 격자·축은 흐리게 */
+.rh-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.rh-mode { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); min-width: 0; }
+.rh-head { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+.rh-head b { color: var(--text); margin-right: 4px; }
+.rh-chart { position: relative; }
+.rh-chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.rh-line { fill: none; stroke: var(--silver); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.rh-last { fill: var(--silver); stroke: var(--surface-2); stroke-width: 2; }
+.rh-hover { fill: var(--text); stroke: var(--surface-2); stroke-width: 2; }
+.rh-grid { stroke: var(--border); stroke-width: 1; }
+.rh-cross { stroke: var(--text-dim); stroke-width: 1; stroke-dasharray: 2 2; }
+.rh-ax { fill: var(--text-dim); font-size: 10px; }
+.rh-tip { position: absolute; top: 0; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 12px; line-height: 1.4; color: var(--text); pointer-events: none; white-space: nowrap; }
+.rh-dim { color: var(--text-dim); font-size: 11px; }
+.rh-empty { font-size: 12px; color: var(--text-dim); padding: var(--sp-2) 0; }
+.rh-best { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.rh-table summary { font-size: 11px; color: var(--text-dim); cursor: pointer; margin-top: 2px; }
+.rh-table table { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 4px; }
+.rh-table th, .rh-table td { text-align: right; padding: 2px 4px; border-bottom: 1px solid var(--border); }
+.rh-table th:first-child, .rh-table td:first-child { text-align: left; }

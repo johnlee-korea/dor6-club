@@ -856,3 +856,9 @@ C:\Projects\dor6-club\
 - **Worker** `/manage/overview` 응답에 `curDivision: {50, 52}` = `{name, rank, score(랭킹 점수 ELO), icon}` | `null`(랭킹 밖) | 키 없음(조회 실패) 추가. 외부 호출 +2(8 → 10). 랭킹 페이지 구조가 바뀌면 `currentDivision()` 정규식만 수정.
 - **화면** `js/manage.js` `divLine()`: `공식 [아이콘] 현재 챌린저1 (2,207위 · 2,576.57점) · 최고 챔피언스` / `감독 …` 두 줄. 예전 저장본(curDivision 없음)은 '현재' 생략 → 🔄 최신 업데이트 시 표시. 📸 모드 캡처 부제에도 `현재 X (순위 · 점수) / 최고 Y`.
 - 스모크 테스트: overview 픽스처에 curDivision(50 등재·52 랭킹 밖) → 두 줄 문구 확인.
+- **파싱 단일 소스** `scripts/lib/rank.js` (`parseRankSearch`·`rankDataTime`) — Worker·기록 스크립트 공용.
+
+### 22-1. 📈 등급 기록 · 24시간 그래프 (사용자 요청: "감독모드는 자동으로 돌아가서 높은 점수 이력을 볼 수 없다")
+- **수집**: Worker Cron `35 * * * *` → `rank.yml`(workflow_dispatch, 수집과 같은 concurrency 그룹) → `scripts/rank-history.js` → `data/rankhist.json` 커밋. 데이터센터는 정시 기준·약 1시간 늦게 갱신 → 기준 시각(페이지 하단 "… 기준")으로 저장, 같은 기준 시각이면 덮어씀. 넥슨 API 키 불필요. 닉은 profiles.json 현재 닉.
+- **저장**: `players[ouid][50|52]` = `pts` [기준시각, 등급번호, 순위, 점수] 최근 7일(랭킹 밖은 null 점) · `best` 기록 시작 후 최고 점수 {t,div,rank,score} · `days` KST 일별 [최고 점수, 최고 순위, 최고 등급번호](계속 보존 — 추후 장기 그래프용). 실측 약 7KB.
+- **화면** (`js/manage.js` rankHistHtml·bindRankCharts, `.rh-*`): 클럽원 구단운영 탭 머리줄 아래 모드별 카드 — 최근 24시간 점수 선 그래프(모드마다 축 따로, 랭킹 밖 구간은 선 끊김, 포인터·터치 툴팁 = 시각·점수·순위·등급, [표로 보기]) + 🏆 기록 최고. 기록 2개 미만이면 "쌓이는 중". 기록 기간 내내 랭킹 밖인 모드는 카드 생략. 클럽 밖 유저(전적 검색)는 기록 없음.

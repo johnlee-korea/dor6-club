@@ -109,11 +109,12 @@ function defaultMode(ov) {
 /* 랭커 기준값·xG 표·선수 메타 (페이지당 1회) */
 async function loadRefs() {
   if (S.base) return;
-  const [base, xg] = await Promise.all([
+  const [base, xg, rh] = await Promise.all([
     loadJSON("data/meta/ranker-baseline.json").catch(() => null),
-    loadJSON("data/meta/xg-model.json").catch(() => null)
+    loadJSON("data/meta/xg-model.json").catch(() => null),
+    loadJSON("data/rankhist.json").catch(() => null)   // 클럽원 등급 기록 (v2.8.0, 매시)
   ]);
-  S.base = base || {}; S.xg = xg || { modes: {} };
+  S.base = base || {}; S.xg = xg || { modes: {} }; S.rankHist = rh || { players: {} };
   S.meta = await sqLoadMeta();
 }
 
@@ -139,6 +140,97 @@ function rankTxt(c) {
   return parts.length ? ` (${parts.join(" · ")})` : "";
 }
 
+/* ---------- 📈 등급 기록 그래프 (v2.8.0) ----------
+   data/rankhist.json(클럽원만, 매시 기록)의 최근 24시간 랭킹 점수 — 모드마다 그래프 하나씩(점수 범위가 달라 분리)
+   랭킹 밖(null) 구간은 선을 끊음. 그래프를 누르거나 올리면 가장 가까운 기록의 시각·점수·순위·등급 툴팁 */
+const RH_W = 320, RH_H = 96, RH_PAD = { l: 40, r: 8, t: 8, b: 18 };
+const RH_MODES = [["50", "공식"], ["52", "감독"]];
+const rhDiv = (i) => (i == null ? "-" : ((S.rankHist.divisions || [])[i] || "-"));
+const rhNum = (n) => n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+function rhTime(iso) {
+  const d = new Date(iso);
+  return `${d.getMonth() + 1}.${d.getDate()} ${d.getHours()}시`;
+}
+
+function rankHistHtml(ouid) {
+  const p = S.rankHist && S.rankHist.players && S.rankHist.players[ouid];
+  if (!p) return "";
+  const now = Date.now(), from = now - 24 * 3600e3;
+  const blocks = RH_MODES.map(([t, label]) => {
+    const h = p[t];
+    if (!h || !h.best) return "";   // 기록 기간 내내 랭킹 밖이면 생략
+    const pts = (h.pts || []).filter((x) => new Date(x[0]).getTime() >= from);
+    const ranked = pts.filter((x) => x[3] != null);
+    const best = h.best;
+    const bestLine = `🏆 기록 최고 <b style="color:var(--silver);">${rhNum(best.score)}점</b> · ${escapeHtml(rhDiv(best.div))} · ${best.rank.toLocaleString()}위 <span class="rh-dim">(${rhTime(best.t)})</span>`;
+    let chart;
+    if (ranked.length < 2) {
+      chart = `<div class="rh-empty">최근 24시간 기록이 쌓이는 중이에요 (매시 기록 · 지금 ${ranked.length}개)</div>`;
+    } else {
+      const ys = ranked.map((x) => x[3]);
+      let lo = Math.min(...ys), hi = Math.max(...ys);
+      const padY = Math.max((hi - lo) * 0.15, 5); lo -= padY; hi += padY;
+      const X = (iso) => RH_PAD.l + ((new Date(iso).getTime() - from) / (now - from)) * (RH_W - RH_PAD.l - RH_PAD.r);
+      const Y = (v) => RH_PAD.t + (1 - (v - lo) / (hi - lo)) * (RH_H - RH_PAD.t - RH_PAD.b);
+      // 랭킹 밖(null)에서 선을 끊음
+      let d = "", pen = false;
+      for (const x of pts) {
+        if (x[3] == null) { pen = false; continue; }
+        d += `${pen ? "L" : "M"}${X(x[0]).toFixed(1)},${Y(x[3]).toFixed(1)}`; pen = true;
+      }
+      // 눈금: y = 24시간 최고·최저, x = 6시간 간격
+      const yTicks = [hi - padY, lo + padY].map((v) =>
+        `<line class="rh-grid" x1="${RH_PAD.l}" x2="${RH_W - RH_PAD.r}" y1="${Y(v)}" y2="${Y(v)}"/><text class="rh-ax" x="${RH_PAD.l - 4}" y="${Y(v) + 3}" text-anchor="end">${Math.round(v).toLocaleString()}</text>`).join("");
+      const xTicks = [24, 18, 12, 6, 0].map((hAgo) => {
+        const tt = now - hAgo * 3600e3, xx = X(new Date(tt).toISOString());
+        return `<text class="rh-ax" x="${xx}" y="${RH_H - 4}" text-anchor="${hAgo === 24 ? "start" : hAgo === 0 ? "end" : "middle"}">${hAgo ? new Date(tt).getHours() + "시" : "지금"}</text>`;
+      }).join("");
+      const last = ranked[ranked.length - 1];
+      const data = ranked.map((x) => [x[0], x[1], x[2], x[3], +X(x[0]).toFixed(1), +Y(x[3]).toFixed(1)]);
+      chart = `<div class="rh-chart" data-rh="${escapeHtml(JSON.stringify(data))}">
+          <svg viewBox="0 0 ${RH_W} ${RH_H}" role="img" aria-label="${label} 최근 24시간 랭킹 점수">
+            ${yTicks}${xTicks}
+            <path class="rh-line" d="${d}"/>
+            <circle class="rh-last" cx="${X(last[0])}" cy="${Y(last[3])}" r="4"/>
+            <line class="rh-cross" y1="${RH_PAD.t}" y2="${RH_H - RH_PAD.b}" visibility="hidden"/>
+            <circle class="rh-hover" r="5" visibility="hidden"/>
+          </svg>
+          <div class="rh-tip" hidden></div>
+        </div>
+        <details class="rh-table"><summary>표로 보기</summary><table><thead><tr><th>시각</th><th>점수</th><th>순위</th><th>등급</th></tr></thead><tbody>${
+          pts.slice().reverse().map((x) => `<tr><td>${rhTime(x[0])}</td>${x[3] == null ? `<td colspan="3">랭킹 1만 위 밖</td>` : `<td>${rhNum(x[3])}</td><td>${x[2].toLocaleString()}</td><td>${escapeHtml(rhDiv(x[1]))}</td>`}</tr>`).join("")
+        }</tbody></table></details>`;
+    }
+    return `<div class="rh-mode"><div class="rh-head"><b>${label}</b> 최근 24시간 랭킹 점수</div>${chart}<div class="rh-best">${bestLine}</div></div>`;
+  }).join("");
+  return blocks ? `<div class="rh-wrap">${blocks}</div>` : "";
+}
+
+/* 그래프 툴팁: 포인터 x에 가장 가까운 기록 점 (마우스·터치 공용) */
+function bindRankCharts(root) {
+  root.querySelectorAll(".rh-chart").forEach((box) => {
+    const data = JSON.parse(box.dataset.rh || "[]");
+    const svg = box.querySelector("svg"), tip = box.querySelector(".rh-tip");
+    const cross = box.querySelector(".rh-cross"), dot = box.querySelector(".rh-hover");
+    const show = (ev) => {
+      const r = svg.getBoundingClientRect();
+      const vx = ((ev.clientX - r.left) / r.width) * RH_W;
+      let best = data[0];
+      for (const p of data) if (Math.abs(p[4] - vx) < Math.abs(best[4] - vx)) best = p;
+      cross.setAttribute("x1", best[4]); cross.setAttribute("x2", best[4]); cross.setAttribute("visibility", "visible");
+      dot.setAttribute("cx", best[4]); dot.setAttribute("cy", best[5]); dot.setAttribute("visibility", "visible");
+      tip.innerHTML = `<div class="rh-dim">${rhTime(best[0])}</div><b>${rhNum(best[3])}점</b><div>${best[2].toLocaleString()}위 · ${escapeHtml(rhDiv(best[1]))}</div>`;
+      tip.hidden = false;
+      const px = (best[4] / RH_W) * r.width;
+      tip.style.left = Math.min(Math.max(px - tip.offsetWidth / 2, 0), Math.max(r.width - tip.offsetWidth, 0)) + "px";
+    };
+    const hide = () => { tip.hidden = true; cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); };
+    svg.addEventListener("pointermove", show);
+    svg.addEventListener("pointerdown", show);
+    svg.addEventListener("pointerleave", hide);
+  });
+}
+
 /* ---------- 머리줄·모드 칩 ---------- */
 function renderShell(warn = "") {
   const ov = S.ov;
@@ -153,10 +245,12 @@ function renderShell(warn = "") {
         마지막 업데이트 ${fmt.dateTime(ov.fetchedAt)}</div>
       <button class="btn sm" type="button" data-refresh>🔄 최신 업데이트</button>
     </div>
+    ${rankHistHtml(ov.ouid)}
     ${warn ? `<div class="in-dim" style="margin-bottom:var(--sp-2);">${escapeHtml(warn)}</div>` : ""}
     <div class="chip-row mg-modes" role="tablist">${MODE_KEYS.map((m) =>
       `<button class="chip" type="button" data-mode="${m}" role="tab">${MODES[m].label} <span class="mg-cnt">${count(m)}</span></button>`).join("")}</div>
     <div id="mg-body"></div>`;
+  bindRankCharts(S.root);
 }
 
 /* ---------- 모드 표시 (필요하면 넥슨 조회) ---------- */

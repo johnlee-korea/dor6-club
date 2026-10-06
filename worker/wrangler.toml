@@ -12,7 +12,8 @@ SITE_URL = "https://johnlee-korea.github.io/dor6-club"   # 전적 검색 분석�
 # 예약 실행 (UTC) — 2시간마다 05분에 GitHub Actions 수집 워크플로 호출
 # (GitHub 자체 schedule은 누락이 잦아 예비용으로만 사용, collect.yml 참고)
 [triggers]
-crons = ["5 */2 * * *"]
+# 매시 35분 = 등급·순위·점수 기록(rank.yml, v2.8.0) — 문자열은 src/index.js RANK_CRON 과 같아야 함
+crons = ["5 */2 * * *", "35 * * * *"]
 
 # 비밀값은 코드/설정에 넣지 말고 아래 명령으로 등록:
 #   wrangler secret put ADMIN_PASSWORD

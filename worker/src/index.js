@@ -4,21 +4,26 @@
    비밀값(시크릿)은 Worker에만 저장 (브라우저/저장소 노출 0):
      ADMIN_PASSWORD, NEXON_API_KEY, GH_TOKEN, JWT_SECRET
    일반 변수(vars): GH_REPO("owner/repo"), GH_BRANCH("main"), ALLOWED_ORIGIN
-   예약 실행(Cron Trigger): 2시간마다 GitHub Actions 수집 워크플로를 호출
+   예약 실행(Cron Trigger): 2시간마다 GitHub Actions 수집 워크플로, 매시 35분 등급 기록 워크플로(rank.yml)를 호출
      → GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 담당
    ============================================================ */
 
 import { styleRaw, withShots, computeMetrics, judge } from "../../scripts/lib/playstyle.js";
 import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/lib/insight.js";
 import { compactMatch } from "../../scripts/lib/manage.js";
+import { RANK_RT, rankSearchUrl, parseRankSearch } from "../../scripts/lib/rank.js";
 
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
+const RANK_WORKFLOW = "rank.yml";       // 매시 등급·순위·점수 기록 (v2.8.0)
+const RANK_CRON = "35 * * * *";         // wrangler.toml crons 와 같은 문자열
 
 export default {
   /* Cron Trigger 진입점 (wrangler.toml [triggers] crons) */
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(dispatchCollect(env).catch((e) => console.error("[cron] 수집 호출 실패:", e.message)));
+    // 매시 35분 = 등급 기록(데이터센터가 정시 기준으로 갱신된 뒤), 2시간마다 05분 = 매치 수집
+    const wf = event.cron === RANK_CRON ? RANK_WORKFLOW : COLLECT_WORKFLOW;
+    ctx.waitUntil(dispatchCollect(env, wf).catch((e) => console.error(`[cron] ${wf} 호출 실패:`, e.message)));
   },
 
   async fetch(request, env) {
@@ -149,35 +154,16 @@ async function divisionName(id) {
   return m ? m.divisionName : (id != null ? String(id) : "-");
 }
 
-/* 현재 등급 — 넥슨 오픈 API엔 '현재 등급'이 없어 FC온라인 데이터센터 랭킹 닉 검색 HTML에서 읽는다.
-   - 랭킹은 모드별 상위 10,000명까지만 → 밖이면 null (화면엔 "랭킹 밖")
-   - 구단주 칸 첫 아이콘 ico_rank{N}(_m).png 의 N = division.json 순서(0 슈퍼 챔피언스, 1 챔피언스, 3 챌린저1 …, 이미지·maxdivision 대조 확인)
-   - 1시간 단위 갱신 데이터 / 페이지 구조가 바뀌면 이 정규식만 수정 */
-const RANK_RT = { 50: "1vs1", 52: "manager" };
+/* 현재 등급 — 데이터센터 랭킹 닉 검색 (파싱은 scripts/lib/rank.js 단일 소스, 랭킹 밖이면 null) */
 async function currentDivision(matchType, nickname) {
-  const rt = RANK_RT[matchType];
-  if (!rt || !nickname) return null;
-  const res = await fetch(`https://fconline.nexon.com/datacenter/rank_inner?rt=${rt}&n4pageno=1&strCharacterName=${encodeURIComponent(nickname)}`,
-    { headers: { "User-Agent": "Mozilla/5.0" } });
-  if (!res.ok) throw new Error(`랭킹 검색 ${rt} 응답 ${res.status}`);
-  const html = await res.text();
-  // 첫 조각은 표 머리 → 행만 (닉 부분 일치로 여러 명 나올 수 있어 정확히 같은 닉만)
-  for (const row of html.split('<div class="tr">').slice(2)) {
-    const name = ((row.match(/profile_pointer"[^>]*>([^<]+)/) || [])[1] || "").trim();
-    if (name !== nickname) continue;
-    const coach = row.split("rank_r_win_point")[0];
-    const icon = (coach.match(/https:\/\/ssl\.nexon\.com\/[^"']+ico_rank(\d+)(?:_m)?\.png/) || []);
-    if (!icon[0]) return null;
-    if (!_divMeta) await divisionName(null);   // 메타 캐시 채우기
-    const meta = _divMeta[+icon[1]];
-    return {
-      name: meta ? meta.divisionName : null,
-      rank: +((row.match(/rank_no">\s*(\d+)/) || [])[1]) || null,
-      score: +((row.match(/rank_r_win_point">\s*([\d.]+)/) || [])[1]) || null,   // 랭킹 점수(ELO)
-      icon: icon[0]
-    };
-  }
-  return null;
+  if (!RANK_RT[matchType] || !nickname) return null;
+  const res = await fetch(rankSearchUrl(matchType, nickname), { headers: { "User-Agent": "Mozilla/5.0" } });
+  if (!res.ok) throw new Error(`랭킹 검색 ${RANK_RT[matchType]} 응답 ${res.status}`);
+  const r = parseRankSearch(await res.text(), nickname);
+  if (!r) return null;
+  if (!_divMeta) await divisionName(null);   // 메타 캐시 채우기
+  const meta = _divMeta[r.div];
+  return { name: meta ? meta.divisionName : null, rank: r.rank, score: r.score, icon: r.icon };
 }
 
 /* 아무 유저 전적 요약 (최근 공식경기 위주) */
@@ -467,9 +453,9 @@ async function mutateMembers(body, env) {
 
 /* ---------- GitHub Actions 수집 워크플로 실행 (workflow_dispatch) ----------
    GH_TOKEN에 Actions: Read and write 권한 필요. 성공 시 GitHub가 204 응답 */
-async function dispatchCollect(env) {
+async function dispatchCollect(env, workflow = COLLECT_WORKFLOW) {
   if (!env.GH_TOKEN) throw new Error("GH_TOKEN 미설정");
-  const url = `https://api.github.com/repos/${env.GH_REPO}/actions/workflows/${COLLECT_WORKFLOW}/dispatches`;
+  const url = `https://api.github.com/repos/${env.GH_REPO}/actions/workflows/${workflow}/dispatches`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -484,7 +470,7 @@ async function dispatchCollect(env) {
     const detail = await res.text();
     throw new Error(`GitHub ${res.status} ${detail.slice(0, 200)}`);
   }
-  console.log(`[cron] 수집 워크플로 실행 요청 완료 (${new Date().toISOString()})`);
+  console.log(`[cron] ${workflow} 실행 요청 완료 (${new Date().toISOString()})`);
 }
 
 /* ---------- 토큰 (HMAC 서명) ---------- */
