@@ -149,6 +149,36 @@ async function divisionName(id) {
   return m ? m.divisionName : (id != null ? String(id) : "-");
 }
 
+/* 현재 등급 — 넥슨 오픈 API엔 '현재 등급'이 없어 FC온라인 데이터센터 랭킹 닉 검색 HTML에서 읽는다.
+   - 랭킹은 모드별 상위 10,000명까지만 → 밖이면 null (화면엔 "랭킹 밖")
+   - 구단주 칸 첫 아이콘 ico_rank{N}(_m).png 의 N = division.json 순서(0 슈퍼 챔피언스, 1 챔피언스, 3 챌린저1 …, 이미지·maxdivision 대조 확인)
+   - 1시간 단위 갱신 데이터 / 페이지 구조가 바뀌면 이 정규식만 수정 */
+const RANK_RT = { 50: "1vs1", 52: "manager" };
+async function currentDivision(matchType, nickname) {
+  const rt = RANK_RT[matchType];
+  if (!rt || !nickname) return null;
+  const res = await fetch(`https://fconline.nexon.com/datacenter/rank_inner?rt=${rt}&n4pageno=1&strCharacterName=${encodeURIComponent(nickname)}`,
+    { headers: { "User-Agent": "Mozilla/5.0" } });
+  if (!res.ok) throw new Error(`랭킹 검색 ${rt} 응답 ${res.status}`);
+  const html = await res.text();
+  // 첫 조각은 표 머리 → 행만 (닉 부분 일치로 여러 명 나올 수 있어 정확히 같은 닉만)
+  for (const row of html.split('<div class="tr">').slice(2)) {
+    const name = ((row.match(/profile_pointer"[^>]*>([^<]+)/) || [])[1] || "").trim();
+    if (name !== nickname) continue;
+    const coach = row.split("rank_r_win_point")[0];
+    const icon = (coach.match(/https:\/\/ssl\.nexon\.com\/[^"']+ico_rank(\d+)(?:_m)?\.png/) || []);
+    if (!icon[0]) return null;
+    if (!_divMeta) await divisionName(null);   // 메타 캐시 채우기
+    const meta = _divMeta[+icon[1]];
+    return {
+      name: meta ? meta.divisionName : null,
+      rank: +((row.match(/rank_no">\s*(\d+)/) || [])[1]) || null,
+      icon: icon[0]
+    };
+  }
+  return null;
+}
+
 /* 아무 유저 전적 요약 (최근 공식경기 위주) */
 const R_MAP = { "승": "win", "무": "draw", "패": "lose" };
 const toLineup = (side) => ((side && side.player) || []).map((pl) => ({
@@ -322,6 +352,12 @@ async function manageRoute(action, body, env) {
     ]);
     if (basic) { out.nickname = basic.nickname; out.level = basic.level; }
     for (const d of divs || []) out.maxDivision[d.matchType] = await divisionName(d.division);
+    // 현재 등급(공식·감독) — 실패해도 나머지는 그대로 응답 (v2.8.0)
+    out.curDivision = {};
+    await Promise.all([50, 52].map(async (t) => {
+      try { out.curDivision[t] = await currentDivision(t, out.nickname); }
+      catch (e) { console.error("[overview] 현재 등급 실패:", e.message); out.curDivision[t] = undefined; }
+    }));
     MANAGE_TYPES.forEach((t, i) => { out.ids[t] = Array.isArray(lists[i]) ? lists[i] : []; });
     return out;
   }

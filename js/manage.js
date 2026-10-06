@@ -117,6 +117,21 @@ async function loadRefs() {
   S.meta = await sqLoadMeta();
 }
 
+/* 모드 한 줄: [아이콘] 현재 등급(순위) · 최고 등급 (v2.8.0)
+   curDivision[t]: {name,rank,icon} = 랭킹 등재 / null = 상위 1만 명 밖 / 없음 = 조회 실패·예전 저장본 → '현재' 생략 */
+function divLine(ov, t, label) {
+  const max = (ov.maxDivision && ov.maxDivision[t]) || "-";
+  const cd = ov.curDivision || {};
+  let cur = "";
+  if (cd[t]) {
+    const icon = cd[t].icon ? `<img class="mg-divico" src="${escapeHtml(cd[t].icon)}" alt="" loading="lazy">` : "";
+    cur = `${icon}현재 <b style="color:var(--silver);">${escapeHtml(cd[t].name || "-")}</b>${cd[t].rank ? ` (${cd[t].rank.toLocaleString()}위)` : ""} · `;
+  } else if (cd[t] === null) {
+    cur = `<span title="데이터센터 랭킹은 모드별 상위 1만 명까지만 공개돼요">현재 랭킹 1만 위 밖</span> · `;
+  }
+  return `<div class="mg-divline"><span class="mg-divlabel">${label}</span>${cur}최고 <b style="color:var(--silver);">${escapeHtml(max)}</b></div>`;
+}
+
 /* ---------- 머리줄·모드 칩 ---------- */
 function renderShell(warn = "") {
   const ov = S.ov;
@@ -124,11 +139,11 @@ function renderShell(warn = "") {
     const n = MODES[m].types.reduce((s, t) => s + ((ov.ids && ov.ids[t]) || []).length, 0);
     return n >= 100 * MODES[m].types.length ? `${n}+` : n;
   };
-  const div = (t) => (ov.maxDivision && ov.maxDivision[t]) || "-";
   S.root.innerHTML = `
     <div class="mg-head">
-      <div class="in-dim">최고 등급 공식 <b style="color:var(--silver);">${escapeHtml(div(50))}</b> · 감독 <b style="color:var(--silver);">${escapeHtml(div(52))}</b>
-        · 마지막 업데이트 ${fmt.dateTime(ov.fetchedAt)}</div>
+      <div class="in-dim">
+        <div class="mg-divs">${divLine(ov, 50, "공식")}${divLine(ov, 52, "감독")}</div>
+        마지막 업데이트 ${fmt.dateTime(ov.fetchedAt)}</div>
       <button class="btn sm" type="button" data-refresh>🔄 최신 업데이트</button>
     </div>
     ${warn ? `<div class="in-dim" style="margin-bottom:var(--sp-2);">${escapeHtml(warn)}</div>` : ""}
@@ -542,7 +557,10 @@ function lanesCard(a) {
 function captureMode(btn) {
   const def = MODES[S.mode], s = S.analysis.summary;
   const range = rangeLabel(S.range);
-  const div = S.ov.maxDivision && S.ov.maxDivision[def.types.includes(52) ? 52 : 50];
+  const t = def.types.includes(52) ? 52 : 50;
+  const max = S.ov.maxDivision && S.ov.maxDivision[t];
+  const cur = S.ov.curDivision && S.ov.curDivision[t];
+  const div = [cur && cur.name ? `현재 ${cur.name}` : "", max ? `최고 ${max}` : ""].filter(Boolean).join(" / ");
   shareSection($("#mg-body"), {
     btn, nick: S.ov.nickname, tab: `구단운영 · ${def.label}`, fileTag: `구단운영_${def.label}`,
     sub: [div, `${range} ${s.games}경기 (${fmt.date(s.from)}~${fmt.date(s.to)})`].filter(Boolean).join(" · "),

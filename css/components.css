@@ -537,6 +537,11 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-pending > summary { cursor: pointer; font-size: var(--fs-sm); color: var(--text-muted); padding: var(--sp-2) 0; }
 /* 구단운영 부품 (v2.4.0 — 프로필·검색 탭 안) */
 .mg-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-3); }
+/* 모드별 현재·최고 등급 (v2.8.0) */
+.mg-divs { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2px; }
+.mg-divline { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; }
+.mg-divlabel { display: inline-block; min-width: 2.4em; font-weight: 700; color: var(--text); }
+.mg-divico { width: 20px; height: 20px; object-fit: contain; vertical-align: middle; }
 .mg-modes { margin-bottom: var(--sp-3); }
 .mg-modes .chip { font-weight: 700; }
 /* 레어 3조합 스타일 (v2.5.0) */

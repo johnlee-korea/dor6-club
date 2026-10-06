@@ -83,6 +83,7 @@ for (const pg of PAGES) {
     let data;
     if (u.endsWith("/search")) data = { ouid: fx.ouid, nickname: fx.nickname, level: 1, maxDivision: "챔피언스", matches: [], summary: { games: 0, wins: 0 } };
     else if (u.endsWith("/overview")) data = { ouid: body.ouid || fx.ouid, nickname: fx.nickname, level: 1, maxDivision: { 50: "챔피언스", 52: "슈퍼 챔피언스" },
+      curDivision: { 50: { name: "챌린저1", rank: 2207, icon: "https://ssl.nexon.com/s2/game/fo4/obt/rank/large/update_2026/ico_rank3.png" }, 52: null },   // v2.8.0 현재 등급(52 = 랭킹 밖)
       ids: { 50: [], 60: [], 30: [], 52: fx.rows.map((r) => r.id) } };
     else if (u.endsWith("/details")) data = { rows: fx.rows.filter((r) => body.ids.includes(r.id)) };
     else if (u.endsWith("/ranker")) data = { ranker: {} };
@@ -111,6 +112,9 @@ for (const pg of PAGES) {
     await sleep(1800);
     const q = (sel) => window.document.querySelectorAll(sel);
     const rowsShown = q(".mg-row").length;
+    const divTxt = (window.document.querySelector(".mg-divs") || {}).textContent || "";
+    if (process.env.MG_DEBUG) console.log("DIV:", divTxt.replace(/s+/g, " "));
+    const divOk = divTxt.includes("현재 챌린저1 (2,207위)") && /랭킹 1만 위 밖/.test(divTxt);   // v2.8.0 현재 등급
     if (process.env.MG_DEBUG) console.log(window.document.querySelector("main").textContent.replace(/\s+/g, " ").slice(0, 400));
     const click = (sel) => { const el = window.document.querySelector(sel); if (el) el.dispatchEvent(new window.MouseEvent("click", { bubbles: true })); };
     click(".mg-row"); await sleep(200);
@@ -118,8 +122,8 @@ for (const pg of PAGES) {
     for (const m of ["official", "friendly", "manager"]) { click(`[data-mode="${m}"]`); await sleep(500); }
     const capBtn = q("#mg-body [data-capture]").length;   // 모드 📸 (v2.3.0)
     const hasHeader = !!window.document.querySelector(".app-header");
-    const ok = errors.length === 0 && hasHeader && rowsShown > 0 && detail > 0 && capBtn > 0;
-    console.log(`${ok ? "✅" : "❌"} ${c.label.padEnd(15)} header:${hasHeader} 진단 행:${rowsShown} 상세:${detail} 📸:${capBtn}`);
+    const ok = errors.length === 0 && hasHeader && rowsShown > 0 && detail > 0 && capBtn > 0 && divOk;
+    console.log(`${ok ? "✅" : "❌"} ${c.label.padEnd(15)} header:${hasHeader} 진단 행:${rowsShown} 상세:${detail} 📸:${capBtn} 현재등급:${divOk}`);
     [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
     ok ? pass++ : fail++;
   }
