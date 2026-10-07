@@ -4,6 +4,10 @@ name: 등급·순위·점수 기록
 # 데이터센터 랭킹 닉 검색만 사용 → 넥슨 API 키 불필요
 on:
   workflow_dispatch:
+  # 예비: Worker 35분 크론이 멈춘 적 있음(2026-10-06 배포 후 미실행, 실측) → GitHub 스케줄로도 매시 실행
+  # 같은 기준 시각이면 덮어써서 두 번 돌아도 중복 없음 (GitHub 스케줄은 수십 분 늦을 수 있음)
+  schedule:
+    - cron: "50 * * * *"
 
 permissions:
   contents: write
