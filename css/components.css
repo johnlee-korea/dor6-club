@@ -497,7 +497,7 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-index.down b { color: var(--lose); }
 .mg-role { color: var(--silver); }
 .mg-cats { display: flex; flex-direction: column; gap: 5px; }
-.mg-cat { display: grid; grid-template-columns: 78px 1fr 30px; align-items: center; gap: 6px; font-size: var(--fs-xs); }
+.mg-cat { display: grid; grid-template-columns: 64px 1fr 64px; align-items: center; gap: 6px; font-size: var(--fs-xs); }
 .mg-cat-l { font-weight: 700; white-space: nowrap; }
 .mg-cat-t { position: relative; height: 10px; background: var(--surface-3); border-radius: 5px; overflow: hidden; }
 .mg-cat-t i { display: block; height: 100%; border-radius: 5px; background: var(--silver-dim); }
@@ -511,6 +511,12 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-line { font-weight: 700; }
 .mg-line.warn { color: var(--warn); }
 .mg-line.danger { color: var(--danger); }
+/* v2.9.0 도륙 지수 배점제 — 계산 근거 한 줄 · 카드 대비 안내 */
+.mg-calc { font-size: var(--fs-sm); }
+.mg-calc b { font-variant-numeric: tabular-nums; }
+.mg-card { color: var(--warn); font-size: 10px; white-space: nowrap; }
+.mg-cat b .in-dim { font-weight: 400; }
+.mg-over { font-style: normal; color: var(--win); font-size: 10px; margin-left: 2px; }
 .mg-metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-3); }
 .mg-metric-h { font-weight: 700; font-size: var(--fs-xs); margin-bottom: 2px; }
 .mg-bar { display: grid; grid-template-columns: 64px 1fr 38px; align-items: center; gap: 6px; font-size: 11px; }

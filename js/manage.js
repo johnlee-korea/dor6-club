@@ -14,7 +14,7 @@
    의존: common.js(escapeHtml·fmt·loadJSON·emptyState·errorState), auth.js(auth.call), squad.js(선수 메타·얼굴), share.js(📸 캡처)
    ============================================================ */
 
-import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES, D6_METRICS, D6_CATS } from "../scripts/lib/manage.js";
+import { MODES, analyze, rankerTargets, VERDICTS, CONF, LANES, P_METRICS, GROUP_LABEL, MIN_JUDGE_GAMES, D6_METRICS, D6_CATS, D6_GRADES, CARD_LOW_LINE, SPIKE_MAX } from "../scripts/lib/manage.js";
 
 const MAX_ROWS = 300;          // 모드별 저장 최대 경기
 const PAGE = 100;              // 처음·더 불러오기 단위
@@ -496,7 +496,9 @@ const mLabel = (k) => D6_METRICS[k] || P_METRICS[k] || k;
 const v2 = (v) => (v == null ? "-" : (Math.round(v * 100) / 100).toString());
 /* 지표 표기: 성공률은 %, 결정력·실점 억제는 부호 */
 const mVal = (k, v) => v == null ? "-" : /R$/.test(k) ? Math.round(v * 100) + "%" : (k === "fin" || k === "gkp") ? (v >= 0 ? "+" : "") + v2(v) : v2(v);
-const idxTone = (i, low = 42) => (i == null ? "" : i >= 60 ? "up" : i < low ? "down" : "");   // 선수 지수는 포지션 판정선(lowIndex) 기준
+/* 지수 색: 배지 기준과 같은 선 — 60↑(핵심) 초록, 35 미만(교체 고려) 빨강 */
+const IDX_UP = D6_GRADES[0].min, IDX_DOWN = D6_GRADES[2].min;
+const idxTone = (i) => (i == null ? "" : i >= IDX_UP ? "up" : i < IDX_DOWN ? "down" : "");
 function playerCardInfo(p) {
   return sqBuildTeam([{ spId: p.spId, spPosition: p.pos, spGrade: p.grade }], S.meta).starters[0];
 }
@@ -505,10 +507,10 @@ function playersCard(a, def, base) {
   // 판정된 선수만 목록에, 선발 10경기 미만(참고)은 아래 접힌 칸으로 — 로테이션이 많은 친선에서 목록이 묻히지 않도록
   const judged = a.players.filter((p) => p.verdict !== "pending");
   const pending = a.players.filter((p) => p.verdict === "pending").sort((x, y) => y.games - x.games);
-  const list = judged.filter((p) => S.filter === "all" || ["replace", "capped", "underused"].includes(p.verdict));
+  const list = judged.filter((p) => S.filter === "all" || ["replace", "watch"].includes(p.verdict));
   const counts = {};
   for (const p of a.players) counts[p.verdict] = (counts[p.verdict] || 0) + 1;
-  const tally = ["replace", "capped", "underused", "keep"].filter((k) => counts[k])
+  const tally = ["core", "keep", "watch", "replace"].filter((k) => counts[k])
     .map((k) => `${VERDICTS[k].emoji} ${VERDICTS[k].label} ${counts[k]}`).join(" · ");
   return `
     <div class="card in-card">
@@ -523,16 +525,14 @@ function playersCard(a, def, base) {
         ${pending.map(playerRow).join("")}</details>` : ""}
       <details class="ps-note" style="margin-top:var(--sp-3);"><summary>진단은 어떻게 하나요?</summary>
         <ul>
-          <li><b>카드 대비</b>: 같은 선수 카드를 같은 포지션에 쓴 넥슨 랭커 평균과 비교 — 낮으면 <b>운용 문제</b>(포지션·전술)</li>
-          <li><b>포지션 대비</b>: 같은 포지션 그룹 랭커 선수들 평균과 비교 — 낮으면 <b>카드 한계</b></li>
-          <li>🟢 유지 · 🟡 카드는 좋은데 덜 쓰임 · 🟠 카드 한계치 · 🔴 둘 다 낮음</li>
-          <li><b>도륙 지수</b>(0~100, 같은 포지션 랭커 평균 = 50): 지표 최대 17개를 6묶음(득점·찬스·돌파·패스·수비·제공권, 골키퍼는 선방·실점 억제·패스)으로 모아 <b>포지션마다 다른 비중</b>으로 합산</li>
-          <li><b>잘하는 방식 인정</b>: 묶음 안에서 가장 잘하는 지표 60% + 나머지 평균 40% — 예) 도움은 적어도 측면 키패스가 많은 윙어는 찬스 점수가 높아요</li>
-          <li><b>가산점</b>: 그 포지션의 핵심 묶음(비중 25% 이상)이 랭커보다 눈에 띄게 높으면 +4점씩(최대 +8) · 센터백·수비형 미드필더 패스는 성공률 70% + 성공 수 30%</li>
+          <li><b>도륙 지수</b>(100점 만점): 포지션마다 <b>지표별 배점</b>(합계 100)이 달라요 — 예) 공격수는 골 18 · 결정력 14 · 유효 슈팅 10 … 제공권 8, 센터백은 볼 획득 26 · 가로채기 20 …</li>
+          <li>같은 포지션 넥슨 랭커 평균과 똑같으면 각 지표 배점의 <b>절반</b>(→ 랭커 평균 ≈ 50점), 랭커보다 크게(표준편차 2배) 잘하면 만점, 크게 못하면 0점</li>
+          <li><b>압도 보너스</b>: 랭커 상위 약 7%를 넘는 압도적인 지표는 배점보다 더 받아요(선수당 최대 +${SPIKE_MAX}) — 한 가지가 압도적이면 약점이 있어도 고득점</li>
+          <li><b>운 보정</b>: 경기 수가 적거나 운이 크게 작용하는 지표(결정력 등)는 랭커 평균 쪽으로 당겨서 계산해요</li>
+          <li><b>배지</b>는 점수만 보고 정해요(모든 포지션·모드 같은 기준): ⭐ 핵심 60+ (랭커 상위 10% 수준) · 🟢 유지 45~59 (랭커 평균권) · 🟡 관찰 35~44 (랭커 하위권) · 🔴 교체 고려 35 미만</li>
+          <li><b>🃏 카드 대비</b>: 같은 선수 카드를 같은 포지션에 쓴 랭커 평균보다 낮으면 '덜 쓰이는 중' 안내 — 배지에는 영향 없음</li>
           <li><b>키패스</b> = 슈팅으로 이어진 패스, <b>측면 키패스</b> = 상대 진영 측면에서 넣은 키패스(크로스·컷백 추정 — 넥슨은 선수별 크로스 수치를 주지 않아요)</li>
-          <li><b>판정선</b>: 같은 포지션 랭커 하위 10%(감독모드는 5%)보다 낮으면 '포지션 대비 낮음' — 선수 상세에 이 포지션 판정선 점수가 표시돼요</li>
-          <li>랭커도 같은 방식으로 채점해 <b>랭커 평균이 정확히 50</b>이 되도록 맞췄어요(랭커 경기 수가 적어 생기는 흔들림도 빼고 비교)</li>
-          <li>경기 수가 적을수록 점수를 50 쪽으로 당겨 판정을 보수적으로 해요. 선발 ${MIN_JUDGE_GAMES}경기 미만은 '참고'</li>
+          <li>제공권은 넥슨 기록에 공중볼이 경기당 0.15회 정도밖에 잡히지 않아 비중을 낮게 뒀어요. 선발 ${MIN_JUDGE_GAMES}경기 미만은 '참고'</li>
           <li>교체 출전은 뛴 시간을 알 수 없어 선발 경기만 봐요</li>
         </ul></details>
     </div>`;
@@ -565,7 +565,8 @@ function playerRow(p) {
         </div>
         <span class="mg-side">
           <span class="badge mg-verdict ${v.tone}">${v.emoji} ${v.label}</span>
-          ${p.index != null ? `<span class="mg-index ${idxTone(p.index, p.lowIndex ?? 42)}" title="도륙 지수 (랭커 평균 50 · 이 포지션 판정선 ${p.lowIndex ?? "-"})"><b>${p.index}</b><i>도륙 지수</i></span>` : ""}
+          ${p.index != null ? `<span class="mg-index ${idxTone(p.index)}" title="도륙 지수 100점 만점 (랭커 평균 ≈ 50)"><b>${p.index}</b><i>도륙 지수</i></span>` : ""}
+          ${p.cardLow ? `<span class="badge mg-card" title="${escapeHtml(CARD_LOW_LINE)}">🃏 카드 대비 ▼</span>` : ""}
         </span>
       </div>
       ${open ? playerDetail(p) : ""}
@@ -575,22 +576,25 @@ function playerRow(p) {
 function playerDetail(p) {
   const v = VERDICTS[p.verdict];
   const aRef = Object.fromEntries(p.zA.map((z) => [z.metric, z.ref]));
-  // 묶음 점수 막대 — 가운데 선 = 포지션 랭커 평균(50), 비중 높은 묶음부터
+  // 묶음 막대 — 받은 점수 / 배점 (막대 가운데 선 = 랭커 평균 = 배점의 절반), 배점 큰 묶음부터
+  const r1 = (x) => Math.round(x * 10) / 10;
   const cats = Object.entries(p.cats || {}).sort((a, b) => b[1].w - a[1].w).map(([k, c]) => `
-      <div class="mg-cat"><span class="mg-cat-l">${escapeHtml(D6_CATS[k].label)} <span class="in-dim">${c.w}%</span></span>
-        <span class="mg-cat-t"><i class="${idxTone(c.index) || "mid"}" style="width:${c.index}%"></i><em></em></span>
-        <b class="${idxTone(c.index) === "up" ? "in-up" : idxTone(c.index) === "down" ? "in-down" : ""}">${c.index}</b></div>`).join("");
-  const bars = p.zB.filter((z) => z.w > 0).map((z) => {
+      <div class="mg-cat"><span class="mg-cat-l">${escapeHtml(D6_CATS[k].label)}</span>
+        <span class="mg-cat-t"><i class="${idxTone(c.index) || "mid"}" style="width:${Math.min(100, c.index)}%"></i><em></em></span>
+        <b class="${idxTone(c.index) === "up" ? "in-up" : idxTone(c.index) === "down" ? "in-down" : ""}">${Math.round(c.pt)}<span class="in-dim">/${Math.round(c.w)}</span>${c.over >= 0.5 ? `<em class="mg-over">+${Math.round(c.over)}</em>` : ""}</b></div>`).join("");
+  // 지표 점수 표기: 배점 18 중 12.3점 (+압도 보너스)
+  const ptLabel = (z) => `${r1(z.pt)}/${r1(z.w)}점${z.over > 0.05 ? ` <b class="in-up">+${r1(z.over)} 압도</b>` : ""}`;
+  const bars = [...p.zB].sort((x, y) => y.w - x.w).filter((z) => z.w > 0).map((z) => {
     // 결정력·실점 억제는 음수가 나오는 차이 지표 → 막대 대신 숫자만
     if (z.metric === "fin" || z.metric === "gkp")
-      return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">/경기</span></div>
+      return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">/경기 · ${ptLabel(z)}</span></div>
         <div class="mg-bar"><span class="mg-bar-l">나</span><b class="${z.z >= 0 ? "in-up" : "in-down"}" style="text-align:left;">${mVal(z.metric, z.value)}</b><span></span></div>
         <div class="mg-bar"><span class="mg-bar-l">포지션 평균</span><b style="text-align:left;">${mVal(z.metric, z.ref)}</b><span></span></div></div>`;
     const vals = [z.value, aRef[z.metric], z.ref].filter((x) => x != null);
     const max = Math.max(...vals, 0.01) * 1.1;
     const bar = (val, cls, label) => val == null ? "" :
       `<div class="mg-bar"><span class="mg-bar-l">${label}</span><span class="mg-bar-t"><i class="${cls}" style="width:${(val / max) * 100}%"></i></span><b>${mVal(z.metric, val)}</b></div>`;
-    return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">${/R$/.test(z.metric) ? "" : "/경기"}</span></div>
+    return `<div class="mg-metric"><div class="mg-metric-h">${escapeHtml(D6_CATS[z.cat].label)} · ${escapeHtml(mLabel(z.metric))} <span class="in-dim">${/R$/.test(z.metric) ? "" : "/경기 · "}${ptLabel(z)}</span></div>
       ${bar(z.value, z.z >= 0 ? "me up" : "me down", "나")}${bar(aRef[z.metric], "card", "카드 랭커")}${bar(z.ref, "pos", "포지션 평균")}</div>`;
   }).join("");
   const fin = p.shots >= 10 ? `<div>⚽ 슈팅 ${p.shots} · 골 <b>${p.goals}</b> · 기대 득점 xG ${p.xg.toFixed(1)} →
@@ -605,9 +609,11 @@ function playerDetail(p) {
   return `
     <div class="mg-detail">
       ${v.line ? `<div class="mg-line ${v.tone}">${v.emoji} ${escapeHtml(v.line)}</div>` : ""}
+      ${p.cardLow ? `<div class="mg-line warn">🃏 ${escapeHtml(CARD_LOW_LINE)}</div>` : ""}
+      ${p.index != null ? `<div class="mg-calc">기본 <b>${p.base}</b>${p.spike ? ` + 압도 보너스 <b class="in-up">${p.spike}</b>${p.spikeRaw > SPIKE_MAX + 0.5 ? ` <span class="in-dim">(${Math.round(p.spikeRaw)} 중 최대 ${SPIKE_MAX})</span>` : ""}` : ""} = 도륙 지수 <b>${p.index}</b> <span class="in-dim">/ 100</span></div>` : ""}
       ${p.rankerGames != null ? `<div class="in-dim">카드 랭커 = 넥슨 랭커가 이 카드를 같은 포지션에 쓴 최근 ${p.rankerGames}경기 평균</div>` : ""}
-      ${cats ? `<div class="mg-cats"><div class="mg-metric-h">묶음별 점수 <span class="in-dim">· 가운데 선 = 같은 포지션 랭커 평균(50)${p.bonus ? ` · 핵심 묶음 가산점 +${Math.round(p.bonus * 20)}` : ""}${p.lowIndex != null ? ` · 이 포지션 판정선 ${p.lowIndex}` : ""}</span></div>${cats}</div>` : ""}
-      <details class="mg-more-metrics"><summary>지표 자세히 (${p.zB.length}개)</summary>
+      ${cats ? `<div class="mg-cats"><div class="mg-metric-h">묶음별 점수 <span class="in-dim">· 받은 점수 / 배점 · 가운데 선 = 같은 포지션 랭커 평균</span></div>${cats}</div>` : ""}
+      <details class="mg-more-metrics"><summary>지표별 점수 자세히 (${p.zB.length}개)</summary>
         <div class="mg-metrics">${bars || `<div class="in-dim">비교 가능한 지표가 없어요.</div>`}</div></details>
       <div class="mg-extra">${fin}${xa}${onoff}</div>
       ${sparkline(p.ratings)}

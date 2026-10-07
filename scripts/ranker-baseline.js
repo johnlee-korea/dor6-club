@@ -22,7 +22,7 @@ import { fileURLToPath } from "node:url";
 import { setCallInterval, getOuidByNickname, getMatchIds, getMatchDetail } from "./lib/nexon-api.js";
 import { styleRaw, withShots, computeMetrics, baselineStats } from "./lib/playstyle.js";
 import { insightRaw, unitAverages, positionBaseline } from "./lib/insight.js";
-import { buildXgModel, laneShares, compactMatch, isNormal, playerUnits, d6Baseline, d6Calibrate, LOW_PCT, SUB_POS, PSI } from "./lib/manage.js";
+import { buildXgModel, laneShares, compactMatch, isNormal, playerUnits, d6Baseline, d6Calibrate, SUB_POS, PSI } from "./lib/manage.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "data", "meta", "ranker-baseline.json");
@@ -106,9 +106,9 @@ async function buildMode(mode) {
   if (process.env.STYLE_DUMP && def.styles) fs.writeFileSync(process.env.STYLE_DUMP, JSON.stringify(styleList));
   const xg = buildXgModel(shots);
   const lanes = laneShares(conceded, xg).share;
-  // 도륙 지수 분포: 우연 편차 제거(d6Baseline) → 기준점 보정·판정선(d6Calibrate, v2.7.1)
+  // 도륙 지수 분포: 우연 편차 제거(d6Baseline) → 랭커 지수 분포 기록(d6Calibrate, v2.9.0 배점제)
   const d6units = rankerRows.flatMap((rows) => playerUnits(rows, xg));
-  const dor6 = d6Calibrate(d6Baseline(d6units), d6units, LOW_PCT[mode]);
+  const dor6 = d6Calibrate(d6Baseline(d6units), d6units);
   // 검수용: D6_DUMP=폴더 이면 랭커 압축 행·xG 표를 저장(도륙 지수 보정 실험)
   if (process.env.D6_DUMP) fs.writeFileSync(path.join(process.env.D6_DUMP, `d6-${mode}.json`), JSON.stringify({ rankerRows, xg }));
   console.log(`✅ [${mode}] 유효 랭커 ${ok}명 · 경기 ${seen.size} · 슈팅 ${shots.length}`);
