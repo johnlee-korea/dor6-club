@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T02:07:23.992Z",
+  "updated": "2026-10-07T04:07:23.697Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1818,41 +1818,40 @@
       ]
     },
     "9052276188238316b9fc057307e0d58c": {
-      "games": 39,
+      "games": 44,
       "style": {
-        "name": "깃발 수집가",
-        "line": "골보다 오프사이드 깃발이 더 많다",
+        "name": "스루 아끼는 신중파",
+        "line": "찔러줄 타이밍? 아직 아니야",
         "basis": [
-          "offside+",
-          "gf-"
+          "throughRatio-"
         ]
       },
       "highs": [
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.769,
-          "avg": 0.502,
-          "z": 1.27,
-          "key": true
-        },
-        {
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.126,
+          "v": 0.135,
           "avg": 0.064,
-          "z": 1.23,
+          "z": 1.42,
+          "key": false
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.75,
+          "avg": 0.502,
+          "z": 1.18,
           "key": false
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.068,
+          "v": 0.067,
           "avg": 0.05,
-          "z": 0.79,
+          "z": 0.76,
           "key": false
         }
       ],
@@ -1861,28 +1860,28 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.075,
+          "v": 0.074,
           "avg": 0.15,
-          "z": -1.53,
-          "key": false
+          "z": -1.54,
+          "key": true
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.718,
+          "v": 3.75,
           "avg": 4.829,
-          "z": -1.37,
+          "z": -1.33,
           "key": false
         },
         {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.641,
-          "avg": 3.324,
-          "z": -1.24,
-          "key": true
+          "k": "lobRatio",
+          "label": "띄우는 패스 비율",
+          "unit": "%",
+          "v": 0.002,
+          "avg": 0.013,
+          "z": -1.16,
+          "key": false
         }
       ]
     }
