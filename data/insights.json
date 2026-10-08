@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T04:07:51.952Z",
+  "updated": "2026-10-08T06:07:21.602Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1008,20 +1008,23 @@
     },
     "b56e8c1f2e6e414588b06a1e528e510b": {
       "ctrl": "gamepad",
-      "games": 82,
+      "games": 84,
       "ace": [
         {
-          "spId": 868214098,
-          "group": "DM",
-          "pos": 11,
-          "games": 5,
-          "metric": "win",
-          "value": 2.6,
-          "base": 2.1,
-          "z": 0.88,
-          "title": null,
-          "goals": 0,
-          "assists": 2
+          "spId": 866242444,
+          "group": "AM",
+          "pos": 18,
+          "games": 6,
+          "metric": "gol",
+          "value": 1.17,
+          "base": 0.65,
+          "z": 1.17,
+          "title": {
+            "emoji": "🔫",
+            "name": "골 사냥꾼"
+          },
+          "goals": 10,
+          "assists": 3
         },
         {
           "spId": 861214100,
@@ -1040,11 +1043,11 @@
           "spId": 265237942,
           "group": "FB",
           "pos": 7,
-          "games": 53,
+          "games": 55,
           "metric": "pas",
-          "value": 8.34,
+          "value": 8.29,
           "base": 6.83,
-          "z": 0.85,
+          "z": 0.82,
           "title": null,
           "goals": 0,
           "assists": 6
@@ -1052,20 +1055,20 @@
       ],
       "goalMins": {
         "for": [
-          30,
+          31,
           42,
           43,
           44,
           28,
           41,
-          15
+          16
         ],
         "against": [
-          19,
+          20,
           27,
-          31,
-          27,
-          29,
+          33,
+          30,
+          30,
           30,
           9
         ]
@@ -1073,11 +1076,11 @@
       "comebacks": 16,
       "lateWinners": 9,
       "manner": {
-        "games": 82,
+        "games": 84,
         "yellow": 3,
         "red": 0,
-        "foul": 74,
-        "score": 1.01
+        "foul": 77,
+        "score": 1.02
       }
     },
     "3dc0730dd24290345883c55c1c5d4d97": {

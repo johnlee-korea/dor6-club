@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T04:07:51.952Z",
+  "updated": "2026-10-08T06:07:21.602Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -914,28 +914,28 @@
     "b56e8c1f2e6e414588b06a1e528e510b": {
       "games": 50,
       "style": {
-        "name": "깔아 차기 거부",
-        "line": "슈팅은 뜨게 차야 제맛",
+        "name": "전반 폭격형",
+        "line": "초반에 몰아치고 후반엔 관리 모드",
         "basis": [
-          "lowShot-"
+          "lateGoal-"
         ]
       },
       "highs": [
         {
-          "k": "tackleRate",
-          "label": "태클 성공률",
-          "unit": "%",
-          "v": 0.578,
-          "avg": 0.53,
-          "z": 0.87,
-          "key": false
-        },
-        {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 53.12,
+          "v": 53.14,
           "avg": 50.66,
+          "z": 0.82,
+          "key": false
+        },
+        {
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.575,
+          "avg": 0.53,
           "z": 0.82,
           "key": false
         },
@@ -943,9 +943,9 @@
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.122,
+          "v": 0.123,
           "avg": 0.089,
-          "z": 0.52,
+          "z": 0.55,
           "key": false
         }
       ],
@@ -954,9 +954,9 @@
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 2.12,
+          "v": 2.16,
           "avg": 2.741,
-          "z": -1.26,
+          "z": -1.18,
           "key": false
         },
         {
@@ -969,12 +969,12 @@
           "key": false
         },
         {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
+          "k": "lateGoal",
+          "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.03,
-          "avg": 0.099,
-          "z": -0.91,
+          "v": 0.521,
+          "avg": 0.598,
+          "z": -0.95,
           "key": true
         }
       ]
