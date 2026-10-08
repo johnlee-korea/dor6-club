@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T10:07:30.220Z",
+  "updated": "2026-10-08T12:07:22.807Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -464,7 +464,7 @@
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
       "ctrl": "keyboard",
-      "games": 44,
+      "games": 47,
       "ace": [
         {
           "spId": 863232488,
@@ -483,22 +483,6 @@
           "assists": 0
         },
         {
-          "spId": 846237238,
-          "group": "DM",
-          "pos": 11,
-          "games": 8,
-          "metric": "win",
-          "value": 3.25,
-          "base": 2.1,
-          "z": 2.03,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 2,
-          "assists": 0
-        },
-        {
           "spId": 877173210,
           "group": "DM",
           "pos": 11,
@@ -513,36 +497,52 @@
           },
           "goals": 2,
           "assists": 2
+        },
+        {
+          "spId": 861190042,
+          "group": "W",
+          "pos": 16,
+          "games": 11,
+          "metric": "ast",
+          "value": 1,
+          "base": 0.49,
+          "z": 1.88,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 1,
+          "assists": 11
         }
       ],
       "goalMins": {
         "for": [
           22,
-          31,
+          35,
           18,
-          15,
+          18,
           20,
-          21,
-          6
+          23,
+          8
         ],
         "against": [
           14,
-          22,
+          24,
           18,
           26,
           17,
-          9,
+          10,
           8
         ]
       },
-      "comebacks": 8,
+      "comebacks": 9,
       "lateWinners": 4,
       "manner": {
-        "games": 44,
+        "games": 47,
         "yellow": 5,
         "red": 0,
-        "foul": 43,
-        "score": 1.32
+        "foul": 44,
+        "score": 1.26
       }
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
@@ -1174,39 +1174,39 @@
     },
     "001221eab7f2c49f8571511731cc2573": {
       "ctrl": "keyboard",
-      "games": 77,
+      "games": 82,
       "ace": [
         {
           "spId": 866252042,
           "group": "ST",
           "pos": 26,
-          "games": 50,
+          "games": 55,
           "metric": "sht",
-          "value": 3.64,
+          "value": 3.58,
           "base": 2.1,
-          "z": 2.18,
+          "z": 2.09,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 87,
-          "assists": 38
+          "goals": 92,
+          "assists": 40
         },
         {
           "spId": 855257534,
           "group": "ST",
           "pos": 20,
-          "games": 8,
-          "metric": "sht",
-          "value": 3.38,
-          "base": 2.1,
-          "z": 1.8,
+          "games": 13,
+          "metric": "win",
+          "value": 1.23,
+          "base": 0.7,
+          "z": 1.65,
           "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
-          "goals": 13,
-          "assists": 6
+          "goals": 17,
+          "assists": 10
         },
         {
           "spId": 866247090,
@@ -1228,31 +1228,31 @@
       "goalMins": {
         "for": [
           36,
-          31,
-          49,
-          46,
-          36,
-          34,
-          18
+          35,
+          52,
+          47,
+          39,
+          35,
+          19
         ],
         "against": [
-          26,
+          30,
           38,
-          31,
-          39,
-          39,
-          27,
-          13
+          34,
+          43,
+          40,
+          28,
+          14
         ]
       },
-      "comebacks": 12,
+      "comebacks": 13,
       "lateWinners": 8,
       "manner": {
-        "games": 77,
+        "games": 82,
         "yellow": 2,
         "red": 1,
-        "foul": 67,
-        "score": 0.99
+        "foul": 71,
+        "score": 0.98
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -1755,7 +1755,7 @@
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
       "ctrl": "gamepad",
-      "games": 71,
+      "games": 72,
       "ace": [
         {
           "spId": 848200145,
@@ -1777,11 +1777,11 @@
           "spId": 861190046,
           "group": "AM",
           "pos": 18,
-          "games": 71,
+          "games": 72,
           "metric": "drb",
-          "value": 14.61,
+          "value": 14.57,
           "base": 9.75,
-          "z": 1.52,
+          "z": 1.51,
           "title": {
             "emoji": "🪄",
             "name": "드리블 마법사"
@@ -1790,20 +1790,20 @@
           "assists": 29
         },
         {
-          "spId": 845192190,
+          "spId": 861135455,
           "group": "DM",
-          "pos": 9,
-          "games": 63,
+          "pos": 11,
+          "games": 72,
           "metric": "drb",
-          "value": 13.02,
+          "value": 13.01,
           "base": 9.71,
           "z": 1.26,
           "title": {
             "emoji": "🪄",
             "name": "드리블 마법사"
           },
-          "goals": 12,
-          "assists": 10
+          "goals": 10,
+          "assists": 23
         }
       ],
       "goalMins": {
@@ -1818,10 +1818,10 @@
         ],
         "against": [
           21,
-          27,
+          28,
           21,
           28,
-          20,
+          21,
           19,
           6
         ]
@@ -1829,11 +1829,11 @@
       "comebacks": 7,
       "lateWinners": 4,
       "manner": {
-        "games": 71,
+        "games": 72,
         "yellow": 3,
         "red": 0,
         "foul": 39,
-        "score": 0.68
+        "score": 0.67
       }
     },
     "2f86358cfed5c31dd83a09bbe42d3586": {
@@ -2332,11 +2332,11 @@
       {
         "ouid": "315d8d350dabea2c99cb2e49af2f1603",
         "nick": "지브리스튜디오",
-        "games": 44,
+        "games": 47,
         "yellow": 5,
         "red": 0,
-        "foul": 43,
-        "score": 1.32
+        "foul": 44,
+        "score": 1.26
       },
       {
         "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
