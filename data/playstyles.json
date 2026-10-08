@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T20:07:40.158Z",
+  "updated": "2026-10-08T22:07:27.616Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -647,9 +647,9 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.256,
+          "v": 0.257,
           "avg": 0.15,
-          "z": 2.15,
+          "z": 2.16,
           "key": true
         },
         {
@@ -665,38 +665,38 @@
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.93,
+          "v": 0.928,
           "avg": 0.886,
-          "z": 0.68,
+          "z": 0.65,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.34,
-          "avg": 4.829,
-          "z": -1.83,
-          "key": false
-        },
-        {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.16,
+          "v": 5.04,
           "avg": 6.835,
-          "z": -1.61,
+          "z": -1.73,
           "key": true
         },
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
+          "k": "passRate",
+          "label": "패스 성공률",
           "unit": "%",
-          "v": 0.175,
-          "avg": 0.292,
-          "z": -1.47,
+          "v": 0.865,
+          "avg": 0.896,
+          "z": -1.6,
+          "key": false
+        },
+        {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.54,
+          "avg": 4.829,
+          "z": -1.58,
           "key": false
         }
       ]
@@ -1122,42 +1122,40 @@
     "8d32fed0280eb81bcf6bed6405a278d3": {
       "games": 50,
       "style": {
-        "name": "무한 포격",
-        "line": "들어갈 때까지 박스 밖 포격",
+        "name": "중거리 스나이퍼",
+        "line": "박스 밖이 곧 내 슈팅 존, 실제로 들어간다",
         "basis": [
-          "shots+",
           "longShot+",
-          "finish-"
-        ],
-        "rare": true
+          "longGoal+"
+        ]
       },
       "highs": [
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.306,
+          "v": 0.332,
           "avg": 0.188,
-          "z": 1.5,
+          "z": 1.84,
+          "key": true
+        },
+        {
+          "k": "longGoal",
+          "label": "중거리골 비율",
+          "unit": "%",
+          "v": 0.175,
+          "avg": 0.089,
+          "z": 1.37,
           "key": true
         },
         {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.205,
+          "v": 0.196,
           "avg": 0.099,
-          "z": 1.4,
+          "z": 1.28,
           "key": false
-        },
-        {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 7.92,
-          "avg": 6.835,
-          "z": 1.04,
-          "key": true
         }
       ],
       "lows": [
@@ -1165,27 +1163,27 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.128,
+          "v": 0.114,
           "avg": 0.292,
-          "z": -2.07,
+          "z": -2.25,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.389,
+          "v": 0.399,
           "avg": 0.49,
-          "z": -1.51,
-          "key": true
+          "z": -1.36,
+          "key": false
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
+          "k": "boxGoal",
+          "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.004,
-          "avg": 0.013,
-          "z": -0.97,
+          "v": 0.8,
+          "avg": 0.886,
+          "z": -1.34,
           "key": false
         }
       ]
