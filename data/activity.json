@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-09T22:07:25.816Z",
+  "updated": "2026-10-09T22:56:01.472Z",
   "week": {
-    "from": "2026-10-02T22:07:25.816Z",
+    "from": "2026-10-02T22:56:01.472Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -20,9 +20,9 @@
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "games": 58,
+        "games": 59,
         "wins": 30,
-        "winRate": 52
+        "winRate": 51
       },
       {
         "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
@@ -417,8 +417,9 @@
       }
     },
     "2dd2edb174f63716078ffc324199edd1": {
-      "games": 267,
+      "games": 268,
       "form": [
+        "lose",
         "win",
         "draw",
         "win",
@@ -427,11 +428,10 @@
         "win",
         "lose",
         "win",
-        "win",
-        "draw"
+        "win"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
