@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T10:07:23.901Z",
+  "updated": "2026-10-09T12:07:22.001Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -672,7 +672,7 @@
     },
     "2dd2edb174f63716078ffc324199edd1": {
       "ctrl": "keyboard",
-      "games": 204,
+      "games": 206,
       "ace": [
         {
           "spId": 877224232,
@@ -687,8 +687,8 @@
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
-          "goals": 1,
-          "assists": 1
+          "goals": 4,
+          "assists": 2
         },
         {
           "spId": 856192119,
@@ -725,32 +725,32 @@
       ],
       "goalMins": {
         "for": [
-          66,
-          79,
+          68,
+          80,
           84,
-          101,
-          72,
-          97,
+          102,
+          73,
+          98,
           38
         ],
         "against": [
-          64,
-          86,
+          65,
+          88,
           84,
-          97,
-          81,
+          98,
+          82,
           75,
           42
         ]
       },
-      "comebacks": 30,
-      "lateWinners": 18,
+      "comebacks": 31,
+      "lateWinners": 19,
       "manner": {
-        "games": 204,
-        "yellow": 9,
+        "games": 206,
+        "yellow": 10,
         "red": 1,
-        "foul": 196,
-        "score": 1.11
+        "foul": 201,
+        "score": 1.14
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
@@ -1423,17 +1423,17 @@
     },
     "75278aef5ddb1cb75d88dd114f68f0ab": {
       "ctrl": "keyboard",
-      "games": 33,
+      "games": 38,
       "ace": [
         {
           "spId": 206206585,
           "group": "GK",
           "pos": 0,
-          "games": 33,
+          "games": 38,
           "metric": "pas",
-          "value": 4.33,
+          "value": 4.24,
           "base": 2.35,
-          "z": 3.38,
+          "z": 3.22,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -1442,66 +1442,66 @@
           "assists": 0
         },
         {
-          "spId": 845037576,
-          "group": "ST",
-          "pos": 26,
-          "games": 8,
-          "metric": "drb",
-          "value": 13.63,
-          "base": 8.98,
-          "z": 1.85,
-          "title": {
-            "emoji": "🪄",
-            "name": "드리블 마법사"
-          },
-          "goals": 12,
-          "assists": 4
-        },
-        {
           "spId": 829228618,
           "group": "FB",
           "pos": 7,
-          "games": 26,
+          "games": 31,
           "metric": "win",
-          "value": 3.19,
+          "value": 3.26,
           "base": 2.25,
-          "z": 1.8,
+          "z": 1.93,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 0,
           "assists": 0
+        },
+        {
+          "spId": 845037576,
+          "group": "ST",
+          "pos": 26,
+          "games": 13,
+          "metric": "drb",
+          "value": 13.38,
+          "base": 8.98,
+          "z": 1.75,
+          "title": {
+            "emoji": "🪄",
+            "name": "드리블 마법사"
+          },
+          "goals": 22,
+          "assists": 8
         }
       ],
       "goalMins": {
         "for": [
-          7,
+          10,
           13,
-          28,
-          15,
-          16,
-          13,
+          31,
+          18,
+          24,
+          17,
           7
         ],
         "against": [
-          15,
-          15,
-          20,
           16,
+          16,
+          24,
+          18,
           15,
-          9,
+          13,
           5
         ]
       },
-      "comebacks": 8,
+      "comebacks": 10,
       "lateWinners": 4,
       "manner": {
-        "games": 33,
+        "games": 38,
         "yellow": 4,
         "red": 0,
-        "foul": 22,
-        "score": 1.03
+        "foul": 25,
+        "score": 0.97
       }
     },
     "b578e892bd97681f0d6bfbb1106d803a": {
@@ -1755,7 +1755,7 @@
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
       "ctrl": "gamepad",
-      "games": 76,
+      "games": 78,
       "ace": [
         {
           "spId": 848200145,
@@ -1777,63 +1777,63 @@
           "spId": 861190046,
           "group": "AM",
           "pos": 18,
-          "games": 76,
+          "games": 78,
           "metric": "drb",
-          "value": 14.71,
+          "value": 14.82,
           "base": 9.75,
-          "z": 1.56,
+          "z": 1.59,
           "title": {
             "emoji": "🪄",
             "name": "드리블 마법사"
           },
-          "goals": 60,
+          "goals": 64,
           "assists": 29
         },
         {
           "spId": 861135455,
           "group": "DM",
           "pos": 11,
-          "games": 76,
+          "games": 78,
           "metric": "drb",
-          "value": 13.17,
+          "value": 13.26,
           "base": 9.71,
-          "z": 1.32,
+          "z": 1.36,
           "title": {
             "emoji": "🪄",
             "name": "드리블 마법사"
           },
-          "goals": 10,
-          "assists": 23
+          "goals": 11,
+          "assists": 24
         }
       ],
       "goalMins": {
         "for": [
-          14,
+          15,
           27,
-          25,
-          37,
-          33,
-          29,
+          26,
+          38,
+          36,
+          30,
           9
         ],
         "against": [
           21,
           28,
-          23,
-          30,
+          24,
+          31,
           21,
-          20,
-          7
+          23,
+          8
         ]
       },
       "comebacks": 7,
       "lateWinners": 4,
       "manner": {
-        "games": 76,
+        "games": 78,
         "yellow": 3,
         "red": 0,
         "foul": 39,
-        "score": 0.63
+        "score": 0.62
       }
     },
     "2f86358cfed5c31dd83a09bbe42d3586": {
@@ -2196,8 +2196,8 @@
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
         "spId": 848037576,
-        "goals": 137,
-        "games": 116
+        "goals": 138,
+        "games": 118
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -2216,18 +2216,18 @@
         "games": 149
       },
       {
+        "ouid": "2dd2edb174f63716078ffc324199edd1",
+        "nick": "미드필더",
+        "spId": 848037576,
+        "assists": 73,
+        "games": 118
+      },
+      {
         "ouid": "82c59dce895a829f78a8e10c10122249",
         "nick": "Dor6곽철용",
         "spId": 845037576,
         "assists": 73,
         "games": 167
-      },
-      {
-        "ouid": "2dd2edb174f63716078ffc324199edd1",
-        "nick": "미드필더",
-        "spId": 848037576,
-        "assists": 71,
-        "games": 116
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -2262,9 +2262,9 @@
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "comebacks": 30,
-        "lateWinners": 18,
-        "games": 204
+        "comebacks": 31,
+        "lateWinners": 19,
+        "games": 206
       }
     ],
     "lateHero": [
@@ -2276,18 +2276,18 @@
         "games": 298
       },
       {
+        "ouid": "2dd2edb174f63716078ffc324199edd1",
+        "nick": "미드필더",
+        "comebacks": 31,
+        "lateWinners": 19,
+        "games": 206
+      },
+      {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
         "comebacks": 34,
         "lateWinners": 18,
         "games": 209
-      },
-      {
-        "ouid": "2dd2edb174f63716078ffc324199edd1",
-        "nick": "미드필더",
-        "comebacks": 30,
-        "lateWinners": 18,
-        "games": 204
       }
     ],
     "gentleman": [
@@ -2303,11 +2303,11 @@
       {
         "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
         "nick": "Dor6평정",
-        "games": 76,
+        "games": 78,
         "yellow": 3,
         "red": 0,
         "foul": 39,
-        "score": 0.63
+        "score": 0.62
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
