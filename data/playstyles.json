@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T06:07:57.468Z",
+  "updated": "2026-10-09T06:46:25.589Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1191,10 +1191,10 @@
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "원터치 발리",
-        "line": "잡을 시간이 어딨어, 바로 발리",
+        "name": "원터치 중거리",
+        "line": "잡자마자 박스 밖에서 바로 슛",
         "basis": [
-          "volley+",
+          "longShot+",
           "dribble-"
         ]
       },
@@ -1203,27 +1203,27 @@
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.171,
+          "v": 0.17,
           "avg": 0.089,
-          "z": 1.31,
-          "key": false
-        },
-        {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.128,
-          "avg": 0.064,
           "z": 1.28,
-          "key": true
+          "key": false
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.288,
+          "v": 0.287,
           "avg": 0.188,
-          "z": 1.28,
+          "z": 1.27,
+          "key": true
+        },
+        {
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.783,
+          "avg": 0.706,
+          "z": 1.13,
           "key": false
         }
       ],
@@ -1232,18 +1232,18 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.057,
+          "v": 0.058,
           "avg": 0.302,
-          "z": -2.13,
+          "z": -2.12,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 65.98,
+          "v": 65.68,
           "avg": 80.364,
-          "z": -1.51,
+          "z": -1.54,
           "key": true
         },
         {
