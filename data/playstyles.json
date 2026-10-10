@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-09T22:56:01.472Z",
+  "updated": "2026-10-10T00:07:27.298Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -484,42 +484,40 @@
     "315d8d350dabea2c99cb2e49af2f1603": {
       "games": 50,
       "style": {
-        "name": "저격형 수비수",
-        "line": "가끔 들어가서 확실하게, 대신 거칠게",
+        "name": "한 방 태클러",
+        "line": "태클은 가끔, 하면 무조건 뺏는다",
         "basis": [
           "tackleRate+",
-          "cards+",
           "tackleTry-"
-        ],
-        "rare": true
+        ]
       },
       "highs": [
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.676,
+          "v": 0.675,
           "avg": 0.53,
-          "z": 2.69,
+          "z": 2.68,
           "key": true
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.242,
+          "v": 0.24,
           "avg": 0.15,
-          "z": 1.87,
+          "z": 1.82,
           "key": false
         },
         {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.14,
-          "avg": 0.04,
-          "z": 1.25,
-          "key": true
+          "k": "longGoal",
+          "label": "중거리골 비율",
+          "unit": "%",
+          "v": 0.152,
+          "avg": 0.089,
+          "z": 1,
+          "key": false
         }
       ],
       "lows": [
@@ -527,27 +525,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 8.08,
+          "v": 8,
           "avg": 15.653,
-          "z": -2.26,
+          "z": -2.28,
           "key": true
         },
         {
           "k": "lateGoal",
           "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.47,
+          "v": 0.487,
           "avg": 0.598,
-          "z": -1.57,
+          "z": -1.35,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.812,
+          "v": 0.804,
           "avg": 0.886,
-          "z": -1.15,
+          "z": -1.28,
           "key": false
         }
       ]
