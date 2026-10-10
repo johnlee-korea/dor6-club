@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T13:05:40.573Z",
+  "updated": "2026-10-10T14:07:23.991Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -672,24 +672,8 @@
     },
     "2dd2edb174f63716078ffc324199edd1": {
       "ctrl": "keyboard",
-      "games": 207,
+      "games": 209,
       "ace": [
-        {
-          "spId": 877224232,
-          "group": "FB",
-          "pos": 7,
-          "games": 7,
-          "metric": "win",
-          "value": 3.57,
-          "base": 2.25,
-          "z": 2.53,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 4,
-          "assists": 2
-        },
         {
           "spId": 856192119,
           "group": "GK",
@@ -721,24 +705,40 @@
           },
           "goals": 2,
           "assists": 5
+        },
+        {
+          "spId": 861190043,
+          "group": "AM",
+          "pos": 18,
+          "games": 16,
+          "metric": "int",
+          "value": 0.88,
+          "base": 0.36,
+          "z": 2.28,
+          "title": {
+            "emoji": "🦅",
+            "name": "볼 사냥꾼"
+          },
+          "goals": 43,
+          "assists": 17
         }
       ],
       "goalMins": {
         "for": [
-          68,
-          80,
-          85,
-          102,
+          69,
+          81,
+          87,
+          104,
           74,
           98,
           38
         ],
         "against": [
-          65,
-          90,
+          66,
+          92,
+          85,
+          99,
           84,
-          98,
-          82,
           76,
           42
         ]
@@ -746,10 +746,10 @@
       "comebacks": 31,
       "lateWinners": 19,
       "manner": {
-        "games": 207,
+        "games": 209,
         "yellow": 11,
         "red": 1,
-        "foul": 203,
+        "foul": 205,
         "score": 1.15
       }
     },
@@ -1506,7 +1506,7 @@
     },
     "b578e892bd97681f0d6bfbb1106d803a": {
       "ctrl": "keyboard",
-      "games": 63,
+      "games": 67,
       "ace": [
         {
           "spId": 852190042,
@@ -1541,50 +1541,50 @@
           "assists": 6
         },
         {
-          "spId": 861190042,
-          "group": "W",
-          "pos": 16,
-          "games": 52,
-          "metric": "drb",
-          "value": 10.9,
-          "base": 6.83,
-          "z": 2.2,
+          "spId": 866237238,
+          "group": "AM",
+          "pos": 18,
+          "games": 67,
+          "metric": "sht",
+          "value": 2.85,
+          "base": 1.22,
+          "z": 2.34,
           "title": {
-            "emoji": "🏃",
-            "name": "측면 돌파왕"
+            "emoji": "🏹",
+            "name": "슈팅 머신"
           },
-          "goals": 14,
-          "assists": 26
+          "goals": 66,
+          "assists": 16
         }
       ],
       "goalMins": {
         "for": [
-          22,
-          28,
-          32,
+          25,
+          30,
+          37,
+          27,
           23,
-          20,
-          35,
+          38,
           11
         ],
         "against": [
           19,
-          19,
+          20,
           21,
-          26,
-          21,
+          28,
           22,
+          23,
           4
         ]
       },
-      "comebacks": 11,
+      "comebacks": 12,
       "lateWinners": 7,
       "manner": {
-        "games": 63,
+        "games": 67,
         "yellow": 0,
         "red": 0,
-        "foul": 41,
-        "score": 0.65
+        "foul": 45,
+        "score": 0.67
       }
     },
     "0b4adfde6411fa08e6339ceaa3ed1942": {
@@ -2196,8 +2196,8 @@
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
         "spId": 848037576,
-        "goals": 139,
-        "games": 119
+        "goals": 142,
+        "games": 121
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -2219,8 +2219,8 @@
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
         "spId": 848037576,
-        "assists": 74,
-        "games": 119
+        "assists": 75,
+        "games": 121
       },
       {
         "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -2264,7 +2264,7 @@
         "nick": "미드필더",
         "comebacks": 31,
         "lateWinners": 19,
-        "games": 207
+        "games": 209
       }
     ],
     "lateHero": [
@@ -2280,7 +2280,7 @@
         "nick": "미드필더",
         "comebacks": 31,
         "lateWinners": 19,
-        "games": 207
+        "games": 209
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
