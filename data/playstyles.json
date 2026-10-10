@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T20:07:23.706Z",
+  "updated": "2026-10-10T22:01:26.492Z",
   "baselineUpdated": "2026-09-29T15:29:51.453Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -645,28 +645,28 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.241,
+          "v": 0.244,
           "avg": 0.15,
-          "z": 1.85,
+          "z": 1.89,
+          "key": true
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.72,
+          "avg": 0.502,
+          "z": 1.03,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.402,
+          "v": 0.406,
           "avg": 0.302,
-          "z": 0.87,
+          "z": 0.91,
           "key": false
-        },
-        {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.68,
-          "avg": 0.502,
-          "z": 0.84,
-          "key": true
         }
       ],
       "lows": [
@@ -674,27 +674,27 @@
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 4.96,
+          "v": 4.92,
           "avg": 6.835,
-          "z": -1.8,
+          "z": -1.84,
           "key": true
-        },
-        {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.866,
-          "avg": 0.896,
-          "z": -1.57,
-          "key": false
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 0.86,
+          "v": 0.8,
           "avg": 1.581,
-          "z": -1.5,
+          "z": -1.62,
+          "key": false
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.869,
+          "avg": 0.896,
+          "z": -1.42,
           "key": false
         }
       ]
