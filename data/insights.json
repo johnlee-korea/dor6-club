@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T02:07:16.528Z",
+  "updated": "2026-10-11T04:07:19.960Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -55,23 +55,20 @@
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
       "ctrl": "gamepad",
-      "games": 174,
+      "games": 180,
       "ace": [
         {
           "spId": 867224232,
           "group": "W",
           "pos": 16,
-          "games": 110,
-          "metric": "win",
-          "value": 1.52,
-          "base": 1.13,
-          "z": 1.01,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 54,
-          "assists": 55
+          "games": 113,
+          "metric": "sht",
+          "value": 0.89,
+          "base": 0.58,
+          "z": 0.94,
+          "title": null,
+          "goals": 56,
+          "assists": 56
         },
         {
           "spId": 868004000,
@@ -90,11 +87,11 @@
           "spId": 835138123,
           "group": "DM",
           "pos": 11,
-          "games": 19,
+          "games": 21,
           "metric": "win",
-          "value": 2.47,
+          "value": 2.62,
           "base": 2.1,
-          "z": 0.66,
+          "z": 0.91,
           "title": null,
           "goals": 1,
           "assists": 10
@@ -102,31 +99,31 @@
       ],
       "goalMins": {
         "for": [
-          54,
-          68,
-          95,
-          87,
+          56,
           69,
-          68,
+          96,
+          90,
+          72,
+          74,
           44
         ],
         "against": [
-          53,
-          80,
-          74,
-          80,
-          67,
-          75,
-          30
+          56,
+          84,
+          77,
+          84,
+          70,
+          79,
+          32
         ]
       },
-      "comebacks": 23,
-      "lateWinners": 17,
+      "comebacks": 24,
+      "lateWinners": 18,
       "manner": {
-        "games": 174,
+        "games": 180,
         "yellow": 8,
         "red": 0,
-        "foul": 152,
+        "foul": 158,
         "score": 1.01
       }
     },
@@ -298,17 +295,33 @@
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "ctrl": "gamepad",
-      "games": 54,
+      "games": 55,
       "ace": [
+        {
+          "spId": 861049072,
+          "group": "AM",
+          "pos": 18,
+          "games": 12,
+          "metric": "sht",
+          "value": 2.75,
+          "base": 1.22,
+          "z": 2.2,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 20,
+          "assists": 6
+        },
         {
           "spId": 851237942,
           "group": "FB",
           "pos": 7,
-          "games": 14,
+          "games": 15,
           "metric": "win",
-          "value": 3.29,
+          "value": 3.27,
           "base": 2.25,
-          "z": 1.98,
+          "z": 1.95,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
@@ -317,43 +330,27 @@
           "assists": 0
         },
         {
-          "spId": 861049072,
-          "group": "AM",
-          "pos": 18,
-          "games": 11,
-          "metric": "sht",
-          "value": 2.55,
-          "base": 1.22,
-          "z": 1.91,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 19,
-          "assists": 6
-        },
-        {
-          "spId": 856232580,
+          "spId": 866276493,
           "group": "CB",
-          "pos": 6,
-          "games": 8,
-          "metric": "rt",
-          "value": 6.64,
-          "base": 6.19,
-          "z": 1.69,
+          "pos": 4,
+          "games": 35,
+          "metric": "int",
+          "value": 2.71,
+          "base": 1.71,
+          "z": 1.74,
           "title": {
-            "emoji": "⭐",
-            "name": "믿을맨"
+            "emoji": "🚧",
+            "name": "길목 차단기"
           },
-          "goals": 1,
+          "goals": 0,
           "assists": 1
         }
       ],
       "goalMins": {
         "for": [
-          16,
-          25,
           17,
+          27,
+          18,
           27,
           26,
           32,
@@ -372,11 +369,11 @@
       "comebacks": 10,
       "lateWinners": 5,
       "manner": {
-        "games": 54,
-        "yellow": 2,
+        "games": 55,
+        "yellow": 3,
         "red": 0,
-        "foul": 42,
-        "score": 0.89
+        "foul": 43,
+        "score": 0.95
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
@@ -2179,18 +2176,18 @@
         "games": 168
       },
       {
+        "ouid": "82c59dce895a829f78a8e10c10122249",
+        "nick": "Dor6곽철용",
+        "spId": 845037576,
+        "goals": 155,
+        "games": 180
+      },
+      {
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
         "spId": 100001625,
         "goals": 152,
         "games": 145
-      },
-      {
-        "ouid": "82c59dce895a829f78a8e10c10122249",
-        "nick": "Dor6곽철용",
-        "spId": 845037576,
-        "goals": 152,
-        "games": 174
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -2216,18 +2213,18 @@
         "games": 168
       },
       {
+        "ouid": "82c59dce895a829f78a8e10c10122249",
+        "nick": "Dor6곽철용",
+        "spId": 845037576,
+        "assists": 78,
+        "games": 180
+      },
+      {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
         "spId": 848037576,
         "assists": 76,
         "games": 123
-      },
-      {
-        "ouid": "82c59dce895a829f78a8e10c10122249",
-        "nick": "Dor6곽철용",
-        "spId": 845037576,
-        "assists": 75,
-        "games": 174
       },
       {
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
@@ -2283,11 +2280,11 @@
         "games": 214
       },
       {
-        "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
-        "nick": "Dor6문선생",
-        "comebacks": 34,
+        "ouid": "82c59dce895a829f78a8e10c10122249",
+        "nick": "Dor6곽철용",
+        "comebacks": 24,
         "lateWinners": 18,
-        "games": 212
+        "games": 180
       }
     ],
     "gentleman": [

@@ -1,13 +1,13 @@
 {
-  "updated": "2026-10-11T02:07:16.528Z",
+  "updated": "2026-10-11T04:07:19.960Z",
   "week": {
-    "from": "2026-10-04T02:07:16.528Z",
+    "from": "2026-10-04T04:07:19.960Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 78,
-        "wins": 37,
+        "games": 75,
+        "wins": 35,
         "winRate": 47
       },
       {
@@ -42,22 +42,22 @@
   },
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
-      "games": 196,
+      "games": 202,
       "form": [
-        "win",
+        "lose",
+        "lose",
+        "lose",
         "lose",
         "win",
         "lose",
         "win",
-        "win",
-        "draw",
-        "win",
         "lose",
-        "draw"
+        "win",
+        "lose"
       ],
       "streak": {
-        "type": "win",
-        "n": 1
+        "type": "lose",
+        "n": 4
       },
       "rivals": {
         "nemesis": null,
@@ -223,8 +223,10 @@
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
-      "games": 82,
+      "games": 84,
       "form": [
+        "lose",
+        "win",
         "lose",
         "win",
         "win",
@@ -232,9 +234,7 @@
         "lose",
         "lose",
         "lose",
-        "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
         "type": "lose",
