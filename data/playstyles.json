@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T06:07:16.124Z",
+  "updated": "2026-10-12T06:38:01.357Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1879,6 +1879,144 @@
           "v": 0,
           "avg": 0.114,
           "z": -1.2,
+          "key": false
+        }
+      ]
+    },
+    "980d209770b51f1cc39d22e82cb2d01c": {
+      "games": 50,
+      "style": {
+        "name": "크로스-헤더 공식",
+        "line": "측면에서 올리고 머리로 끝낸다",
+        "basis": [
+          "headShot+",
+          "lobRatio+"
+        ]
+      },
+      "highs": [
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.124,
+          "avg": 0.055,
+          "z": 2.54,
+          "key": false
+        },
+        {
+          "k": "headShot",
+          "label": "헤더 슈팅 비율",
+          "unit": "%",
+          "v": 0.503,
+          "avg": 0.204,
+          "z": 2.52,
+          "key": true
+        },
+        {
+          "k": "lobRatio",
+          "label": "띄우는 패스 비율",
+          "unit": "%",
+          "v": 0.029,
+          "avg": 0.012,
+          "z": 1.72,
+          "key": true
+        }
+      ],
+      "lows": [
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.731,
+          "avg": 0.808,
+          "z": -1.64,
+          "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.376,
+          "avg": 0.495,
+          "z": -1.63,
+          "key": false
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.864,
+          "avg": 0.891,
+          "z": -1.36,
+          "key": false
+        }
+      ]
+    },
+    "068895f008054937eb7c5fa1acbd5c30": {
+      "games": 50,
+      "style": {
+        "name": "한 방 태클러",
+        "line": "태클은 가끔, 하면 무조건 뺏는다",
+        "basis": [
+          "tackleRate+",
+          "tackleTry-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.809,
+          "avg": 0.537,
+          "z": 5.39,
+          "key": true
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.277,
+          "avg": 0.094,
+          "z": 2.52,
+          "key": false
+        },
+        {
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 99.92,
+          "avg": 79.272,
+          "z": 2.36,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 5.66,
+          "avg": 15.8,
+          "z": -2.94,
+          "key": true
+        },
+        {
+          "k": "foul",
+          "label": "파울",
+          "unit": "",
+          "v": 0.5,
+          "avg": 0.907,
+          "z": -1.28,
+          "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.408,
+          "avg": 0.495,
+          "z": -1.19,
           "key": false
         }
       ]
