@@ -906,7 +906,7 @@ C:\Projects\dor6-club\
 
 - **출처**: 공식 홈페이지 목록 HTML `https://fconline.nexon.com/news/{notice|play}/list` (1페이지 20건, 넥슨 API 키 불필요). 행 = `<div class="tr [notice]"><a href="…/view?n4ArticleSN=N">` 안 `td sort·subject·date`, 바로 뒤 `hidden_desc > text_box` = 넥슨이 잘라 둔 본문 앞부분(약 5줄, `...`로 끝남). `tr notice`는 상단 고정 글(`pinned`).
 - **날짜**: 목록은 "9시간 전"·"10.1(목)"처럼 연도 없음 → 처음 보는 글만 상세 페이지 JSON-LD `datePublished`(KST 오프셋)로 확정, 이후엔 저장값 재사용(하루 상세 요청 몇 건).
-- **수집**: `.github/workflows/notices.yml` 매일 `17 23 * * *`(08:17 KST, 수집과 같은 concurrency 그룹) + 수동 실행 → `scripts/notices.js` → `data/notices.json` `{ updatedAt, boards: { notice|play: { label, items: [{ sn, category, title, pinned, preview, date, url }] } } }` 게시 시각 최신순 20건. 한 게시판 실패 시 그 게시판은 이전 값 유지, 둘 다 실패면 exit 1. 파서 단일 소스 `scripts/lib/notice.js`(구조 바뀌면 정규식만 수정).
+- **수집**: `.github/workflows/notices.yml` 매일 `17 11 * * *`(20:17 KST — 중요 공지가 오후에 올라와서, 수집과 같은 concurrency 그룹) + 수동 실행 → `scripts/notices.js` → `data/notices.json` `{ updatedAt, boards: { notice|play: { label, items: [{ sn, category, title, pinned, preview, date, url }] } } }` 게시 시각 최신순 20건. 한 게시판 실패 시 그 게시판은 이전 값 유지, 둘 다 실패면 exit 1. 파서 단일 소스 `scripts/lib/notice.js`(구조 바뀌면 정규식만 수정).
 - **저작권**: 본문 전문은 저장·표시하지 않음 — 넥슨이 목록에 공개한 미리보기 + 원문 링크만.
 - **화면** (`js/home.js` renderNews, `.nw-*`): 홈 히어로 바로 아래 `#fc-news`. [공지사항 | 개발자 노트] 칩(선택 기억 `dor6.news.tab`) · 5건 + [더 보기] · 행 = 분류 태그(점검 노랑·이벤트 초록·노트 파랑)·제목·N(3일 이내)·날짜(오늘 HH:MM/어제/N일 전/M.D) · `<details>`로 펼치면 미리보기 + 원문 링크. 데이터 없거나 로딩 실패면 섹션 숨김.
 - 스모크 테스트: 홈에서 `#fc-news .nw-item` 렌더 확인.

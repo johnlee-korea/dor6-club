@@ -1,11 +1,11 @@
 name: FC온라인 공지 수집
 
 # 하루 1회 FC온라인 공식 홈페이지 공지사항·개발자 노트 → data/notices.json (v2.10.0)
-# 홈페이지 HTML만 읽음 → 넥슨 API 키 불필요. 매일 오전 8시 17분(KST) 전후 (GitHub 스케줄은 수십 분 늦을 수 있음)
+# 홈페이지 HTML만 읽음 → 넥슨 API 키 불필요. 매일 저녁 8시 17분(KST) 전후 — 정기점검 등 중요 공지가 주로 오후에 올라옴(사용자) (GitHub 스케줄은 수십 분 늦을 수 있음)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 23 * * *"
+    - cron: "17 11 * * *"
 
 permissions:
   contents: write
