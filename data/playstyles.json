@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T08:07:32.132Z",
+  "updated": "2026-10-12T10:08:36.817Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -631,42 +631,40 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "침투 설계자",
-        "line": "스루와 침투는 많은데 슈팅은 아낀다",
+        "name": "스루 난사범",
+        "line": "찔러는 주는데 절반은 상대 발 앞",
         "basis": [
-          "offside+",
           "throughRatio+",
-          "shots-"
-        ],
-        "rare": true
+          "passRate-"
+        ]
       },
       "highs": [
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.241,
+          "v": 0.243,
           "avg": 0.144,
-          "z": 2.01,
+          "z": 2.05,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.405,
+          "v": 0.414,
           "avg": 0.291,
-          "z": 0.97,
+          "z": 1.05,
           "key": false
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
+          "k": "cards",
+          "label": "카드",
           "unit": "",
-          "v": 0.66,
-          "avg": 0.489,
-          "z": 0.75,
-          "key": true
+          "v": 0.06,
+          "avg": 0.026,
+          "z": 0.68,
+          "key": false
         }
       ],
       "lows": [
@@ -674,28 +672,28 @@
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.16,
+          "v": 5.14,
           "avg": 6.701,
-          "z": -1.51,
-          "key": true
+          "z": -1.53,
+          "key": false
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.194,
+          "v": 0.191,
           "avg": 0.286,
-          "z": -1.3,
+          "z": -1.35,
           "key": false
         },
         {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
+          "k": "passRate",
+          "label": "패스 성공률",
           "unit": "%",
-          "v": 0.012,
-          "avg": 0.094,
-          "z": -1.14,
-          "key": false
+          "v": 0.867,
+          "avg": 0.891,
+          "z": -1.18,
+          "key": true
         }
       ]
     },
@@ -1064,56 +1062,56 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.66,
+          "v": 0.662,
           "avg": 0.537,
-          "z": 2.44,
+          "z": 2.47,
           "key": true
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 8.26,
+          "v": 8.24,
           "avg": 6.701,
-          "z": 1.53,
+          "z": 1.51,
           "key": false
         },
         {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
+          "k": "throughRatio",
+          "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.173,
-          "avg": 0.094,
+          "v": 0.197,
+          "avg": 0.144,
           "z": 1.09,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.866,
-          "avg": 0.891,
-          "z": -1.21,
-          "key": false
-        },
-        {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 47.14,
+          "v": 47.08,
           "avg": 50.642,
-          "z": -1.2,
+          "z": -1.22,
           "key": true
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
+          "k": "finish",
+          "label": "결정력",
           "unit": "%",
-          "v": 0.002,
-          "avg": 0.012,
-          "z": -1.07,
+          "v": 0.41,
+          "avg": 0.495,
+          "z": -1.17,
+          "key": false
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.868,
+          "avg": 0.891,
+          "z": -1.14,
           "key": false
         }
       ]
@@ -1900,27 +1898,27 @@
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.129,
+          "v": 0.132,
           "avg": 0.055,
-          "z": 2.7,
+          "z": 2.81,
           "key": false
         },
         {
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.518,
+          "v": 0.535,
           "avg": 0.204,
-          "z": 2.64,
+          "z": 2.79,
           "key": true
         },
         {
           "k": "lobRatio",
           "label": "띄우는 패스 비율",
           "unit": "%",
-          "v": 0.033,
+          "v": 0.035,
           "avg": 0.012,
-          "z": 2.16,
+          "z": 2.4,
           "key": true
         }
       ],
@@ -1929,27 +1927,27 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.73,
+          "v": 0.718,
           "avg": 0.808,
-          "z": -1.66,
+          "z": -1.91,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.38,
+          "v": 0.378,
           "avg": 0.495,
-          "z": -1.58,
+          "z": -1.61,
           "key": false
         },
         {
-          "k": "passRate",
-          "label": "패스 성공률",
+          "k": "finesse",
+          "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.863,
-          "avg": 0.891,
-          "z": -1.4,
+          "v": 0.13,
+          "avg": 0.291,
+          "z": -1.37,
           "key": false
         }
       ]
