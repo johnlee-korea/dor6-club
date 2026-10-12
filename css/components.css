@@ -586,3 +586,41 @@ a.ms-row:hover { background: var(--surface-2); }
 .rh-table table { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 4px; }
 .rh-table th, .rh-table td { text-align: right; padding: 2px 4px; border-bottom: 1px solid var(--border); }
 .rh-table th:first-child, .rh-table td:first-child { text-align: left; }
+
+/* --- 📢 FC온라인 소식 (v2.10.0, 홈) --- */
+.nw-tabs { margin-bottom: var(--sp-3); }
+.nw-list { padding: var(--sp-1) var(--sp-4); }
+.nw-item { border-bottom: 1px solid var(--border); }
+.nw-item:last-of-type { border-bottom: none; }
+.nw-item summary {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: 12px 0; cursor: pointer; list-style: none; min-height: 44px;
+}
+.nw-item summary::-webkit-details-marker { display: none; }
+.nw-cat {
+  flex: none; font-size: var(--fs-xs); font-weight: 700; padding: 1px 8px; border-radius: 999px;
+  background: var(--surface-3); color: var(--silver);
+}
+.nw-cat.c-점검 { background: var(--warn-bg); color: var(--warn); }
+.nw-cat.c-이벤트 { background: var(--ok-bg); color: var(--ok); }
+.nw-cat.c-노트 { background: rgba(88,166,255,.12); color: var(--info); }
+.nw-title {
+  flex: 1; min-width: 0; font-size: var(--fs-sm); font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nw-item[open] .nw-title { white-space: normal; }
+.nw-new {
+  display: inline-block; font-size: 10px; font-weight: 800; line-height: 1; padding: 2px 4px;
+  border-radius: 4px; background: var(--danger); color: #fff; vertical-align: 2px;
+}
+.nw-date { flex: none; font-size: var(--fs-xs); color: var(--text-dim); white-space: nowrap; }
+.nw-body { padding: 0 0 var(--sp-3); }
+.nw-preview {
+  margin: 0 0 var(--sp-2); padding: var(--sp-3); border-radius: 8px; background: var(--surface-2);
+  font-size: var(--fs-sm); line-height: 1.6; color: var(--text-muted); white-space: pre-line; word-break: break-all;
+}
+.nw-link { font-size: var(--fs-sm); color: var(--info); font-weight: 600; }
+.nw-more {
+  display: block; width: 100%; padding: 10px 0; border: none; border-top: 1px solid var(--border);
+  background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); cursor: pointer;
+}

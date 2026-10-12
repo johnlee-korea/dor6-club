@@ -16,7 +16,7 @@ const FIRST_OUID = JSON.parse(rd("data/members.json")).members.find((m) => m.oui
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const PAGES = [
-  { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: ".copyright" },
+  { file: "index.html",     scripts: ["js/common.js", "js/activity-ui.js", "js/home.js"], root: "summary", expect: "#fc-news .nw-item" },   // v2.10.0 FC온라인 소식
   // 클럽원 탭: 검색 우선 + 접힌 전체 명단(행 = 프로필 링크)
   { file: "members.html",   scripts: ["js/common.js", "js/activity-ui.js", "js/members.js"], root: "members-root", expect: "a.ms-row",
     act: (w) => { const q = w.document.getElementById("member-q"); q.value = "dor6"; q.dispatchEvent(new w.Event("input")); } },
