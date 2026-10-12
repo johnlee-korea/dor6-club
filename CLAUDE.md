@@ -910,3 +910,10 @@ C:\Projects\dor6-club\
 - **저작권**: 본문 전문은 저장·표시하지 않음 — 넥슨이 목록에 공개한 미리보기 + 원문 링크만.
 - **화면** (`js/home.js` renderNews, `.nw-*`): 홈 히어로 바로 아래 `#fc-news`. [공지사항 | 개발자 노트] 칩(선택 기억 `dor6.news.tab`) · 5건 + [더 보기] · 행 = 분류 태그(점검 노랑·이벤트 초록·노트 파랑)·제목·N(3일 이내)·날짜(오늘 HH:MM/어제/N일 전/M.D) · `<details>`로 펼치면 미리보기 + 원문 링크. 데이터 없거나 로딩 실패면 섹션 숨김.
 - 스모크 테스트: 홈에서 `#fc-news .nw-item` 렌더 확인.
+
+### 24-1. v2.10.1 전문 보기 (2026-10-12, 사용자 결정)
+- 사용자: "전문을 보여주자, 출처만 명확하게" (저작권·내용 낡음·화면 깨짐 위험 안내 후 결정).
+- **수집**: 글마다 상세 페이지를 **매 실행 다시 받음**(게시 시각 + 본문, 40회 약 15초). 본문 구역 = `<div class="content_body">` ~ `<!-- 설문 -->`/`article_utils_wrap`. 실패하면 이전 본문 유지. 저장 `data/notices-body.json` `{ updatedAt, bodies: { "<board>-<sn>": HTML } }`, 목록에서 밀려난 글은 자동 삭제. `notices.json` 항목에 `hasBody`.
+- **정리** (`lib/notice.js sanitizeBody`, 화이트리스트): script·style·form 등 내용째 제거 · 허용 태그(p br b strong u i em span a img table… h1~6→h4)만, 속성은 a href(http/s, 새 창)·img src(http/s, lazy)·td colspan/rowspan만 · 꾸밈 없는 span은 해제(용량 439→318KB) · 글자색은 채도 있는 색만 `class="hl"`(다크 테마에서 검정 글자 안 보임) · iframe 동영상 → '▶ 영상 보기' 링크 · 짝 안 맞는 태그 자동 닫기. 넥슨 이미지(file.nexon.com → storage.nexon.com 302)는 외부 Referer에서도 열림(확인).
+- **화면**: 펼치면 `출처: FC온라인 공식 홈페이지 › 공지사항 · 작성 일시` → 전문 → 저작권 안내(NEXON Korea, 하루 1회라 이후 수정 가능) + [원문 보기 ↗] [접기 ▴](접으면 제목 위치로). 본문은 처음 펼칠 때 `notices-body.json` 한 번 로딩, 실패 시 미리보기 + 안내. 표는 `width: max-content` + 가로 스크롤(좁은 칸에 글자 세로로 찌그러지던 문제). 카드 아래·홈 저작권 안내에 출처 문구.
+- 수집 시각: 사용자 요청으로 `17 11 * * *`(20:17 KST).

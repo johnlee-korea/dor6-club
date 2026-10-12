@@ -624,3 +624,29 @@ a.ms-row:hover { background: var(--surface-2); }
   display: block; width: 100%; padding: 10px 0; border: none; border-top: 1px solid var(--border);
   background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); cursor: pointer;
 }
+/* 전문 (v2.10.1) — 넥슨 편집기 HTML을 정리한 본문 */
+.nw-src { font-size: var(--fs-xs); color: var(--text-dim); margin-bottom: var(--sp-2); }
+.nw-src a { color: var(--text-muted); text-decoration: underline; }
+.nw-article {
+  font-size: var(--fs-sm); line-height: 1.7; color: var(--text); word-break: break-all; overflow-wrap: anywhere;
+  padding: var(--sp-3); border-radius: 8px; background: var(--surface-2);
+}
+.nw-article .nw-preview { padding: 0; background: none; }
+.nw-article p { margin: 0 0 4px; }
+.nw-article ul, .nw-article ol { margin: 4px 0; padding-left: 20px; }
+.nw-article h4 { font-size: var(--fs-base); margin: var(--sp-3) 0 var(--sp-1); }
+.nw-article img { max-width: 100%; height: auto; display: block; margin: var(--sp-2) auto; border-radius: 6px; }
+.nw-article a { color: var(--info); text-decoration: underline; }
+.nw-article .hl { color: var(--warn); }
+.nw-article hr { border: none; border-top: 1px solid var(--border); margin: var(--sp-3) 0; }
+.nw-article blockquote { margin: var(--sp-2) 0; padding-left: var(--sp-3); border-left: 3px solid var(--border); color: var(--text-muted); }
+.nw-tbl { overflow-x: auto; margin: var(--sp-2) 0; -webkit-overflow-scrolling: touch; }
+.nw-tbl table { border-collapse: collapse; width: max-content; min-width: 100%; font-size: var(--fs-xs); }  /* 좁은 화면에서 칸을 짓누르지 않고 가로 스크롤 */
+.nw-tbl td, .nw-tbl th { border: 1px solid var(--border); padding: 4px 6px; vertical-align: top; word-break: keep-all; overflow-wrap: normal; min-width: 4em; max-width: 16em; }
+.nw-tbl th, .nw-tbl thead td { background: var(--surface-3); }
+.nw-loading { color: var(--text-dim); font-size: var(--fs-xs); margin-top: var(--sp-2); }
+.nw-foot { margin-top: var(--sp-2); font-size: var(--fs-xs); color: var(--text-dim); line-height: 1.5; }
+.nw-foot p { margin: 0 0 var(--sp-2); }
+.nw-foot-btns { display: flex; justify-content: space-between; align-items: center; }
+.nw-close { border: 1px solid var(--border); background: var(--surface-3); color: var(--text-muted); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: var(--fs-xs); cursor: pointer; }
+.nw-credit { font-size: var(--fs-xs); color: var(--text-dim); margin-top: var(--sp-2); }
