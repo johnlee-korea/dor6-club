@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T12:07:33.325Z",
+  "updated": "2026-10-12T14:07:39.140Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -413,42 +413,40 @@
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "games": 50,
       "style": {
-        "name": "옆패스 공무원",
-        "line": "정확하게, 안전하게, 옆으로만",
+        "name": "공이 곧 수비",
+        "line": "뺏길 일이 없으니 태클할 일도 없다",
         "basis": [
-          "shortRatio+",
-          "passRate+",
-          "throughRatio-"
-        ],
-        "rare": true
+          "poss+",
+          "tackleTry-"
+        ]
       },
       "highs": [
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.913,
+          "v": 0.914,
           "avg": 0.891,
-          "z": 1.08,
+          "z": 1.14,
+          "key": false
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 52.88,
+          "avg": 50.642,
+          "z": 0.77,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.375,
+          "v": 0.374,
           "avg": 0.291,
-          "z": 0.72,
+          "z": 0.71,
           "key": false
-        },
-        {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
-          "unit": "%",
-          "v": 0.746,
-          "avg": 0.706,
-          "z": 0.57,
-          "key": true
         }
       ],
       "lows": [
@@ -456,28 +454,28 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 11.58,
+          "v": 11.48,
           "avg": 15.8,
-          "z": -1.22,
+          "z": -1.25,
+          "key": true
+        },
+        {
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.09,
+          "avg": 0.144,
+          "z": -1.13,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.74,
+          "v": 2.76,
           "avg": 3.29,
-          "z": -0.99,
+          "z": -0.96,
           "key": false
-        },
-        {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
-          "unit": "%",
-          "v": 0.099,
-          "avg": 0.144,
-          "z": -0.94,
-          "key": true
         }
       ]
     },
@@ -1202,9 +1200,9 @@
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 3.36,
+          "v": 3.42,
           "avg": 2.604,
-          "z": 1.43,
+          "z": 1.54,
           "key": false
         },
         {
@@ -1213,16 +1211,16 @@
           "unit": "%",
           "v": 0.793,
           "avg": 0.706,
-          "z": 1.23,
+          "z": 1.24,
           "key": true
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.254,
+          "v": 0.258,
           "avg": 0.181,
-          "z": 0.97,
+          "z": 1.01,
           "key": false
         }
       ],
@@ -1231,27 +1229,27 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.063,
+          "v": 0.066,
           "avg": 0.291,
-          "z": -1.95,
+          "z": -1.93,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 67.66,
+          "v": 68.02,
           "avg": 79.272,
-          "z": -1.33,
+          "z": -1.29,
           "key": true
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.215,
+          "v": 0.213,
           "avg": 0.286,
-          "z": -1.01,
+          "z": -1.03,
           "key": false
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T12:07:33.325Z",
+  "updated": "2026-10-12T14:07:39.140Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -381,8 +381,24 @@
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "ctrl": "gamepad",
-      "games": 152,
+      "games": 158,
       "ace": [
+        {
+          "spId": 868214098,
+          "group": "DM",
+          "pos": 11,
+          "games": 5,
+          "metric": "int",
+          "value": 2,
+          "base": 0.88,
+          "z": 3.27,
+          "title": {
+            "emoji": "🧹",
+            "name": "진공청소기"
+          },
+          "goals": 1,
+          "assists": 1
+        },
         {
           "spId": 251164835,
           "group": "GK",
@@ -414,52 +430,36 @@
           },
           "goals": 0,
           "assists": 0
-        },
-        {
-          "spId": 848167948,
-          "group": "GK",
-          "pos": 0,
-          "games": 16,
-          "metric": "pas",
-          "value": 3.25,
-          "base": 1.95,
-          "z": 2.6,
-          "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
-          },
-          "goals": 0,
-          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
-          53,
-          57,
-          62,
-          61,
           56,
-          68,
-          23
+          59,
+          64,
+          64,
+          60,
+          70,
+          24
         ],
         "against": [
           46,
-          64,
-          53,
-          53,
-          60,
-          68,
+          69,
+          54,
+          54,
+          61,
+          70,
           30
         ]
       },
-      "comebacks": 18,
-      "lateWinners": 12,
+      "comebacks": 19,
+      "lateWinners": 13,
       "manner": {
-        "games": 152,
+        "games": 158,
         "yellow": 5,
-        "red": 0,
-        "foul": 108,
-        "score": 0.81
+        "red": 1,
+        "foul": 119,
+        "score": 0.87
       }
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
@@ -1337,7 +1337,7 @@
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "ctrl": "gamepad",
-      "games": 112,
+      "games": 113,
       "ace": [
         {
           "spId": 861049072,
@@ -1392,30 +1392,30 @@
         "for": [
           52,
           48,
-          49,
-          73,
+          50,
+          75,
           59,
-          67,
+          68,
           38
         ],
         "against": [
-          34,
-          51,
+          35,
+          52,
           60,
           66,
-          47,
+          48,
           50,
           39
         ]
       },
-      "comebacks": 22,
+      "comebacks": 23,
       "lateWinners": 11,
       "manner": {
-        "games": 112,
+        "games": 113,
         "yellow": 4,
         "red": 2,
         "foul": 77,
-        "score": 0.85
+        "score": 0.84
       }
     },
     "75278aef5ddb1cb75d88dd114f68f0ab": {
