@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T18:07:40.158Z",
+  "updated": "2026-10-13T20:07:17.735Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -342,11 +342,11 @@
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "games": 50,
       "style": {
-        "name": "관중석 기념품 배달부",
-        "line": "중거리 한 방이 관중석으로 선물",
+        "name": "관중석 VIP 배송",
+        "line": "박스 밖에서 쏘고 관중석으로 배송 완료",
         "basis": [
           "longShot+",
-          "finish-"
+          "effRate-"
         ]
       },
       "highs": [
@@ -354,19 +354,10 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.305,
+          "v": 0.301,
           "avg": 0.181,
-          "z": 1.63,
+          "z": 1.57,
           "key": true
-        },
-        {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
-          "unit": "%",
-          "v": 0.754,
-          "avg": 0.706,
-          "z": 0.69,
-          "key": false
         },
         {
           "k": "cards",
@@ -376,34 +367,43 @@
           "avg": 0.026,
           "z": 0.68,
           "key": false
+        },
+        {
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.752,
+          "avg": 0.706,
+          "z": 0.66,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.396,
-          "avg": 0.495,
-          "z": -1.35,
-          "key": true
-        },
-        {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.746,
+          "v": 0.747,
           "avg": 0.808,
-          "z": -1.33,
+          "z": -1.3,
+          "key": true
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.405,
+          "avg": 0.495,
+          "z": -1.24,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.68,
+          "v": 2.72,
           "avg": 3.29,
-          "z": -1.1,
+          "z": -1.03,
           "key": false
         }
       ]
