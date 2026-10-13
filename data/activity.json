@@ -1,20 +1,20 @@
 {
-  "updated": "2026-10-13T10:07:19.724Z",
+  "updated": "2026-10-13T12:07:19.712Z",
   "week": {
-    "from": "2026-10-06T10:07:19.724Z",
+    "from": "2026-10-06T12:07:19.712Z",
     "rows": [
       {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
         "nick": "FaceID",
-        "games": 87,
-        "wins": 42,
+        "games": 79,
+        "wins": 38,
         "winRate": 48
       },
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
         "nick": "Dor6파리",
-        "games": 74,
-        "wins": 26,
+        "games": 77,
+        "wins": 27,
         "winRate": 35
       },
       {
@@ -223,8 +223,9 @@
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
-      "games": 102,
+      "games": 103,
       "form": [
+        "win",
         "lose",
         "draw",
         "lose",
@@ -233,11 +234,10 @@
         "lose",
         "win",
         "draw",
-        "draw",
-        "lose"
+        "draw"
       ],
       "streak": {
-        "type": "lose",
+        "type": "win",
         "n": 1
       },
       "rivals": {
@@ -1131,8 +1131,9 @@
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
-      "games": 117,
+      "games": 118,
       "form": [
+        "lose",
         "win",
         "win",
         "lose",
@@ -1141,12 +1142,11 @@
         "draw",
         "win",
         "draw",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
-        "type": "win",
-        "n": 2
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
@@ -1156,20 +1156,23 @@
       }
     },
     "068895f008054937eb7c5fa1acbd5c30": {
-      "games": 126,
+      "games": 129,
       "form": [
+        "lose",
+        "win",
+        "lose",
         "draw",
         "lose",
         "win",
         "draw",
         "win",
         "lose",
-        "draw",
-        "draw",
-        "win",
-        "lose"
+        "draw"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,

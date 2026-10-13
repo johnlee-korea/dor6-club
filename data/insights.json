@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T10:07:19.724Z",
+  "updated": "2026-10-13T12:07:19.712Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -298,7 +298,7 @@
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "ctrl": "gamepad",
-      "games": 69,
+      "games": 70,
       "ace": [
         {
           "spId": 877227236,
@@ -336,35 +336,35 @@
           "spId": 861049072,
           "group": "AM",
           "pos": 18,
-          "games": 25,
+          "games": 26,
           "metric": "sht",
-          "value": 2.28,
+          "value": 2.27,
           "base": 1.2,
-          "z": 1.49,
+          "z": 1.48,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 29,
+          "goals": 31,
           "assists": 15
         }
       ],
       "goalMins": {
         "for": [
-          24,
+          25,
           34,
           21,
           35,
-          32,
+          33,
           38,
-          5
+          6
         ],
         "against": [
           19,
           26,
           33,
           33,
-          27,
+          28,
           26,
           9
         ]
@@ -372,10 +372,10 @@
       "comebacks": 11,
       "lateWinners": 5,
       "manner": {
-        "games": 69,
+        "games": 70,
         "yellow": 3,
         "red": 0,
-        "foul": 55,
+        "foul": 56,
         "score": 0.93
       }
     },
@@ -2167,8 +2167,40 @@
     },
     "068895f008054937eb7c5fa1acbd5c30": {
       "ctrl": "keyboard",
-      "games": 83,
+      "games": 85,
       "ace": [
+        {
+          "spId": 866230621,
+          "group": "GK",
+          "pos": 0,
+          "games": 6,
+          "metric": "sav",
+          "value": 5.33,
+          "base": 2.58,
+          "z": 3.44,
+          "title": {
+            "emoji": "🧤",
+            "name": "수호신"
+          },
+          "goals": 0,
+          "assists": 0
+        },
+        {
+          "spId": 221183898,
+          "group": "W",
+          "pos": 23,
+          "games": 6,
+          "metric": "int",
+          "value": 1.17,
+          "base": 0.37,
+          "z": 3.2,
+          "title": {
+            "emoji": "🦅",
+            "name": "볼 사냥꾼"
+          },
+          "goals": 1,
+          "assists": 0
+        },
         {
           "spId": 877231866,
           "group": "DM",
@@ -2184,38 +2216,6 @@
           },
           "goals": 5,
           "assists": 6
-        },
-        {
-          "spId": 851251517,
-          "group": "DM",
-          "pos": 9,
-          "games": 17,
-          "metric": "pas",
-          "value": 21.88,
-          "base": 14.38,
-          "z": 2.51,
-          "title": {
-            "emoji": "🎼",
-            "name": "중원의 지휘자"
-          },
-          "goals": 3,
-          "assists": 2
-        },
-        {
-          "spId": 845244260,
-          "group": "AM",
-          "pos": 18,
-          "games": 12,
-          "metric": "pas",
-          "value": 22.08,
-          "base": 11.78,
-          "z": 2.49,
-          "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
-          },
-          "goals": 9,
-          "assists": 11
         }
       ],
       "goalMins": {
@@ -2229,23 +2229,23 @@
           15
         ],
         "against": [
+          31,
           30,
-          30,
-          23,
-          41,
-          30,
-          33,
+          24,
+          43,
+          32,
+          34,
           9
         ]
       },
       "comebacks": 16,
       "lateWinners": 11,
       "manner": {
-        "games": 83,
+        "games": 85,
         "yellow": 2,
         "red": 1,
-        "foul": 42,
-        "score": 0.61
+        "foul": 44,
+        "score": 0.62
       }
     }
   },
@@ -2383,11 +2383,11 @@
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
         "nick": "Dor6파리",
-        "games": 83,
+        "games": 85,
         "yellow": 2,
         "red": 1,
-        "foul": 42,
-        "score": 0.61
+        "foul": 44,
+        "score": 0.62
       },
       {
         "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
