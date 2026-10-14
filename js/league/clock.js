@@ -76,6 +76,12 @@ export function hm(ms) {
   return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
 }
 
+/* UTC ms → KST "HH:MM:SS" (테스트 리그처럼 간격이 짧을 때) */
+export function hms(ms) {
+  const d = new Date(ms + KST);
+  return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+}
+
 /* ---------- 개최일·예약 규칙 ---------- */
 export const dayEntry = (config, date) => ((config && config.days) || []).find((d) => d.date === date) || null;
 export const lastNo = (config) => ((config && config.days) || []).reduce((m, d) => Math.max(m, d.no), 0);

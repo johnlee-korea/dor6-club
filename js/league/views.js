@@ -14,6 +14,9 @@ const empty = (msg, emoji = "📭") => `<div class="empty"><span class="emoji">$
 const teamName = (ctx, id) => esc(ctx.day.names.get(id));
 const player = (ctx, team, idx) => ctx.day.squads.get(team).players[idx];
 const mine = (ctx, id) => (id === ctx.myId ? " lg-mine" : "");
+/* 라운드 k 결과 공개 시각 — 정식 리그는 07:00 기준(clock.js), 테스트 리그는 ctx.roundAt(시작 시각 + k × 간격) */
+const rt = (ctx, k) => (ctx.roundAt ? ctx.roundAt(k) : C.roundMs(ctx.date, k, ctx.R));
+const tl = (ctx, ms) => (ctx.test ? C.hms(ms) : C.hm(ms));
 
 /* 선수 기록 캐시 (라운드 k까지) */
 export function statsAt(ctx, k) {
@@ -43,7 +46,7 @@ export function matchCard(ctx, r, i, open = false) {
   const res = ctx.day.results[r][i];
   const win = done ? (res.hg > res.ag ? m.home : res.ag > res.hg ? m.away : null) : null;
   const cls = (id) => `lg-team${mine(ctx, id)}${id === win ? " lg-win" : ""}`;
-  const score = done ? `<b class="lg-score">${res.hg} : ${res.ag}</b>` : `<span class="lg-time">${C.hm(C.roundMs(ctx.date, r + 1, ctx.R))}</span>`;
+  const score = done ? `<b class="lg-score">${res.hg} : ${res.ag}</b>` : `<span class="lg-time">${tl(ctx, rt(ctx, r + 1))}</span>`;
   const head = `<div class="lg-match-row"><span class="${cls(m.home)} h">${teamName(ctx, m.home)}</span>${score}<span class="${cls(m.away)} a">${teamName(ctx, m.away)}</span></div>`;
   if (!done || !res.ev.length) return `<div class="lg-match">${head}</div>`;
   return `<details class="lg-match"${open ? " open" : ""}><summary>${head}</summary><div class="lg-goals">${res.ev.map((e) => goalLine(ctx, m, e)).join("")}</div></details>`;
@@ -90,8 +93,8 @@ export function headCard(ctx) {
   const isToday = ctx.viewToday;
   const pct = ctx.R ? Math.round((ctx.k / ctx.R) * 100) : 0;
   return `<div class="card lg-head">
-    <div class="lg-title">제${ctx.no}회 도륙리그 ${isToday ? badge : `<span class="badge">지난 회차</span>`}</div>
-    <div class="lg-sub">${C.dateLabel(ctx.date)} · 참가 ${ctx.day.ids.length}팀 · ${ctx.R}라운드 · ${C.hm(C.roundMs(ctx.date, 0, ctx.R))}~${C.endLabel(ctx.R)}</div>
+    <div class="lg-title">${ctx.test ? "🧪 테스트 리그" : `제${ctx.no}회 도륙리그`} ${isToday ? badge : `<span class="badge">지난 회차</span>`}</div>
+    <div class="lg-sub">${C.dateLabel(ctx.date)} · 참가 ${ctx.day.ids.length}팀 · ${ctx.R}라운드 · ${tl(ctx, rt(ctx, 0))}~${tl(ctx, rt(ctx, ctx.R))}</div>
     <div class="progress ${ctx.k >= ctx.R ? "ok" : ""}"><div class="bar" style="width:${pct}%"></div></div>
     <div class="lg-prog"><span><b>${ctx.k}</b> / ${ctx.R} 라운드</span><span id="lg-count" class="lg-count">${countdownText(ctx)}</span></div>
     ${isToday ? "" : statusMessage(ctx)}
@@ -104,8 +107,8 @@ export function countdownText(ctx) {
   const now = ctx.now();
   let target, label;
   if (ctx.k >= ctx.R) return "🏁 모든 라운드 종료";
-  if (now < C.roundMs(ctx.date, 0, ctx.R)) { target = C.roundMs(ctx.date, 0, ctx.R); label = "개막까지"; }
-  else { target = C.roundMs(ctx.date, ctx.k + 1, ctx.R); label = `${ctx.k + 1}라운드 결과까지`; }
+  if (now < rt(ctx, 0)) { target = rt(ctx, 0); label = "개막까지"; }
+  else { target = rt(ctx, ctx.k + 1); label = `${ctx.k + 1}라운드 결과까지`; }
   const s = Math.max(0, Math.ceil((target - now) / 1000));
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
   const t = h ? `${h}시간 ${m}분` : `${m}:${String(sec).padStart(2, "0")}`;
@@ -131,11 +134,11 @@ export function tabLive(ctx) {
   if (k >= R) html += finalCard(ctx);
   if (k === 0) {
     // 개막 전: 1라운드 대진
-    html += `<div class="section-title">🗓 1라운드 대진 <span class="lg-dim">${C.hm(C.roundMs(ctx.date, 1, R))} 결과</span></div>
+    html += `<div class="section-title">🗓 1라운드 대진 <span class="lg-dim">${tl(ctx, rt(ctx, 1))} 결과</span></div>
       <div class="card">${ctx.day.rounds[0].matches.map((_, i) => matchCard(ctx, 0, i)).join("")}${byeLine(ctx, 0)}</div>`;
   } else if (k < R || ctx.viewToday) {
     const r = k - 1;
-    html += `<div class="section-title">📣 ${k}라운드 결과 <span class="lg-dim">${C.hm(C.roundMs(ctx.date, k, R))}</span></div>
+    html += `<div class="section-title">📣 ${k}라운드 결과 <span class="lg-dim">${tl(ctx, rt(ctx, k))}</span></div>
       <div class="card">${ctx.day.rounds[r].matches.map((_, i) => matchCard(ctx, r, i)).join("")}${byeLine(ctx, r)}</div>`;
   }
   html += `<div class="section-title">📊 순위 <a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
@@ -224,12 +227,12 @@ export function tabFixtures(ctx, sel) {
   const def = ctx.k >= ctx.R ? ctx.R : Math.max(1, ctx.k);
   const r = sel == null ? def : sel;
   const opts = ctx.day.rounds.map((_, i) => {
-    const n = i + 1, t = C.hm(C.roundMs(ctx.date, n, ctx.R));
+    const n = i + 1, t = tl(ctx, rt(ctx, n));
     return `<option value="${n}"${n === r ? " selected" : ""}>${n}라운드 · ${t}${n <= ctx.k ? " ✓" : ""}</option>`;
   }).join("");
   return `<div class="lg-tools"><select class="input lg-select" data-sel="fixtures">${opts}</select></div>
     <div class="card">${ctx.day.rounds[r - 1].matches.map((_, i) => matchCard(ctx, r - 1, i, false)).join("")}${byeLine(ctx, r - 1)}</div>
-    <div class="lg-dim lg-foot">${r <= ctx.k ? "경기를 누르면 득점자가 보여요." : `${C.hm(C.roundMs(ctx.date, r, ctx.R))}에 결과가 공개돼요.`}</div>`;
+    <div class="lg-dim lg-foot">${r <= ctx.k ? "경기를 누르면 득점자가 보여요." : `${tl(ctx, rt(ctx, r))}에 결과가 공개돼요.`}</div>`;
 }
 
 /* ---------- 탭 ⑤ 내 팀 ---------- */

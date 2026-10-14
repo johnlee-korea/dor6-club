@@ -5,6 +5,7 @@
 
 .lg-travel { background: var(--warn-bg); border: 1px solid var(--warn); color: var(--warn); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); margin-bottom: var(--sp-3); }
 .lg-travel a { text-decoration: underline; }
+.lg-travel.lg-test { background: rgba(88,166,255,.10); border-color: var(--info); color: var(--info); }
 
 .lg-head { margin-bottom: var(--sp-2); }
 .lg-title { font-size: var(--fs-lg); font-weight: 800; display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }

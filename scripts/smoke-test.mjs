@@ -149,9 +149,10 @@ for (const pg of PAGES) {
     ["2026-10-15T22:00", "done", ".lg-final"],
     ["2026-10-16T10:00", "none", ".lg-final"],      // 리그 없는 날 → 지난 회차(10-15) 최종 결과 + 다음 예약 안내
     ["2026-10-17T06:50", "forming", ".lg-head"],
-    ["2026-10-17T08:00", "delayed", ".lg-head"]
+    ["2026-10-17T08:00", "delayed", ".lg-head"],
+    ["2026-10-15T13:05", "live", ".lg-test", Date.UTC(2026, 9, 15, 4, 0)]   // 🧪 테스트 리그: 13:00 시작·20초 간격 → 5분 뒤 15라운드
   ];
-  for (const [nowParam, want, expectSel] of CASES) {
+  for (const [nowParam, want, expectSel, testStart] of CASES) {
     const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
     const { window } = dom;
     const errors = [];
@@ -161,7 +162,7 @@ for (const pg of PAGES) {
     try {
       window.eval(rd("js/common.js"));
       window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
-      app = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: leagueFetch, nowParam, myId: ME });
+      app = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: leagueFetch, nowParam, myId: ME, ...(testStart ? { testParam: String(testStart), ivParam: 20 } : {}) });
     } catch (e) { errors.push("mount: " + e.message); }
     const doc = window.document;
     const status = app && app.ctx ? app.ctx().status : "-";
@@ -185,7 +186,7 @@ for (const pg of PAGES) {
     const hasHeader = !!doc.querySelector(".app-header");
     const navOk = !!doc.querySelector('.app-nav a[href="league.html"].active');
     const ok = errors.length === 0 && hasHeader && navOk && status === want && expectOk && !tabsOk.includes("✗");
-    console.log(`${ok ? "✅" : "❌"} league ${nowParam.slice(5).replace("T", " ")} 상태:${status}(기대 ${want}) ${expectSel}:${expectOk} 탭:${tabsOk.join("")} 네비:${navOk}`);
+    console.log(`${ok ? "✅" : "❌"} league${testStart ? "(테스트)" : ""} ${nowParam.slice(5).replace("T", " ")} 상태:${status}(기대 ${want}) ${expectSel}:${expectOk} 탭:${tabsOk.join("")} 네비:${navOk}`);
     [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
     ok ? pass++ : fail++;
   }

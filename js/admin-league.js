@@ -64,6 +64,7 @@
           ${can.cancel.ok ? `<div class="lg-admin-why">해당일 06:30 전까지만 취소할 수 있어요.</div>` : `<div class="lg-admin-why">${escapeHtml(can.cancel.reason)}</div>`}` : ""}
         ${s.todayEntry ? `<button class="btn block" data-act="snapshot" ${can.snapshot.ok ? "" : "disabled"}>${snapBtnLabel}</button>
           <div class="lg-admin-why">${can.snapshot.ok ? (can.snapshot.late ? "자동 생성이 안 됐을 때만 사용 — 지금 명단·판수로 오늘 팀을 확정해요." : "07:00 전까지만 다시 만들 수 있어요 (지금 명단·판수 기준).") : escapeHtml(can.snapshot.reason)}</div>` : ""}
+        <a class="btn block" href="league.html?test&iv=20" target="_blank" rel="noopener">🧪 테스트 리그 바로 돌려 보기 <span class="lg-dim">(20초 간격 · 기록에 안 남음)</span></a>
         <button class="btn sm" data-act="refresh" style="justify-self:start;">↻ 상태 새로고침</button>
       </div>
       <div id="league-admin-msg" style="margin-top:var(--sp-3);font-size:var(--fs-sm);"></div>`;
