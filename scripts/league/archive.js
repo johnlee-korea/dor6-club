@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runDay, summarizeDay, ENGINE_VERSION } from "../../js/engine/index.js";
 import { kstDate } from "../../js/league/clock.js";
+import { snapshotTeams } from "../../js/league/roster.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const arg = (name) => { const i = process.argv.indexOf("--" + name); return i > 0 ? process.argv[i + 1] : null; };
@@ -21,11 +22,14 @@ const readJSON = (f, fallback) => {
   catch (e) { if (e.code === "ENOENT") return fallback; throw e; }
 };
 
-/* 스냅샷 하나 → history 항목 */
-export function archiveEntry(entry, snap, config) {
+/* 실제 스쿼드 선수 이름표 (spId → 이름) */
+export const loadNames = () => readJSON(path.join(ROOT, "data/meta/players.json"), {});
+
+/* 스냅샷 하나 → history 항목 (names: 선수 이름표 — 기록에 실제 선수 이름이 남음) */
+export function archiveEntry(entry, snap, config, names) {
   if (!snap) return { no: entry.no, date: entry.date, status: "none", teams: 0 };              // 편성 실패(미개최)
   if (!snap.teams || snap.teams.length < 2) return { no: entry.no, date: entry.date, status: "rest", teams: (snap.teams || []).length };
-  const day = runDay({ daySeed: snap.seed, teamSeed: snap.teamSeed || config.seed, teams: snap.teams.map((t) => ({ id: t.ouid, name: t.name })) });
+  const day = runDay({ daySeed: snap.seed, teamSeed: snap.teamSeed || config.seed, teams: snapshotTeams(snap, names) });
   return { no: entry.no, date: entry.date, engine: ENGINE_VERSION, teams: snap.teams.length, ...summarizeDay(day) };
 }
 
@@ -41,9 +45,10 @@ function main() {
   const todo = (config.days || []).filter((d) => d.date < TODAY && !done.has(d.date));
   if (!todo.length) { console.log(`기록할 회차 없음 (기준일 ${TODAY})`); return; }
 
+  const names = loadNames();
   for (const entry of todo) {
     const snap = readJSON(path.join(DIR, "days", entry.date + ".json"), null);
-    const rec = archiveEntry(entry, snap, config);
+    const rec = archiveEntry(entry, snap, config, names);
     history.days.push(rec);
     const c = rec.table && rec.table[0];
     console.log(`제${rec.no}회 ${rec.date}: ${rec.status ? (rec.status === "none" ? "스냅샷 없음(미개최)" : "휴무") : `${rec.teams}팀 · 우승 ${c.name} (승점 ${c.pts})`}`);

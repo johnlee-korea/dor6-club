@@ -15,9 +15,18 @@ export const TUNE = {
   assistRate: 0.85   // 골에 도움이 붙을 확률
 };
 
-// 득점자 가중: 포지션 × 슈팅 / 도움 가중: 포지션 × 패스
-const SCORE_W = { GK: 0, DF: 1, MF: 3, FW: 6 };
-const ASSIST_W = { GK: 0.2, DF: 1.5, MF: 4, FW: 3 };
+/* 득점자·도움 가중 — 세부 포지션만으로 결정 (v2, 사용자 결정: 능력치·강화 미반영, "골키퍼가 득점왕 안 나오게")
+   스트라이커 > 세컨톱·윙어 > 공격형 미드 > 측면 미드 > 중앙 미드 > 수비형·윙백 > 풀백 > 센터백 > 골키퍼(0) */
+export const SCORE_W = {
+  ST: 8, RS: 8, LS: 8, CF: 8, RF: 7, LF: 7, RW: 6, LW: 6,
+  CAM: 5, RAM: 5, LAM: 5, RM: 3.5, LM: 3.5, CM: 2, RCM: 2, LCM: 2,
+  CDM: 1, RDM: 1, LDM: 1, RWB: 1, LWB: 1, RB: 0.7, LB: 0.7, CB: 0.5, RCB: 0.5, LCB: 0.5, SW: 0.5, GK: 0
+};
+export const ASSIST_W = {
+  CAM: 6, RAM: 6, LAM: 6, RW: 5.5, LW: 5.5, RM: 5, LM: 5, RF: 5, LF: 5,
+  CM: 4, RCM: 4, LCM: 4, ST: 3.5, RS: 3.5, LS: 3.5, CF: 3.5, RWB: 3.5, LWB: 3.5, RB: 3, LB: 3,
+  CDM: 2.5, RDM: 2.5, LDM: 2.5, CB: 1, RCB: 1, LCB: 1, SW: 1, GK: 0.3
+};
 
 export function expectedGoals(att, def, isHome) {
   const l = TUNE.base * (1 + TUNE.k * (att - def - TUNE.gap)) + (isHome ? TUNE.home : 0);
@@ -36,11 +45,11 @@ export function simulateMatch(home, away, seedStr) {
   const addGoals = (side, team, n) => {
     for (let g = 0; g < n; g++) {
       const st = team.starters.map((i) => team.players[i]);
-      const s = st[rng.weighted(st.map((p) => SCORE_W[p.pos] * p.attrs.sht))].idx;
+      const s = st[rng.weighted(st.map((p) => SCORE_W[p.role] || 0))].idx;
       let as = null;
       if (rng.chance(TUNE.assistRate)) {
         const pool = st.filter((p) => p.idx !== s);
-        as = pool[rng.weighted(pool.map((p) => ASSIST_W[p.pos] * p.attrs.pas))].idx;
+        as = pool[rng.weighted(pool.map((p) => ASSIST_W[p.role] || 0))].idx;
       }
       // 시각: 1~90분, 90분 골은 추가시간(90+1~4)일 수 있음
       const min = 1 + rng.int(90);

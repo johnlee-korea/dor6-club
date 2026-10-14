@@ -10,6 +10,7 @@
 import * as C from "./clock.js";
 import { fetchJSON, loadSnapshot, simulateSnapshot } from "./data.js";
 import { judgeEligibility } from "./eligibility.js";
+import { squadFromLineup, hasSquads } from "./roster.js";
 import * as V from "./views.js";
 
 const TABS = [["live", "라이브"], ["table", "순위표"], ["players", "개인 순위"], ["fixtures", "일정/결과"], ["myteam", "내 팀"], ["records", "기록실"]];
@@ -65,18 +66,30 @@ export async function mountLeague(root, opts = {}) {
     return s;
   };
 
+  /* 실제 스쿼드 선수 이름 (data/meta/players.json, 약 380KB) — 스쿼드가 있는 스냅샷일 때만 1회 로딩 */
+  let namesP = null;
+  const getNames = (snap) => {
+    if (!hasSquads(snap)) return Promise.resolve(null);
+    if (!namesP) namesP = fetchJSON(fetchFn, "data/meta/players.json").catch((e) => { console.error("[도륙리그] 선수 이름 로딩 실패:", e); return null; });
+    return namesP;
+  };
+
   /* 🧪 테스트 리그 컨텍스트 — members.json + dashboard.json으로 참가 자격 판정(정식과 같은 규칙) */
   let testCache = null;
   async function buildTestCtx() {
     if (!testCache) {
-      const [members, dash] = await Promise.all([
+      const [members, dash, squads] = await Promise.all([
         fetchJSON(fetchFn, "data/members.json"),
-        fetchJSON(fetchFn, "data/dashboard.json").catch(() => null)
+        fetchJSON(fetchFn, "data/dashboard.json").catch(() => null),
+        fetchJSON(fetchFn, "data/squads.json").catch(() => null)
       ]);
       const date = C.kstDate(testStart);
       const j = judgeEligibility(members, dash, date);
-      const snap = { date, no: "테스트", seed: `TEST-${testStart}`, teamSeed: config.seed, teams: j.teams, excluded: j.excluded, eligibility: j.eligibility };
-      testCache = { snap, day: simulateSnapshot(snap, config) };
+      // 정식 스냅샷(Worker)과 같은 방식으로 실제 스쿼드를 붙임
+      const sq = (squads && squads.squads) || {};
+      const teams = j.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; });
+      const snap = { date, no: "테스트", seed: `TEST-${testStart}`, teamSeed: config.seed, teams, excluded: j.excluded, eligibility: j.eligibility };
+      testCache = { snap, day: simulateSnapshot(snap, config, await getNames(snap)) };
     }
     const { snap, day } = testCache;
     const R = day ? day.totalRounds : 0;
@@ -103,13 +116,13 @@ export async function mountLeague(root, opts = {}) {
     const c = { now, myId, config, history, todayEntry, todaySnap, pending: C.pendingReservation(config, n), today };
     let day = null, snap = null, entry = null;
     if (todaySnap && todaySnap.teams && todaySnap.teams.length >= 2) {
-      snap = todaySnap; entry = todayEntry; day = simulateSnapshot(snap, config); c.viewToday = true;
+      snap = todaySnap; entry = todayEntry; day = simulateSnapshot(snap, config, await getNames(snap)); c.viewToday = true;
     } else {
       // 지난 회차 중 가장 최근 (스냅샷이 있는 것)
       const past = config.days.filter((d) => d.date < today).sort((a, b) => (a.date < b.date ? 1 : -1));
       for (const d of past.slice(0, 3)) {
         const s = await getSnap(d.date);
-        if (s && s.teams && s.teams.length >= 2) { snap = s; entry = d; day = simulateSnapshot(s, config); break; }
+        if (s && s.teams && s.teams.length >= 2) { snap = s; entry = d; day = simulateSnapshot(s, config, await getNames(s)); break; }
       }
       c.viewToday = false;
     }

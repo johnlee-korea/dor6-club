@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { runDay, summarizeDay, ENGINE_VERSION } from "../../js/engine/index.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
 import { kstDate } from "../../js/league/clock.js";
+import { squadFromLineup, snapshotTeams } from "../../js/league/roster.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"));
@@ -36,7 +37,10 @@ if (history.days.some((d) => d.seed === seed)) { console.log("이미 기록된 �
 const config = read("data/league/config.json");
 const date = kstDate(start);
 const j = judgeEligibility(read("data/members.json"), read("data/dashboard.json"), date);
-const day = runDay({ daySeed: seed, teamSeed: config.seed, teams: j.teams.map((t) => ({ id: t.ouid, name: t.name })) });
+// 테스트 리그 화면과 같은 방식: 실제 스쿼드(squads.json) 첨부 + 선수 이름표
+const sq = read("data/squads.json").squads || {};
+const snap = { teams: j.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; }) };
+const day = runDay({ daySeed: seed, teamSeed: config.seed, teams: snapshotTeams(snap, read("data/meta/players.json")) });
 const rec = { no: "테스트", test: true, date, seed, startedAt: new Date(start).toISOString(), engine: ENGINE_VERSION, teams: j.teams.length, ...summarizeDay(day) };
 history.days.push(rec);
 fs.writeFileSync(HIST, JSON.stringify(history, null, 2) + "\n");

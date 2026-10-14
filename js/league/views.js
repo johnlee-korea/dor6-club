@@ -5,7 +5,14 @@
 import * as C from "./clock.js";
 import { reasonLabel } from "./eligibility.js";
 import { playerStats, leaders } from "../engine/index.js";
-import { ATTR_LABEL } from "../engine/team.js";
+import { formationOf } from "../engine/team.js";
+
+/* 포지션 표시: 실제 스쿼드면 세부 포지션(ST·CAM…), 교체는 "교체" */
+const posLabel = (p) => (p.sub ? "교체" : p.role || p.pos);
+/* 선수단 표 정렬: GK → 수비 → 수비형 → 중앙 → 공격형 → 공격, 교체는 맨 뒤 */
+const ROLE_ORDER = ["GK", "SW", "LWB", "LB", "LCB", "CB", "RCB", "RB", "RWB", "LDM", "CDM", "RDM", "LM", "LCM", "CM", "RCM", "RM",
+  "LAM", "CAM", "RAM", "LW", "LF", "CF", "RF", "RW", "LS", "ST", "RS"];
+const roleRank = (p) => (p.sub ? 99 : ROLE_ORDER.indexOf(p.role) < 0 ? 50 : ROLE_ORDER.indexOf(p.role));
 
 export const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -215,7 +222,7 @@ export function tabPlayers(ctx, kind = "g") {
   return chips(kind) + `<div class="card">${list.length ? list.map((s, i) => {
     const p = player(ctx, s.team, s.idx);
     return `<div class="lg-prow${mine(ctx, s.team)}"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
-      <div class="lg-pinfo"><b>${esc(p.name)}</b> <span class="lg-pos">${p.pos}</span><div class="lg-dim">${teamName(ctx, s.team)}</div></div>
+      <div class="lg-pinfo"><b>${esc(p.name)}</b> <span class="lg-pos">${posLabel(p)}</span><div class="lg-dim">${teamName(ctx, s.team)}</div></div>
       <div class="lg-pval"><b>${val(s)}</b><div class="lg-dim">${sub(s)}</div></div></div>`;
   }).join("") : empty("기록이 없어요.")}</div>
   ${kind === "avg" ? `<div class="lg-dim lg-foot">평균 평점은 팀 경기 수의 1/3(${minApps}경기) 이상 출전 선수만.</div>` : ""}`;
@@ -266,7 +273,8 @@ export function tabMyTeam(ctx, sel) {
     const wl = gf > ga ? ["W", "승"] : gf < ga ? ["L", "패"] : ["D", "무"];
     return `<div class="lg-rlabel"><span class="lg-f ${wl[0]}">${wl[1]}</span> ${r + 1}R</div>${matchCard(ctx, r, i)}`;
   };
-  const players = sq.players.map((p) => ({ p, s: st.get(id + "#" + p.idx) || { g: 0, a: 0, apps: 0, avg: 0 }, start: sq.starters.includes(p.idx) }));
+  const players = sq.players.map((p) => ({ p, s: st.get(id + "#" + p.idx) || { g: 0, a: 0, apps: 0, avg: 0 }, start: sq.starters.includes(p.idx) }))
+    .sort((a, b) => (b.start - a.start) || roleRank(a.p) - roleRank(b.p) || a.p.idx - b.p.idx);
   return picker + note + `<div class="card lg-myhead">
       <div class="lg-title">${teamName(ctx, id)}</div>
       <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"} · 팀 오버롤 ${sq.ovr}</div>
@@ -274,12 +282,11 @@ export function tabMyTeam(ctx, sel) {
     ${next ? `<div class="section-title">⏭ 다음 경기</div><div class="card">${matchCard(ctx, next[0], next[1])}</div>` : ""}
     ${shown.length ? `<div class="section-title">📋 지난 경기 <span class="lg-dim">${shown.length}경기</span></div>
       <div class="card">${recent.slice(0, 10).map(game).join("")}${recent.length > 10 ? `<details class="lg-older"><summary>이전 ${recent.length - 10}경기 보기</summary>${recent.slice(10).map(game).join("")}</details>` : ""}</div>` : ""}
-    <div class="section-title">👥 선수단 <span class="lg-dim">4-4-2 · 선발 ●</span></div>
-    <div class="card"><div class="table-wrap"><table class="data lg-squad"><thead><tr><th>#</th><th>선수</th><th>포지션</th><th class="num">OVR</th>
+    <div class="section-title">👥 선수단 <span class="lg-dim">${formationOf(sq)} · ${sq.real ? "최근 경기 스쿼드" : "가상 선수"} · 선발 ●</span></div>
+    <div class="card"><div class="table-wrap"><table class="data lg-squad"><thead><tr><th>포지션</th><th>선수</th>
       <th class="num">골</th><th class="num">도움</th><th class="num">평점</th></tr></thead><tbody>
-      ${players.map(({ p, s, start }) => `<tr><td>${p.num}</td><td>${start ? "● " : "<span class='lg-dim'>○</span> "}${esc(p.name)}</td>
-        <td><span class="lg-pos">${p.pos}</span></td><td class="num" title="${Object.entries(p.attrs).map(([k, v]) => ATTR_LABEL[k] + " " + v).join(" · ")}">${p.ovr}</td>
-        <td class="num">${s.g || ""}</td><td class="num">${s.a || ""}</td><td class="num">${s.apps ? s.avg.toFixed(1) : ""}</td></tr>`).join("")}
+      ${players.map(({ p, s, start }) => `<tr><td><span class="lg-pos">${posLabel(p)}</span></td><td>${start ? "● " : "<span class='lg-dim'>○</span> "}${esc(p.name)}</td>
+                <td class="num">${s.g || ""}</td><td class="num">${s.a || ""}</td><td class="num">${s.apps ? s.avg.toFixed(1) : ""}</td></tr>`).join("")}
     </tbody></table></div></div>`;
 }
 

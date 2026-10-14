@@ -11,6 +11,7 @@ import {
   canReserve, canCancel, canSnapshot, pendingReservation, todayRunning
 } from "../../js/league/clock.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
+import { squadFromLineup } from "../../js/league/roster.js";
 import { ENGINE_VERSION, roundCount } from "../../js/engine/index.js";
 
 export const LEAGUE_SNAPSHOT_CRON = "40,50 21 * * *";   // 06:40·06:50 KST — wrangler.toml crons와 같은 문자열
@@ -84,12 +85,18 @@ async function makeSnapshot(env, now, opts) {
 
   const { members, dashboard } = await readRoster(env);
   const judged = judgeEligibility(members, dashboard, today);
+  // v2.12.0 실제 스쿼드: squads.json 최근 경기 라인업 18명을 [spId, spPosition]으로 얼려 둠 (없으면 가상 선수)
+  const sqFile = await ghRead(env, "data/squads.json").catch((e) => { console.error("[league] squads.json 읽기 실패:", e.message); return null; });
+  const sq = (sqFile && sqFile.json && sqFile.json.squads) || {};
   const snap = {
     date: today, no: entry.no,
     seed: `${config.seed}-${today}`, teamSeed: config.seed,
     engine: ENGINE_VERSION,
     createdAt: new Date(now).toISOString(), source: opts.source,
-    teams: judged.teams.map((t) => ({ ouid: t.ouid, name: t.name })),
+    teams: judged.teams.map((t) => {
+      const squad = squadFromLineup(sq[t.ouid]);
+      return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
+    }),
     eligibility: judged.eligibility,
     excluded: judged.excluded
   };

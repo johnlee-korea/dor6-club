@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { archiveEntry } from "./archive.js";
+import { archiveEntry, loadNames } from "./archive.js";
 import { ENGINE_VERSION } from "../../js/engine/index.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -20,11 +20,12 @@ const pick = (r) => JSON.stringify({ t: r.table, s: r.scorers, a: r.assists, m: 
 
 console.log(`현재 엔진 v${ENGINE_VERSION} — 기록 ${history.days.length}회차 비교`);
 let diff = 0, checked = 0;
+const names = loadNames();
 for (const h of history.days) {
   if (!h.table || h.test) continue;   // 🧪 테스트 기록은 스냅샷 파일이 없어 비교 대상 아님
   const snap = read(path.join(DIR, "days", h.date + ".json"));
   if (!snap) { console.log(`  제${h.no}회 ${h.date}: 스냅샷 없음 — 건너뜀`); continue; }
-  const now = archiveEntry(h, snap, config);
+  const now = archiveEntry(h, snap, config, names);
   const same = pick(now) === pick(h);
   checked++;
   if (!same) diff++;
