@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/league.css">
 </head>
 <body data-page="admin">
   <main class="page">
     <h1 class="page-title">🔒 관리자 패널</h1>
-    <p class="page-desc">회장·클럽장·부클럽장 전용. 클럽원 등록/삭제를 수행합니다.</p>
+    <p class="page-desc">회장·클럽장·부클럽장 전용. 클럽원 등록/삭제와 도륙리그 개최를 관리합니다.</p>
 
     <!-- 로그인 전 -->
     <div id="login-view" class="card" style="max-width:380px;margin:0 auto;">
@@ -30,6 +31,10 @@
         <span class="badge ok">로그인됨</span>
         <button id="logout-btn" class="btn">로그아웃</button>
       </div>
+
+      <!-- v2.11.0 도륙리그 (js/admin-league.js) -->
+      <div class="section-title">⚽ 도륙리그 <a href="league.html" style="margin-left:auto;font-size:var(--fs-sm);font-weight:400;color:var(--text-muted);">리그 보기 ›</a></div>
+      <div id="league-admin" class="card"><div class="loading">불러오는 중…</div></div>
 
       <div class="section-title">➕ 클럽원 등록</div>
       <div class="card">
@@ -58,6 +63,7 @@
   </main>
   <script src="js/common.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/admin-league.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

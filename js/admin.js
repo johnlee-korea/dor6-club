@@ -39,6 +39,7 @@ async function doLogin() {
 async function showAdminView() {
   $("login-view").style.display = "none";
   $("admin-view").style.display = "block";
+  if (window.loadLeagueAdmin) window.loadLeagueAdmin();   // v2.11.0 도륙리그 섹션 (js/admin-league.js)
   await loadMemberList();
 }
 

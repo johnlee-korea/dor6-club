@@ -1,0 +1,50 @@
+name: 도륙리그 기록 보관
+
+# 매일 00:30 KST(15:30 UTC) Cloudflare Worker Cron이 workflow_dispatch로 호출 — 전날이 개최일일 때만 (worker/src/league.js)
+# 지난 개최일 중 history.json에 없는 회차를 같은 엔진으로 시뮬레이션해 최종 결과를 추가 (CLAUDE.md 25-7)
+on:
+  workflow_dispatch:
+  # 예비: Worker 크론이 멈춘 적이 있어(v2.8.0) GitHub 스케줄로도 매일 01:10 KST 실행
+  # 기록할 회차가 없으면 커밋 없이 끝나므로 두 번 돌아도 중복 없음
+  schedule:
+    - cron: "10 16 * * *"
+
+permissions:
+  contents: write
+
+# 수집(collect.yml)·등급(rank.yml)과 같은 그룹 → 커밋 충돌 방지
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 기록 보관
+        run: node scripts/league/archive.js
+
+      - name: 변경 사항 커밋
+        run: |
+          git config user.name "dor6-bot"
+          git config user.email "actions@github.com"
+          git add data/league/history.json
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "[자동] 도륙리그 기록 보관 ($(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST'))"
+            for i in 1 2 3; do
+              git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+              git rebase --abort 2>/dev/null; echo "push 재시도 $i/3"; sleep 5
+            done
+            exit 1
+          fi

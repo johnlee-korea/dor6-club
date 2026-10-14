@@ -5,6 +5,7 @@
      ADMIN_PASSWORD, NEXON_API_KEY, GH_TOKEN, JWT_SECRET
    일반 변수(vars): GH_REPO("owner/repo"), GH_BRANCH("main"), ALLOWED_ORIGIN
    예약 실행(Cron Trigger): 2시간마다 GitHub Actions 수집 워크플로, 매시 35분 등급 기록 워크플로(rank.yml)를 호출
+     + 도륙리그(v2.11.0, league.js): 06:40·06:50 KST 참가팀 스냅샷, 00:30 KST 기록 보관 워크플로(league.yml)
      → GitHub 자체 schedule은 혼잡 시 누락이 잦아 정시 실행을 Worker가 담당
    ============================================================ */
 
@@ -12,6 +13,7 @@ import { styleRaw, withShots, computeMetrics, judge } from "../../scripts/lib/pl
 import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/lib/insight.js";
 import { compactMatch } from "../../scripts/lib/manage.js";
 import { RANK_RT, rankSearchUrl, parseRankSearch } from "../../scripts/lib/rank.js";
+import { leagueRoute, leagueScheduled, LEAGUE_SNAPSHOT_CRON, LEAGUE_ARCHIVE_CRON } from "./league.js";
 
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
@@ -21,6 +23,11 @@ const RANK_CRON = "35 * * * *";         // wrangler.toml crons 와 같은 문자
 export default {
   /* Cron Trigger 진입점 (wrangler.toml [triggers] crons) */
   async scheduled(event, env, ctx) {
+    // 도륙리그 크론은 league.js가 처리 (기존 수집·등급 분기는 그대로)
+    if (event.cron === LEAGUE_SNAPSHOT_CRON || event.cron === LEAGUE_ARCHIVE_CRON) {
+      ctx.waitUntil(leagueScheduled(event.cron, env, dispatchCollect).catch((e) => console.error("[cron] 도륙리그 처리 실패:", e.message)));
+      return;
+    }
     // 매시 35분 = 등급 기록(데이터센터가 정시 기준으로 갱신된 뒤), 2시간마다 05분 = 매치 수집
     const wf = event.cron === RANK_CRON ? RANK_WORKFLOW : COLLECT_WORKFLOW;
     ctx.waitUntil(dispatchCollect(env, wf).catch((e) => console.error(`[cron] ${wf} 호출 실패:`, e.message)));
@@ -87,6 +94,13 @@ export default {
         const ouid = await resolveOuid(nickname, env.NEXON_API_KEY);
         if (!ouid) return json({ error: "넥슨에서 해당 닉네임을 찾을 수 없습니다." }, 404);
         return json({ ouid });
+      }
+
+      // ⚽ 도륙리그 관리 (v2.11.0) — status · reserve · cancel · snapshot
+      if (url.pathname.startsWith("/league/") && request.method === "POST") {
+        const body = await request.json().catch(() => ({}));
+        const data = await leagueRoute(url.pathname.slice(8), body, env);
+        return json(data, data.error ? 400 : 200);
       }
 
       if (url.pathname === "/members" && request.method === "POST") {

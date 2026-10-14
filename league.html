@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>도륙리그 · 도륙 Dor6</title>
+  <link rel="icon" href="dor6.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/league.css">
+</head>
+<body data-page="league">
+  <main class="page">
+    <h1 class="page-title">⚽ 도륙리그</h1>
+    <p class="page-desc">클럽원 1명 = 1팀! 운영자가 리그를 열면 아침 7시에 자동 편성되고, 12분마다 한 라운드씩 진행돼요. 우리는 구경하고 응원만 하면 끝.</p>
+    <div id="league-root"><div class="loading">불러오는 중…</div></div>
+  </main>
+  <script src="js/common.js"></script>
+  <!-- 결과는 서버가 아니라 이 모듈이 계산 (js/engine 결정론 엔진, CLAUDE.md 25장) -->
+  <script type="module" src="js/league/league.js"></script>
+</body>
+</html>

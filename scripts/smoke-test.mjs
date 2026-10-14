@@ -30,7 +30,7 @@ const PAGES = [
   { file: "hall.html",      scripts: ["js/common.js", "js/squad.js", "js/hall.js"], root: "hall-root", expect: ".sq-chip" },
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },
   { file: "patchnotes.html", scripts: ["js/common.js", "js/patchnotes.js"], root: "pn-root", expect: ".pn-tag" },
-  { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin.js"], root: null },
+  { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin-league.js", "js/admin.js"], root: null },
   { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null }
 ];
 
@@ -129,6 +129,77 @@ for (const pg of PAGES) {
   }
 }
 
+
+/* ---------- ⚽ 도륙리그 (v2.11.0) ----------
+   league.js는 ES 모듈 → Node에서 직접 import해 jsdom 창에 mountLeague로 붙임.
+   데이터는 픽스처(scripts/fixtures/league: 10-13 지난 회차·10-15 오늘·10-17 예약, 실제 명단·판수로 편성)
+   시간 이동(nowParam)으로 상태 6가지를 만들고 탭 6개·선택상자를 모두 돌려 오류 없는지 확인 */
+{
+  const { mountLeague } = await import(new URL("../js/league/league.js", import.meta.url));
+  const FX = "scripts/fixtures/league/";
+  const leagueFetch = async (url) => {
+    const p = String(url).replace(/^https?:\/\/localhost\//, "").replace(/^\//, "").split("?")[0];
+    return localFetch(p.startsWith("data/league/") ? FX + p.slice("data/league/".length) : url);
+  };
+  const fxSnap = JSON.parse(rd(FX + "days/2026-10-15.json"));
+  const ME = fxSnap.teams[0].ouid;
+  const CASES = [
+    ["2026-10-15T06:20", "before", ".lg-match"],
+    ["2026-10-15T13:00", "live", ".lg-score"],
+    ["2026-10-15T22:00", "done", ".lg-final"],
+    ["2026-10-16T10:00", "none", ".lg-final"],      // 리그 없는 날 → 지난 회차(10-15) 최종 결과 + 다음 예약 안내
+    ["2026-10-17T06:50", "forming", ".lg-head"],
+    ["2026-10-17T08:00", "delayed", ".lg-head"]
+  ];
+  for (const [nowParam, want, expectSel] of CASES) {
+    const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    const errors = [];
+    window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
+    window.fetch = localFetch;
+    let app = null;
+    try {
+      window.eval(rd("js/common.js"));
+      window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+      app = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: leagueFetch, nowParam, myId: ME });
+    } catch (e) { errors.push("mount: " + e.message); }
+    const doc = window.document;
+    const status = app && app.ctx ? app.ctx().status : "-";
+    const expectOk = doc.querySelectorAll(expectSel).length > 0;
+    const change = (sel, v) => { const el = doc.querySelector(sel); if (el) { el.value = v; el.dispatchEvent(new window.Event("change", { bubbles: true })); } };
+    const tabsOk = [];
+    for (const t of ["live", "table", "players", "fixtures", "myteam", "records"]) {
+      window.location.hash = t;
+      window.dispatchEvent(new window.HashChangeEvent("hashchange"));
+      await sleep(30);
+      if (t === "table") change("[data-sel=table]", "1");
+      if (t === "players") { const c = doc.querySelector('[data-kind="avg"]'); if (c) c.dispatchEvent(new window.MouseEvent("click", { bubbles: true })); }
+      if (t === "fixtures") change("[data-sel=fixtures]", "2");
+      if (t === "myteam") change("[data-sel=myteam]", fxSnap.teams[1].ouid);
+      await sleep(20);
+      const bad = doc.querySelector("#lg-body .error-box");
+      if (bad) errors.push(`${t} 탭 오류 표시`);
+      tabsOk.push(doc.querySelector(`.pf-tab.active[data-tab="${t}"]`) ? "✓" : "✗");
+    }
+    if (app) app.destroy();
+    const hasHeader = !!doc.querySelector(".app-header");
+    const navOk = !!doc.querySelector('.app-nav a[href="league.html"].active');
+    const ok = errors.length === 0 && hasHeader && navOk && status === want && expectOk && !tabsOk.includes("✗");
+    console.log(`${ok ? "✅" : "❌"} league ${nowParam.slice(5).replace("T", " ")} 상태:${status}(기대 ${want}) ${expectSel}:${expectOk} 탭:${tabsOk.join("")} 네비:${navOk}`);
+    [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
+    ok ? pass++ : fail++;
+  }
+
+  // 엔진 금지 함수 검사 (주석 제외) — 기기마다 결과가 달라질 수 있는 함수·현재 시각 사용 금지 (CLAUDE.md 25-5)
+  const bad = [];
+  for (const f of fs.readdirSync(path.join(ROOT, "js/engine"))) {
+    const src = rd("js/engine/" + f).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+    const m = src.match(/Math\.(random|exp|log|pow|sqrt|sin|cos|tan|atan|cbrt|hypot)\b|\bDate\b|performance\.|localStorage|document\./g);
+    if (m) bad.push(`${f}: ${[...new Set(m)].join(", ")}`);
+  }
+  console.log(`${bad.length ? "❌" : "✅"} 엔진 금지 함수 검사 ${bad.length ? bad.join(" / ") : "없음"}`);
+  bad.length ? fail++ : pass++;
+}
 
 console.log(`\n결과: ${pass} 통과, ${fail} 실패`);
 process.exit(fail ? 1 : 0);

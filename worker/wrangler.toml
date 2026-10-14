@@ -13,7 +13,9 @@ SITE_URL = "https://johnlee-korea.github.io/dor6-club"   # 전적 검색 분석�
 # (GitHub 자체 schedule은 누락이 잦아 예비용으로만 사용, collect.yml 참고)
 [triggers]
 # 매시 35분 = 등급·순위·점수 기록(rank.yml, v2.8.0) — 문자열은 src/index.js RANK_CRON 과 같아야 함
-crons = ["5 */2 * * *", "35 * * * *"]
+# 도륙리그(v2.11.0): "40,50 21 * * *" = 06:40·06:50 KST 참가팀 스냅샷, "30 15 * * *" = 00:30 KST 기록 보관
+#   — 문자열은 src/league.js LEAGUE_SNAPSHOT_CRON·LEAGUE_ARCHIVE_CRON 과 같아야 함 (무료 플랜 계정당 크론 5개 한도)
+crons = ["5 */2 * * *", "35 * * * *", "40,50 21 * * *", "30 15 * * *"]
 
 # 비밀값은 코드/설정에 넣지 말고 아래 명령으로 등록:
 #   wrangler secret put ADMIN_PASSWORD

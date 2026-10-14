@@ -1,0 +1,104 @@
+/* ============================================================
+   league.css — ⚽ 도륙리그 전용 스타일 (league.html · admin 리그 섹션)
+   색·간격은 tokens.css 변수만 사용. 접두사 lg- (다른 페이지와 섞이지 않게)
+   ============================================================ */
+
+.lg-travel { background: var(--warn-bg); border: 1px solid var(--warn); color: var(--warn); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); margin-bottom: var(--sp-3); }
+.lg-travel a { text-decoration: underline; }
+
+.lg-head { margin-bottom: var(--sp-2); }
+.lg-title { font-size: var(--fs-lg); font-weight: 800; display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.lg-sub { color: var(--text-muted); font-size: var(--fs-sm); margin: 4px 0 var(--sp-3); }
+.lg-prog { display: flex; justify-content: space-between; gap: var(--sp-2); font-size: var(--fs-sm); margin-top: 6px; color: var(--text-muted); flex-wrap: wrap; }
+.lg-prog b { color: var(--silver-bright); }
+.lg-count b { color: var(--silver-bright); font-variant-numeric: tabular-nums; }
+.lg-note { margin-top: var(--sp-3); font-size: var(--fs-sm); color: var(--text-muted); background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); }
+.lg-note b { color: var(--silver-bright); }
+.lg-note.warn { color: var(--warn); background: var(--warn-bg); }
+.lg-dim { color: var(--text-dim); font-size: var(--fs-xs); font-weight: 400; }
+.lg-foot { margin-top: var(--sp-2); }
+.lg-more { margin-left: auto; font-size: var(--fs-sm); color: var(--text-muted); font-weight: 400; }
+.lg-tabs { margin-top: var(--sp-2); }
+
+/* 경기 카드 */
+.lg-match { border-bottom: 1px solid var(--border); }
+.lg-match:last-of-type { border-bottom: none; }
+.lg-match summary { list-style: none; cursor: pointer; }
+.lg-match summary::-webkit-details-marker { display: none; }
+.lg-match-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--sp-2); padding: 10px 0; }
+.lg-team { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sm); }
+.lg-team.h { text-align: right; }
+.lg-team.lg-win { color: var(--text); font-weight: 800; }
+.lg-team:not(.lg-win) { color: var(--text-muted); }
+.lg-team.lg-mine { color: var(--silver-bright); font-weight: 800; text-decoration: underline; text-decoration-color: var(--silver-dim); text-underline-offset: 3px; }
+.lg-score { font-size: var(--fs-base); font-variant-numeric: tabular-nums; color: var(--silver-bright); background: var(--surface-2); border-radius: 6px; padding: 2px 10px; min-width: 64px; text-align: center; }
+.lg-time { font-size: var(--fs-xs); color: var(--text-dim); min-width: 64px; text-align: center; }
+details.lg-match[open] .lg-score { background: var(--surface-3); }
+.lg-goals { padding: 0 0 10px; font-size: var(--fs-xs); }
+.lg-goal { padding: 2px 0; color: var(--text-muted); }
+.lg-goal.h { text-align: left; }
+.lg-goal.a { text-align: right; }
+.lg-min { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.lg-bye { font-size: var(--fs-xs); color: var(--text-dim); padding-top: var(--sp-2); }
+.lg-rlabel { font-size: 11px; color: var(--text-dim); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.lg-older summary { cursor: pointer; font-size: var(--fs-sm); color: var(--text-muted); padding: var(--sp-3) 0 var(--sp-1); }
+
+/* 순위표 */
+.lg-table td, .lg-table th { padding: 7px 8px; }
+.lg-table .rank { width: 22px; height: 22px; font-size: 11px; }
+.lg-tname { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+.lg-table tr.lg-mine td, .lg-squad tr.lg-mine td { background: rgba(199,204,209,.08); }
+.lg-table tr.lg-mine .lg-tname { color: var(--silver-bright); font-weight: 800; }
+.lg-gap td { text-align: center; color: var(--text-dim); padding: 2px; }
+.lg-up { color: var(--win); font-size: 10px; }
+.lg-down { color: var(--lose); font-size: 10px; }
+.lg-same { color: var(--text-dim); font-size: 10px; }
+.lg-f { display: inline-block; width: 18px; height: 18px; line-height: 18px; border-radius: 4px; text-align: center; font-size: 10px; margin-right: 2px; font-weight: 700; }
+.lg-f.W { background: var(--ok-bg); color: var(--win); }
+.lg-f.D { background: var(--surface-3); color: var(--draw); }
+.lg-f.L { background: var(--danger-bg); color: var(--lose); }
+
+.lg-tools { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.lg-select { max-width: 260px; }
+
+/* 개인 순위·기록실 행 */
+.lg-prow { display: flex; align-items: center; gap: var(--sp-3); padding: 8px 0; border-bottom: 1px solid var(--border); }
+.lg-prow:last-child { border-bottom: none; }
+.lg-prow.lg-mine .lg-pinfo b { color: var(--silver-bright); }
+.lg-prow.lg-mine { background: rgba(199,204,209,.05); }
+.lg-pinfo { flex: 1; min-width: 0; }
+.lg-pinfo .lg-dim { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lg-pval { text-align: right; }
+.lg-pval b { font-size: var(--fs-lg); color: var(--silver-bright); }
+.lg-pos { font-size: 10px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; }
+
+/* 종료·우승 카드 */
+.lg-final { border-color: #d4a01766; background: linear-gradient(160deg, rgba(212,160,23,.10), var(--surface) 60%); }
+.lg-champ { font-size: var(--fs-xl); font-weight: 800; margin: 4px 0; }
+.lg-champ b { background: linear-gradient(135deg,#ffe08a,#d4a017); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lg-awards { display: grid; gap: 4px; margin-top: var(--sp-3); font-size: var(--fs-sm); }
+.lg-awards b { color: var(--silver-bright); }
+
+/* 불참 명단 */
+.lg-excl summary { cursor: pointer; font-size: var(--fs-sm); color: var(--text-muted); }
+.lg-excl-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--sp-2); }
+.lg-excl-item { font-size: var(--fs-xs); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+.lg-excl-item.lg-mine { border-color: var(--danger); }
+
+/* 내 팀 순위 추이 */
+.lg-chart { width: 100%; height: 90px; margin-top: var(--sp-2); }
+.lg-chart-line { fill: none; stroke: var(--silver); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.lg-chart-top { stroke: #d4a01766; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.lg-chart-dot { fill: var(--silver-bright); }
+.lg-chart-cap { margin-top: 2px; }
+
+.lg-rec summary { cursor: pointer; list-style: none; font-size: var(--fs-sm); }
+.lg-rec summary::-webkit-details-marker { display: none; }
+.lg-rec .table-wrap { margin-top: var(--sp-3); }
+
+/* 관리자 리그 섹션 (admin.html) */
+.lg-admin-grid { display: grid; grid-template-columns: auto 1fr; gap: 6px var(--sp-3); font-size: var(--fs-sm); }
+.lg-admin-grid dt { color: var(--text-muted); }
+.lg-admin-grid dd { margin: 0; }
+.lg-admin-actions { display: grid; gap: var(--sp-2); margin-top: var(--sp-4); }
+.lg-admin-why { font-size: var(--fs-xs); color: var(--text-dim); margin-top: -2px; }

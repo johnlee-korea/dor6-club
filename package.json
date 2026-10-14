@@ -9,7 +9,10 @@
     "aggregate": "node scripts/aggregate.js",
     "build": "npm run collect && npm run aggregate",
     "test": "node scripts/smoke-test.mjs",
-    "baseline": "node --env-file=.env scripts/ranker-baseline.js"
+    "baseline": "node --env-file=.env scripts/ranker-baseline.js",
+    "league:test": "node scripts/league/balance-test.js",
+    "league:verify": "node scripts/league/verify.js",
+    "league:archive": "node scripts/league/archive.js"
   },
   "engines": {
     "node": ">=20"
