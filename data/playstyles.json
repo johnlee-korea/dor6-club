@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T23:09:42.711Z",
+  "updated": "2026-10-14T00:07:31.497Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1391,77 +1391,6 @@
           "v": 0.792,
           "avg": 0.889,
           "z": -1.4,
-          "key": false
-        }
-      ]
-    },
-    "0b4adfde6411fa08e6339ceaa3ed1942": {
-      "games": 50,
-      "style": {
-        "name": "카운터 스나이퍼",
-        "line": "공 내주고 스루 한 방, 막히면 중거리",
-        "basis": [
-          "longShot+",
-          "throughRatio+",
-          "poss-"
-        ],
-        "rare": true
-      },
-      "highs": [
-        {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
-          "unit": "%",
-          "v": 0.206,
-          "avg": 0.144,
-          "z": 1.29,
-          "key": true
-        },
-        {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
-          "unit": "%",
-          "v": 0.274,
-          "avg": 0.181,
-          "z": 1.22,
-          "key": true
-        },
-        {
-          "k": "ga",
-          "label": "경기당 실점",
-          "unit": "",
-          "v": 3.22,
-          "avg": 2.604,
-          "z": 1.17,
-          "key": false
-        }
-      ],
-      "lows": [
-        {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 45.78,
-          "avg": 50.642,
-          "z": -1.67,
-          "key": true
-        },
-        {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 66.62,
-          "avg": 79.272,
-          "z": -1.45,
-          "key": false
-        },
-        {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.863,
-          "avg": 0.891,
-          "z": -1.36,
           "key": false
         }
       ]
