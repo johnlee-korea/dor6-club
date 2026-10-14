@@ -19,6 +19,9 @@ const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
 const RANK_WORKFLOW = "rank.yml";       // 매시 등급·순위·점수 기록 (v2.8.0)
 const RANK_CRON = "35 * * * *";         // wrangler.toml crons 와 같은 문자열
+const NOTICES_WORKFLOW = "notices.yml"; // FC온라인 공지 수집 (v2.10.0)
+const NOTICES_UTC_HOUR = 11;            // 매시 35분 크론 중 11시(UTC) = 20:35 KST에 공지 수집도 호출
+                                        // — GitHub 자체 schedule이 7시간 늦거나 건너뛰어서(10/13·10/14 실측), 크론 개수(무료 5개) 늘리지 않고 재사용
 
 export default {
   /* Cron Trigger 진입점 (wrangler.toml [triggers] crons) */
@@ -31,6 +34,9 @@ export default {
     // 매시 35분 = 등급 기록(데이터센터가 정시 기준으로 갱신된 뒤), 2시간마다 05분 = 매치 수집
     const wf = event.cron === RANK_CRON ? RANK_WORKFLOW : COLLECT_WORKFLOW;
     ctx.waitUntil(dispatchCollect(env, wf).catch((e) => console.error(`[cron] ${wf} 호출 실패:`, e.message)));
+    if (event.cron === RANK_CRON && new Date(event.scheduledTime).getUTCHours() === NOTICES_UTC_HOUR) {
+      ctx.waitUntil(dispatchCollect(env, NOTICES_WORKFLOW).catch((e) => console.error(`[cron] ${NOTICES_WORKFLOW} 호출 실패:`, e.message)));
+    }
   },
 
   async fetch(request, env) {

@@ -2,6 +2,8 @@ name: FC온라인 공지 수집
 
 # 하루 1회 FC온라인 공식 홈페이지 공지사항·개발자 노트 → data/notices.json (v2.10.0)
 # 홈페이지 HTML만 읽음 → 넥슨 API 키 불필요. 매일 저녁 8시 17분(KST) 전후 — 정기점검 등 중요 공지가 주로 오후에 올라옴(사용자) (GitHub 스케줄은 수십 분 늦을 수 있음)
+# 정시 실행은 Cloudflare Worker가 담당: 매시 35분 등급 크론 중 11시 UTC(20:35 KST)에 workflow_dispatch (worker/src/index.js)
+# GitHub 자체 schedule은 늦거나 건너뛰어(10/13 7시간 지연·10/14 미실행) 예비로만 둠 — 하루 두 번 돌아도 덮어쓰기라 문제없음
 on:
   workflow_dispatch:
   schedule:
@@ -35,7 +37,8 @@ jobs:
         run: |
           git config user.name "dor6-bot"
           git config user.email "actions@github.com"
-          git add data/notices.json
+          # notices.js가 쓰는 두 파일 모두 — 본문 파일(v2.10.1)을 빠뜨려 pull --rebase가 "unstaged changes"로 실패했었음(10/13)
+          git add data/notices.json data/notices-body.json
           # updatedAt만 바뀐 경우도 커밋(화면의 '갱신 시각' 표시용) — 하루 1회라 부담 없음
           if git diff --staged --quiet; then
             echo "변경 없음 — 커밋 생략"
