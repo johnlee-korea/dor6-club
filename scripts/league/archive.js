@@ -35,7 +35,7 @@ function main() {
   const histFile = path.join(DIR, "history.json");
   const history = readJSON(histFile, { days: [] });
   history.days = history.days || [];
-  const done = new Set(history.days.map((d) => d.date));
+  const done = new Set(history.days.filter((d) => !d.test).map((d) => d.date));   // 🧪 테스트 기록(archive-test.js)은 제외
 
   // 오늘(KST)보다 이전 개최일만 — 오늘 리그는 아직 진행 중일 수 있음
   const todo = (config.days || []).filter((d) => d.date < TODAY && !done.has(d.date));

@@ -177,13 +177,16 @@ function finalCard(ctx) {
     </div></div>`;
 }
 
+/* 기록 회차 이름 — 🧪 테스트 리그는 회차 번호 대신 표시 (archive-test.js) */
+const recLabel = (d) => (d.test ? `🧪 테스트${d.startedAt ? " " + C.hm(Date.parse(d.startedAt)) : ""}` : `제${d.no}회`);
+
 /* 리그 없는 날: 직전 회차 결과 요약 (history) */
 function lastResultCard(h) {
   const c = h.table && h.table[0];
   if (!c) return "";
   const s = h.scorers && h.scorers[0];
   return `<div class="section-title">🏆 지난 회차 결과</div><div class="card lg-final">
-    <div class="lg-dim">제${h.no}회 · ${C.dateLabel(h.date)} · ${h.teams}팀</div>
+    <div class="lg-dim">${recLabel(h)} · ${C.dateLabel(h.date)} · ${h.teams}팀</div>
     <div class="lg-champ">🏆 우승 <b>${esc(c.name)}</b></div>
     <div class="lg-dim">${c.w}승 ${c.d}무 ${c.l}패 · 승점 ${c.pts}</div>
     ${s ? `<div class="lg-awards"><div>⚽ 득점왕 ${esc(s.player)} <span class="lg-dim">${esc(s.team)}</span> <b>${s.goals}골</b></div></div>` : ""}
@@ -308,13 +311,14 @@ export function tabRecords(ctx) {
     wins.set(c.ouid, w);
   }
   const top = [...wins.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "ko"));
-  return `<div class="section-title">👑 누적 우승</div><div class="card">${top.map((w, i) => `<div class="lg-prow"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
+  const hasTest = days.some((d) => d.test);
+  return `<div class="section-title">👑 누적 우승${hasTest ? ` <span class="lg-dim">🧪 테스트 포함</span>` : ""}</div><div class="card">${top.map((w, i) => `<div class="lg-prow"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
       <div class="lg-pinfo"><b>${esc(w.name)}</b></div><div class="lg-pval"><b>${w.n}회</b></div></div>`).join("")}</div>
     <div class="section-title">📜 회차별 기록</div>
     ${days.map((d) => {
       const c = d.table && d.table[0], s = d.scorers && d.scorers[0], a = d.assists && d.assists[0];
-      if (!c) return `<div class="card lg-rec"><b>제${d.no}회</b> <span class="lg-dim">${C.dateLabel(d.date)} · 미개최</span></div>`;
-      return `<details class="card lg-rec"><summary><b>제${d.no}회</b> <span class="lg-dim">${C.dateLabel(d.date)} · ${d.teams}팀</span>
+      if (!c) return `<div class="card lg-rec"><b>${recLabel(d)}</b> <span class="lg-dim">${C.dateLabel(d.date)} · 미개최</span></div>`;
+      return `<details class="card lg-rec"><summary><b>${recLabel(d)}</b> <span class="lg-dim">${C.dateLabel(d.date)} · ${d.teams}팀</span>
           <div>🏆 ${esc(c.name)} <span class="lg-dim">승점 ${c.pts}</span>${s ? ` · ⚽ ${esc(s.player)} ${s.goals}골` : ""}</div></summary>
         <div class="lg-awards">
           ${s ? `<div>⚽ 득점왕 ${esc(s.player)} <span class="lg-dim">${esc(s.team)}</span> <b>${s.goals}골</b></div>` : ""}
