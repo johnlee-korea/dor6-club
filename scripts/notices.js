@@ -6,7 +6,7 @@
    - 넥슨 API 키 불필요 (공식 홈페이지 HTML)
    - v2.10.1 전문 표시(사용자 결정, 출처 명시) → 본문은 홈 첫 화면이 무거워지지 않게 data/notices-body.json으로 분리
    저장 구조:
-     updatedAt: 수집 시각 ISO
+     updatedAt: 마지막으로 내용이 바뀐 수집 시각 ISO (v2.12.2: 2시간마다 확인, 바뀐 게 없으면 파일을 다시 쓰지 않음 → 커밋 없음)
      boards[board] = { label, items: [{ sn, category, title, pinned, preview, date, url, hasBody }] }  — 게시 시각 최신순
    data/notices-body.json: { updatedAt, bodies: { "<board>-<sn>": 정리된 본문 HTML } }  — 글을 펼칠 때만 로딩
    실행: node scripts/notices.js
@@ -82,6 +82,9 @@ async function main() {
   // 목록에 남은 글의 본문만 저장 (밀려난 글은 자동 정리)
   const keep = new Set(Object.entries(out.boards).flatMap(([b, x]) => x.items.map((it) => `${b}-${it.sn}`)));
   const bodyOut = Object.fromEntries(Object.entries(bodies).filter(([k]) => keep.has(k)));
+  // 2시간마다 돌므로 내용이 그대로면 파일을 건드리지 않음 (약 320KB 본문 파일이 매번 커밋되며 저장소가 불어나는 것 방지)
+  const same = prev.updatedAt && JSON.stringify(out.boards) === JSON.stringify(prev.boards) && JSON.stringify(bodyOut) === JSON.stringify(prevBodies);
+  if (same) { console.log("변경 없음 — 파일 그대로 (커밋 생략)"); return; }
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n");
   fs.writeFileSync(OUT_BODY, JSON.stringify({ updatedAt: out.updatedAt, bodies: bodyOut }) + "\n");
   console.log(`본문: ${Object.keys(bodyOut).length}건 · ${Math.round(fs.statSync(OUT_BODY).size / 1024)}KB`);

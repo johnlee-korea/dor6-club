@@ -116,7 +116,7 @@ function renderNews(news) {
     const items = board.items;
     const shown = expanded ? items : items.slice(0, NEWS_SHOW);
     root.innerHTML = `
-      <div class="section-title">📢 FC온라인 소식 <span class="in-note">· 하루 1회 갱신 (${fmt.dateTime(news.updatedAt)})</span></div>
+      <div class="section-title">📢 FC온라인 소식 <span class="in-note">· 2시간마다 확인 (최근 변경 ${fmt.dateTime(news.updatedAt)})</span></div>
       <div class="chip-row nw-tabs">${boards.map(([k, b]) =>
         `<button type="button" class="chip${k === tab ? " active" : ""}" data-nw-tab="${k}">${escapeHtml(b.label)}</button>`).join("")}</div>
       <div class="card nw-list">

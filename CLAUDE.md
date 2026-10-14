@@ -918,6 +918,7 @@ C:\Projects\dor6-club\
 - **화면**: 펼치면 `출처: FC온라인 공식 홈페이지 › 공지사항 · 작성 일시` → 전문 → 저작권 안내(NEXON Korea, 하루 1회라 이후 수정 가능) + [원문 보기 ↗] [접기 ▴](접으면 제목 위치로). 본문은 처음 펼칠 때 `notices-body.json` 한 번 로딩, 실패 시 미리보기 + 안내. 표는 `width: max-content` + 가로 스크롤(좁은 칸에 글자 세로로 찌그러지던 문제). 카드 아래·홈 저작권 안내에 출처 문구.
 - 수집 시각: 사용자 요청으로 `17 11 * * *`(20:17 KST).
 - **v2.12.1 수집 멈춤 수정 (2026-10-14)**: 커밋 단계가 `notices.json`만 add → `notices-body.json` 미스테이징으로 `pull --rebase` 실패(10/12 이후 자동 갱신 0회). GitHub schedule도 10/13 7시간 지연·10/14 미실행. → 두 파일 add + Worker `35 * * * *` 크론이 `scheduledTime` UTC 11시일 때 notices.yml workflow_dispatch(20:35 KST, `NOTICES_UTC_HOUR`). GitHub schedule은 예비.
+- **v2.12.2 2시간마다 (2026-10-14, 사용자 요청)**: Worker `5 */2 * * *` 매치 수집 크론이 notices.yml도 dispatch(위 20:35 단독 호출 대체), GitHub 예비 `20 */6 * * *`. 내용(boards·bodies)이 이전과 같으면 notices.js가 파일을 쓰지 않음 → 커밋 없음, `updatedAt` = 최근 변경 시각. 홈 문구 "2시간마다 확인 (최근 변경 …)". concurrency 그룹 collect라 매치 수집 뒤에 차례로 실행.
 
 ## 25. v2.11.0 ⚽ 도륙리그 — 관전형 가상 리그 (2026-10-14 기획·사용자 승인 "일단 만들어 보고 수정하자", 마스터 기획서 v5 반영)
 
