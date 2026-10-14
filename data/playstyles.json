@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-14T14:07:46.512Z",
+  "updated": "2026-10-14T16:07:58.546Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -413,12 +413,14 @@
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "games": 50,
       "style": {
-        "name": "평화주의자",
-        "line": "안 뺏고, 안 넣는다",
+        "name": "옆패스 공무원",
+        "line": "정확하게, 안전하게, 옆으로만",
         "basis": [
-          "tackleTry-",
-          "gf-"
-        ]
+          "shortRatio+",
+          "passRate+",
+          "throughRatio-"
+        ],
+        "rare": true
       },
       "highs": [
         {
@@ -436,17 +438,17 @@
           "unit": "%",
           "v": 0.909,
           "avg": 0.891,
-          "z": 0.88,
-          "key": false
+          "z": 0.89,
+          "key": true
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.768,
+          "v": 0.766,
           "avg": 0.706,
-          "z": 0.87,
-          "key": false
+          "z": 0.85,
+          "key": true
         }
       ],
       "lows": [
@@ -454,27 +456,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 10.3,
+          "v": 10.4,
           "avg": 15.8,
-          "z": -1.59,
-          "key": true
+          "z": -1.56,
+          "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.749,
+          "v": 0.75,
           "avg": 0.808,
-          "z": -1.26,
+          "z": -1.24,
           "key": false
         },
         {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.6,
-          "avg": 3.29,
-          "z": -1.25,
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.088,
+          "avg": 0.144,
+          "z": -1.18,
           "key": true
         }
       ]
@@ -919,18 +921,18 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.638,
+          "v": 0.636,
           "avg": 0.537,
-          "z": 2,
+          "z": 1.97,
           "key": true
         },
         {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.222,
+          "v": 0.225,
           "avg": 0.094,
-          "z": 1.76,
+          "z": 1.81,
           "key": false
         },
         {
@@ -939,7 +941,7 @@
           "unit": "%",
           "v": 0.08,
           "avg": 0.055,
-          "z": 0.91,
+          "z": 0.94,
           "key": false
         }
       ],
@@ -948,9 +950,9 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.94,
+          "v": 9.84,
           "avg": 15.8,
-          "z": -1.7,
+          "z": -1.73,
           "key": true
         },
         {
@@ -963,12 +965,12 @@
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.749,
-          "avg": 0.808,
-          "z": -1.26,
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.62,
+          "avg": 3.29,
+          "z": -1.21,
           "key": false
         }
       ]
@@ -1228,27 +1230,27 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.085,
+          "v": 0.09,
           "avg": 0.291,
-          "z": -1.76,
+          "z": -1.72,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 68.14,
+          "v": 68.54,
           "avg": 79.272,
-          "z": -1.27,
+          "z": -1.23,
           "key": true
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
+          "k": "foul",
+          "label": "파울",
           "unit": "",
-          "v": 0.24,
-          "avg": 0.489,
-          "z": -1.08,
+          "v": 0.52,
+          "avg": 0.907,
+          "z": -1.22,
           "key": false
         }
       ]
