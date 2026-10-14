@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-14T08:07:38.825Z",
+  "updated": "2026-10-14T10:07:43.310Z",
   "week": {
-    "from": "2026-10-07T08:07:38.825Z",
+    "from": "2026-10-07T10:07:43.310Z",
     "rows": [
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
         "nick": "Dor6파리",
-        "games": 73,
-        "wins": 24,
-        "winRate": 33
+        "games": 68,
+        "wins": 22,
+        "winRate": 32
       },
       {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
@@ -16,6 +16,13 @@
         "games": 64,
         "wins": 29,
         "winRate": 45
+      },
+      {
+        "ouid": "0ec85bc04c006744f49a284cd624bbbb",
+        "nick": "땜쟁",
+        "games": 54,
+        "wins": 29,
+        "winRate": 54
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -30,13 +37,6 @@
         "games": 50,
         "wins": 17,
         "winRate": 34
-      },
-      {
-        "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
-        "nick": "Dor6평정",
-        "games": 45,
-        "wins": 14,
-        "winRate": 31
       }
     ]
   },
@@ -535,18 +535,18 @@
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
-      "games": 378,
+      "games": 388,
       "form": [
         "win",
         "win",
         "win",
         "win",
         "lose",
-        "lose",
-        "lose",
+        "win",
         "lose",
         "win",
-        "win"
+        "win",
+        "lose"
       ],
       "streak": {
         "type": "win",
@@ -770,8 +770,10 @@
       }
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 139,
+      "games": 141,
       "form": [
+        "win",
+        "draw",
         "win",
         "win",
         "win",
@@ -779,13 +781,11 @@
         "win",
         "win",
         "win",
-        "lose",
-        "win",
         "lose"
       ],
       "streak": {
         "type": "win",
-        "n": 3
+        "n": 1
       },
       "rivals": {
         "nemesis": {
@@ -1016,17 +1016,17 @@
       }
     },
     "9052276188238316b9fc057307e0d58c": {
-      "games": 91,
+      "games": 93,
       "form": [
         "win",
         "lose",
         "win",
+        "lose",
+        "win",
         "win",
         "lose",
         "lose",
         "lose",
-        "win",
-        "win",
         "win"
       ],
       "streak": {

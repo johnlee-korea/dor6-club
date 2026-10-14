@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-14T08:07:38.825Z",
+  "updated": "2026-10-14T10:07:43.310Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -977,7 +977,7 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 331,
+      "games": 340,
       "ace": [
         {
           "spId": 852001075,
@@ -996,6 +996,22 @@
           "assists": 3
         },
         {
+          "spId": 829005479,
+          "group": "GK",
+          "pos": 0,
+          "games": 17,
+          "metric": "sav",
+          "value": 4.29,
+          "base": 2.58,
+          "z": 2.14,
+          "title": {
+            "emoji": "🧤",
+            "name": "수호신"
+          },
+          "goals": 0,
+          "assists": 0
+        },
+        {
           "spId": 852001088,
           "group": "CB",
           "pos": 4,
@@ -1010,51 +1026,35 @@
           },
           "goals": 12,
           "assists": 1
-        },
-        {
-          "spId": 861005661,
-          "group": "ST",
-          "pos": 25,
-          "games": 76,
-          "metric": "sht",
-          "value": 3.3,
-          "base": 2.19,
-          "z": 1.55,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 105,
-          "assists": 24
         }
       ],
       "goalMins": {
         "for": [
-          89,
-          128,
-          140,
+          91,
+          132,
           150,
-          128,
-          161,
-          61
+          153,
+          130,
+          168,
+          62
         ],
         "against": [
-          118,
-          136,
-          134,
-          142,
-          119,
-          132,
-          61
+          120,
+          137,
+          137,
+          146,
+          122,
+          139,
+          63
         ]
       },
-      "comebacks": 62,
-      "lateWinners": 37,
+      "comebacks": 63,
+      "lateWinners": 39,
       "manner": {
-        "games": 331,
+        "games": 340,
         "yellow": 6,
         "red": 1,
-        "foul": 190,
+        "foul": 197,
         "score": 0.64
       }
     },
@@ -1555,7 +1555,7 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 127,
+      "games": 129,
       "ace": [
         {
           "spId": 856220901,
@@ -1608,32 +1608,32 @@
       ],
       "goalMins": {
         "for": [
-          42,
-          47,
-          54,
+          43,
+          48,
+          55,
           58,
-          45,
+          46,
           55,
           16
         ],
         "against": [
           30,
           49,
-          47,
+          48,
           53,
           45,
           59,
-          15
+          17
         ]
       },
       "comebacks": 21,
       "lateWinners": 7,
       "manner": {
-        "games": 127,
+        "games": 129,
         "yellow": 1,
         "red": 0,
         "foul": 125,
-        "score": 1.01
+        "score": 0.99
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
@@ -1970,7 +1970,7 @@
     },
     "9052276188238316b9fc057307e0d58c": {
       "ctrl": "gamepad",
-      "games": 57,
+      "games": 59,
       "ace": [
         {
           "spId": 840214997,
@@ -1989,22 +1989,6 @@
           "assists": 2
         },
         {
-          "spId": 861001114,
-          "group": "AM",
-          "pos": 18,
-          "games": 14,
-          "metric": "sht",
-          "value": 2.79,
-          "base": 1.2,
-          "z": 2.19,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 16,
-          "assists": 4
-        },
-        {
           "spId": 828158023,
           "group": "AM",
           "pos": 18,
@@ -2019,36 +2003,52 @@
           },
           "goals": 8,
           "assists": 8
+        },
+        {
+          "spId": 861001114,
+          "group": "AM",
+          "pos": 18,
+          "games": 16,
+          "metric": "sht",
+          "value": 2.69,
+          "base": 1.2,
+          "z": 2.06,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 19,
+          "assists": 4
         }
       ],
       "goalMins": {
         "for": [
-          21,
-          21,
+          22,
+          22,
           22,
           31,
-          26,
-          26,
+          28,
+          27,
           10
         ],
         "against": [
           18,
           16,
           27,
-          16,
+          17,
           33,
-          25,
+          26,
           5
         ]
       },
       "comebacks": 7,
       "lateWinners": 6,
       "manner": {
-        "games": 57,
+        "games": 59,
         "yellow": 1,
         "red": 0,
-        "foul": 45,
-        "score": 0.84
+        "foul": 47,
+        "score": 0.85
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
@@ -2251,9 +2251,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "spId": 848120274,
-        "goals": 111,
-        "games": 169
+        "spId": 861005661,
+        "goals": 119,
+        "games": 85
       }
     ],
     "topAssists": [
@@ -2297,9 +2297,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 62,
-        "lateWinners": 37,
-        "games": 331
+        "comebacks": 63,
+        "lateWinners": 39,
+        "games": 340
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -2320,9 +2320,9 @@
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
-        "comebacks": 62,
-        "lateWinners": 37,
-        "games": 331
+        "comebacks": 63,
+        "lateWinners": 39,
+        "games": 340
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
