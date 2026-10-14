@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-14T18:07:35.106Z",
+  "updated": "2026-10-14T20:07:15.802Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -697,11 +697,11 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "터프한 플레이메이커",
-        "line": "스루는 날카롭게, 몸싸움은 거칠게",
+        "name": "헛스루 장인",
+        "line": "스루는 쉴 새 없는데 골은 없다",
         "basis": [
           "throughRatio+",
-          "cards+"
+          "gf-"
         ]
       },
       "highs": [
@@ -709,18 +709,18 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.246,
+          "v": 0.245,
           "avg": 0.144,
-          "z": 2.12,
+          "z": 2.09,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.44,
+          "v": 0.444,
           "avg": 0.291,
-          "z": 1.27,
+          "z": 1.31,
           "key": false
         },
         {
@@ -730,7 +730,7 @@
           "v": 0.08,
           "avg": 0.026,
           "z": 1.08,
-          "key": true
+          "key": false
         }
       ],
       "lows": [
@@ -747,10 +747,10 @@
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.44,
+          "v": 2.42,
           "avg": 3.29,
-          "z": -1.54,
-          "key": false
+          "z": -1.57,
+          "key": true
         },
         {
           "k": "wideShot",
@@ -1398,10 +1398,11 @@
     "b80a06acac01ad21b0aa609c2699d58b": {
       "games": 50,
       "style": {
-        "name": "블락 면제",
-        "line": "슈팅 막는 건 키퍼 몫",
+        "name": "노골 티키타카",
+        "line": "예쁘게 돌리는데 골이 안 난다",
         "basis": [
-          "block-"
+          "shortRatio+",
+          "gf-"
         ]
       },
       "highs": [
@@ -1409,19 +1410,19 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.183,
+          "v": 0.189,
           "avg": 0.094,
-          "z": 1.23,
+          "z": 1.31,
           "key": false
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.779,
+          "v": 0.777,
           "avg": 0.706,
-          "z": 1.04,
-          "key": false
+          "z": 1.01,
+          "key": true
         },
         {
           "k": "foul",
@@ -1438,28 +1439,28 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.738,
+          "v": 0.74,
           "avg": 0.808,
-          "z": -1.5,
+          "z": -1.46,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.24,
+          "v": 3.22,
           "avg": 4.426,
-          "z": -1.36,
-          "key": true
+          "z": -1.39,
+          "key": false
         },
         {
-          "k": "ga",
-          "label": "경기당 실점",
+          "k": "gf",
+          "label": "경기당 득점",
           "unit": "",
-          "v": 1.96,
-          "avg": 2.604,
-          "z": -1.22,
-          "key": false
+          "v": 2.62,
+          "avg": 3.29,
+          "z": -1.21,
+          "key": true
         }
       ]
     },
