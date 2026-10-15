@@ -33,7 +33,11 @@ export function clubCard(state, clubId, opts = {}) {
   const top3 = CATS.slice().sort((a, b) => W[player.pos][b] - W[player.pos][a]).slice(0, 3);
   const coachHit = top3.filter((k) => c.coach.includes(k));
   const eff = playCoef(ratio) * stageCoef(ovr - c.R);
+  // 예상 선발 경기 수 (카드 표시: 출전 빈도 비교용)
+  const games = 2 * (Object.values(world.clubs).filter((x) => x.league === c.league).length - 1);
+  const ps = Math.min(ROLE.maxStart, ROLE.prob[role][0] + (short ? ROLE.shortageBonus : 0));
   return {
+    games, expStarts: Math.round(ps * games), prefPos: c.pref ? c.pref.split(":")[0] : null,
     clubId, league: c.league, tier: leagueOf(c.league).tier, country: leagueOf(c.league).country, R: c.R, role, short,
     pref: c.pref, prefMatch: pm, coach: c.coach, coachHit, salary: salaryOf(c.R, role, age),
     efficiency: Math.round(eff * 100), stage: stageCoef(ovr - c.R)
@@ -67,14 +71,30 @@ export function makeOffers(state, last) {
   let count = MARKET.maxOffers;
   if (last && last.posRank && last.posCount && last.posRank <= Math.max(1, Math.ceil(last.posCount * 0.1))) count++;
   if (last && last.slump) count -= 1 + rng.int(2);
-  const challenge = pool.filter((c) => c.role !== "S");
-  const starters = pool.filter((c) => c.role === "S" && c.R >= ovr - MARKET.starterRange).sort((a, b) => b.R - a.R || (a.clubId < b.clubId ? -1 : 1)).slice(0, MARKET.starterPool);
+  // v2.13.3 (사용자 요청 "선택지 모두 내 포지션을 원하는 구단, 차이는 유형·출전 빈도"):
+  //   ① 내 포지션이 부족하거나 감독이 내 포지션 유형을 선호하는 구단만 후보 (모자라면 다른 구단을 '그 포지션 보강' 구단으로)
+  //   ② 출전 빈도가 고르게: 주전 예상(요구 OVR 상위 = 시장 가치) · 로테이션 · 후보(도전) 각 1 이상
+  //   ③ 감독 선호 유형 일치 구단이 있으면 1개 이상 포함
+  const wants = (c) => c.short || c.prefPos === player.pos;
+  let base = pool.filter(wants);
+  if (base.length < count + 2) base = base.concat(rng.shuffle(pool.filter((c) => !wants(c))).slice(0, count + 2 - base.length));
   const chosen = [];
-  const push = (arr) => { for (const c of arr) if (!chosen.some((x) => x.clubId === c.clubId)) chosen.push(c); };
-  push(pickW(challenge, 1));
+  const has = (c) => chosen.some((x) => x.clubId === c.clubId);
+  const push = (arr) => { for (const c of arr) if (!has(c) && chosen.length < count) chosen.push(c); };
+  const starters = base.filter((c) => c.role === "S" && c.R >= ovr - MARKET.starterRange).sort((a, b) => b.R - a.R || (a.clubId < b.clubId ? -1 : 1)).slice(0, MARKET.starterPool);
   push(pickW(starters, 2));
-  push(pickW(pool.filter((c) => !chosen.some((x) => x.clubId === c.clubId)), Math.max(0, count - chosen.length)));
-  return chosen.slice(0, Math.max(0, count)).sort((a, b) => b.efficiency - a.efficiency || b.salary - a.salary);
+  push(pickW(base.filter((c) => c.role === "R" && !has(c)), 1));
+  push(pickW(base.filter((c) => c.role === "B" && !has(c)), 1));
+  if (!chosen.some((c) => c.prefMatch)) push(pickW(base.filter((c) => c.prefMatch && !has(c)), 1));
+  push(pickW(base.filter((c) => !has(c)), Math.max(0, count - chosen.length)));
+  // 제안한 구단 = 내 포지션을 보강하려는 구단 → 이번 시즌 부족 포지션에 내 포지션 추가 (카드·출전 보너스 일관)
+  const out = chosen.slice(0, Math.max(0, count)).map((c) => {
+    const w = world.clubs[c.clubId];
+    if (!w.short.includes(player.pos)) w.short = w.short.concat(player.pos);
+    return clubCard(state, c.clubId, { ovr });
+  });
+  const rank = { S: 0, R: 1, B: 2 };
+  return out.sort((a, b) => rank[a.role] - rank[b.role] || b.efficiency - a.efficiency || b.salary - a.salary);
 }
 
 /* 임대 후보: 24세 이하 + 후보일 때, R이 더 낮고 예상 역할 주전·로테이션 구단 2~3개 */

@@ -35,13 +35,15 @@ export function clubCardHtml(app, card, opts = {}) {
   const c = app.state.world.clubs[card.clubId];
   const tags = [];
   if (card.short) tags.push("🔍 내 포지션 부족");
-  if (card.prefMatch === "full") tags.push("🎯 선호 유형 일치");
-  else if (card.prefMatch === "partial") tags.push("🎯 선호 부분 일치");
   if (card.coachHit.length) tags.push("🏋️ " + card.coachHit.map((k) => catLabel(k).split(" ")[1]).join("·") + " 코치진");
+  // 감독이 원하는 유형은 항상 표시 (같은 포지션일 때) — 일치하면 ✅
+  const prefLine = card.prefPos === p.pos
+    ? `<span class="${card.prefMatch ? "cr-hit" : "cr-dim"}">🎯 원하는 유형: ${esc(typeIdLabel(c.pref))}${card.prefMatch === "full" ? " ✅" : card.prefMatch === "partial" ? " (부분 일치)" : ""}</span>`
+    : "";
   return `<div class="cr-clubcard${opts.selected ? " selected" : ""}${opts.dim ? " dim" : ""}">
     <div class="cr-cc-head">${clubLabel(app.base, card.clubId, { strong: true })} ${roleBadge(card.role)}${opts.tag ? ` <span class="cr-tag">${esc(opts.tag)}</span>` : ""}</div>
-    <div class="cr-cc-line">${leagueShort(card.league)} · 요구 <b>${card.R}</b> · ${money(card.salary)} · <span class="cr-eff">성장 ${card.efficiency}%${card.stage < 1 ? "⚠️" : ""}</span></div>
-    ${tags.length ? `<div class="cr-cc-badges">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
+    <div class="cr-cc-line">${leagueShort(card.league)} · 요구 <b>${card.R}</b> · 선발 약 <b>${card.expStarts}</b>/${card.games}경기 · ${money(card.salary)} · <span class="cr-eff">성장 ${card.efficiency}%${card.stage < 1 ? "⚠️" : ""}</span></div>
+    ${tags.length || prefLine ? `<div class="cr-cc-badges">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}${prefLine}</div>` : ""}
     ${opts.act ? `<button class="btn sm ${opts.selected ? "primary" : ""}" data-act="${opts.act}" ${opts.data || ""}>${esc(opts.btn || "선택")}</button>` : ""}
   </div>`;
 }
