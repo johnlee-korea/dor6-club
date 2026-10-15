@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-15T02:07:13.609Z",
+  "updated": "2026-10-15T04:07:09.033Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -549,13 +549,13 @@
       ]
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
-      "games": 24,
+      "games": 25,
       "style": {
-        "name": "투박한 타깃맨",
-        "line": "감아차기는 모른다, 머리로 들이받는다",
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
         "basis": [
-          "headShot+",
-          "finesse-"
+          "longRatio+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -563,19 +563,19 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.716,
+          "v": 0.721,
           "avg": 0.204,
-          "z": 4.31,
-          "key": true
+          "z": 4.36,
+          "key": false
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.168,
+          "v": 0.172,
           "avg": 0.055,
-          "z": 4.14,
-          "key": false
+          "z": 4.27,
+          "key": true
         },
         {
           "k": "boxGoal",
@@ -592,10 +592,10 @@
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.841,
+          "v": 0.839,
           "avg": 0.891,
-          "z": -2.47,
-          "key": false
+          "z": -2.59,
+          "key": true
         },
         {
           "k": "finesse",
@@ -603,16 +603,16 @@
           "unit": "%",
           "v": 0.012,
           "avg": 0.291,
-          "z": -2.38,
-          "key": true
+          "z": -2.39,
+          "key": false
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.024,
+          "v": 0.023,
           "avg": 0.181,
-          "z": -2.05,
+          "z": -2.07,
           "key": false
         }
       ]
@@ -1686,26 +1686,26 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.218,
+          "v": 0.209,
           "avg": 0.094,
-          "z": 1.7,
+          "z": 1.58,
           "key": false
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.078,
+          "v": 0.077,
           "avg": 0.055,
-          "z": 0.84,
+          "z": 0.82,
           "key": true
         },
         {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.06,
-          "avg": 0.026,
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.754,
+          "avg": 0.706,
           "z": 0.68,
           "key": false
         }
@@ -1717,25 +1717,25 @@
           "unit": "%",
           "v": 0.858,
           "avg": 0.891,
-          "z": -1.63,
+          "z": -1.61,
           "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.376,
+          "v": 0.38,
           "avg": 0.495,
-          "z": -1.63,
+          "z": -1.58,
           "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.744,
+          "v": 0.746,
           "avg": 0.808,
-          "z": -1.36,
+          "z": -1.33,
           "key": false
         }
       ]
