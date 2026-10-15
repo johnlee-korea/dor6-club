@@ -59,6 +59,7 @@ export function retire(app) {
       <p>🏅 업적 ${(s.achieved || []).length}개 달성</p></section>
     ${seasonTable(app, s.history)}
     <button class="btn primary block" data-act="hall-register">🏛 명예의 전당에 등록하고 새 커리어로</button>
+    <button class="btn block" data-act="discard">🗑 기록 없이 새로 시작</button>
     <button class="btn block" data-act="go" data-to="career">OVR 추이 보기</button>
   </div>`;
 }

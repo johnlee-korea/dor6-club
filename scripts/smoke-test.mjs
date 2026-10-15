@@ -248,16 +248,20 @@ for (const pg of PAGES) {
       steps.push(doc.querySelectorAll('[data-act="start-pick"]').length ? "시작구단" : "시작구단✗");
       await click('[data-act="start-tab"][data-c="it"]');
       await click('[data-act="start-pick"]');
-      for (const t of ["shop", "focus", "pos", "club"]) await click(`[data-act="off-tab"][data-tab="${t}"]`);
+      for (const t of ["pos", "club", "shop", "focus", "club"]) await click(`[data-act="off-step"][data-step="${t}"]`);
+      await click('[data-act="off-decide"][data-type="stay"]');            // 고르면 훈련 단계로 자동 이동
+      if (app.view.offStep !== "shop") errors.push("잔류 선택 후 훈련 단계로 안 넘어감");
+      await click('[data-act="off-step"][data-step="focus"]');
       steps.push(doc.querySelector(".cr-plan") ? "오프시즌" : "오프시즌✗");
       for (let season = 0; season < 2; season++) {
+        await click('[data-act="off-step"][data-step="focus"]');
         await click('[data-act="play"]', 30);
         for (let i = 0; i < 300 && app.route !== "report"; i++) await sleep(20);   // 시즌 계산 대기
         steps.push(app.route === "report" ? `시즌${season + 1}` : `시즌${season + 1}✗(${app.route})`);
         for (const t of ["rank", "leaders", "table", "matches"]) await click(`[data-act="report-tab"][data-tab="${t}"]`);
         if (!doc.querySelector(".cr-matches")) errors.push("경기별 기록 표 없음");
         await click('[data-act="to-offseason"]');
-        await click('[data-act="off-tab"][data-tab="club"]');
+        await click('[data-act="off-step"][data-step="club"]');
         if (doc.querySelector('[data-act="off-decide"][data-type="transfer"]')) await click('[data-act="off-decide"][data-type="transfer"]');
       }
       for (const r of ["career", "achievements", "hall", "settings"]) {
@@ -272,8 +276,8 @@ for (const pg of PAGES) {
       if (imp) { imp.value = exp; await click('[data-act="import"]'); }
       steps.push(exp.includes("dor6-career") && app.state && app.state.history.length === 2 ? "내보내기/가져오기" : "내보내기✗");
       // 은퇴 → 명예의 전당
-      app.state.player.age = 35; app.go("offseason"); await sleep(10);
-      await click('[data-act="retire-now"]');
+      app.go("offseason", { offStep: "club" }); await sleep(10);
+      await click('[data-act="retire-now"]');                                  // 나이 제한 없음 (조기 은퇴)
       await click('[data-act="hall-register"]');
       steps.push(app.meta.hall.length === 1 && app.route === "hall" ? "은퇴·전당" : "은퇴✗");
       html.push(doc.getElementById("career-root").innerHTML);

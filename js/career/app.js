@@ -121,15 +121,17 @@ export async function mountCareer(root, opts = {}) {
     "start-pick": (d) => {
       chooseStartClub(app.state, d.club);
       app.persist();
-      app.go("offseason", { offTab: "club" });
+      app.go("offseason", { offStep: "club" });
     },
     // 오프시즌
-    "off-tab": (d) => { app.view.offTab = d.tab; render(); },
+    "off-step": (d) => { app.view.offStep = d.step; app.view.shopMsg = null; render(); if (!/jsdom/i.test(win.navigator.userAgent || "")) try { win.scrollTo(0, 0); } catch (e) { /* 인앱 */ } },
     "off-decide": (d) => {
       decide(app.state, { type: d.type, clubId: d.club });
       // 구단을 바꾸면 그 구단 코치진 기준 추천 집중 육성으로 (직접 고른 적 없을 때만)
       if (!app.view.focusTouched) setFocus(app.state, defaultFocus(app.state, d.club));
-      app.persist(); render();
+      app.persist();
+      // 고르면 바로 다음 단계(훈련)로
+      if (d.next) acts["off-step"]({ step: "shop" }); else render();
     },
     "off-focus": (d) => {
       const f = app.state.off.focus.slice();
@@ -143,13 +145,14 @@ export async function mountCareer(root, opts = {}) {
     "shop-cat": (d) => { app.view.shopCat = d.cat; render(); },
     "shop-buy": () => {
       const r = buyTraining(app.state, app.view.shopKind || "normal", app.view.shopCat);
-      app.view.shopMsg = r.ok ? `훈련 완료! OVR ${r.ovrBefore} → ${r.ovrAfter}${r.typeChanged ? " · 유형이 바뀌었어요" : ""}` : r.reason;
-      app.persist(); render();
+      app.persist();
+      if (r.ok) { app.view.offStep = "focus"; render(); app.view.shopMsg = null; return; }
+      app.view.shopMsg = r.reason; render();
     },
     "convert": (d) => {
       if (!win.confirm("포지션을 바꾸면 이번 시즌 OVR −3(적응 기간)이에요. 커리어 중 2번까지만 가능해요. 바꿀까요?")) return;
       convertPosition(app.state, d.pos);
-      app.persist(); render();
+      app.persist(); app.view.offStep = "club"; render();
     },
     "same-again": () => {
       const s = app.state;
@@ -181,9 +184,11 @@ export async function mountCareer(root, opts = {}) {
       }, 30);
     },
     "skip": () => { season.stopProgress(app); app.view.playing = null; app.go("report"); },
-    "to-offseason": () => app.go(app.state.phase === "retired" ? "retire" : "offseason", { offTab: "club" }),
+    "to-offseason": () => app.go(app.state.phase === "retired" ? "retire" : "offseason", { offStep: "club" }),
     "retire-now": () => {
-      if (!win.confirm("은퇴하면 이 선수로는 더 이상 뛸 수 없어요. 은퇴할까요?")) return;
+      // 나이 제한 없음 (v2.13.2 사용자 요청: 맘에 안 들면 접고 다시) — 35세 전은 '조기 은퇴'
+      const early = app.state.player.age < 35;
+      if (!win.confirm(early ? "이 선수를 접고 은퇴할까요? 업적은 유지되고, 명예의 전당 등록 여부는 다음 화면에서 고를 수 있어요." : "은퇴하면 이 선수로는 더 이상 뛸 수 없어요. 은퇴할까요?")) return;
       retire(app.state); app.persist(); app.go("retire");
     },
     "hall-register": () => {
@@ -192,6 +197,12 @@ export async function mountCareer(root, opts = {}) {
       if (!app.meta.hall.some((h) => h.id === sum.id)) app.meta.hall.push(sum);
       app.state = null; clearSave(storage); app.persist();
       app.go("hall", { hallSort: "maxOvr" });
+    },
+    "discard": () => {
+      // 기록 없이 새로 시작 (명예의 전당에 남기지 않음, 업적은 이미 기기에 저장됨)
+      app.state = null; clearSave(storage); app.persist();
+      app.view.draft = { name: setup.randomName(), pos: "ST", pair: ["spd", "sht"] };
+      app.go("create");
     },
     "hall-sort": (d) => { app.view.hallSort = d.k; render(); },
     "report-tab": (d) => { app.view.reportTab = d.tab; render(); },

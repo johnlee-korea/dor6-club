@@ -4,7 +4,7 @@
    상태(state)는 그대로 LocalStorage에 저장된다 (save.js). 구단 이름은 저장하지 않음(구단 id만).
    ============================================================ */
 import { makeRng } from "../engine/rng.js";
-import { CATS, W, CONVERT_PENALTY, LEGEND, SLUMP, PREF_ADOPT, RETIRE, BONUS, TOP_CLUB, BIG_CLUB, round1 } from "./rules.js";
+import { CATS, W, CONVERT_PENALTY, LEGEND, SLUMP, PREF_ADOPT, CLUB_GROW, RETIRE, BONUS, TOP_CLUB, BIG_CLUB, round1 } from "./rules.js";
 import { SAVE_VERSION } from "./config.js";
 import { makeStart, posOvr, catValues, isStar } from "./attrs.js";
 import { comboKey, reevaluateType, prefMatch, typeEffects, typeName } from "./types.js";
@@ -134,6 +134,7 @@ export function playSeason(state, clubsJson) {
   const playId = p.loan ? p.loan.clubId : p.clubId;
   const club = world.clubs[playId];
   const lg = leagueOf(club.league);
+  const leagueId = club.league, clubR = club.R;   // 시즌 종료 처리(승강·등급 재배분) 전에 고정
   const penalty = p.penaltySeason === n ? CONVERT_PENALTY : 0;
   const ovrStart = posOvr(p.subs, p.pos);
   const ovrShown = ri(ovrStart - penalty);
@@ -184,7 +185,7 @@ export function playSeason(state, clubsJson) {
   const prevType = p.typeKey;
   p.typeKey = reevaluateType(p.typeKey, catValues(p.subs));
 
-  const order = res.leagues[club.league].order;
+  const order = res.leagues[leagueId].order;
   const finish = order.indexOf(playId) + 1;
   const finals = Object.fromEntries(Object.entries(res.leagues).map(([k, v]) => [k, v.order]));
   const news = endSeason(world, finals, state.seed, base);
@@ -196,9 +197,18 @@ export function playSeason(state, clubsJson) {
     world.clubs[p.clubId].pref = `${p.pos}:${p.typeKey}`;
     news.push({ type: "pref", club: p.clubId });
   }
+  // 내가 키우는 팀: 원 소속에서 주전으로 잘하면(목표 달성 또는 팀 평균 이상) 구단이 전력 보강 → 요구 OVR이 내 수준을 따라옴 (원클럽 레전드 가능)
+  const own = world.clubs[p.clubId];
+  const starred = !p.loan && (mine.startRole === "S" || mine.endRole === "S") && (met || (mine.vsTeam !== null && mine.vsTeam >= 0));
+  let clubGrowth = 0;
+  if (starred) {
+    const band = leagueOf(own.league).band;
+    clubGrowth = Math.max(0, Math.min(CLUB_GROW.max, Math.round((ri(ovrEnd) - CLUB_GROW.gap - own.R) * CLUB_GROW.rate), band[1] + 1 - own.R));
+    if (clubGrowth > 0) { news.push({ type: "grow", club: p.clubId, from: own.R, to: own.R + clubGrowth }); own.R += clubGrowth; }
+  }
 
   const summary = {
-    n, age: p.age, club: playId, parent: p.loan ? p.clubId : null, league: club.league, tier: lg.tier, R: club.R,
+    n, age: p.age, club: playId, parent: p.loan ? p.clubId : null, league: leagueId, tier: lg.tier, R: clubR,
     pos: p.pos, type: prevType, typeAfter: p.typeKey, role: mine.startRole, roleEnd: mine.endRole, mid: mine.mid,
     games: mine.games, starts: mine.starts, subs: mine.subs, bench: mine.bench, youth: mine.youth,
     goals: mine.goals, assists: mine.assists, avg: Math.round(mine.avg * 100) / 100, apps: mine.apps, hatTricks: mine.hatTricks,
@@ -213,6 +223,7 @@ export function playSeason(state, clubsJson) {
   const totalsBefore = JSON.parse(JSON.stringify(state.totals));
   updateTotals(state, summary, mine);
   summary.prefAdopted = prefAdopted;
+  summary.clubGrowth = clubGrowth;
   summary.highlights = highlights(state, summary, mine, totalsBefore);
   state.history.push(summary);
   state.recent.push({ n, matches: mine.matches, roundRanks: mine.roundRanks, table: mine.table, scorers: mine.scorers,
@@ -298,6 +309,7 @@ function highlights(state, s, mine, before) {
   if (s.hatTricks) h.push({ icon: "🎩", title: s.hatTricks > 1 ? `해트트릭 ${s.hatTricks}회` : "해트트릭", text: "" });
   if (s.winners) h.push({ icon: "💥", title: `결승골 ${s.winners}개`, text: "" });
   if (s.typeAfter !== s.type) h.push({ icon: "🧬", title: "유형 진화!", text: `${typeName(s.pos, s.type)} → ${typeName(s.pos, s.typeAfter)}` });
+  if (s.clubGrowth) h.push({ icon: "📈", title: "팀이 나와 함께 성장", text: `구단 전력 보강 · 요구 OVR +${s.clubGrowth}` });
   if (s.prefAdopted) h.push({ icon: "🎯", title: "감독이 나에게 맞춘 전술", text: "다음 시즌 선호 유형 = 내 유형 (잔류하면 역할 점수 +3)" });
   if (s.revival) h.push({ icon: "🔥", title: "부활", text: "슬럼프를 딛고 팀 상위권 평점" });
   if (s.slump) h.push({ icon: "💧", title: "슬럼프 시즌", text: "감독 신뢰도 −2, 다음 오프시즌 제안이 줄어요" });

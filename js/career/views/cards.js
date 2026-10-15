@@ -29,23 +29,20 @@ export function playerCard(app, extra = "") {
 }
 
 /* 구단 카드 — card: market.clubCard 결과 */
+/* 간결 카드 (v2.13.2): 이름·역할 / 리그·요구·연봉·성장 / 나와 맞는 점만 배지 */
 export function clubCardHtml(app, card, opts = {}) {
   const p = app.state.player;
   const c = app.state.world.clubs[card.clubId];
-  const short = card.short ? `<span class="cr-hit">🔍 부족 포지션: ${posLabel(p.pos)} ✅</span>` : `<span class="cr-dim">🔍 부족: ${c.short.map(posLabel).join("·")}</span>`;
-  const pm = card.prefMatch === "full" ? `<span class="cr-hit">🎯 선호 유형: ${esc(typeIdLabel(c.pref))} (일치 +3)</span>`
-    : card.prefMatch === "partial" ? `<span class="cr-hit">🎯 선호 유형: ${esc(typeIdLabel(c.pref))} (부분 일치 +1)</span>`
-    : `<span class="cr-dim">🎯 선호: ${esc(typeIdLabel(c.pref))}</span>`;
-  const coach = `<span class="${card.coachHit.length ? "cr-hit" : "cr-dim"}">🏋️ 코치진: ${c.coach.map(catLabel).join(" · ")}</span>`;
-  const eff = `<span class="cr-eff" title="예상 성장 효율 = 출전 계수 × 경기 수준 계수">성장 효율 ${card.efficiency}%${card.stage < 1 ? " ⚠️" : ""}</span>`;
+  const tags = [];
+  if (card.short) tags.push("🔍 내 포지션 부족");
+  if (card.prefMatch === "full") tags.push("🎯 선호 유형 일치");
+  else if (card.prefMatch === "partial") tags.push("🎯 선호 부분 일치");
+  if (card.coachHit.length) tags.push("🏋️ " + card.coachHit.map((k) => catLabel(k).split(" ")[1]).join("·") + " 코치진");
   return `<div class="cr-clubcard${opts.selected ? " selected" : ""}${opts.dim ? " dim" : ""}">
-    <div class="cr-cc-head">
-      ${clubLabel(app.base, card.clubId, { strong: true })}
-      ${opts.tag ? `<span class="cr-tag">${esc(opts.tag)}</span>` : ""}
-    </div>
-    <div class="cr-cc-line"><span class="cr-dim">${leagueShort(card.league)}</span> · 요구 OVR <b>${card.R}</b> · 예상 ${roleBadge(card.role)} · 연봉 ${money(card.salary)} · ${eff}</div>
-    <div class="cr-cc-badges">${short}${pm}${coach}</div>
-    ${opts.act ? `<button class="btn sm ${opts.selected ? "primary" : ""}" data-act="${opts.act}" ${opts.data || ""}>${opts.selected ? "✔ 선택됨" : esc(opts.btn || "선택")}</button>` : ""}
+    <div class="cr-cc-head">${clubLabel(app.base, card.clubId, { strong: true })} ${roleBadge(card.role)}${opts.tag ? ` <span class="cr-tag">${esc(opts.tag)}</span>` : ""}</div>
+    <div class="cr-cc-line">${leagueShort(card.league)} · 요구 <b>${card.R}</b> · ${money(card.salary)} · <span class="cr-eff">성장 ${card.efficiency}%${card.stage < 1 ? "⚠️" : ""}</span></div>
+    ${tags.length ? `<div class="cr-cc-badges">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
+    ${opts.act ? `<button class="btn sm ${opts.selected ? "primary" : ""}" data-act="${opts.act}" ${opts.data || ""}>${esc(opts.btn || "선택")}</button>` : ""}
   </div>`;
 }
 export const roleName = (r) => ROLE_LABEL[r];
