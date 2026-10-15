@@ -51,6 +51,7 @@ function myNews(app) {
     if (n.type === "up") out.push("⬆️ 우리 구단이 승격했어요!");
     if (n.type === "down") out.push("⬇️ 우리 구단이 강등됐어요…");
     if (n.type === "manager") out.push("🔄 감독 교체 — 코치진 특화가 바뀌었을 수 있어요");
+    if (n.type === "pref") out.push("🎯 감독이 당신에게 맞춰 선호 유형을 " + typeName(p.pos, p.typeKey) + "(으)로 바꿨어요 — 잔류하면 역할 점수 +3");
   }
   const own = clubCard(s, p.clubId, { trust: p.trust, penalty: p.penaltySeason === s.world.season ? CONVERT_PENALTY : 0 });
   if (own.stage < 1) out.push(`⚠️ 지금 무대가 너무 쉬워요 (성장 효율 −${Math.round((1 - own.stage) * 100)}%) — 더 높은 무대가 필요해요`);

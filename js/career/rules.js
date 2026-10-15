@@ -87,6 +87,8 @@ export const ROLE = {
 export const ROLE_LABEL = { S: "주전", R: "로테이션", B: "후보" };
 export const TRUST_MIN = -3, TRUST_MAX = 3;
 export const PREF_BONUS = { full: 3, partial: 1 };   // 역할 점수 보너스(능력치 보너스는 +2 / +1)
+// 잘한 시즌 뒤 원 소속 감독이 선호 유형을 내 유형으로 바꾸는 조건 (목표 달성 + 팀 평균 대비 평점 차 ≥ minVsTeam)
+export const PREF_ADOPT = { minVsTeam: 0 };
 
 /* ---------- 영입·임대 (26-7-5) ---------- */
 export const MARKET = {

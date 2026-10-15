@@ -4,7 +4,7 @@
    상태(state)는 그대로 LocalStorage에 저장된다 (save.js). 구단 이름은 저장하지 않음(구단 id만).
    ============================================================ */
 import { makeRng } from "../engine/rng.js";
-import { CATS, W, CONVERT_PENALTY, LEGEND, SLUMP, RETIRE, BONUS, TOP_CLUB, BIG_CLUB, round1 } from "./rules.js";
+import { CATS, W, CONVERT_PENALTY, LEGEND, SLUMP, PREF_ADOPT, RETIRE, BONUS, TOP_CLUB, BIG_CLUB, round1 } from "./rules.js";
 import { SAVE_VERSION } from "./config.js";
 import { makeStart, posOvr, catValues, isStar } from "./attrs.js";
 import { comboKey, reevaluateType, prefMatch, typeEffects, typeName } from "./types.js";
@@ -190,6 +190,12 @@ export function playSeason(state, clubsJson) {
   const news = endSeason(world, finals, state.seed, base);
   const promoted = news.some((x) => x.type === "up" && x.club === playId);
   const relegated = news.some((x) => x.type === "down" && x.club === playId);
+  // 감독이 내게 전술을 맞춤: 원 소속에서 뛰며(임대 X) 목표 달성 + 팀 평균 평점 이상 → 다음 시즌 선호 유형 = 내 유형 (잔류 시 역할 점수 +3)
+  const prefAdopted = !p.loan && met && mine.vsTeam !== null && mine.vsTeam >= PREF_ADOPT.minVsTeam;
+  if (prefAdopted) {
+    world.clubs[p.clubId].pref = `${p.pos}:${p.typeKey}`;
+    news.push({ type: "pref", club: p.clubId });
+  }
 
   const summary = {
     n, age: p.age, club: playId, parent: p.loan ? p.clubId : null, league: club.league, tier: lg.tier, R: club.R,
@@ -206,6 +212,7 @@ export function playSeason(state, clubsJson) {
   };
   const totalsBefore = JSON.parse(JSON.stringify(state.totals));
   updateTotals(state, summary, mine);
+  summary.prefAdopted = prefAdopted;
   summary.highlights = highlights(state, summary, mine, totalsBefore);
   state.history.push(summary);
   state.recent.push({ n, matches: mine.matches, roundRanks: mine.roundRanks, table: mine.table, scorers: mine.scorers,
@@ -291,6 +298,7 @@ function highlights(state, s, mine, before) {
   if (s.hatTricks) h.push({ icon: "🎩", title: s.hatTricks > 1 ? `해트트릭 ${s.hatTricks}회` : "해트트릭", text: "" });
   if (s.winners) h.push({ icon: "💥", title: `결승골 ${s.winners}개`, text: "" });
   if (s.typeAfter !== s.type) h.push({ icon: "🧬", title: "유형 진화!", text: `${typeName(s.pos, s.type)} → ${typeName(s.pos, s.typeAfter)}` });
+  if (s.prefAdopted) h.push({ icon: "🎯", title: "감독이 나에게 맞춘 전술", text: "다음 시즌 선호 유형 = 내 유형 (잔류하면 역할 점수 +3)" });
   if (s.revival) h.push({ icon: "🔥", title: "부활", text: "슬럼프를 딛고 팀 상위권 평점" });
   if (s.slump) h.push({ icon: "💧", title: "슬럼프 시즌", text: "감독 신뢰도 −2, 다음 오프시즌 제안이 줄어요" });
   for (const mark of [90, 95, 99]) if (ri(s.ovr) < mark && ri(s.ovrEnd) >= mark) h.push({ icon: "🚀", title: `OVR ${mark} 돌파`, text: "" });
