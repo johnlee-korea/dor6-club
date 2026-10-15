@@ -202,5 +202,96 @@ for (const pg of PAGES) {
   bad.length ? fail++ : pass++;
 }
 
+/* ---------- ⭐ 내 선수 키우기 (v2.13.0) ----------
+   app.js는 ES 모듈 → Node에서 import해 jsdom 창에 mountCareer로 붙임 (저장소는 메모리 대체)
+   흐름: 타이틀 → 선수 생성 → 시작 구단 → 오프시즌 탭 4개 → 시즌 2회 → 리포트 탭 4개 → 기록·업적·명예의 전당·설정(내보내기/가져오기)
+   + USE_REAL_NAMES 전환 검사: 가상명 모드에서 화면·내보내기 글에 실제 구단명 0건 */
+{
+  const { mountCareer } = await import(new URL("../js/career/app.js", import.meta.url));
+  const { namesMode } = await import(new URL("../js/career/config.js", import.meta.url));
+  const clubsJson = JSON.parse(rd("data/career/clubs.json"));
+  const realNames = clubsJson.clubs.flatMap((c) => [c.realName, c.koName].filter(Boolean)).filter((n) => n.length >= 3);
+  const run = async (useReal) => {
+    namesMode.useReal = useReal;
+    const dom = new JSDOM(rd("career.html"), { url: "http://localhost/career.html", pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    const errors = [];
+    window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
+    window.confirm = () => true;
+    window.navigator.clipboard = { writeText: async () => {} };
+    const mem = new Map();
+    const storage = { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => mem.set(k, String(v)), removeItem: (k) => mem.delete(k) };
+    const doc = window.document;
+    const html = [];
+    const steps = [];
+    let app = null;
+    const click = async (sel, wait = 10) => {
+      const el = doc.querySelector(sel);
+      if (!el) { errors.push("없음: " + sel); return false; }
+      el.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+      await sleep(wait);
+      if (doc.querySelector("#career-root .error-box")) errors.push("오류 화면: " + sel);
+      html.push(doc.getElementById("career-root").innerHTML);
+      return true;
+    };
+    try {
+      window.eval(rd("js/common.js"));
+      doc.dispatchEvent(new window.Event("DOMContentLoaded"));
+      app = await mountCareer(doc.getElementById("career-root"), { win: window, fetch: localFetch, storage, now: () => "2026-10-15T00:00:00Z", seedFn: () => "C-smoke" + (useReal ? "" : "2") });
+      app.meta.settings.fast = false;           // 연출 없이 바로 리포트
+      steps.push(doc.querySelector('[data-act="go"][data-to="create"]') ? "타이틀" : "타이틀✗");
+      await click('[data-act="go"][data-to="create"]');
+      await click('[data-act="create-pos"][data-pos="WG"]');
+      await click('[data-act="create-cat"][data-cat="spd"]'); await click('[data-act="create-cat"][data-cat="dri"]');
+      steps.push(doc.querySelector(".cr-result-type") ? "생성" : "생성✗");
+      await click('[data-act="create-start"]');
+      steps.push(doc.querySelectorAll('[data-act="start-pick"]').length ? "시작구단" : "시작구단✗");
+      await click('[data-act="start-tab"][data-c="it"]');
+      await click('[data-act="start-pick"]');
+      for (const t of ["shop", "focus", "pos", "club"]) await click(`[data-act="off-tab"][data-tab="${t}"]`);
+      steps.push(doc.querySelector(".cr-plan") ? "오프시즌" : "오프시즌✗");
+      for (let season = 0; season < 2; season++) {
+        await click('[data-act="play"]', 30);
+        for (let i = 0; i < 300 && app.route !== "report"; i++) await sleep(20);   // 시즌 계산 대기
+        steps.push(app.route === "report" ? `시즌${season + 1}` : `시즌${season + 1}✗(${app.route})`);
+        for (const t of ["rank", "leaders", "table", "matches"]) await click(`[data-act="report-tab"][data-tab="${t}"]`);
+        if (!doc.querySelector(".cr-matches")) errors.push("경기별 기록 표 없음");
+        await click('[data-act="to-offseason"]');
+        await click('[data-act="off-tab"][data-tab="club"]');
+        if (doc.querySelector('[data-act="off-decide"][data-type="transfer"]')) await click('[data-act="off-decide"][data-type="transfer"]');
+      }
+      for (const r of ["career", "achievements", "hall", "settings"]) {
+        app.go(r); await sleep(10); html.push(doc.getElementById("career-root").innerHTML);
+        if (doc.querySelector("#career-root .error-box")) errors.push("오류 화면: " + r);
+      }
+      if (!doc.querySelector("#cr-ovr-chart, .cr-ach-grid, .cr-ta")) { /* 마지막은 설정 */ }
+      await click('[data-act="export"]');
+      const exp = doc.querySelector("#cr-export")?.value || "";
+      html.push(exp);
+      const imp = doc.querySelector("#cr-import");
+      if (imp) { imp.value = exp; await click('[data-act="import"]'); }
+      steps.push(exp.includes("dor6-career") && app.state && app.state.history.length === 2 ? "내보내기/가져오기" : "내보내기✗");
+      // 은퇴 → 명예의 전당
+      app.state.player.age = 35; app.go("offseason"); await sleep(10);
+      await click('[data-act="retire-now"]');
+      await click('[data-act="hall-register"]');
+      steps.push(app.meta.hall.length === 1 && app.route === "hall" ? "은퇴·전당" : "은퇴✗");
+      html.push(doc.getElementById("career-root").innerHTML);
+    } catch (e) { errors.push("mount: " + e.stack); }
+    const keys = [...mem.keys()].filter((k) => !k.startsWith("dor6.career."));
+    if (keys.length) errors.push("dor6.career. 접두어 아닌 저장 키: " + keys.join(","));
+    const leaked = useReal ? [] : realNames.filter((n) => html.some((h) => h.includes(n)));
+    const navOk = !!doc.querySelector('.app-nav a[href="career.html"].active');
+    const ok = errors.length === 0 && navOk && !steps.some((s) => s.includes("✗")) && !leaked.length;
+    console.log(`${ok ? "✅" : "❌"} career(${useReal ? "실명" : "가상명"}) ${steps.join(" → ")} 네비:${navOk}${useReal ? "" : ` 실명 노출:${leaked.length}건`}`);
+    [...new Set(errors)].slice(0, 4).forEach((e) => console.log("   ⚠ " + String(e).split("\n").slice(0, 3).join(" | ")));
+    if (leaked.length) console.log("   ⚠ 노출: " + leaked.slice(0, 5).join(", "));
+    ok ? pass++ : fail++;
+  };
+  await run(true);
+  await run(false);
+  namesMode.useReal = true;
+}
+
 console.log(`\n결과: ${pass} 통과, ${fail} 실패`);
 process.exit(fail ? 1 : 0);

@@ -12,7 +12,10 @@
     "baseline": "node --env-file=.env scripts/ranker-baseline.js",
     "league:test": "node scripts/league/balance-test.js",
     "league:verify": "node scripts/league/verify.js",
-    "league:archive": "node scripts/league/archive.js"
+    "league:archive": "node scripts/league/archive.js",
+    "career:sim": "node scripts/career/growth-sim.js",
+    "career:clubs": "node scripts/career/build-clubs.js",
+    "career:test": "node scripts/career/balance-test.js"
   },
   "engines": {
     "node": ">=20"

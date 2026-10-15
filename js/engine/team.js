@@ -136,6 +136,11 @@ function jerseyNumber(pos, i, rng) {
   return NUMS[pos][i - before] || 30 + rng.int(60);
 }
 
+/* 팀 전력 (커리어 시뮬레이터가 직접 만든 팀 객체에 att·def를 붙일 때 사용, 결과 무관 export) */
+export function teamPower(team) {
+  return { att: attackPower(team), def: defensePower(team) };
+}
+
 /* 공격력: 선발 FW·MF(·DF 조금)의 공격 능력치 가중 평균 */
 function attackPower(team) {
   const W = { GK: 0, DF: 0.5, MF: 2, FW: 3 };

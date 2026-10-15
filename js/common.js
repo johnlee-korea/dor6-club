@@ -27,6 +27,7 @@ const DOR6_SECTIONS = {
       { key: "internal",  label: "내전",       href: "internal.html" },
       { key: "tournament", label: "토너먼트",  href: "tournament.html" },
       { key: "league",    label: "⚽ 도륙리그", href: "league.html" },   // v2.11.0 관전형 가상 리그
+      { key: "career",    label: "⭐ 내 선수 키우기", href: "career.html" }, // v2.13.0 축구 커리어 시뮬레이터 (CLAUDE.md 26장)
       { key: "hall",      label: "명예의전당",  href: "hall.html" },
       { key: "rules",     label: "규칙·공지",   href: "rules.html" }
     ]
