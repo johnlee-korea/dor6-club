@@ -15,6 +15,7 @@ import {
 import { seasonIdOf, shortSeasonName } from "./lib/squad.js";
 import { styleRaw } from "./lib/playstyle.js";
 import { insightRaw, P_KEYS } from "./lib/insight.js";
+import { matchTime } from "./lib/season.js";
 
 /* pStats가 현재 형식(P_KEYS 길이)인지 — v1.9.0 초기 4칸 형식은 재백필 대상. null(조회 불가)은 재시도 안 함 */
 const pStatsCurrent = (m) => m.pStats === null ||
@@ -149,6 +150,48 @@ async function collectMember(member, config) {
   return newCount;
 }
 
+/* 🔥 감독모드(52) 경기 날짜만 가볍게 수집 → data/manager-dates.json (v2.14.0 도륙리그 전날 판수 보너스용)
+   감독모드는 자동 진행이라 판수가 많아 상세 요약 저장은 하지 않음 — 최근 KEEP_DAYS일 경기 날짜만 보관.
+   seen = 직전 목록의 매치 id(재조회 방지). 목록은 최신순이라 보관 기간보다 오래된 경기를 만나면 나머지는 조회 생략 */
+const MGR_TYPE = 52, MGR_KEEP_DAYS = 2, MGR_PAGES = 3;   // 개최일 06:40에 전날 0시(KST)까지 = 약 31시간 → 2일이면 충분
+async function collectManagerDates(active, config) {
+  const file = p("data", "manager-dates.json");
+  const store = readJSON(file, { players: {} });
+  const cutoff = Date.now() - MGR_KEEP_DAYS * 86400000;
+  const players = {};
+  let fetched = 0;
+  for (const m of active) {
+    const prev = store.players[m.ouid] || { seen: [], dates: [] };
+    const seen = new Set(prev.seen);
+    let dates = prev.dates.filter(([, d]) => matchTime(d).getTime() >= cutoff);
+    // 목록 한 쪽(100개)이 모두 새 경기이고 끝까지 보관 기간 안이면 다음 쪽도 (최대 MGR_PAGES쪽 — 첫 실행·판수 많은 날)
+    let ids = [], done = false;
+    for (let pg = 0; pg < MGR_PAGES && !done; pg++) {
+      let page;
+      try { page = await getMatchIds(m.ouid, MGR_TYPE, pg * config.matchListLimit, config.matchListLimit); }
+      catch (e) { console.warn(`  [${m.ingameNick}] 감독모드 목록 조회 실패: ${e.message}`); break; }
+      if (!page.length) break;
+      ids = ids.concat(page);
+      for (const id of page) {
+        if (seen.has(id)) { done = true; break; }            // 여기부터는 지난 실행에서 본 경기
+        try {
+          const d = await getMatchDetail(id);
+          fetched++;
+          if (!d.matchDate || matchTime(d.matchDate).getTime() < cutoff) { done = true; break; }   // 이후는 더 오래된 경기
+          dates.push([id, d.matchDate]);
+        } catch (e) { console.warn(`  [${m.ingameNick}] 감독모드 상세(${id}) 실패: ${e.message}`); }
+      }
+      if (page.length < config.matchListLimit) break;
+    }
+    if (!ids.length) { players[m.ouid] = { seen: prev.seen, dates }; continue; }
+    const byId = new Map(dates.map((x) => [x[0], x]));
+    dates = [...byId.values()].sort((a, b) => matchTime(b[1]) - matchTime(a[1]));
+    players[m.ouid] = { seen: ids.slice(0, config.matchListLimit), dates };
+  }
+  writeJSON(file, { updated: new Date().toISOString(), keepDays: MGR_KEEP_DAYS, players });
+  console.log(`🎮 감독모드 날짜 수집 — 상세 조회 ${fetched}건`);
+}
+
 /* 회원 프로필(닉·레벨·최고등급) 수집 → profiles.json */
 async function collectProfile(member, divisionMeta) {
   const { ouid } = member;
@@ -261,6 +304,8 @@ async function main() {
     profiles[m.ouid] = await collectProfile(m, divisionMeta);
   }
   writeJSON(p("data", "profiles.json"), { updated: new Date().toISOString(), profiles });
+  // 감독모드 날짜 수집이 실패해도 매치 수집·집계는 계속 (도륙리그 보너스만 빠짐)
+  try { await collectManagerDates(active, config); } catch (e) { console.warn(`감독모드 날짜 수집 실패: ${e.message}`); }
   await backfillDetails(active, config.detailBackfillPerRun ?? 300);
   await saveSquadMeta(active);
   console.log(`✅ 수집 완료 — 신규 매치 총 ${total}건, 프로필 ${Object.keys(profiles).length}명`);

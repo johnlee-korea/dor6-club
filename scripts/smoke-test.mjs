@@ -191,6 +191,38 @@ for (const pg of PAGES) {
     ok ? pass++ : fail++;
   }
 
+  // 🔥 전날 판수 보너스 (v2.14.0): 보너스 식 · 보너스 없으면 결과 불변 · 있으면 반영 · 화면 표시
+  {
+    const { activityBoost, attachBoost, prevDay } = await import(new URL("../js/league/boost.js", import.meta.url));
+    const { runDay } = await import(new URL("../js/engine/index.js", import.meta.url));
+    const { snapshotTeams } = await import(new URL("../js/league/roster.js", import.meta.url));
+    const formulaOk = activityBoost(0) === 0 && activityBoost(5) === 125 && activityBoost(10) === 250 && activityBoost(20) === 350 && activityBoost(35) === 500 && activityBoost(99) === 500 && prevDay("2026-11-01") === "2026-10-31";
+    const daily = { days: { "2026-10-14": { [fxSnap.teams[0].ouid]: [12, 3, 0, 20], [fxSnap.teams[1].ouid]: [2, 0, 1, 0] } } };
+    const att = attachBoost(fxSnap.teams, daily, "2026-10-15");
+    const boosted = { ...fxSnap, teams: att.teams, activity: att.activity, activityDay: att.activityDay };
+    const sig = (snap) => { const d = runDay({ daySeed: snap.seed, teamSeed: snap.teamSeed, teams: snapshotTeams(snap) }); return JSON.stringify(d.tables[d.totalRounds].map((r) => [r.id, r.pts, r.gf])); };
+    const plain = attachBoost(fxSnap.teams, { days: {} }, "2026-10-15");
+    const sameOk = plain.activity === "skipped" && sig({ ...fxSnap, teams: plain.teams }) === sig(fxSnap) && sig({ ...fxSnap, teams: fxSnap.teams.map((t) => ({ ...t, act: [0, 0, 0, 0] })) }) === sig(fxSnap);
+    const diffOk = att.teams[0].boost === 500 && att.teams[1].boost === 75 && !att.teams[2].boost && sig(boosted) !== sig(fxSnap);
+    // 화면: 10-15 스냅샷을 보너스 붙인 것으로 바꿔 진행 중 화면·내 팀 탭 확인
+    const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    window.fetch = localFetch;
+    window.eval(rd("js/common.js"));
+    window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+    const fx2 = async (url) => String(url).includes("days/2026-10-15.json")
+      ? { ok: true, status: 200, json: async () => JSON.parse(JSON.stringify(boosted)) } : leagueFetch(url);
+    const app = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: fx2, nowParam: "2026-10-15T13:00", myId: ME });
+    const doc = window.document;
+    const liveOk = doc.querySelectorAll(".lg-fire").length > 0 && /판수 보너스 2팀/.test(doc.querySelector("#lg-body").textContent);
+    window.location.hash = "myteam"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(30);
+    const myOk = /35판 → 전력 \+0\.5/.test(doc.querySelector("#lg-body").textContent);
+    app.destroy();
+    const ok = formulaOk && sameOk && diffOk && liveOk && myOk;
+    console.log(`${ok ? "✅" : "❌"} league 🔥판수 보너스 식:${formulaOk} 없으면 불변:${sameOk} 반영:${diffOk} 화면:${liveOk} 내팀:${myOk}`);
+    ok ? pass++ : fail++;
+  }
+
   // 엔진 금지 함수 검사 (주석 제외) — 기기마다 결과가 달라질 수 있는 함수·현재 시각 사용 금지 (CLAUDE.md 25-5)
   const bad = [];
   for (const f of fs.readdirSync(path.join(ROOT, "js/engine"))) {

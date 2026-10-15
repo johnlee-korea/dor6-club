@@ -20,12 +20,13 @@ export { roundCount, buildTeam, formationOf, teamPower, playerStats, leaders, mv
 
 /* daySeed: 일일 시드(예 "DOR6-2026-10-15") — 대진·경기 결과
    teamSeed: 리그 시드(예 "DOR6") — 선수단 능력치 (날짜와 무관하게 팀 정체성 유지)
-   teams: [{ id, name, roster? }] — roster: [{ name, role, starter }] 실제 스쿼드(없으면 가상 선수) */
+   teams: [{ id, name, roster?, boost? }] — roster: [{ name, role, starter }] 실제 스쿼드(없으면 가상 선수)
+   boost: 팀 공격력·수비력 보정(0.001 단위 정수, 선택값) — 없으면 기존과 같은 결과(난수 소비 순서 불변) */
 export function runDay({ daySeed, teamSeed, teams }) {
   // 입력 순서와 무관하게 같은 결과가 나오도록 id로 정렬 후 일일 시드로 섞음
   const sorted = teams.slice().sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const ids = sorted.map((t) => t.id);
-  const squads = new Map(sorted.map((t) => [t.id, buildTeam(t.id, teamSeed, t.roster)]));
+  const squads = new Map(sorted.map((t) => [t.id, withBoost(buildTeam(t.id, teamSeed, t.roster), t.boost)]));
   const names = new Map(sorted.map((t) => [t.id, t.name]));
   const order = makeRng(daySeed + "|draw").shuffle(ids);
   const rounds = doubleRoundRobin(order);
@@ -34,6 +35,13 @@ export function runDay({ daySeed, teamSeed, teams }) {
     simulateMatch(squads.get(m.home), squads.get(m.away), `${daySeed}|R${r + 1}|${m.home}|${m.away}`)));
   const tables = buildTables(ids, rounds, results);
   return { ids, names, squads, rounds, results, tables, totalRounds: rounds.length };
+}
+
+/* 팀 전력 보정 (선택값) — 선수 능력치는 그대로, 경기 계산용 공격·수비력만 */
+function withBoost(team, boost) {
+  const b = Math.floor(Number(boost) || 0);
+  if (b > 0) { team.boost = b; team.att += b / 1000; team.def += b / 1000; }
+  return team;
 }
 
 /* 하루 최종 요약 (기록 보관 history.json·종료 화면 공용) */

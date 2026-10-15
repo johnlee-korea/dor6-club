@@ -1,7 +1,7 @@
 /* ============================================================
    aggregate.js — 수집 매치 → 화면용 집계 JSON 생성
    실행: node scripts/aggregate.js   (API 호출 없음, 로컬 JSON만 사용)
-   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json, insights.json, activity.json
+   산출: data/dashboard.json, internal.json, hall.json, squads.json, playstyles.json, insights.json, activity.json, daily-games.json
    ============================================================ */
 
 import fs from "node:fs";
@@ -354,6 +354,29 @@ function buildActivity() {
   return Object.values(players).filter((x) => x.streak && x.streak.n >= 3).length;
 }
 
+/* ---------- ⑨ 🔥 하루 판수 (v2.14.0 도륙리그 전날 판수 보너스) ----------
+   최근 3일(KST) 회원별 [공식 50, 공식친선 60, 리그친선 30, 감독모드 52] 판수 → data/daily-games.json
+   감독모드는 collect.js가 날짜만 모은 manager-dates.json. 판수가 0인 회원은 생략(용량) */
+const DAILY_DAYS = 3;
+function buildDailyGames() {
+  const mgr = readJSON(p("data", "manager-dates.json"), { players: {} }).players || {};
+  const kst = (t) => new Date(t + 9 * 3600000).toISOString().slice(0, 10);
+  const days = {};
+  for (let i = 0; i < DAILY_DAYS; i++) days[kst(now.getTime() - i * 86400000)] = {};
+  const add = (ouid, day, col) => {
+    if (!days[day]) return;
+    const row = (days[day][ouid] = days[day][ouid] || [0, 0, 0, 0]);
+    row[col]++;
+  };
+  const COL = { 50: 0, 60: 1, 30: 2 };
+  for (const m of members) {
+    for (const x of matchesByOuid[m.ouid]) if (x.matchType in COL) add(m.ouid, matchDayKST(x.matchDate), COL[x.matchType]);
+    for (const [, d] of (mgr[m.ouid] && mgr[m.ouid].dates) || []) add(m.ouid, matchDayKST(d), 3);
+  }
+  writeJSON(p("data", "daily-games.json"), { updated: now.toISOString(), types: [50, 60, 30, 52], days });
+  return Object.keys(days[kst(now.getTime() - 86400000)]).length;
+}
+
 /* 최빈값 (동률이면 먼저 나온 값 = 최신 경기 쪽) */
 function mode(arr) {
   const cnt = new Map();
@@ -371,5 +394,6 @@ const squadCount = buildSquads();
 const styleCount = buildPlaystyles();
 const insightCount = buildInsights();
 const streakCount = buildActivity();
-console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, 인사이트 ${insightCount}명, 3연속 기록 ${streakCount}명, ` +
-  `dashboard/internal/hall/squads/playstyles/insights/activity.json 갱신`);
+const dailyCount = buildDailyGames();
+console.log(`✅ 집계 완료 — 현재 시즌 '${cur.seasonName || "-"}' ${cur.rows.length}명, 스쿼드 ${squadCount}명, 플레이스타일 ${styleCount}명, 인사이트 ${insightCount}명, 3연속 기록 ${streakCount}명, 어제 판수 ${dailyCount}명, ` +
+  `dashboard/internal/hall/squads/playstyles/insights/activity/daily-games.json 갱신`);

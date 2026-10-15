@@ -10,6 +10,7 @@
 import * as C from "./clock.js";
 import { fetchJSON, loadSnapshot, simulateSnapshot } from "./data.js";
 import { judgeEligibility } from "./eligibility.js";
+import { attachBoost } from "./boost.js";
 import { squadFromLineup, hasSquads } from "./roster.js";
 import * as V from "./views.js";
 
@@ -78,17 +79,18 @@ export async function mountLeague(root, opts = {}) {
   let testCache = null;
   async function buildTestCtx() {
     if (!testCache) {
-      const [members, dash, squads] = await Promise.all([
+      const [members, dash, squads, daily] = await Promise.all([
         fetchJSON(fetchFn, "data/members.json"),
         fetchJSON(fetchFn, "data/dashboard.json").catch(() => null),
-        fetchJSON(fetchFn, "data/squads.json").catch(() => null)
+        fetchJSON(fetchFn, "data/squads.json").catch(() => null),
+        fetchJSON(fetchFn, "data/daily-games.json").catch(() => null)
       ]);
       const date = C.kstDate(testStart);
       const j = judgeEligibility(members, dash, date);
       // 정식 스냅샷(Worker)과 같은 방식으로 실제 스쿼드를 붙임
       const sq = (squads && squads.squads) || {};
-      const teams = j.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; });
-      const snap = { date, no: "테스트", seed: `TEST-${testStart}`, teamSeed: config.seed, teams, excluded: j.excluded, eligibility: j.eligibility };
+      const bt = attachBoost(j.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; }), daily, date);
+      const snap = { date, no: "테스트", seed: `TEST-${testStart}`, teamSeed: config.seed, teams: bt.teams, excluded: j.excluded, eligibility: j.eligibility, activity: bt.activity, activityDay: bt.activityDay };
       testCache = { snap, day: simulateSnapshot(snap, config, await getNames(snap)) };
     }
     const { snap, day } = testCache;

@@ -6,6 +6,12 @@ import * as C from "./clock.js";
 import { reasonLabel } from "./eligibility.js";
 import { playerStats, leaders } from "../engine/index.js";
 import { formationOf } from "../engine/team.js";
+import { gamesOf, boostText, prevDay } from "./boost.js";
+
+/* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
+const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
+const fire = (ctx, id) => { const t = snapTeam(ctx, id); return t && t.boost ? ` <span class="lg-fire" title="전날 ${gamesOf(t)}판 · 전력 ${boostText(t.boost)}">🔥</span>` : ""; };
+const dayLabel = (d) => `${+d.slice(5, 7)}/${+d.slice(8, 10)}`;
 
 /* 포지션 표시: 실제 스쿼드면 세부 포지션(ST·CAM…), 교체는 "교체" */
 const posLabel = (p) => (p.sub ? "교체" : p.role || p.pos);
@@ -79,7 +85,7 @@ export function tableHtml(ctx, k, limit) {
       <th class="num">승</th><th class="num">무</th><th class="num">패</th><th class="num">득</th><th class="num">실</th><th>최근 5</th></tr></thead><tbody>
     ${list.map((r) => r === null ? `<tr class="lg-gap"><td colspan="11">⋯</td></tr>` : `<tr class="${mine(ctx, r.id).trim()}">
       <td class="num"><span class="rank ${r.rank <= 3 ? "r" + r.rank : ""}">${r.rank}</span> ${move(r)}</td>
-      <td class="lg-tname">${teamName(ctx, r.id)}</td><td class="num">${r.p}</td><td class="num"><b>${r.pts}</b></td>
+      <td class="lg-tname">${teamName(ctx, r.id)}${fire(ctx, r.id)}</td><td class="num">${r.p}</td><td class="num"><b>${r.pts}</b></td>
       <td class="num">${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="num">${r.w}</td><td class="num">${r.d}</td><td class="num">${r.l}</td>
       <td class="num">${r.gf}</td><td class="num">${r.ga}</td><td>${form(r.form)}</td></tr>`).join("")}
     </tbody></table></div>`;
@@ -149,8 +155,21 @@ export function tabLive(ctx) {
       <div class="card">${ctx.day.rounds[r].matches.map((_, i) => matchCard(ctx, r, i)).join("")}${byeLine(ctx, r)}</div>`;
   }
   html += `<div class="section-title">📊 순위 <a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
+  html += boostBox(ctx);
   html += excludedBox(ctx);
   return html;
+}
+
+/* 🔥 전날 판수 보너스 목록 — 판수 많은 순 */
+function boostBox(ctx) {
+  const s = ctx.snap;
+  if (!s || s.activity !== "ok") return "";
+  const list = s.teams.filter((t) => t.boost).sort((a, b) => gamesOf(b) - gamesOf(a) || (a.ouid < b.ouid ? -1 : 1));
+  if (!list.length) return "";
+  const kinds = (a) => [["공식", a[0]], ["친선", a[1] + a[2]], ["감독", a[3]]].filter((x) => x[1]).map((x) => x[0] + " " + x[1]).join(" · ");
+  return `<details class="card lg-excl"><summary>🔥 ${dayLabel(s.activityDay || prevDay(s.date))} 판수 보너스 ${list.length}팀</summary>
+    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${gamesOf(t)}판 (${kinds(t.act)})</span></span><b>${boostText(t.boost)}</b></div>`).join("")}</div>
+    <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 아주 조금 올라요 (10판까지 판당 +0.025, 이후 +0.01, 최대 +0.5)</div></details>`;
 }
 
 function byeLine(ctx, r) {
@@ -278,6 +297,7 @@ export function tabMyTeam(ctx, sel) {
   return picker + note + `<div class="card lg-myhead">
       <div class="lg-title">${teamName(ctx, id)}</div>
       <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"} · 팀 오버롤 ${sq.ovr}</div>
+      ${myBoostLine(ctx, id)}
       ${ctx.k > 1 ? rankChart(ctx, id) : ""}</div>
     ${next ? `<div class="section-title">⏭ 다음 경기</div><div class="card">${matchCard(ctx, next[0], next[1])}</div>` : ""}
     ${shown.length ? `<div class="section-title">📋 지난 경기 <span class="lg-dim">${shown.length}경기</span></div>
@@ -288,6 +308,14 @@ export function tabMyTeam(ctx, sel) {
       ${players.map(({ p, s, start }) => `<tr><td><span class="lg-pos">${posLabel(p)}</span></td><td>${start ? "● " : "<span class='lg-dim'>○</span> "}${esc(p.name)}</td>
                 <td class="num">${s.g || ""}</td><td class="num">${s.a || ""}</td><td class="num">${s.apps ? s.avg.toFixed(1) : ""}</td></tr>`).join("")}
     </tbody></table></div></div>`;
+}
+
+function myBoostLine(ctx, id) {
+  const t = snapTeam(ctx, id);
+  if (!t || !ctx.snap || ctx.snap.activity !== "ok") return "";
+  const day = dayLabel(ctx.snap.activityDay || prevDay(ctx.snap.date));
+  return t.boost ? `<div class="lg-sub">🔥 ${day} ${gamesOf(t)}판 → 전력 <b>${boostText(t.boost)}</b></div>`
+    : `<div class="lg-sub lg-dim">${day} 판수 0 — 전날 한 판이라도 하면 🔥 보너스</div>`;
 }
 
 /* 순위 추이 꺾은선 (SVG, 1위가 위) */

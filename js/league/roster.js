@@ -29,7 +29,8 @@ export function squadToRoster(squad, names) {
 
 /* 스냅샷 → 엔진 teams 입력 */
 export function snapshotTeams(snap, names) {
-  return snap.teams.map((t) => ({ id: t.ouid, name: t.name, roster: squadToRoster(t.squad, names) }));
+  // boost: 🔥 전날 판수 보너스(league/boost.js, v2.14.0) — 없으면 엔진 결과 기존과 동일
+  return snap.teams.map((t) => ({ id: t.ouid, name: t.name, roster: squadToRoster(t.squad, names), ...(t.boost ? { boost: t.boost } : {}) }));
 }
 
 export const hasSquads = (snap) => !!(snap && snap.teams && snap.teams.some((t) => t.squad));

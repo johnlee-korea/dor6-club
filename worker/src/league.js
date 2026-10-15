@@ -11,6 +11,7 @@ import {
   canReserve, canCancel, canSnapshot, pendingReservation, todayRunning
 } from "../../js/league/clock.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
+import { attachBoost } from "../../js/league/boost.js";
 import { squadFromLineup } from "../../js/league/roster.js";
 import { ENGINE_VERSION, roundCount } from "../../js/engine/index.js";
 
@@ -88,16 +89,20 @@ async function makeSnapshot(env, now, opts) {
   // v2.12.0 실제 스쿼드: squads.json 최근 경기 라인업 18명을 [spId, spPosition]으로 얼려 둠 (없으면 가상 선수)
   const sqFile = await ghRead(env, "data/squads.json").catch((e) => { console.error("[league] squads.json 읽기 실패:", e.message); return null; });
   const sq = (sqFile && sqFile.json && sqFile.json.squads) || {};
+  // v2.14.0 🔥 전날 판수 보너스: daily-games.json의 개최 전날 판수를 팀마다 얼려 둠 (없으면 보너스 없이 진행)
+  const dgFile = await ghRead(env, "data/daily-games.json").catch((e) => { console.error("[league] daily-games.json 읽기 실패:", e.message); return null; });
+  const boosted = attachBoost(judged.teams.map((t) => {
+    const squad = squadFromLineup(sq[t.ouid]);
+    return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
+  }), dgFile && dgFile.json, today);
   const snap = {
     date: today, no: entry.no,
     seed: `${config.seed}-${today}`, teamSeed: config.seed,
     engine: ENGINE_VERSION,
     createdAt: new Date(now).toISOString(), source: opts.source,
-    teams: judged.teams.map((t) => {
-      const squad = squadFromLineup(sq[t.ouid]);
-      return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
-    }),
+    teams: boosted.teams,
     eligibility: judged.eligibility,
+    activity: boosted.activity, activityDay: boosted.activityDay,
     excluded: judged.excluded
   };
   const tag = opts.source === "cron" ? "[자동]" : "[기능]";

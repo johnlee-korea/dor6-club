@@ -103,3 +103,9 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-admin-grid dd { margin: 0; }
 .lg-admin-actions { display: grid; gap: var(--sp-2); margin-top: var(--sp-4); }
 .lg-admin-why { font-size: var(--fs-xs); color: var(--text-dim); margin-top: -2px; }
+
+/* 🔥 전날 판수 보너스 (v2.14.0) */
+.lg-fire { font-size: 0.8em; }
+.lg-boost-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.lg-boost { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
+.lg-boost.lg-mine { font-weight: 700; }
