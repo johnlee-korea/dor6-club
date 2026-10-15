@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-15T04:07:09.033Z",
+  "updated": "2026-10-15T05:15:30.631Z",
   "week": {
-    "from": "2026-10-08T04:07:09.033Z",
+    "from": "2026-10-08T05:15:30.631Z",
     "rows": [
       {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
         "nick": "FaceID",
-        "games": 65,
-        "wins": 29,
-        "winRate": 45
+        "games": 61,
+        "wins": 27,
+        "winRate": 44
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -27,9 +27,9 @@
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
         "nick": "Dor6파리",
-        "games": 51,
-        "wins": 16,
-        "winRate": 31
+        "games": 48,
+        "wins": 14,
+        "winRate": 29
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
@@ -979,20 +979,23 @@
       }
     },
     "40e7eb538cbc1bf73403ace3a75e403b": {
-      "games": 60,
+      "games": 63,
       "form": [
-        "draw",
-        "draw",
-        "lose",
-        "draw",
-        "lose",
-        "lose",
         "win",
         "lose",
         "lose",
-        "lose"
+        "draw",
+        "draw",
+        "lose",
+        "draw",
+        "lose",
+        "lose",
+        "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "82c59dce895a829f78a8e10c10122249",
