@@ -136,10 +136,13 @@ export const STYLE_CATS = { attack: ["sht", "spd", "dri"], build: ["pas", "dri"]
 
 /* ---------- 시즌 목표 (26-9) ---------- */
 export const GOALS = {
-  S: { ST: ["goals", 0.32], WG: ["points", 0.3], AM: ["points", 0.3], DM: ["rating", 6.8], CB: ["rating", 6.9], FB: ["rating", 6.9] },
+  // 평점 목표(DM·CB·FB) = 포지션 기준 + 예상 평점 보정(내 OVR − 팀 선발 평균, 엔진 rb와 같은 식) — v2.13.4
+  // 고정 6.8·6.9는 수비 포지션 평점 구조(MF는 무실점 보너스 없음)상 적정 무대 주전 달성률 0~10%였음 → 공격수 목표(약 90%)와 비슷하게
+  S: { ST: ["goals", 0.32], WG: ["points", 0.3], AM: ["points", 0.3], DM: ["rating", 6.0], CB: ["rating", 5.8], FB: ["rating", 5.8] },
   R: { ST: ["goals", 0.16], WG: ["points", 0.2], AM: ["points", 0.2], DM: ["apps", 0.6], CB: ["apps", 0.6], FB: ["apps", 0.6] },
   B: { ST: ["apps", 0.4], WG: ["apps", 0.4], AM: ["apps", 0.4], DM: ["apps", 0.4], CB: ["apps", 0.4], FB: ["apps", 0.4] },
-  raise: 1.15, raiseOver: 1.3
+  raise: 1.15, raiseOver: 1.3,
+  starterGap: 4.2         // 팀 선발 평균 OVR ≈ 요구 OVR + 4.2 (squad.js 주전 R+5·R+3 평균)
 };
 
 /* ---------- 은퇴 ---------- */

@@ -80,7 +80,8 @@ export function decisionPreview(state) {
   const trust = d.type === "stay" ? p.trust : 0;
   const card = clubCard(state, clubId, { trust, penalty: p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0 });
   const games = 2 * (leagueClubCount(state, card.league) - 1);
-  const goal = makeGoal(card.role, p.pos, games, state.history[state.history.length - 1]);
+  const ovr = ri(posOvr(p.subs, p.pos) - (p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0));
+  const goal = makeGoal(card.role, p.pos, games, state.history[state.history.length - 1], { ovr, R: card.R, typeRb: typeEffects(p.pos, p.typeKey).rb });
   return { card, goal, games };
 }
 const leagueClubCount = (state, lg) => Object.values(state.world.clubs).filter((c) => c.league === lg).length;
@@ -152,7 +153,7 @@ export function playSeason(state, clubsJson) {
   const res = simulateSeason({ world, seed: state.seed,
     me: { clubId: playId, name: p.name, pos: p.pos, ovr: ovrShown, attrs, fx, pref: pm, trust: trustIn, age: p.age } });
   const mine = res.mine;
-  const goal = makeGoal(mine.startRole, p.pos, mine.games, last);
+  const goal = makeGoal(mine.startRole, p.pos, mine.games, last, { ovr: ovrShown, R: clubR, typeRb: fx.rb });
   const met = goalMet(goal, mine);
   const champion = res.leagues[club.league].order[0] === playId;
   // 레전드 시즌은 2시즌 연속 나오지 않음 (다음 시즌은 견제가 심해짐)
