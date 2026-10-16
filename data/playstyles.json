@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-16T00:08:18.323Z",
+  "updated": "2026-10-16T02:08:44.790Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -921,40 +921,31 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.233,
+          "v": 0.228,
           "avg": 0.094,
-          "z": 1.92,
-          "key": false
-        },
-        {
-          "k": "tackleRate",
-          "label": "태클 성공률",
-          "unit": "%",
-          "v": 0.595,
-          "avg": 0.537,
-          "z": 1.15,
+          "z": 1.85,
           "key": false
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.078,
+          "v": 0.079,
           "avg": 0.055,
-          "z": 0.86,
+          "z": 0.89,
+          "key": false
+        },
+        {
+          "k": "headShot",
+          "label": "헤더 슈팅 비율",
+          "unit": "%",
+          "v": 0.281,
+          "avg": 0.204,
+          "z": 0.65,
           "key": false
         }
       ],
       "lows": [
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 9.72,
-          "avg": 15.8,
-          "z": -1.76,
-          "key": true
-        },
         {
           "k": "gf",
           "label": "경기당 득점",
@@ -965,12 +956,21 @@
           "key": true
         },
         {
-          "k": "finish",
-          "label": "결정력",
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 9.98,
+          "avg": 15.8,
+          "z": -1.69,
+          "key": true
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.395,
-          "avg": 0.495,
-          "z": -1.38,
+          "v": 0.745,
+          "avg": 0.808,
+          "z": -1.36,
           "key": false
         }
       ]
