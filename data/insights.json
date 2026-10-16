@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-16T12:08:23.442Z",
+  "updated": "2026-10-16T14:08:09.037Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -2133,7 +2133,7 @@
     },
     "068895f008054937eb7c5fa1acbd5c30": {
       "ctrl": "keyboard",
-      "games": 95,
+      "games": 98,
       "ace": [
         {
           "spId": 877231866,
@@ -2152,22 +2152,6 @@
           "assists": 6
         },
         {
-          "spId": 866230621,
-          "group": "GK",
-          "pos": 0,
-          "games": 16,
-          "metric": "sav",
-          "value": 4.88,
-          "base": 2.58,
-          "z": 2.87,
-          "title": {
-            "emoji": "🧤",
-            "name": "수호신"
-          },
-          "goals": 0,
-          "assists": 0
-        },
-        {
           "spId": 851251517,
           "group": "DM",
           "pos": 9,
@@ -2182,36 +2166,52 @@
           },
           "goals": 3,
           "assists": 2
+        },
+        {
+          "spId": 845244260,
+          "group": "AM",
+          "pos": 18,
+          "games": 12,
+          "metric": "pas",
+          "value": 22.08,
+          "base": 11.78,
+          "z": 2.49,
+          "title": {
+            "emoji": "📨",
+            "name": "패스 마스터"
+          },
+          "goals": 9,
+          "assists": 11
         }
       ],
       "goalMins": {
         "for": [
-          37,
-          35,
           38,
-          44,
-          39,
           38,
-          19
+          41,
+          45,
+          41,
+          38,
+          20
         ],
         "against": [
-          32,
+          33,
           32,
           26,
-          47,
-          35,
-          37,
-          10
+          49,
+          36,
+          38,
+          11
         ]
       },
-      "comebacks": 18,
-      "lateWinners": 13,
+      "comebacks": 19,
+      "lateWinners": 14,
       "manner": {
-        "games": 95,
+        "games": 98,
         "yellow": 2,
         "red": 1,
-        "foul": 50,
-        "score": 0.62
+        "foul": 55,
+        "score": 0.65
       }
     }
   },
@@ -2338,15 +2338,6 @@
     ],
     "gentleman": [
       {
-        "ouid": "068895f008054937eb7c5fa1acbd5c30",
-        "nick": "Dor6파리",
-        "games": 95,
-        "yellow": 2,
-        "red": 1,
-        "foul": 50,
-        "score": 0.62
-      },
-      {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "games": 367,
@@ -2363,6 +2354,15 @@
         "red": 0,
         "foul": 62,
         "score": 0.63
+      },
+      {
+        "ouid": "068895f008054937eb7c5fa1acbd5c30",
+        "nick": "Dor6파리",
+        "games": 98,
+        "yellow": 2,
+        "red": 1,
+        "foul": 55,
+        "score": 0.65
       }
     ],
     "toughGuy": [
