@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T08:08:44.054Z",
+  "updated": "2026-10-17T10:08:39.197Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -697,11 +697,11 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "터프한 플레이메이커",
-        "line": "스루는 날카롭게, 몸싸움은 거칠게",
+        "name": "헛스루 장인",
+        "line": "스루는 쉴 새 없는데 골은 없다",
         "basis": [
           "throughRatio+",
-          "cards+"
+          "gf-"
         ]
       },
       "highs": [
@@ -715,21 +715,21 @@
           "key": true
         },
         {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.1,
-          "avg": 0.026,
-          "z": 1.47,
-          "key": true
-        },
-        {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.436,
+          "v": 0.437,
           "avg": 0.291,
-          "z": 1.24,
+          "z": 1.25,
+          "key": false
+        },
+        {
+          "k": "cards",
+          "label": "카드",
+          "unit": "",
+          "v": 0.08,
+          "avg": 0.026,
+          "z": 1.08,
           "key": false
         }
       ],
@@ -738,9 +738,9 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.156,
+          "v": 0.161,
           "avg": 0.286,
-          "z": -1.85,
+          "z": -1.77,
           "key": false
         },
         {
@@ -750,15 +750,15 @@
           "v": 2.42,
           "avg": 3.29,
           "z": -1.57,
-          "key": false
+          "key": true
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.12,
+          "v": 5.2,
           "avg": 6.701,
-          "z": -1.55,
+          "z": -1.47,
           "key": false
         }
       ]
