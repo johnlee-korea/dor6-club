@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T06:07:52.962Z",
+  "updated": "2026-10-17T08:08:44.054Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1892,57 +1892,57 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.679,
+          "v": 0.662,
           "avg": 0.537,
-          "z": 2.82,
+          "z": 2.48,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.537,
+          "v": 0.545,
           "avg": 0.291,
-          "z": 2.1,
+          "z": 2.17,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 92.22,
+          "v": 90.62,
           "avg": 79.272,
-          "z": 1.48,
+          "z": 1.3,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 9.6,
-          "avg": 15.8,
-          "z": -1.8,
-          "key": true
-        },
-        {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.372,
+          "v": 0.353,
           "avg": 0.495,
-          "z": -1.7,
+          "z": -1.95,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.46,
+          "v": 2.4,
           "avg": 3.29,
-          "z": -1.5,
+          "z": -1.61,
           "key": false
+        },
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 10.6,
+          "avg": 15.8,
+          "z": -1.51,
+          "key": true
         }
       ]
     }
