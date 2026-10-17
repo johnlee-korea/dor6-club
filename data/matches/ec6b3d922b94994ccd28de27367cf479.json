@@ -1,6 +1,6 @@
 {
   "ouid": "ec6b3d922b94994ccd28de27367cf479",
-  "updated": "2026-10-17T10:06:34.302Z",
+  "updated": "2026-10-17T11:11:12.816Z",
   "knownMatchIds": [
     "6ab14562ecf38026cc9c6e81",
     "6ab142477e8edb81374565c9",
@@ -334,9 +334,471 @@
     "6acf78e64f39b1ad7704bece",
     "6acf76409082cf5db87a9331",
     "6acf715cda69e8786f5f6818",
-    "6acf6ee13e689220a47aa10d"
+    "6acf6ee13e689220a47aa10d",
+    "6ad343f02b97b6719a3d9d89"
   ],
   "matches": [
+    {
+      "matchId": "6ad343f02b97b6719a3d9d89",
+      "matchType": 50,
+      "matchDate": "2026-10-17T09:56:21",
+      "result": "win",
+      "goalFor": 3,
+      "goalAgainst": 0,
+      "opponentOuid": "c248308f5b3eddca88ed04bd483ba339",
+      "opponentNick": "대구FC조사장",
+      "stats": {
+        "possession": 54,
+        "shootTotal": 6,
+        "effectiveShoot": 5,
+        "passTry": 91,
+        "passSuccess": 79,
+        "tackle": 8,
+        "foul": 1,
+        "corner": 0
+      },
+      "lineup": [
+        {
+          "spId": 861001615,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 100001625,
+          "spPosition": 24,
+          "spGrade": 10
+        },
+        {
+          "spId": 237020170,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 237174543,
+          "spPosition": 0,
+          "spGrade": 13
+        },
+        {
+          "spId": 250186153,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 848189505,
+          "spPosition": 16,
+          "spGrade": 11
+        },
+        {
+          "spId": 280192119,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 810192448,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 280210035,
+          "spPosition": 7,
+          "spGrade": 13
+        },
+        {
+          "spId": 260210514,
+          "spPosition": 3,
+          "spGrade": 13
+        },
+        {
+          "spId": 217227928,
+          "spPosition": 28,
+          "spGrade": 12
+        },
+        {
+          "spId": 866231443,
+          "spPosition": 26,
+          "spGrade": 11
+        },
+        {
+          "spId": 877231866,
+          "spPosition": 9,
+          "spGrade": 11
+        },
+        {
+          "spId": 866233419,
+          "spPosition": 12,
+          "spGrade": 11
+        },
+        {
+          "spId": 854241486,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 253241671,
+          "spPosition": 28,
+          "spGrade": 12
+        },
+        {
+          "spId": 854251854,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 810263578,
+          "spPosition": 28,
+          "spGrade": 13
+        }
+      ],
+      "oppLineup": [
+        {
+          "spId": 829000240,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 846000250,
+          "spPosition": 28,
+          "spGrade": 9
+        },
+        {
+          "spId": 868007289,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 864039943,
+          "spPosition": 16,
+          "spGrade": 8
+        },
+        {
+          "spId": 101121944,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 861140601,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 877167905,
+          "spPosition": 12,
+          "spGrade": 10
+        },
+        {
+          "spId": 867176944,
+          "spPosition": 26,
+          "spGrade": 11
+        },
+        {
+          "spId": 846190053,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 863200145,
+          "spPosition": 9,
+          "spGrade": 11
+        },
+        {
+          "spId": 863202556,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 814204923,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 844233306,
+          "spPosition": 0,
+          "spGrade": 8
+        },
+        {
+          "spId": 851236401,
+          "spPosition": 3,
+          "spGrade": 10
+        },
+        {
+          "spId": 846237238,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 866259399,
+          "spPosition": 24,
+          "spGrade": 10
+        },
+        {
+          "spId": 852268438,
+          "spPosition": 28,
+          "spGrade": 9
+        },
+        {
+          "spId": 856268889,
+          "spPosition": 7,
+          "spGrade": 10
+        }
+      ],
+      "styleRaw": {
+        "end": 1,
+        "pos": 54,
+        "rt": 4.45,
+        "dr": 69,
+        "off": 1,
+        "ck": 0,
+        "fl": 1,
+        "cd": 0,
+        "pT": 91,
+        "pS": 79,
+        "spT": 58,
+        "lpT": 2,
+        "tpT": 13,
+        "lobT": 5,
+        "sT": 6,
+        "eS": 5,
+        "g": 3,
+        "gH": 0,
+        "sO": 2,
+        "gO": 0,
+        "gI": 3,
+        "gSet": 0,
+        "tT": 15,
+        "tS": 8,
+        "bT": 2,
+        "ga": 0
+      },
+      "ctrl": "keyboard",
+      "cards": {
+        "y": 0,
+        "r": 0
+      },
+      "pStats": [
+        [
+          861001615,
+          6,
+          0,
+          0,
+          6.1,
+          0,
+          6,
+          3,
+          1,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          100001625,
+          24,
+          1,
+          1,
+          8.5,
+          1,
+          10,
+          8,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          237174543,
+          0,
+          0,
+          0,
+          8.2,
+          0,
+          4,
+          0,
+          0,
+          2,
+          0,
+          0,
+          5
+        ],
+        [
+          848189505,
+          16,
+          1,
+          0,
+          8.1,
+          1,
+          7,
+          5,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          280210035,
+          7,
+          0,
+          0,
+          6.8,
+          0,
+          11,
+          9,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          260210514,
+          3,
+          0,
+          0,
+          7,
+          0,
+          5,
+          3,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          866231443,
+          26,
+          1,
+          0,
+          7.2,
+          1,
+          6,
+          4,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          877231866,
+          9,
+          0,
+          0,
+          7.3,
+          2,
+          9,
+          12,
+          2,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          866233419,
+          12,
+          0,
+          0,
+          6,
+          1,
+          1,
+          3,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          854241486,
+          4,
+          0,
+          0,
+          6.8,
+          0,
+          5,
+          2,
+          1,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          854251854,
+          11,
+          0,
+          1,
+          8.1,
+          0,
+          15,
+          11,
+          1,
+          2,
+          0,
+          0,
+          0
+        ]
+      ],
+      "shots": [
+        [
+          644,
+          0.95,
+          0.66,
+          1,
+          6,
+          866233419,
+          877231866
+        ],
+        [
+          935,
+          0.84,
+          0.64,
+          1,
+          1,
+          877231866,
+          0
+        ],
+        [
+          2876,
+          0.72,
+          0.48,
+          2,
+          13,
+          877231866,
+          854251854
+        ],
+        [
+          2982,
+          0.88,
+          0.35,
+          3,
+          2,
+          848189505,
+          0
+        ],
+        [
+          3397,
+          0.86,
+          0.42,
+          3,
+          2,
+          100001625,
+          854251854
+        ],
+        [
+          4991,
+          0.95,
+          0.45,
+          3,
+          1,
+          866231443,
+          100001625
+        ]
+      ],
+      "oppGoals": []
+    },
     {
       "matchId": "6acf85be6105ecf528bbf21a",
       "matchType": 40,
