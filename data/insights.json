@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T21:01:02.496Z",
+  "updated": "2026-10-17T22:08:53.041Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1552,7 +1552,7 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 133,
+      "games": 137,
       "ace": [
         {
           "spId": 856220901,
@@ -1571,6 +1571,22 @@
           "assists": 0
         },
         {
+          "spId": 864200104,
+          "group": "W",
+          "pos": 16,
+          "games": 7,
+          "metric": "win",
+          "value": 2.43,
+          "base": 1.46,
+          "z": 1.87,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 2,
+          "assists": 5
+        },
+        {
           "spId": 866239580,
           "group": "CB",
           "pos": 4,
@@ -1585,52 +1601,36 @@
           },
           "goals": 0,
           "assists": 0
-        },
-        {
-          "spId": 241210257,
-          "group": "GK",
-          "pos": 0,
-          "games": 5,
-          "metric": "pas",
-          "value": 2.8,
-          "base": 1.95,
-          "z": 1.7,
-          "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
-          },
-          "goals": 0,
-          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
           43,
-          50,
-          56,
-          61,
-          50,
+          52,
+          57,
+          63,
+          52,
           56,
           16
         ],
         "against": [
           32,
           51,
-          48,
-          55,
+          50,
+          59,
           46,
-          60,
+          62,
           17
         ]
       },
       "comebacks": 22,
       "lateWinners": 7,
       "manner": {
-        "games": 133,
+        "games": 137,
         "yellow": 1,
         "red": 0,
-        "foul": 128,
-        "score": 0.98
+        "foul": 136,
+        "score": 1.01
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
