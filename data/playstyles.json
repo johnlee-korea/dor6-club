@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T21:04:53.229Z",
+  "updated": "2026-10-18T22:08:55.948Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -204,43 +204,52 @@
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "games": 50,
       "style": {
-        "name": "쏘고 잊는 공격수",
-        "line": "앞에선 쏘고, 뒤에선 안 막는다",
+        "name": "뺏기면 끝",
+        "line": "공 잡을 땐 왕, 뺏기면 무방비",
         "basis": [
-          "longShot+",
+          "poss+",
           "block-"
         ]
       },
       "highs": [
         {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
-          "unit": "%",
-          "v": 0.282,
-          "avg": 0.181,
-          "z": 1.33,
-          "key": true
-        },
-        {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 54.5,
+          "v": 54.32,
           "avg": 50.642,
-          "z": 1.33,
+          "z": 1.26,
+          "key": true
+        },
+        {
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
+          "unit": "%",
+          "v": 0.274,
+          "avg": 0.181,
+          "z": 1.23,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 86.3,
+          "v": 86.68,
           "avg": 79.272,
-          "z": 0.8,
+          "z": 0.85,
           "key": false
         }
       ],
       "lows": [
+        {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.06,
+          "avg": 4.426,
+          "z": -1.57,
+          "key": true
+        },
         {
           "k": "gf",
           "label": "경기당 득점",
@@ -251,21 +260,12 @@
           "key": false
         },
         {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.2,
-          "avg": 4.426,
-          "z": -1.41,
-          "key": true
-        },
-        {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.752,
+          "v": 0.753,
           "avg": 0.808,
-          "z": -1.2,
+          "z": -1.19,
           "key": false
         }
       ]
