@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T18:08:56.144Z",
+  "updated": "2026-10-18T20:08:15.655Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1397,11 +1397,10 @@
     "b80a06acac01ad21b0aa609c2699d58b": {
       "games": 50,
       "style": {
-        "name": "패스로 박스까지",
-        "line": "짧은 패스로 박스 안까지 들어가서 넣는다",
+        "name": "블락 면제",
+        "line": "슈팅 막는 건 키퍼 몫",
         "basis": [
-          "shortRatio+",
-          "boxGoal+"
+          "block-"
         ]
       },
       "highs": [
@@ -1409,28 +1408,28 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.196,
+          "v": 0.181,
           "avg": 0.094,
-          "z": 1.4,
+          "z": 1.2,
+          "key": false
+        },
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 18.34,
+          "avg": 15.8,
+          "z": 0.74,
           "key": false
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.767,
+          "v": 0.758,
           "avg": 0.706,
-          "z": 0.86,
-          "key": true
-        },
-        {
-          "k": "boxGoal",
-          "label": "박스안골 비율",
-          "unit": "%",
-          "v": 0.93,
-          "avg": 0.889,
-          "z": 0.58,
-          "key": true
+          "z": 0.73,
+          "key": false
         }
       ],
       "lows": [
@@ -1438,27 +1437,27 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3,
+          "v": 2.96,
           "avg": 4.426,
-          "z": -1.64,
-          "key": false
+          "z": -1.69,
+          "key": true
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.753,
+          "v": 0.759,
           "avg": 0.808,
-          "z": -1.17,
+          "z": -1.05,
           "key": false
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 2.04,
+          "v": 2.06,
           "avg": 2.604,
-          "z": -1.07,
+          "z": -1.03,
           "key": false
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T18:08:56.144Z",
+  "updated": "2026-10-18T20:08:15.655Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1552,7 +1552,7 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 141,
+      "games": 144,
       "ace": [
         {
           "spId": 856220901,
@@ -1571,22 +1571,6 @@
           "assists": 0
         },
         {
-          "spId": 862199236,
-          "group": "FB",
-          "pos": 7,
-          "games": 11,
-          "metric": "int",
-          "value": 1.73,
-          "base": 1.01,
-          "z": 1.83,
-          "title": {
-            "emoji": "🦅",
-            "name": "볼 사냥꾼"
-          },
-          "goals": 0,
-          "assists": 1
-        },
-        {
           "spId": 866239580,
           "group": "CB",
           "pos": 4,
@@ -1601,36 +1585,52 @@
           },
           "goals": 0,
           "assists": 0
+        },
+        {
+          "spId": 241210257,
+          "group": "GK",
+          "pos": 0,
+          "games": 5,
+          "metric": "pas",
+          "value": 2.8,
+          "base": 1.95,
+          "z": 1.7,
+          "title": {
+            "emoji": "📨",
+            "name": "패스 마스터"
+          },
+          "goals": 0,
+          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
           43,
-          56,
-          59,
-          66,
-          55,
-          56,
+          57,
+          61,
+          70,
+          57,
+          58,
           16
         ],
         "against": [
-          34,
+          35,
           53,
-          51,
-          61,
-          47,
-          68,
+          54,
+          64,
+          48,
+          71,
           17
         ]
       },
-      "comebacks": 23,
+      "comebacks": 24,
       "lateWinners": 7,
       "manner": {
-        "games": 141,
+        "games": 144,
         "yellow": 1,
         "red": 0,
-        "foul": 141,
-        "score": 1.02
+        "foul": 145,
+        "score": 1.03
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
