@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T06:07:46.352Z",
+  "updated": "2026-10-18T08:08:10.981Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -420,30 +420,30 @@
       },
       "highs": [
         {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 54.02,
-          "avg": 50.642,
-          "z": 1.16,
-          "key": true
-        },
-        {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.74,
+          "v": 0.76,
           "avg": 0.489,
-          "z": 1.09,
+          "z": 1.18,
           "key": false
         },
         {
-          "k": "lateGoal",
-          "label": "후반 득점 비율",
-          "unit": "%",
-          "v": 0.669,
-          "avg": 0.583,
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 53.68,
+          "avg": 50.642,
           "z": 1.04,
+          "key": true
+        },
+        {
+          "k": "shortRatio",
+          "label": "짧은 패스 비율",
+          "unit": "%",
+          "v": 0.769,
+          "avg": 0.706,
+          "z": 0.9,
           "key": false
         }
       ],
@@ -452,27 +452,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 10.54,
+          "v": 10.34,
           "avg": 15.8,
-          "z": -1.52,
+          "z": -1.58,
           "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.6,
+          "v": 2.56,
           "avg": 3.29,
-          "z": -1.25,
+          "z": -1.32,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.48,
+          "v": 3.46,
           "avg": 4.426,
-          "z": -1.09,
+          "z": -1.11,
           "key": false
         }
       ]
