@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T16:08:54.503Z",
+  "updated": "2026-10-18T18:08:56.144Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -695,39 +695,41 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "헛스루 장인",
-        "line": "스루는 쉴 새 없는데 골은 없다",
+        "name": "침투 설계자",
+        "line": "스루와 침투는 많은데 슈팅은 아낀다",
         "basis": [
+          "offside+",
           "throughRatio+",
-          "gf-"
-        ]
+          "shots-"
+        ],
+        "rare": true
       },
       "highs": [
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.223,
+          "v": 0.233,
           "avg": 0.144,
-          "z": 1.63,
+          "z": 1.83,
+          "key": true
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.72,
+          "avg": 0.489,
+          "z": 1.01,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.434,
+          "v": 0.402,
           "avg": 0.291,
-          "z": 1.22,
-          "key": false
-        },
-        {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.08,
-          "avg": 0.026,
-          "z": 1.08,
+          "z": 0.95,
           "key": false
         }
       ],
@@ -745,10 +747,10 @@
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.42,
+          "v": 2.38,
           "avg": 3.29,
-          "z": -1.57,
-          "key": true
+          "z": -1.64,
+          "key": false
         },
         {
           "k": "shots",
@@ -757,7 +759,7 @@
           "v": 5.2,
           "avg": 6.701,
           "z": -1.47,
-          "key": false
+          "key": true
         }
       ]
     },
@@ -1752,9 +1754,9 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.185,
+          "v": 0.189,
           "avg": 0.091,
-          "z": 1.32,
+          "z": 1.38,
           "key": true
         },
         {
@@ -1770,22 +1772,13 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.145,
+          "v": 0.161,
           "avg": 0.094,
-          "z": 0.71,
+          "z": 0.93,
           "key": false
         }
       ],
       "lows": [
-        {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.414,
-          "avg": 0.495,
-          "z": -1.11,
-          "key": true
-        },
         {
           "k": "headGoal",
           "label": "헤더골 비율",
@@ -1796,12 +1789,21 @@
           "key": false
         },
         {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.423,
+          "avg": 0.495,
+          "z": -0.99,
+          "key": true
+        },
+        {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.639,
+          "v": 0.642,
           "avg": 0.706,
-          "z": -0.95,
+          "z": -0.91,
           "key": false
         }
       ]
