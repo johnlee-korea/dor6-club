@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19T06:07:45.491Z",
+  "updated": "2026-10-19T08:08:12.539Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1552,8 +1552,24 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 144,
+      "games": 145,
       "ace": [
+        {
+          "spId": 864140053,
+          "group": "DM",
+          "pos": 11,
+          "games": 15,
+          "metric": "int",
+          "value": 1.6,
+          "base": 0.88,
+          "z": 2.1,
+          "title": {
+            "emoji": "🧹",
+            "name": "진공청소기"
+          },
+          "goals": 3,
+          "assists": 2
+        },
         {
           "spId": 856220901,
           "group": "GK",
@@ -1585,32 +1601,16 @@
           },
           "goals": 0,
           "assists": 0
-        },
-        {
-          "spId": 241210257,
-          "group": "GK",
-          "pos": 0,
-          "games": 5,
-          "metric": "pas",
-          "value": 2.8,
-          "base": 1.95,
-          "z": 1.7,
-          "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
-          },
-          "goals": 0,
-          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
-          43,
+          44,
           57,
           61,
           70,
           57,
-          58,
+          60,
           16
         ],
         "against": [
@@ -1626,10 +1626,10 @@
       "comebacks": 24,
       "lateWinners": 7,
       "manner": {
-        "games": 144,
+        "games": 145,
         "yellow": 1,
         "red": 0,
-        "foul": 145,
+        "foul": 146,
         "score": 1.03
       }
     },
