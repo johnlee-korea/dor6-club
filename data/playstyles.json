@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19T14:08:27.985Z",
+  "updated": "2026-10-19T16:08:47.133Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -204,52 +204,43 @@
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "games": 50,
       "style": {
-        "name": "뺏기면 끝",
-        "line": "공 잡을 땐 왕, 뺏기면 무방비",
+        "name": "쏘고 잊는 공격수",
+        "line": "앞에선 쏘고, 뒤에선 안 막는다",
         "basis": [
-          "poss+",
+          "longShot+",
           "block-"
         ]
       },
       "highs": [
         {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 54.36,
-          "avg": 50.642,
-          "z": 1.28,
-          "key": true
-        },
-        {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.269,
+          "v": 0.28,
           "avg": 0.181,
-          "z": 1.16,
+          "z": 1.3,
+          "key": true
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 54.2,
+          "avg": 50.642,
+          "z": 1.22,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 87.38,
+          "v": 87.4,
           "avg": 79.272,
           "z": 0.93,
           "key": false
         }
       ],
       "lows": [
-        {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.08,
-          "avg": 4.426,
-          "z": -1.55,
-          "key": true
-        },
         {
           "k": "gf",
           "label": "경기당 득점",
@@ -263,10 +254,19 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.744,
+          "v": 0.738,
           "avg": 0.808,
-          "z": -1.37,
+          "z": -1.5,
           "key": false
+        },
+        {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.16,
+          "avg": 4.426,
+          "z": -1.46,
+          "key": true
         }
       ]
     },
