@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19T08:08:12.539Z",
+  "updated": "2026-10-19T10:08:04.593Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1552,24 +1552,8 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 145,
+      "games": 149,
       "ace": [
-        {
-          "spId": 864140053,
-          "group": "DM",
-          "pos": 11,
-          "games": 15,
-          "metric": "int",
-          "value": 1.6,
-          "base": 0.88,
-          "z": 2.1,
-          "title": {
-            "emoji": "🧹",
-            "name": "진공청소기"
-          },
-          "goals": 3,
-          "assists": 2
-        },
         {
           "spId": 856220901,
           "group": "GK",
@@ -1585,6 +1569,22 @@
           },
           "goals": 0,
           "assists": 0
+        },
+        {
+          "spId": 864140053,
+          "group": "DM",
+          "pos": 11,
+          "games": 19,
+          "metric": "win",
+          "value": 3.42,
+          "base": 2.4,
+          "z": 1.91,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 4,
+          "assists": 3
         },
         {
           "spId": 866239580,
@@ -1605,32 +1605,32 @@
       ],
       "goalMins": {
         "for": [
-          44,
-          57,
-          61,
-          70,
-          57,
-          60,
+          47,
+          58,
+          62,
+          72,
+          58,
+          62,
           16
         ],
         "against": [
-          35,
-          53,
+          37,
           54,
-          64,
-          48,
+          60,
+          65,
+          50,
           71,
           17
         ]
       },
-      "comebacks": 24,
+      "comebacks": 25,
       "lateWinners": 7,
       "manner": {
-        "games": 145,
+        "games": 149,
         "yellow": 1,
         "red": 0,
-        "foul": 146,
-        "score": 1.03
+        "foul": 149,
+        "score": 1.02
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
