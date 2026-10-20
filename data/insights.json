@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-20T16:09:18.607Z",
+  "updated": "2026-10-20T17:34:47.376Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -55,23 +55,23 @@
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
       "ctrl": "gamepad",
-      "games": 214,
+      "games": 217,
       "ace": [
         {
           "spId": 867224232,
           "group": "W",
           "pos": 16,
-          "games": 128,
+          "games": 130,
           "metric": "sht",
-          "value": 0.88,
+          "value": 0.87,
           "base": 0.53,
-          "z": 1.25,
+          "z": 1.21,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
           "goals": 63,
-          "assists": 66
+          "assists": 67
         },
         {
           "spId": 868004000,
@@ -97,37 +97,37 @@
           "z": 0.89,
           "title": null,
           "goals": 43,
-          "assists": 62
+          "assists": 64
         }
       ],
       "goalMins": {
         "for": [
           67,
-          81,
-          108,
-          102,
-          81,
-          86,
-          51
+          82,
+          109,
+          103,
+          82,
+          89,
+          53
         ],
         "against": [
-          70,
-          96,
-          90,
+          73,
+          98,
+          92,
           95,
-          79,
-          94,
-          40
+          80,
+          95,
+          41
         ]
       },
-      "comebacks": 27,
-      "lateWinners": 20,
+      "comebacks": 28,
+      "lateWinners": 21,
       "manner": {
-        "games": 214,
+        "games": 217,
         "yellow": 10,
         "red": 0,
         "foul": 193,
-        "score": 1.04
+        "score": 1.03
       }
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
@@ -215,7 +215,7 @@
     },
     "ec6b3d922b94994ccd28de27367cf479": {
       "ctrl": "keyboard",
-      "games": 171,
+      "games": 174,
       "ace": [
         {
           "spId": 237020170,
@@ -234,17 +234,17 @@
           "assists": 0
         },
         {
-          "spId": 810192448,
-          "group": "GK",
-          "pos": 0,
-          "games": 6,
+          "spId": 863278046,
+          "group": "CB",
+          "pos": 6,
+          "games": 5,
           "metric": "pas",
-          "value": 3,
-          "base": 1.95,
-          "z": 2.1,
+          "value": 8.4,
+          "base": 5.09,
+          "z": 3.15,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "⚙️",
+            "name": "빌드업 엔진"
           },
           "goals": 0,
           "assists": 0
@@ -269,30 +269,30 @@
       "goalMins": {
         "for": [
           64,
-          69,
-          64,
-          89,
-          68,
+          70,
+          65,
+          90,
+          70,
           56,
-          21
+          22
         ],
         "against": [
-          51,
-          65,
           52,
-          58,
-          72,
-          77,
+          67,
+          53,
+          59,
+          75,
+          80,
           21
         ]
       },
       "comebacks": 21,
       "lateWinners": 9,
       "manner": {
-        "games": 171,
+        "games": 174,
         "yellow": 8,
         "red": 1,
-        "foul": 119,
+        "foul": 121,
         "score": 0.85
       }
     },
@@ -2221,8 +2221,8 @@
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
         "spId": 100001625,
-        "goals": 182,
-        "games": 171
+        "goals": 183,
+        "games": 174
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -2276,18 +2276,18 @@
         "games": 210
       },
       {
+        "ouid": "ec6b3d922b94994ccd28de27367cf479",
+        "nick": "쌌따",
+        "spId": 848189505,
+        "assists": 79,
+        "games": 174
+      },
+      {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
         "nick": "FaceID",
         "spId": 861190045,
         "assists": 78,
         "games": 87
-      },
-      {
-        "ouid": "ec6b3d922b94994ccd28de27367cf479",
-        "nick": "쌌따",
-        "spId": 848189505,
-        "assists": 78,
-        "games": 171
       }
     ],
     "comebackKing": [

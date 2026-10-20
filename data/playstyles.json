@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-20T16:09:18.607Z",
+  "updated": "2026-10-20T17:34:47.376Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -135,40 +135,42 @@
     "82c59dce895a829f78a8e10c10122249": {
       "games": 50,
       "style": {
-        "name": "골 가뭄 심화",
-        "line": "쏴도 안 들어가고 골도 안 난다",
+        "name": "ZD 중독자",
+        "line": "박스 밖 감아차기, 오늘도 골대 옆으로",
         "basis": [
-          "gf-",
+          "finesse+",
+          "longShot+",
           "finish-"
-        ]
+        ],
+        "rare": true
       },
       "highs": [
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.26,
+          "v": 0.259,
           "avg": 0.181,
-          "z": 1.04,
-          "key": false
-        },
-        {
-          "k": "cards",
-          "label": "카드",
-          "unit": "",
-          "v": 0.06,
-          "avg": 0.026,
-          "z": 0.68,
-          "key": false
+          "z": 1.02,
+          "key": true
         },
         {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.135,
+          "v": 0.132,
           "avg": 0.092,
-          "z": 0.67,
+          "z": 0.62,
           "key": false
+        },
+        {
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.345,
+          "avg": 0.291,
+          "z": 0.46,
+          "key": true
         }
       ],
       "lows": [
@@ -178,25 +180,25 @@
           "unit": "%",
           "v": 0.328,
           "avg": 0.495,
-          "z": -2.29,
+          "z": -2.3,
           "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.22,
+          "v": 2.28,
           "avg": 3.29,
-          "z": -1.93,
-          "key": true
+          "z": -1.82,
+          "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 64.54,
+          "v": 64.88,
           "avg": 79.272,
-          "z": -1.68,
+          "z": -1.64,
           "key": false
         }
       ]
@@ -285,27 +287,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.301,
+          "v": 0.298,
           "avg": 0.181,
-          "z": 1.58,
+          "z": 1.54,
           "key": true
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.74,
+          "v": 0.78,
           "avg": 0.489,
-          "z": 1.09,
+          "z": 1.27,
           "key": false
         },
         {
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.21,
+          "v": 0.203,
           "avg": 0.114,
-          "z": 1.02,
+          "z": 0.95,
           "key": false
         }
       ],
@@ -320,21 +322,21 @@
           "key": true
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.73,
-          "avg": 0.808,
-          "z": -1.67,
-          "key": false
-        },
-        {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.38,
+          "v": 2.36,
           "avg": 3.29,
-          "z": -1.64,
+          "z": -1.68,
+          "key": false
+        },
+        {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.08,
+          "avg": 4.426,
+          "z": -1.55,
           "key": false
         }
       ]

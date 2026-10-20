@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-20T16:09:18.607Z",
+  "updated": "2026-10-20T17:34:47.376Z",
   "week": {
-    "from": "2026-10-13T16:09:18.607Z",
+    "from": "2026-10-13T17:34:47.376Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -42,21 +42,21 @@
   },
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
-      "games": 238,
+      "games": 241,
       "form": [
+        "lose",
+        "win",
+        "lose",
         "win",
         "draw",
         "win",
         "win",
         "win",
         "win",
-        "lose",
-        "lose",
-        "win",
-        "win"
+        "lose"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
@@ -152,10 +152,10 @@
           {
             "ouid": "2dd2edb174f63716078ffc324199edd1",
             "nick": "미드필더",
-            "games": 20,
-            "win": 8,
+            "games": 24,
+            "win": 10,
             "draw": 8,
-            "lose": 4,
+            "lose": 6,
             "rate": 53
           },
           {
@@ -168,22 +168,22 @@
             "rate": 72
           }
         ],
-        "internalGames": 83
+        "internalGames": 87
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
-      "games": 244,
+      "games": 247,
       "form": [
         "win",
         "lose",
         "lose",
         "win",
+        "lose",
+        "lose",
+        "win",
         "win",
         "lose",
-        "draw",
-        "lose",
-        "draw",
-        "lose"
+        "draw"
       ],
       "streak": {
         "type": "win",
@@ -438,11 +438,11 @@
         "nemesis": {
           "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
           "nick": "Dor6문선생",
-          "games": 20,
-          "win": 4,
+          "games": 24,
+          "win": 6,
           "draw": 8,
-          "lose": 8,
-          "rate": 33
+          "lose": 10,
+          "rate": 36
         },
         "prey": {
           "ouid": "9052276188238316b9fc057307e0d58c",
@@ -466,11 +466,11 @@
           {
             "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
             "nick": "Dor6문선생",
-            "games": 20,
-            "win": 4,
+            "games": 24,
+            "win": 6,
             "draw": 8,
-            "lose": 8,
-            "rate": 33
+            "lose": 10,
+            "rate": 36
           },
           {
             "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -482,7 +482,7 @@
             "rate": 60
           }
         ],
-        "internalGames": 177
+        "internalGames": 181
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
@@ -1031,11 +1031,11 @@
           {
             "ouid": "9052276188238316b9fc057307e0d58c",
             "nick": "휴민트",
-            "games": 9,
+            "games": 12,
             "win": 2,
             "draw": 1,
-            "lose": 6,
-            "rate": 26
+            "lose": 9,
+            "rate": 19
           },
           {
             "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -1047,7 +1047,7 @@
             "rate": 0
           }
         ],
-        "internalGames": 125
+        "internalGames": 128
       }
     },
     "9052276188238316b9fc057307e0d58c": {
@@ -1081,11 +1081,11 @@
         "prey": {
           "ouid": "40e7eb538cbc1bf73403ace3a75e403b",
           "nick": "사이다엔박카스",
-          "games": 9,
-          "win": 6,
+          "games": 12,
+          "win": 9,
           "draw": 1,
           "lose": 2,
-          "rate": 70
+          "rate": 78
         },
         "frequent": [
           {
@@ -1100,11 +1100,11 @@
           {
             "ouid": "40e7eb538cbc1bf73403ace3a75e403b",
             "nick": "사이다엔박카스",
-            "games": 9,
-            "win": 6,
+            "games": 12,
+            "win": 9,
             "draw": 1,
             "lose": 2,
-            "rate": 70
+            "rate": 78
           },
           {
             "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1116,7 +1116,7 @@
             "rate": 22
           }
         ],
-        "internalGames": 47
+        "internalGames": 50
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
