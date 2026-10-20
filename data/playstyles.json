@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-20T20:08:44.904Z",
+  "updated": "2026-10-20T21:55:32.275Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -344,11 +344,11 @@
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "games": 50,
       "style": {
-        "name": "관중석 VIP 배송",
-        "line": "박스 밖에서 쏘고 관중석으로 배송 완료",
+        "name": "쏘고 잊는 공격수",
+        "line": "앞에선 쏘고, 뒤에선 안 막는다",
         "basis": [
           "longShot+",
-          "effRate-"
+          "block-"
         ]
       },
       "highs": [
@@ -356,9 +356,9 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.289,
+          "v": 0.287,
           "avg": 0.181,
-          "z": 1.42,
+          "z": 1.39,
           "key": true
         },
         {
@@ -374,9 +374,9 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.752,
+          "v": 0.751,
           "avg": 0.706,
-          "z": 0.66,
+          "z": 0.64,
           "key": false
         }
       ],
@@ -385,28 +385,28 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.742,
+          "v": 0.744,
           "avg": 0.808,
-          "z": -1.41,
-          "key": true
+          "z": -1.36,
+          "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.402,
+          "v": 0.412,
           "avg": 0.495,
-          "z": -1.27,
+          "z": -1.14,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.6,
+          "v": 3.58,
           "avg": 4.426,
-          "z": -0.95,
-          "key": false
+          "z": -0.97,
+          "key": true
         }
       ]
     },
