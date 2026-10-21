@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T05:22:26.960Z",
+  "updated": "2026-10-21T06:10:29.041Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -2213,6 +2213,89 @@
         "foul": 69,
         "score": 0.66
       }
+    },
+    "0d3885c2f5c8446370d0bce6c5a2cbf3": {
+      "ctrl": "keyboard",
+      "games": 90,
+      "ace": [
+        {
+          "spId": 877028765,
+          "group": "W",
+          "pos": 16,
+          "games": 90,
+          "metric": "ast",
+          "value": 1.88,
+          "base": 0.58,
+          "z": 3.71,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 11,
+          "assists": 169
+        },
+        {
+          "spId": 877121939,
+          "group": "W",
+          "pos": 12,
+          "games": 6,
+          "metric": "ast",
+          "value": 1.67,
+          "base": 0.58,
+          "z": 3.11,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 0,
+          "assists": 10
+        },
+        {
+          "spId": 863229558,
+          "group": "CB",
+          "pos": 4,
+          "games": 20,
+          "metric": "win",
+          "value": 3.7,
+          "base": 2.56,
+          "z": 2.09,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
+          "assists": 0
+        }
+      ],
+      "goalMins": {
+        "for": [
+          40,
+          37,
+          46,
+          50,
+          56,
+          49,
+          7
+        ],
+        "against": [
+          33,
+          51,
+          43,
+          51,
+          43,
+          49,
+          17
+        ]
+      },
+      "comebacks": 16,
+      "lateWinners": 4,
+      "manner": {
+        "games": 90,
+        "yellow": 1,
+        "red": 0,
+        "foul": 76,
+        "score": 0.88
+      }
     }
   },
   "clubTop": {
@@ -2255,6 +2338,13 @@
     ],
     "topAssists": [
       {
+        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
+        "nick": "FO4커벌",
+        "spId": 877028765,
+        "assists": 169,
+        "games": 90
+      },
+      {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
         "nick": "땜쟁",
         "spId": 848120274,
@@ -2281,13 +2371,6 @@
         "spId": 848189505,
         "assists": 79,
         "games": 174
-      },
-      {
-        "ouid": "980d209770b51f1cc39d22e82cb2d01c",
-        "nick": "FaceID",
-        "spId": 861190045,
-        "assists": 78,
-        "games": 87
       }
     ],
     "comebackKing": [

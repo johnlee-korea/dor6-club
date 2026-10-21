@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T05:22:26.960Z",
+  "updated": "2026-10-21T06:10:29.041Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1942,6 +1942,75 @@
           "v": 0.749,
           "avg": 0.808,
           "z": -1.27,
+          "key": false
+        }
+      ]
+    },
+    "0d3885c2f5c8446370d0bce6c5a2cbf3": {
+      "games": 50,
+      "style": {
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
+        "basis": [
+          "longRatio+",
+          "passRate-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.166,
+          "avg": 0.055,
+          "z": 4.08,
+          "key": true
+        },
+        {
+          "k": "headShot",
+          "label": "헤더 슈팅 비율",
+          "unit": "%",
+          "v": 0.623,
+          "avg": 0.204,
+          "z": 3.53,
+          "key": false
+        },
+        {
+          "k": "boxGoal",
+          "label": "박스안골 비율",
+          "unit": "%",
+          "v": 0.975,
+          "avg": 0.889,
+          "z": 1.24,
+          "key": false
+        }
+      ],
+      "lows": [
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.813,
+          "avg": 0.891,
+          "z": -3.85,
+          "key": true
+        },
+        {
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 53.86,
+          "avg": 79.272,
+          "z": -2.9,
+          "key": false
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.691,
+          "avg": 0.808,
+          "z": -2.5,
           "key": false
         }
       ]
