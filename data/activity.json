@@ -1,28 +1,21 @@
 {
-  "updated": "2026-10-21T14:08:11.164Z",
+  "updated": "2026-10-21T16:09:06.182Z",
   "week": {
-    "from": "2026-10-14T14:08:11.164Z",
+    "from": "2026-10-14T16:09:06.182Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 80,
-        "wins": 34,
-        "winRate": 43
+        "games": 79,
+        "wins": 33,
+        "winRate": 42
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
-        "games": 54,
-        "wins": 21,
-        "winRate": 39
-      },
-      {
-        "ouid": "2dd2edb174f63716078ffc324199edd1",
-        "nick": "미드필더",
-        "games": 40,
-        "wins": 20,
-        "winRate": 50
+        "games": 45,
+        "wins": 18,
+        "winRate": 40
       },
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
@@ -30,6 +23,13 @@
         "games": 39,
         "wins": 16,
         "winRate": 41
+      },
+      {
+        "ouid": "2dd2edb174f63716078ffc324199edd1",
+        "nick": "미드필더",
+        "games": 38,
+        "wins": 19,
+        "winRate": 50
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -42,21 +42,21 @@
   },
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
-      "games": 241,
+      "games": 246,
       "form": [
-        "lose",
         "win",
         "lose",
-        "win",
         "draw",
+        "lose",
         "win",
+        "lose",
         "win",
+        "lose",
         "win",
-        "win",
-        "lose"
+        "draw"
       ],
       "streak": {
-        "type": "lose",
+        "type": "win",
         "n": 1
       },
       "rivals": {
@@ -525,21 +525,21 @@
       }
     },
     "49f604d3f58f5f607234ef60c584326a": {
-      "games": 122,
+      "games": 128,
       "form": [
+        "win",
+        "lose",
+        "lose",
+        "lose",
+        "draw",
+        "draw",
         "lose",
         "draw",
         "win",
-        "win",
-        "lose",
-        "win",
-        "win",
-        "win",
-        "draw",
         "win"
       ],
       "streak": {
-        "type": "lose",
+        "type": "win",
         "n": 1
       },
       "rivals": {
@@ -709,21 +709,21 @@
       }
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
-      "games": 182,
+      "games": 186,
       "form": [
+        "lose",
+        "win",
+        "win",
+        "lose",
         "win",
         "draw",
         "win",
         "win",
         "win",
-        "lose",
-        "win",
-        "lose",
-        "lose",
-        "win"
+        "lose"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
@@ -1122,7 +1122,7 @@
             "rate": 22
           }
         ],
-        "internalGames": 50
+        "internalGames": 51
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
