@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T12:30:20.408Z",
+  "updated": "2026-10-22T14:08:45.908Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -2295,6 +2295,89 @@
         "red": 0,
         "foul": 78,
         "score": 0.89
+      }
+    },
+    "10512ddbc79f7b043f02f62eac238b37": {
+      "ctrl": "keyboard",
+      "games": 8,
+      "ace": [
+        {
+          "spId": 861051257,
+          "group": "ST",
+          "pos": 25,
+          "games": 8,
+          "metric": "sht",
+          "value": 4.75,
+          "base": 2.19,
+          "z": 3.55,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 18,
+          "assists": 3
+        },
+        {
+          "spId": 839000250,
+          "group": "W",
+          "pos": 12,
+          "games": 8,
+          "metric": "rt",
+          "value": 8.8,
+          "base": 7.2,
+          "z": 3.18,
+          "title": {
+            "emoji": "⭐",
+            "name": "믿을맨"
+          },
+          "goals": 4,
+          "assists": 9
+        },
+        {
+          "spId": 861034079,
+          "group": "FB",
+          "pos": 7,
+          "games": 8,
+          "metric": "rt",
+          "value": 7.28,
+          "base": 6.43,
+          "z": 3.1,
+          "title": {
+            "emoji": "⭐",
+            "name": "믿을맨"
+          },
+          "goals": 0,
+          "assists": 2
+        }
+      ],
+      "goalMins": {
+        "for": [
+          3,
+          5,
+          2,
+          7,
+          6,
+          4,
+          3
+        ],
+        "against": [
+          3,
+          3,
+          2,
+          5,
+          2,
+          3,
+          1
+        ]
+      },
+      "comebacks": 3,
+      "lateWinners": 2,
+      "manner": {
+        "games": 8,
+        "yellow": 0,
+        "red": 0,
+        "foul": 6,
+        "score": 0.75
       }
     }
   },
