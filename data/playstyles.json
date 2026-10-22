@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T14:08:45.908Z",
+  "updated": "2026-10-22T16:09:18.274Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -215,30 +215,30 @@
       },
       "highs": [
         {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 54.18,
-          "avg": 50.642,
-          "z": 1.22,
-          "key": true
-        },
-        {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.76,
+          "v": 0.78,
           "avg": 0.489,
-          "z": 1.18,
+          "z": 1.27,
           "key": false
         },
         {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 87.98,
-          "avg": 79.272,
-          "z": 0.99,
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 53.86,
+          "avg": 50.642,
+          "z": 1.11,
+          "key": true
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.174,
+          "avg": 0.094,
+          "z": 1.09,
           "key": false
         }
       ],
@@ -247,27 +247,27 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.14,
+          "v": 3.12,
           "avg": 4.426,
-          "z": -1.48,
+          "z": -1.5,
           "key": true
+        },
+        {
+          "k": "shots",
+          "label": "경기당 슈팅",
+          "unit": "",
+          "v": 5.54,
+          "avg": 6.701,
+          "z": -1.14,
+          "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.54,
+          "v": 2.68,
           "avg": 3.29,
-          "z": -1.35,
-          "key": false
-        },
-        {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.746,
-          "avg": 0.808,
-          "z": -1.34,
+          "z": -1.1,
           "key": false
         }
       ]
@@ -838,11 +838,11 @@
     "49f604d3f58f5f607234ef60c584326a": {
       "games": 50,
       "style": {
-        "name": "롱볼 카운터",
-        "line": "뺏으면 드리블 없이 바로 전방으로",
+        "name": "크로스-헤더 공식",
+        "line": "측면에서 올리고 머리로 끝낸다",
         "basis": [
-          "longRatio+",
-          "dribble-"
+          "headShot+",
+          "lobRatio+"
         ]
       },
       "highs": [
@@ -850,19 +850,19 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.38,
+          "v": 0.372,
           "avg": 0.204,
-          "z": 1.48,
-          "key": false
+          "z": 1.42,
+          "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.092,
+          "v": 0.09,
           "avg": 0.055,
-          "z": 1.38,
-          "key": true
+          "z": 1.3,
+          "key": false
         },
         {
           "k": "lobRatio",
@@ -871,7 +871,7 @@
           "v": 0.023,
           "avg": 0.012,
           "z": 1.11,
-          "key": false
+          "key": true
         }
       ],
       "lows": [
@@ -879,9 +879,9 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.464,
+          "v": 0.46,
           "avg": 0.537,
-          "z": -1.43,
+          "z": -1.51,
           "key": false
         },
         {
@@ -900,7 +900,7 @@
           "v": 68.64,
           "avg": 79.272,
           "z": -1.21,
-          "key": true
+          "key": false
         }
       ]
     },
@@ -1116,42 +1116,40 @@
     "8d32fed0280eb81bcf6bed6405a278d3": {
       "games": 50,
       "style": {
-        "name": "무한 포격",
-        "line": "들어갈 때까지 박스 밖 포격",
+        "name": "중거리 스나이퍼",
+        "line": "박스 밖이 곧 내 슈팅 존, 실제로 들어간다",
         "basis": [
-          "shots+",
           "longShot+",
-          "finish-"
-        ],
-        "rare": true
+          "longGoal+"
+        ]
       },
       "highs": [
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.406,
+          "v": 0.398,
           "avg": 0.181,
-          "z": 2.95,
+          "z": 2.84,
           "key": true
         },
         {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.251,
+          "v": 0.241,
           "avg": 0.092,
-          "z": 2.49,
-          "key": false
+          "z": 2.33,
+          "key": true
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 8.28,
-          "avg": 6.701,
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.206,
+          "avg": 0.094,
           "z": 1.55,
-          "key": true
+          "key": false
         }
       ],
       "lows": [
@@ -1161,36 +1159,37 @@
           "unit": "%",
           "v": 0.129,
           "avg": 0.286,
-          "z": -2.24,
+          "z": -2.23,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.737,
+          "v": 0.747,
           "avg": 0.889,
-          "z": -2.2,
+          "z": -2.05,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.413,
+          "v": 0.415,
           "avg": 0.495,
-          "z": -1.13,
-          "key": true
+          "z": -1.1,
+          "key": false
         }
       ]
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "정직한 슈터",
-        "line": "감아차기? 난 정직하게 일반 슛",
+        "name": "관중석 VIP 배송",
+        "line": "박스 밖에서 쏘고 관중석으로 배송 완료",
         "basis": [
-          "finesse-"
+          "longShot+",
+          "effRate-"
         ]
       },
       "highs": [
@@ -1198,27 +1197,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.288,
+          "v": 0.295,
           "avg": 0.181,
-          "z": 1.4,
-          "key": false
+          "z": 1.5,
+          "key": true
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 3.28,
+          "v": 3.32,
           "avg": 2.604,
-          "z": 1.28,
+          "z": 1.36,
           "key": false
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.794,
+          "v": 0.792,
           "avg": 0.706,
-          "z": 1.25,
+          "z": 1.22,
           "key": false
         }
       ],
@@ -1227,28 +1226,28 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.118,
+          "v": 0.125,
           "avg": 0.291,
-          "z": -1.48,
-          "key": true
+          "z": -1.42,
+          "key": false
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.2,
+          "v": 0.18,
           "avg": 0.489,
-          "z": -1.26,
+          "z": -1.35,
           "key": false
         },
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
+          "k": "effRate",
+          "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.213,
-          "avg": 0.286,
-          "z": -1.03,
-          "key": false
+          "v": 0.747,
+          "avg": 0.808,
+          "z": -1.3,
+          "key": true
         }
       ]
     },
@@ -1741,11 +1740,11 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "땅볼 정직파",
-        "line": "감지도 띄우지도 않고 깔아 찬다",
+        "name": "발리 난사",
+        "line": "떨어지는 공마다 발리, 결과는 하늘에",
         "basis": [
-          "lowShot+",
-          "finesse-"
+          "volley+",
+          "finish-"
         ]
       },
       "highs": [
@@ -1753,56 +1752,56 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.188,
+          "v": 0.181,
           "avg": 0.091,
-          "z": 1.37,
-          "key": false
-        },
-        {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
-          "unit": "%",
-          "v": 0.169,
-          "avg": 0.094,
-          "z": 1.03,
+          "z": 1.27,
           "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.081,
+          "v": 0.08,
           "avg": 0.055,
-          "z": 0.96,
+          "z": 0.94,
+          "key": false
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.159,
+          "avg": 0.094,
+          "z": 0.89,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "finesse",
-          "label": "감아차기 비율",
+          "k": "finish",
+          "label": "결정력",
           "unit": "%",
-          "v": 0.166,
-          "avg": 0.291,
-          "z": -1.07,
+          "v": 0.412,
+          "avg": 0.495,
+          "z": -1.15,
           "key": true
         },
         {
-          "k": "block",
-          "label": "블락 시도",
+          "k": "gf",
+          "label": "경기당 득점",
           "unit": "",
-          "v": 3.54,
-          "avg": 4.426,
-          "z": -1.02,
+          "v": 2.7,
+          "avg": 3.29,
+          "z": -1.07,
           "key": false
         },
         {
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.021,
+          "v": 0.015,
           "avg": 0.114,
-          "z": -0.97,
+          "z": -1.04,
           "key": false
         }
       ]
@@ -2015,7 +2014,7 @@
       ]
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 8
+      "games": 9
     }
   }
 }
