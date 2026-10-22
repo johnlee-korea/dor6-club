@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T10:08:03.054Z",
+  "updated": "2026-10-22T12:08:16.877Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1187,11 +1187,10 @@
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "관중석 VIP 배송",
-        "line": "박스 밖에서 쏘고 관중석으로 배송 완료",
+        "name": "정직한 슈터",
+        "line": "감아차기? 난 정직하게 일반 슛",
         "basis": [
-          "longShot+",
-          "effRate-"
+          "finesse-"
         ]
       },
       "highs": [
@@ -1199,27 +1198,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.287,
+          "v": 0.288,
           "avg": 0.181,
           "z": 1.4,
-          "key": true
+          "key": false
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 3.34,
+          "v": 3.28,
           "avg": 2.604,
-          "z": 1.39,
+          "z": 1.28,
           "key": false
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.797,
+          "v": 0.794,
           "avg": 0.706,
-          "z": 1.29,
+          "z": 1.25,
           "key": false
         }
       ],
@@ -1228,10 +1227,10 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.116,
+          "v": 0.118,
           "avg": 0.291,
-          "z": -1.5,
-          "key": false
+          "z": -1.48,
+          "key": true
         },
         {
           "k": "offside",
@@ -1243,13 +1242,13 @@
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.758,
-          "avg": 0.808,
-          "z": -1.07,
-          "key": true
+          "v": 0.213,
+          "avg": 0.286,
+          "z": -1.03,
+          "key": false
         }
       ]
     },

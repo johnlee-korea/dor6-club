@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-22T10:08:03.054Z",
+  "updated": "2026-10-22T12:08:16.877Z",
   "week": {
-    "from": "2026-10-15T10:08:03.054Z",
+    "from": "2026-10-15T12:08:16.877Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -13,30 +13,30 @@
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "games": 42,
+        "games": 40,
         "wins": 19,
-        "winRate": 45
+        "winRate": 48
       },
       {
         "ouid": "068895f008054937eb7c5fa1acbd5c30",
         "nick": "Dor6파리",
-        "games": 39,
-        "wins": 16,
-        "winRate": 41
-      },
-      {
-        "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
-        "nick": "진저맨",
-        "games": 37,
-        "wins": 16,
-        "winRate": 43
+        "games": 34,
+        "wins": 12,
+        "winRate": 35
       },
       {
         "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
         "nick": "AUD콜대원",
-        "games": 31,
-        "wins": 15,
-        "winRate": 48
+        "games": 33,
+        "wins": 17,
+        "winRate": 52
+      },
+      {
+        "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
+        "nick": "진저맨",
+        "games": 30,
+        "wins": 12,
+        "winRate": 40
       }
     ]
   },
@@ -709,8 +709,10 @@
       }
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
-      "games": 186,
+      "games": 188,
       "form": [
+        "win",
+        "win",
         "lose",
         "win",
         "win",
@@ -718,13 +720,11 @@
         "win",
         "draw",
         "win",
-        "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 1
+        "type": "win",
+        "n": 2
       },
       "rivals": {
         "nemesis": null,
