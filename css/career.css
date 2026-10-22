@@ -83,8 +83,8 @@
 .cr-conv { display: flex; justify-content: space-between; gap: var(--sp-2); align-items: center; padding: var(--sp-2) 0; border-bottom: 1px solid var(--border); }
 
 /* 단계형 오프시즌 (v2.13.2) */
-.cr-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: var(--sp-2) 0 var(--sp-3); }
-.cr-step { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--radius-sm); padding: 8px 4px; font-size: var(--fs-sm); font-weight: 700; cursor: pointer; }
+.cr-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: var(--sp-2) 0 var(--sp-3); }
+.cr-step { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--radius-sm); padding: 8px 2px; font-size: var(--fs-sm); white-space: nowrap; font-weight: 700; cursor: pointer; }
 .cr-step.done { color: var(--silver); }
 .cr-step.on { background: var(--silver); color: var(--bg); border-color: var(--silver); }
 .cr-head-links { margin-left: auto; display: flex; gap: 4px; }
@@ -201,3 +201,23 @@
   .cr-focus { grid-template-columns: repeat(3, 1fr); }
   .cr-ach-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ---------- 🎲 시즌 이벤트 (v2.15.0) ---------- */
+.cr-event { display: grid; gap: var(--sp-3); }
+.cr-event.major { border-color: #c9a227; box-shadow: 0 0 0 1px rgba(201,162,39,.5) inset; }
+.cr-ev-tag { font-size: var(--fs-xs); font-weight: 800; color: var(--silver); }
+.cr-ev-tag.major { color: #e3bf4a; }
+.cr-ev-q { display: flex; gap: var(--sp-3); align-items: center; font-weight: 700; font-size: var(--fs-lg); line-height: 1.45; }
+.cr-ev-icon { font-size: 34px; line-height: 1; flex-shrink: 0; }
+.cr-ev-choices { display: grid; gap: var(--sp-2); }
+.cr-ev-c { display: flex; gap: var(--sp-3); align-items: center; text-align: left; width: 100%; min-height: 48px; padding: var(--sp-2) var(--sp-3);
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); font: inherit; cursor: pointer; }
+.cr-ev-c:hover, .cr-ev-c:focus-visible { border-color: var(--silver); }
+.cr-ev-c b { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-3); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: var(--fs-sm); }
+.cr-ev-odds { font-size: var(--fs-xs); margin: 0; }
+.cr-ev-pick { color: var(--text-muted); }
+.cr-ev-res { display: flex; gap: var(--sp-3); align-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--sp-3); }
+.cr-ev-big { font-size: 32px; line-height: 1; }
+.cr-event.tier-small .cr-ev-res b, .cr-event.tier-big .cr-ev-res b { color: var(--ok); }
+.cr-event.tier-huge .cr-ev-res b { color: #e3bf4a; }
+.cr-ev-ovr { margin: 0; }

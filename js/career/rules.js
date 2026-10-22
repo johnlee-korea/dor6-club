@@ -145,6 +145,18 @@ export const GOALS = {
   starterGap: 4.2         // 팀 선발 평균 OVR ≈ 요구 OVR + 4.2 (squad.js 주전 R+5·R+3 평균)
 };
 
+/* ---------- 🎲 시즌 이벤트 (v2.15.0, events.js) ---------- */
+// 결과 확률 [단계, 가중치] · 단계별 OVR 상승 [최소, 최대] · OVR별 효과 배율
+// 실측(balance-test 60회): 45/40/15 + 85부터 감소로는 최선 정점 99가 62% → 유지 65% + OVR 60부터 서서히 감소로 99 약 2%
+// 어린 나이(OVR 60 이하)에 받은 상승은 출전·역할·레전드로 복리처럼 커지므로 감소 시작점을 낮춤
+export const EVENT = {
+  majorEvery: 5,
+  normal: [["keep", 65], ["small", 30], ["big", 5]],
+  major: [["keep", 35], ["small", 30], ["big", 22], ["huge", 13]],
+  amount: { small: [1, 2], big: [3, 4], huge: [5, 6] },
+  damp: [[0, 1], [60, 1], [70, 0.75], [80, 0.5], [85, 0.35], [90, 0.2], [99, 0.1]]
+};
+
 /* ---------- 은퇴 ---------- */
 export const RETIRE = { canFrom: 35, forceAge: 40, hintFrom: 35, minOvr: 50 };
 

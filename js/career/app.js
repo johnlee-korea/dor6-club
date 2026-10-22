@@ -6,7 +6,8 @@
    ============================================================ */
 import { indexBase } from "./world.js";
 import { makeStorage, loadSave, writeSave, clearSave, loadMeta, writeMeta, mergeAchievements, exportText, parseImport } from "./save.js";
-import { newCareer, chooseStartClub, playSeason, decide, setFocus, buyTraining, convertPosition, retire, careerSummary, defaultFocus } from "./career.js";
+import { newCareer, chooseStartClub, playSeason, decide, setFocus, buyTraining, convertPosition, retire, careerSummary, defaultFocus, chooseEvent } from "./career.js";
+import { pendingEvent } from "./events.js";
 import * as setup from "./views/setup.js";
 import * as off from "./views/offseason.js";
 import * as season from "./views/season.js";
@@ -124,6 +125,12 @@ export async function mountCareer(root, opts = {}) {
       app.go("offseason", { offStep: "club" });
     },
     // 오프시즌
+    "event-pick": (d) => {
+      if (!pendingEvent(app.state)) return;
+      chooseEvent(app.state, +d.i);
+      app.view.offStep = "event";                       // 결과 카드 보여 주고 [다음: 구단 →]
+      app.persist(); render();
+    },
     "off-step": (d) => { app.view.offStep = d.step; app.view.shopMsg = null; render(); if (!/jsdom/i.test(win.navigator.userAgent || "")) try { win.scrollTo(0, 0); } catch (e) { /* 인앱 */ } },
     "off-decide": (d) => {
       decide(app.state, { type: d.type, clubId: d.club });
@@ -162,6 +169,7 @@ export async function mountCareer(root, opts = {}) {
     },
     "play": () => {
       if (app.view.playing) return;
+      if (pendingEvent(app.state)) { app.view.offStep = "event"; render(); return; }   // 이벤트를 먼저 골라야 시즌 시작
       app.view.playing = { started: Date.now() };
       root.innerHTML = season.loading(app);
       // 계산 전에 '진행 중' 화면을 먼저 그리도록 한 박자 쉼

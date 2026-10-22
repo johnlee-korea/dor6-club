@@ -280,6 +280,15 @@ for (const pg of PAGES) {
       steps.push(doc.querySelectorAll('[data-act="start-pick"]').length ? "시작구단" : "시작구단✗");
       await click('[data-act="start-tab"][data-c="it"]');
       await click('[data-act="start-pick"]');
+      // 🎲 시즌 이벤트: 고르기 전엔 다른 단계로 못 감 → 선택 → 결과 카드
+      await click('[data-act="off-step"][data-step="club"]');
+      if (!doc.querySelector('[data-act="event-pick"]')) errors.push("오프시즌 첫 화면에 이벤트 선택지 없음");
+      app.acts.play(); await sleep(10);                                  // 하단 버튼이 없어도 직접 호출 시 막혀야 함
+      if (app.view.playing) errors.push("이벤트 전에 시즌 시작됨");
+      await click('[data-act="event-pick"][data-i="0"]');
+      if (!doc.querySelector(".cr-ev-res") || !app.state.off.event || app.state.off.event.choice !== 0) errors.push("이벤트 결과 표시 안 됨");
+      steps.push(doc.querySelector(".cr-ev-res") ? "이벤트" : "이벤트✗");
+      await click('[data-act="off-step"][data-step="club"]');
       for (const t of ["pos", "club", "shop", "focus", "club"]) await click(`[data-act="off-step"][data-step="${t}"]`);
       await click('[data-act="off-decide"][data-type="stay"]');            // 고르면 훈련 단계로 자동 이동
       if (app.view.offStep !== "shop") errors.push("잔류 선택 후 훈련 단계로 안 넘어감");
@@ -293,6 +302,8 @@ for (const pg of PAGES) {
         for (const t of ["rank", "leaders", "table", "matches"]) await click(`[data-act="report-tab"][data-tab="${t}"]`);
         if (!doc.querySelector(".cr-matches")) errors.push("경기별 기록 표 없음");
         await click('[data-act="to-offseason"]');
+        await click('[data-act="event-pick"][data-i="2"]');
+        if (!app.state.off.event || app.state.off.event.n !== season + 2 || app.state.off.event.choice !== 2) errors.push("다음 시즌 이벤트 없음");
         await click('[data-act="off-step"][data-step="club"]');
         if (doc.querySelector('[data-act="off-decide"][data-type="transfer"]')) await click('[data-act="off-decide"][data-type="transfer"]');
       }

@@ -61,9 +61,12 @@ if (!args.includes("--careers")) {
    ============================================================ */
 import { makeRng as mk } from "../../js/engine/rng.js";
 import { POSITIONS, W as PW, CATS as PC } from "../../js/career/rules.js";
-import { newCareer, chooseStartClub, startClubOptions, playSeason, decide, setFocus, buyTraining, defaultFocus, playerOvr } from "../../js/career/career.js";
+import { newCareer, chooseStartClub, startClubOptions, playSeason, decide, setFocus, buyTraining, defaultFocus, playerOvr, chooseEvent } from "../../js/career/career.js";
 import { clubCard, shopPrice } from "../../js/career/market.js";
 import { catsByWeight } from "../../js/career/attrs.js";
+import { EVENT } from "../../js/career/rules.js";
+// 이벤트 계수 실험: EV='{"normal":[["keep",60],...]}' 환경 변수로 덮어쓰기
+if (process.env.EV) Object.assign(EVENT, JSON.parse(process.env.EV));
 
 const POLICY = {
   best: { combo: "top", focus: "opt", club: "growth", shop: true },
@@ -98,6 +101,8 @@ function runCareerAuto(seed, pos, pol) {
   const log = [];
   while (state.phase !== "retired") {
     const p = state.player;
+    // 🎲 시즌 이벤트: 무작위 선택 (--no-events면 건너뜀 = 이벤트 도입 전과 비교)
+    if (!args.includes("--no-events")) chooseEvent(state, rng.int(3));
     if (pol.shop) {
       const top = defaultFocus(state)[0];
       const price = shopPrice(Math.round(playerOvr(state, false)));
@@ -129,6 +134,7 @@ if (args.includes("--careers")) {
   const t0 = performance.now();
   for (const pn of pols) {
     const at = {}, peaks = [], peakAges = [], big27 = [], b25 = [], topAge = [], ret = [];
+    let evGain = 0, evN = 0;
     let legP = 0, legN = 0, slumpN = 0, slumpBase = 0, statDiffs = [];
     for (let r = 0; r < N; r++) {
       const pos = POSITIONS[r % POSITIONS.length];
@@ -141,6 +147,7 @@ if (args.includes("--careers")) {
         if (s.role === "S" && s.R >= 83 && top === null) top = s.age;
         if (s.age >= 27 && s.age <= 32) { legN++; if (s.legend) legP++; }
         if (s.role !== "B") { slumpBase++; if (s.slump) slumpN++; }
+        if (s.event) { evN++; evGain += s.event.gain; }
       }
       peaks.push(Math.round(peak)); peakAges.push(pa); big27.push(big !== null && big <= 27); b25.push(big !== null && big < 25);
       if (top !== null) topAge.push(top);
@@ -155,6 +162,7 @@ if (args.includes("--careers")) {
     console.log(`\n[${pn}] ${N}회 — OVR(시즌 시작): ` + [16, 18, 21, 24, 27, 30, 31, 33, 36].map((a) => `${a}세 ${at[a] ? mean(at[a]).toFixed(1) : "-"}`).join(" · "));
     console.log(`  정점 평균 ${mean(peaks).toFixed(1)} · 분포 ${Object.entries(dist).map(([k, v]) => `${k} ${pct(v)}%`).join(" · ")}`);
     console.log(`  정점 27~32세 ${pct(peakAges.filter((a) => a >= 27 && a <= 32).length)}% · 27세까지 빅클럽 주전 ${pct(big27.filter(Boolean).length)}% · 25세 전 ${pct(b25.filter(Boolean).length)}% · 최상위 주전 중앙 ${topAge.length ? med(topAge) + "세" : "-"}(${pct(topAge.length)}%)`);
+    if (evN) console.log(`  🎲 이벤트 평균 OVR +${(evGain / evN).toFixed(2)}/시즌 · 커리어당 +${(evGain / N).toFixed(1)}`);
     console.log(`  레전드(27~32세 시즌당) ${(100 * legP / (legN || 1)).toFixed(1)}% · 슬럼프(주전·로테이션 시즌당) ${(100 * slumpN / (slumpBase || 1)).toFixed(1)}% · 은퇴 평균 ${mean(ret).toFixed(1)}세`);
   }
   // 결정론: 같은 시드·같은 선택 → 커리어 전체 결과 동일

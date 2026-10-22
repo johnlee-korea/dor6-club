@@ -14,6 +14,7 @@ import { applySeasonGrowth, applyTraining, isLegend } from "./growth.js";
 import { makeGoal, goalMet, addTrust } from "./goals.js";
 import { clubCard, makeOffers, loanOptions, startOptions, shopPrice, salaryOf } from "./market.js";
 import { checkAchievements } from "./achievements.js";
+import { prepareEvent, resolveEvent, eventDef, TIERS } from "./events.js";
 
 const ri = (v) => Math.round(v);
 
@@ -70,6 +71,7 @@ export function prepareOffseason(state, last) {
     decision: { type: "stay", clubId: p.clubId },
     converted: null
   };
+  prepareEvent(state);
   return state.off;
 }
 
@@ -88,6 +90,10 @@ const leagueClubCount = (state, lg) => Object.values(state.world.clubs).filter((
 
 export function decide(state, decision) { state.off.decision = decision; return decisionPreview(state); }
 export function setFocus(state, focus) { if (focus.length === 3) state.off.focus = focus.slice(); }
+
+/* 🎲 시즌 이벤트 선택 (오프시즌 첫 단계) — 예전 저장분은 이벤트가 없으면 여기서 만듦 */
+export function ensureEvent(state) { if (state.off && !state.off.event) prepareEvent(state); return state.off && state.off.event; }
+export function chooseEvent(state, choice) { ensureEvent(state); return resolveEvent(state, choice); }
 
 /* 상점: 시즌당 1회 */
 export function buyTraining(state, kind, cat) {
@@ -218,7 +224,7 @@ export function playSeason(state, clubsJson) {
     ovr: round1(ovrStart), ovrShown, ovrEnd: round1(ovrEnd), cats: mapRound(growth.before), catsAfter: mapRound(growth.after),
     efficiency: growth.efficiency, ratio: Math.round(growth.ratio * 100) / 100, stage: growth.S, focus, coach: club.coach.slice(),
     legend, slump: !!slump, revival: !!revival, goal, met, trust: p.trust, salary, income, money: p.money,
-    pref: pm, short: mine.short, converted: state.off.converted, shop: state.off.shopUsed,
+    pref: pm, short: mine.short, converted: state.off.converted, shop: state.off.shopUsed, event: eventSummary(state.off.event),
     subTop: Object.keys(p.subs).map((k) => [k, round1(p.subs[k] - subsBefore[k])]).sort((x, y) => y[1] - x[1]).slice(0, 5)
   };
   const totalsBefore = JSON.parse(JSON.stringify(state.totals));
@@ -243,6 +249,7 @@ export function playSeason(state, clubsJson) {
   else prepareOffseason(state, summary);
   return { summary, mine, growth, news };
 }
+const eventSummary = (e) => (e && e.choice !== null ? { id: e.id, major: e.major, choice: e.choice, tier: e.tier, gain: e.gain } : null);
 const mapRound = (cv) => { const o = {}; for (const c of CATS) o[c] = round1(cv[c]); return o; };
 
 function forcedRetire(state) {
@@ -310,6 +317,10 @@ function highlights(state, s, mine, before) {
   if (s.hatTricks) h.push({ icon: "🎩", title: s.hatTricks > 1 ? `해트트릭 ${s.hatTricks}회` : "해트트릭", text: "" });
   if (s.winners) h.push({ icon: "💥", title: `결승골 ${s.winners}개`, text: "" });
   if (s.typeAfter !== s.type) h.push({ icon: "🧬", title: "유형 진화!", text: `${typeName(s.pos, s.type)} → ${typeName(s.pos, s.typeAfter)}` });
+  if (s.event && s.event.gain > 0 && s.event.tier !== "small") {
+    const d = eventDef(s.event);
+    if (d) h.push({ icon: TIERS[s.event.tier].icon, title: `${s.event.major ? "인생의 갈림길" : "시즌 이벤트"} · ${TIERS[s.event.tier].label}`, text: `${d.icon} ${d.choices[s.event.choice]} → OVR +${s.event.gain.toFixed(1)}` });
+  }
   if (s.clubGrowth) h.push({ icon: "📈", title: "팀이 나와 함께 성장", text: `구단 전력 보강 · 요구 OVR +${s.clubGrowth}` });
   if (s.prefAdopted) h.push({ icon: "🎯", title: "감독이 나에게 맞춘 전술", text: "다음 시즌 선호 유형 = 내 유형 (잔류하면 역할 점수 +3)" });
   if (s.revival) h.push({ icon: "🔥", title: "부활", text: "슬럼프를 딛고 팀 상위권 평점" });
