@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24T18:08:17.944Z",
+  "updated": "2026-10-24T20:08:58.584Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -464,7 +464,7 @@
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
       "ctrl": "keyboard",
-      "games": 57,
+      "games": 60,
       "ace": [
         {
           "spId": 863232488,
@@ -483,33 +483,33 @@
           "assists": 0
         },
         {
-          "spId": 848255654,
+          "spId": 855247819,
           "group": "CB",
           "pos": 6,
-          "games": 9,
-          "metric": "drb",
-          "value": 4.11,
-          "base": 2.6,
-          "z": 1.93,
+          "games": 5,
+          "metric": "win",
+          "value": 4.6,
+          "base": 2.56,
+          "z": 3.73,
           "title": {
-            "emoji": "🚜",
-            "name": "전진하는 수비수"
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
           "goals": 0,
           "assists": 0
         },
         {
-          "spId": 852001183,
-          "group": "CB",
-          "pos": 6,
-          "games": 7,
-          "metric": "rt",
-          "value": 6.67,
-          "base": 6.2,
-          "z": 1.78,
+          "spId": 101000488,
+          "group": "GK",
+          "pos": 0,
+          "games": 5,
+          "metric": "pas",
+          "value": 3.6,
+          "base": 1.95,
+          "z": 3.3,
           "title": {
-            "emoji": "⭐",
-            "name": "믿을맨"
+            "emoji": "📨",
+            "name": "패스 마스터"
           },
           "goals": 0,
           "assists": 0
@@ -517,32 +517,32 @@
       ],
       "goalMins": {
         "for": [
-          28,
+          30,
           37,
+          26,
+          25,
           24,
-          24,
-          23,
-          29,
+          31,
           10
         ],
         "against": [
-          16,
-          26,
-          18,
-          30,
-          20,
-          16,
-          9
+          17,
+          29,
+          19,
+          33,
+          21,
+          17,
+          10
         ]
       },
-      "comebacks": 12,
+      "comebacks": 13,
       "lateWinners": 8,
       "manner": {
-        "games": 57,
+        "games": 60,
         "yellow": 5,
         "red": 0,
-        "foul": 54,
-        "score": 1.21
+        "foul": 55,
+        "score": 1.17
       }
     },
     "404c9f3ff9c66b4fb37b08c3ea1860a6": {
@@ -891,33 +891,33 @@
     },
     "49f604d3f58f5f607234ef60c584326a": {
       "ctrl": "keyboard",
-      "games": 66,
+      "games": 68,
       "ace": [
         {
           "spId": 866247819,
           "group": "CB",
           "pos": 6,
-          "games": 37,
+          "games": 38,
           "metric": "pas",
-          "value": 7.57,
+          "value": 7.45,
           "base": 5.09,
-          "z": 2.36,
+          "z": 2.24,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
           },
           "goals": 0,
-          "assists": 0
+          "assists": 1
         },
         {
           "spId": 866229237,
           "group": "CB",
           "pos": 6,
-          "games": 66,
+          "games": 68,
           "metric": "pas",
-          "value": 6.5,
+          "value": 6.43,
           "base": 5.09,
-          "z": 1.34,
+          "z": 1.27,
           "title": {
             "emoji": "⚙️",
             "name": "빌드업 엔진"
@@ -929,11 +929,11 @@
           "spId": 866235073,
           "group": "GK",
           "pos": 0,
-          "games": 37,
+          "games": 38,
           "metric": "pas",
-          "value": 2.57,
+          "value": 2.55,
           "base": 1.95,
-          "z": 1.24,
+          "z": 1.21,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -944,32 +944,32 @@
       ],
       "goalMins": {
         "for": [
-          28,
+          29,
           26,
-          28,
-          32,
-          28,
+          29,
+          33,
+          29,
           23,
           4
         ],
         "against": [
-          16,
-          22,
+          17,
+          23,
           21,
-          34,
-          20,
-          24,
-          10
+          35,
+          22,
+          25,
+          11
         ]
       },
       "comebacks": 9,
       "lateWinners": 4,
       "manner": {
-        "games": 66,
+        "games": 68,
         "yellow": 1,
         "red": 0,
-        "foul": 56,
-        "score": 0.89
+        "foul": 57,
+        "score": 0.88
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
@@ -1967,7 +1967,7 @@
     },
     "9052276188238316b9fc057307e0d58c": {
       "ctrl": "gamepad",
-      "games": 144,
+      "games": 145,
       "ace": [
         {
           "spId": 840214997,
@@ -2005,11 +2005,11 @@
           "spId": 848120274,
           "group": "W",
           "pos": 16,
-          "games": 97,
+          "games": 98,
           "metric": "pas",
-          "value": 11.72,
+          "value": 11.69,
           "base": 8.52,
-          "z": 1.55,
+          "z": 1.53,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
@@ -2022,30 +2022,30 @@
         "for": [
           53,
           55,
-          61,
-          82,
+          62,
+          83,
           61,
           71,
           29
         ],
         "against": [
-          43,
+          44,
           46,
           67,
           59,
-          56,
-          68,
+          57,
+          69,
           17
         ]
       },
       "comebacks": 17,
       "lateWinners": 14,
       "manner": {
-        "games": 144,
+        "games": 145,
         "yellow": 1,
         "red": 0,
         "foul": 119,
-        "score": 0.85
+        "score": 0.84
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
@@ -2542,15 +2542,6 @@
         "score": 1.68
       },
       {
-        "ouid": "315d8d350dabea2c99cb2e49af2f1603",
-        "nick": "지브리스튜디오",
-        "games": 57,
-        "yellow": 5,
-        "red": 0,
-        "foul": 54,
-        "score": 1.21
-      },
-      {
         "ouid": "2f86358cfed5c31dd83a09bbe42d3586",
         "nick": "류베르",
         "games": 104,
@@ -2558,6 +2549,15 @@
         "red": 2,
         "foul": 93,
         "score": 1.18
+      },
+      {
+        "ouid": "315d8d350dabea2c99cb2e49af2f1603",
+        "nick": "지브리스튜디오",
+        "games": 60,
+        "yellow": 5,
+        "red": 0,
+        "foul": 55,
+        "score": 1.17
       }
     ],
     "specialists": [

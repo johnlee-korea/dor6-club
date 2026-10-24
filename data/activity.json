@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-24T18:08:17.944Z",
+  "updated": "2026-10-24T20:08:58.584Z",
   "week": {
-    "from": "2026-10-17T18:08:17.944Z",
+    "from": "2026-10-17T20:08:58.584Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
         "games": 78,
-        "wins": 33,
-        "winRate": 42
+        "wins": 31,
+        "winRate": 40
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -299,20 +299,23 @@
       }
     },
     "315d8d350dabea2c99cb2e49af2f1603": {
-      "games": 90,
+      "games": 93,
       "form": [
+        "lose",
+        "win",
+        "lose",
         "draw",
         "win",
         "win",
         "lose",
         "win",
         "lose",
-        "lose",
-        "win",
-        "win",
-        "win"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -533,8 +536,10 @@
       }
     },
     "49f604d3f58f5f607234ef60c584326a": {
-      "games": 135,
+      "games": 137,
       "form": [
+        "lose",
+        "draw",
         "draw",
         "win",
         "win",
@@ -542,11 +547,12 @@
         "draw",
         "win",
         "lose",
-        "win",
-        "lose",
-        "lose"
+        "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -1023,21 +1029,21 @@
         "prey": {
           "ouid": "98b03e65d80a972da509e2f5aa8d3bd2",
           "nick": "포항피방사장",
-          "games": 98,
+          "games": 100,
           "win": 60,
-          "draw": 11,
+          "draw": 13,
           "lose": 27,
-          "rate": 65
+          "rate": 64
         },
         "frequent": [
           {
             "ouid": "98b03e65d80a972da509e2f5aa8d3bd2",
             "nick": "포항피방사장",
-            "games": 98,
+            "games": 100,
             "win": 60,
-            "draw": 11,
+            "draw": 13,
             "lose": 27,
-            "rate": 65
+            "rate": 64
           },
           {
             "ouid": "9052276188238316b9fc057307e0d58c",
@@ -1058,11 +1064,11 @@
             "rate": 0
           }
         ],
-        "internalGames": 140
+        "internalGames": 142
       }
     },
     "9052276188238316b9fc057307e0d58c": {
-      "games": 211,
+      "games": 213,
       "form": [
         "lose",
         "lose",
@@ -1071,13 +1077,13 @@
         "lose",
         "lose",
         "lose",
-        "win",
-        "win",
-        "lose"
+        "lose",
+        "lose",
+        "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 7
+        "n": 9
       },
       "rivals": {
         "nemesis": {
