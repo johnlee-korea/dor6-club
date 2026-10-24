@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24T02:08:32.227Z",
+  "updated": "2026-10-24T04:08:46.646Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -206,11 +206,11 @@
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "games": 50,
       "style": {
-        "name": "뺏기면 끝",
-        "line": "공 잡을 땐 왕, 뺏기면 무방비",
+        "name": "침투만 하는 러너",
+        "line": "라인은 넘는데 슈팅은 아낀다",
         "basis": [
-          "poss+",
-          "block-"
+          "offside+",
+          "shots-"
         ]
       },
       "highs": [
@@ -218,27 +218,27 @@
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.76,
+          "v": 0.78,
           "avg": 0.489,
-          "z": 1.18,
-          "key": false
-        },
-        {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 53.6,
-          "avg": 50.642,
-          "z": 1.02,
+          "z": 1.27,
           "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 87.92,
+          "v": 87.64,
           "avg": 79.272,
-          "z": 0.99,
+          "z": 0.96,
+          "key": false
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 53.24,
+          "avg": 50.642,
+          "z": 0.89,
           "key": false
         }
       ],
@@ -247,27 +247,27 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.18,
+          "v": 3.22,
           "avg": 4.426,
-          "z": -1.43,
-          "key": true
+          "z": -1.39,
+          "key": false
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.58,
+          "v": 5.66,
           "avg": 6.701,
-          "z": -1.1,
-          "key": false
+          "z": -1.02,
+          "key": true
         },
         {
-          "k": "gf",
-          "label": "경기당 득점",
+          "k": "corner",
+          "label": "코너킥",
           "unit": "",
-          "v": 2.76,
-          "avg": 3.29,
-          "z": -0.96,
+          "v": 0.92,
+          "avg": 1.399,
+          "z": -0.94,
           "key": false
         }
       ]
