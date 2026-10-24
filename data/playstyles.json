@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23T22:08:55.818Z",
+  "updated": "2026-10-24T00:08:58.362Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1128,56 +1128,56 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.399,
+          "v": 0.397,
           "avg": 0.181,
-          "z": 2.86,
+          "z": 2.83,
           "key": true
         },
         {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.244,
+          "v": 0.246,
           "avg": 0.092,
-          "z": 2.38,
+          "z": 2.4,
           "key": true
         },
         {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.212,
+          "v": 0.224,
           "avg": 0.094,
-          "z": 1.63,
+          "z": 1.79,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
-          "unit": "%",
-          "v": 0.138,
-          "avg": 0.286,
-          "z": -2.1,
-          "key": false
-        },
-        {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.744,
+          "v": 0.737,
           "avg": 0.889,
-          "z": -2.09,
+          "z": -2.2,
           "key": false
         },
         {
-          "k": "finish",
-          "label": "결정력",
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.425,
-          "avg": 0.495,
-          "z": -0.96,
+          "v": 0.141,
+          "avg": 0.286,
+          "z": -2.06,
+          "key": false
+        },
+        {
+          "k": "headShot",
+          "label": "헤더 슈팅 비율",
+          "unit": "%",
+          "v": 0.085,
+          "avg": 0.204,
+          "z": -1,
           "key": false
         }
       ]
