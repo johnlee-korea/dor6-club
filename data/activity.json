@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-24T05:04:51.029Z",
+  "updated": "2026-10-24T06:08:48.512Z",
   "week": {
-    "from": "2026-10-17T05:04:51.029Z",
+    "from": "2026-10-17T06:08:48.512Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -13,9 +13,9 @@
       {
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
-        "games": 42,
-        "wins": 16,
-        "winRate": 38
+        "games": 44,
+        "wins": 17,
+        "winRate": 39
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -25,18 +25,18 @@
         "winRate": 37
       },
       {
+        "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
+        "nick": "AUD콜대원",
+        "games": 33,
+        "wins": 20,
+        "winRate": 61
+      },
+      {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
         "games": 31,
         "wins": 20,
         "winRate": 65
-      },
-      {
-        "ouid": "f8744e3b6044a3e44de9764d3d3ef81c",
-        "nick": "AUD콜대원",
-        "games": 31,
-        "wins": 19,
-        "winRate": 61
       }
     ]
   },
@@ -180,8 +180,10 @@
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
-      "games": 261,
+      "games": 263,
       "form": [
+        "win",
+        "lose",
         "draw",
         "lose",
         "draw",
@@ -189,11 +191,12 @@
         "draw",
         "win",
         "draw",
-        "lose",
-        "lose",
-        "win"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
@@ -714,18 +717,18 @@
       }
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
-      "games": 196,
+      "games": 198,
       "form": [
         "lose",
         "win",
+        "lose",
+        "win",
         "win",
         "lose",
         "win",
         "win",
         "win",
-        "lose",
-        "win",
-        "win"
+        "lose"
       ],
       "streak": {
         "type": "lose",
