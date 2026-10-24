@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-24T10:08:21.727Z",
+  "updated": "2026-10-24T11:41:29.395Z",
   "week": {
-    "from": "2026-10-17T10:08:21.727Z",
+    "from": "2026-10-17T11:41:29.395Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -13,8 +13,8 @@
       {
         "ouid": "ec6b3d922b94994ccd28de27367cf479",
         "nick": "쌌따",
-        "games": 43,
-        "wins": 16,
+        "games": 41,
+        "wins": 15,
         "winRate": 37
       },
       {
@@ -558,8 +558,10 @@
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
-      "games": 423,
+      "games": 425,
       "form": [
+        "win",
+        "draw",
         "draw",
         "win",
         "win",
@@ -567,11 +569,12 @@
         "lose",
         "lose",
         "lose",
-        "lose",
-        "win",
-        "win"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
