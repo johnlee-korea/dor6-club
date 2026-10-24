@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24T16:17:49.984Z",
+  "updated": "2026-10-24T18:08:17.944Z",
   "baselineUpdated": "2026-10-11T22:25:09.893Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -695,40 +695,42 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "헛스루 장인",
-        "line": "스루는 쉴 새 없는데 골은 없다",
+        "name": "침투 설계자",
+        "line": "스루와 침투는 많은데 슈팅은 아낀다",
         "basis": [
+          "offside+",
           "throughRatio+",
-          "gf-"
-        ]
+          "shots-"
+        ],
+        "rare": true
       },
       "highs": [
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.255,
+          "v": 0.258,
           "avg": 0.144,
-          "z": 2.3,
+          "z": 2.35,
           "key": true
-        },
-        {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.848,
-          "avg": 0.808,
-          "z": 0.85,
-          "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.39,
+          "v": 0.397,
           "avg": 0.291,
-          "z": 0.85,
+          "z": 0.91,
           "key": false
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.64,
+          "avg": 0.489,
+          "z": 0.66,
+          "key": true
         }
       ],
       "lows": [
@@ -736,28 +738,28 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.145,
+          "v": 0.142,
           "avg": 0.286,
-          "z": -2,
+          "z": -2.04,
           "key": false
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 4.88,
+          "v": 4.86,
           "avg": 6.701,
-          "z": -1.79,
-          "key": false
+          "z": -1.81,
+          "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.44,
+          "v": 2.4,
           "avg": 3.29,
-          "z": -1.54,
-          "key": true
+          "z": -1.61,
+          "key": false
         }
       ]
     },
@@ -836,11 +838,11 @@
     "49f604d3f58f5f607234ef60c584326a": {
       "games": 50,
       "style": {
-        "name": "크로스-헤더 공식",
-        "line": "측면에서 올리고 머리로 끝낸다",
+        "name": "롱볼 카운터",
+        "line": "뺏으면 드리블 없이 바로 전방으로",
         "basis": [
-          "headShot+",
-          "lobRatio+"
+          "longRatio+",
+          "dribble-"
         ]
       },
       "highs": [
@@ -848,10 +850,10 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.356,
+          "v": 0.355,
           "avg": 0.204,
-          "z": 1.28,
-          "key": true
+          "z": 1.27,
+          "key": false
         },
         {
           "k": "longRatio",
@@ -859,17 +861,17 @@
           "unit": "%",
           "v": 0.088,
           "avg": 0.055,
-          "z": 1.21,
-          "key": false
+          "z": 1.2,
+          "key": true
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
-          "unit": "%",
-          "v": 0.022,
-          "avg": 0.012,
-          "z": 1.07,
-          "key": true
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.76,
+          "avg": 0.489,
+          "z": 1.18,
+          "key": false
         }
       ],
       "lows": [
@@ -877,28 +879,28 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.472,
+          "v": 0.478,
           "avg": 0.537,
-          "z": -1.28,
+          "z": -1.17,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.36,
+          "v": 3.42,
           "avg": 4.426,
-          "z": -1.23,
+          "z": -1.16,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 69.62,
+          "v": 70.46,
           "avg": 79.272,
-          "z": -1.1,
-          "key": false
+          "z": -1.01,
+          "key": true
         }
       ]
     },
@@ -1749,9 +1751,9 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.199,
+          "v": 0.205,
           "avg": 0.091,
-          "z": 1.51,
+          "z": 1.59,
           "key": true
         },
         {
@@ -1760,16 +1762,16 @@
           "unit": "%",
           "v": 0.076,
           "avg": 0.055,
-          "z": 0.77,
+          "z": 0.79,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 84.9,
+          "v": 85.12,
           "avg": 79.272,
-          "z": 0.64,
+          "z": 0.67,
           "key": false
         }
       ],
@@ -1778,9 +1780,9 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.36,
+          "v": 3.38,
           "avg": 4.426,
-          "z": -1.23,
+          "z": -1.2,
           "key": false
         },
         {
@@ -1793,12 +1795,12 @@
           "key": false
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
-          "unit": "%",
-          "v": 0.002,
-          "avg": 0.012,
-          "z": -1.03,
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 12.18,
+          "avg": 15.8,
+          "z": -1.05,
           "key": false
         }
       ]
