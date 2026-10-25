@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-25T05:22:01.726Z",
+  "updated": "2026-10-25T06:08:30.020Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -2216,22 +2216,38 @@
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
       "ctrl": "keyboard",
-      "games": 112,
+      "games": 113,
       "ace": [
         {
-          "spId": 877028765,
+          "spId": 877156616,
           "group": "W",
-          "pos": 16,
-          "games": 112,
+          "pos": 12,
+          "games": 20,
           "metric": "ast",
-          "value": 1.69,
+          "value": 1.7,
           "base": 0.58,
-          "z": 3.17,
+          "z": 3.21,
           "title": {
             "emoji": "🎯",
             "name": "킬패스 장인"
           },
-          "goals": 15,
+          "goals": 3,
+          "assists": 34
+        },
+        {
+          "spId": 877028765,
+          "group": "W",
+          "pos": 16,
+          "games": 113,
+          "metric": "ast",
+          "value": 1.67,
+          "base": 0.58,
+          "z": 3.13,
+          "title": {
+            "emoji": "🎯",
+            "name": "킬패스 장인"
+          },
+          "goals": 16,
           "assists": 189
         },
         {
@@ -2249,32 +2265,16 @@
           },
           "goals": 0,
           "assists": 10
-        },
-        {
-          "spId": 877156616,
-          "group": "W",
-          "pos": 12,
-          "games": 19,
-          "metric": "ast",
-          "value": 1.58,
-          "base": 0.58,
-          "z": 2.86,
-          "title": {
-            "emoji": "🎯",
-            "name": "킬패스 장인"
-          },
-          "goals": 3,
-          "assists": 30
         }
       ],
       "goalMins": {
         "for": [
           49,
-          44,
+          46,
           54,
-          60,
           62,
-          68,
+          62,
+          69,
           9
         ],
         "against": [
@@ -2290,11 +2290,11 @@
       "comebacks": 19,
       "lateWinners": 7,
       "manner": {
-        "games": 112,
+        "games": 113,
         "yellow": 1,
         "red": 0,
         "foul": 97,
-        "score": 0.89
+        "score": 0.88
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
@@ -2425,7 +2425,7 @@
         "nick": "FO4커벌",
         "spId": 877028765,
         "assists": 189,
-        "games": 112
+        "games": 113
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
