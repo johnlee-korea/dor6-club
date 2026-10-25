@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-25T21:19:45.479Z",
+  "updated": "2026-10-25T22:08:41.179Z",
   "baselineUpdated": "2026-10-25T21:19:45.415Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -693,70 +693,68 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "침투 설계자",
-        "line": "스루와 침투는 많은데 슈팅은 아낀다",
+        "name": "헛스루 장인",
+        "line": "스루는 쉴 새 없는데 골은 없다",
         "basis": [
-          "offside+",
           "throughRatio+",
-          "shots-"
-        ],
-        "rare": true
+          "gf-"
+        ]
       },
       "highs": [
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.258,
+          "v": 0.254,
           "avg": 0.143,
-          "z": 2.4,
+          "z": 2.34,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.397,
+          "v": 0.399,
           "avg": 0.288,
-          "z": 0.93,
+          "z": 0.94,
           "key": false
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.64,
-          "avg": 0.459,
-          "z": 0.78,
-          "key": true
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.845,
+          "avg": 0.803,
+          "z": 0.82,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
-          "unit": "%",
-          "v": 0.142,
-          "avg": 0.278,
-          "z": -1.84,
-          "key": false
-        },
-        {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 4.86,
+          "v": 4.64,
           "avg": 6.722,
-          "z": -1.75,
-          "key": true
+          "z": -1.96,
+          "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.4,
+          "v": 2.34,
           "avg": 3.32,
-          "z": -1.68,
+          "z": -1.79,
+          "key": true
+        },
+        {
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.149,
+          "avg": 0.278,
+          "z": -1.74,
           "key": false
         }
       ]
