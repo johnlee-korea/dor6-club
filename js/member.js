@@ -7,7 +7,7 @@
    ============================================================ */
 
 const MATCH_TYPE_LABEL = { 50: "공식", 60: "공식친선", 30: "리그친선", 52: "감독모드", 40: "클래식" };
-const COUNTED_TYPES = [50, 60, 30]; // 판수 인정 매치 (config.json countedMatchTypes와 동일)
+const COUNTED_TYPES = [50, 60, 30, 40]; // 판수 인정 매치 (config.json countedMatchTypes와 동일, v2.17.0 클래식 포함)
 const PF_TABS = [["overview", "개요"], ["insight", "인사이트"], ["squad", "스쿼드"], ["rival", "라이벌"], ["matches", "경기"], ["manage", "구단운영"]];
 const PF_CTRL = { keyboard: ["⌨️", "키보드"], gamepad: ["🎮", "패드"] };
 
@@ -137,7 +137,7 @@ function tabOverview(body) {
   const defs = s ? Object.values(s.metrics || {}).map((x) => `<li><b>${escapeHtml(x.label)}</b> — ${escapeHtml(x.desc)}</li>`).join("") : "";
   body.innerHTML = `
     <div class="card" style="margin-bottom:var(--sp-3);">
-      <div class="in-title">📈 최근 15경기 <span class="in-dim">왼쪽이 최신 · 공식·공식친선·리그친선</span></div>
+      <div class="in-title">📈 최근 15경기 <span class="in-dim">왼쪽이 최신 · 공식·공식친선·리그친선·클래식</span></div>
       <div>${strip || `<span class="in-dim">경기 기록이 없어요.</span>`}</div>
     </div>
     <div class="card in-card">

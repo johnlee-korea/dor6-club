@@ -26,7 +26,8 @@ const config = readJSON(p("config.json"), {});
 const membersFile = readJSON(p("data", "members.json"), { members: [] });
 const seasonsFile = readJSON(p("data", "seasons.json"), { seasons: [] });
 const members = (membersFile.members || []).filter((m) => m.ouid);
-const counted = config.countedMatchTypes || [50, 60, 30];
+const counted = config.countedMatchTypes || [50, 60, 30, 40];            // 판수·명예의 전당·폼 (v2.17.0 클래식 포함)
+const analysisTypes = config.analysisMatchTypes || [50, 60, 30];       // 플레이스타일·인사이트 — 랭커 공식경기 기준과 비교라 클래식 제외
 
 /* 회원별 매치 로딩 */
 const matchesByOuid = {};
@@ -177,7 +178,7 @@ function buildPlaystyles() {
   const players = {};
   for (const m of members) {
     const raws = matchesByOuid[m.ouid]
-      .filter((x) => counted.includes(x.matchType) && x.styleRaw && x.styleRaw.end === 0)
+      .filter((x) => analysisTypes.includes(x.matchType) && x.styleRaw && x.styleRaw.end === 0)
       .sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate))
       .slice(0, opt.recentGames)
       .map((x) => withShots(x.styleRaw, x.shots));   // v2.5.0 슈팅 유형 지표 포함
@@ -220,7 +221,7 @@ function buildInsights() {
 
     const ms = all.filter((x) => {
       const t = matchTime(x.matchDate).getTime();
-      return t >= startT && t <= endT && counted.includes(x.matchType) &&
+      return t >= startT && t <= endT && analysisTypes.includes(x.matchType) &&
         Array.isArray(x.shots) && x.styleRaw && x.styleRaw.end === 0;
     });
     if (!ms.length) { players[m.ouid] = { ctrl, games: 0 }; continue; }
@@ -291,7 +292,7 @@ function buildInsights() {
   };
   writeJSON(p("data", "insights.json"), {
     updated: now.toISOString(), seasonId: season.id, seasonName: season.name,
-    seasonStart: season.start, seasonEnd: season.end, countedTypes: counted,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
+    seasonStart: season.start, seasonEnd: season.end, countedTypes: analysisTypes,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
     minGames, buckets: GOAL_BUCKETS,
     // 에이스 카드 표기용 — 그룹명·지표명·랭커 표본 수 (정의는 lib/insight.js 단일 소스)
     groupLabels: GROUP_LABEL, metricLabels: P_METRICS,

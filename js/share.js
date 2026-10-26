@@ -295,6 +295,6 @@ function dashCardHtml(dash, twoCol) {
         <div><b>${midMiss}</b><span>중간점검 미달</span></div>
       </div>
       ${body}
-      <div class="sh-foot">집계 ${fmt.dateTime(dash.updated)} · 인정 매치: 공식·공식친선·리그친선 · johnlee-korea.github.io/dor6-club</div>
+      <div class="sh-foot">집계 ${fmt.dateTime(dash.updated)} · 인정 매치: 공식·공식친선·리그친선·클래식 · johnlee-korea.github.io/dor6-club</div>
     </div>`;
 }
