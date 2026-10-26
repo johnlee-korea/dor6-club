@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
-import { latestLineupMatch } from "./lib/squad.js";
+import { latestLineupMatch, recentSquadIds } from "./lib/squad.js";
 import { computeMetrics, judge, METRICS, withShots } from "./lib/playstyle.js";
 import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
   GROUP_LABEL, P_METRICS } from "./lib/insight.js";
@@ -239,7 +239,10 @@ function buildInsights() {
     // 에이스 (v1.10.0): 선수별 주 포지션 그룹에서 같은 그룹 랭커 대비 가장 돋보이는 지표(Z) 상위 3명
     // 판정 규칙은 lib/insight.js rankPlayers 단일 소스 (전적 검색 Worker와 공유)
     const ranked = rankPlayers(pRows, posBaseline);
-    const ace = ranked.slice(0, 3).map((b) => {
+    // 에이스는 지금 스쿼드(최근 20경기 라인업, 교체 명단 포함)에 있는 선수만 — 팔았거나 뺀 선수가 시즌 기록으로 남지 않게
+    // (사용자 지적 2026-10-26). 명예의 전당 스페셜리스트는 시즌 기록이라 그대로 전체 대상
+    const inSquad = recentSquadIds(all, 20);
+    const ace = ranked.filter((b) => !inSquad.size || inSquad.has(b.spId)).slice(0, 3).map((b) => {
       const s = bySp.get(b.spId);
       return { ...b, goals: s.goals, assists: s.assists };
     });

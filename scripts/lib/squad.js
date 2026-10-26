@@ -10,6 +10,15 @@ export function latestLineupMatch(matches) {
   return (matches || []).find((m) => Array.isArray(m.lineup) && m.lineup.length) || null;
 }
 
+/* 현재 스쿼드 추정: 최근 n경기(모든 수집 유형, 최신순 배열) 라인업에 한 번이라도 있던 spId (교체 명단 포함)
+   — 직전 1경기만 보면 로테이션 선수까지 빠지고, 시즌 전체를 보면 판 선수가 남음 */
+export function recentSquadIds(matches, n = 20) {
+  const ids = new Set();
+  for (const m of (matches || []).filter((x) => Array.isArray(x.lineup) && x.lineup.length).slice(0, n))
+    for (const l of m.lineup) ids.add(l.spId);
+  return ids;
+}
+
 /* spId 앞 3자리 = 시즌 id */
 export const seasonIdOf = (spId) => Math.floor(spId / 1000000);
 
