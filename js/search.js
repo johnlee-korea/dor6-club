@@ -323,11 +323,12 @@ const GUIDE_MIN_SIDE = 8;   // 공식경기 최근 30경기 표본이라 승·�
 async function renderSearchGuide(a) {
   const box = document.getElementById("search-guide");
   try {
-    const [{ buildGuide }, base] = await Promise.all([
+    const [{ buildGuide }, base, wl] = await Promise.all([
       import(new URL("scripts/lib/guide.js", document.baseURI).href),
-      fetch("data/meta/ranker-baseline.json").then((r) => r.json())
+      fetch("data/meta/ranker-baseline.json").then((r) => r.json()),
+      fetch("data/meta/guide-baseline.json").then((r) => r.json()).catch(() => null)   // 클럽원 보통 승패 차이 (없으면 그 섹션만 생략)
     ]);
-    const g = buildGuide(a.guideRows, base.stats, { minSide: GUIDE_MIN_SIDE });
+    const g = buildGuide(a.guideRows, base.stats, { minSide: GUIDE_MIN_SIDE, wl });
     if (box && box.isConnected) box.innerHTML = guideCard(g, `공식경기 최근 정상 종료 ${a.games}경기 기준 · `);
   } catch (e) {
     console.error("[전적 검색] 플레이 가이드 계산 실패:", e);

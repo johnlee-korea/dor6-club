@@ -3,7 +3,11 @@
    - 규칙·문장 템플릿만으로 만든다 (모든 문장에 근거 숫자 — 지어낸 말 없음)
    - 두 가지 비교를 함께 본다
      ① 랭커 대비: 플레이스타일 지표 31개의 Z점수 (ranker-baseline stats)
-     ② 나 대 나: 내 경기 중 이긴 경기 vs 진 경기 — 경기별 값으로 Welch t (|t| ≥ SIG_T일 때만 '차이 있음')
+     ② 이길 때·질 때 나만의 특징 (v2 사용자 지적: "이기면 점유율·패스 성공률이 높은 건 누구나 그렇다")
+        → 내 (이긴 경기 − 진 경기) 차이를 **클럽원들이 보통 보이는 차이**(winLossBaseline)와 비교해, 벗어날 때만 표시
+        z = (내 차이 − 클럽원 평균 차이) ÷ √(클럽원 '진짜' 편차² + 내 차이 표준오차²) — |z| ≥ WL_Z
+        클럽원 진짜 편차² = 회원 간 차이의 분산 − 회원별 표본 오차²의 평균 (표본 흔들림을 두 번 세지 않도록)
+        z > 0 → 이길 때 상대적으로 더 많음(🟢 이길 때 나만의 특징) · z < 0 → 질 때 더 많음(🔴 질 때 나만의 특징)
    - 지표마다 '좋은 방향'(DIR)이 정해진 것만 장점·약점으로 단정. 스타일 지표(방향 없음)는 승패 차이가 있을 때만 판단,
      없으면 '특징'으로만 표시
    - 클럽 집계(aggregate.js → insights.json players[].guide)와 전적 검색(Worker /search analysis.guide)이 공유
@@ -11,9 +15,9 @@
 import { computeMetrics, METRICS } from "./playstyle.js";
 import { GOAL_BUCKETS, bucketOf, goalFlow } from "./insight.js";
 
-export const GUIDE_VERSION = 1;
+export const GUIDE_VERSION = 2;
+const WL_Z = 1.5;            // 이길 때·질 때 '나만의 특징' 판정
 const MIN_GAMES = 15;        // 가이드 최소 경기
-const SIG_T = 2;             // 승패 차이 판정 (Welch t)
 const Z_GOOD = 0.5;          // 랭커 대비 '좋다/나쁘다' 판정 Z
 const Z_TRAIT = 1;           // 방향 없는 지표가 '특징'이 되는 Z
 
@@ -26,6 +30,8 @@ const DIR = {
 const SKIP = new Set(["gf", "rating"]);
 /* 파울·카드는 적다고 '무기'라 하긴 어색 → 보완점(많을 때)으로만 사용 */
 const NO_STRENGTH = new Set(["foul", "cards"]);
+/* 경기당 1회 미만으로 드문 지표(카드)는 승패 패턴 판정에서 제외 — 몇 경기로 수치가 크게 흔들림 */
+const NO_SPECIAL = new Set(["cards"]);
 /* 승패 비교에서 빼는 지표 — 골·실점·평점처럼 결과 그 자체이거나 골이 있어야 정의되는 비율 */
 const NOT_KEY = new Set(["gf", "ga", "rating", "finish", "headGoal", "longGoal", "boxGoal", "lateGoal", "setGoal"]);
 /* 경기별 값의 분모(styleRaw 키) — 분모 0인 경기는 그 지표 비교에서 제외 */
@@ -67,19 +73,60 @@ const fmtV = (k, v) => {
   return (Math.round(v * 10) / 10).toFixed(1);
 };
 
-/* Welch t — 두 표본 평균 차이 (표본 2개 미만이면 0) */
-function welch(a, b) {
-  if (a.length < 2 || b.length < 2) return 0;
+/* 두 표본 평균 차이의 표준오차 (Welch) — 표본 2개 미만이면 null */
+function diffSE(a, b) {
+  if (a.length < 2 || b.length < 2) return null;
   const m = (x) => x.reduce((s, v) => s + v, 0) / x.length;
   const v = (x, mu) => x.reduce((s, y) => s + (y - mu) ** 2, 0) / (x.length - 1);
-  const ma = m(a), mb = m(b);
-  const se = Math.sqrt(v(a, ma) / a.length + v(b, mb) / b.length);
-  return se > 0 ? (ma - mb) / se : 0;
+  return Math.sqrt(v(a, m(a)) / a.length + v(b, m(b)) / b.length);
 }
+const meanSd = (a) => {
+  const mu = a.reduce((s, v) => s + v, 0) / a.length;
+  return { mean: mu, sd: a.length > 1 ? Math.sqrt(a.reduce((s, v) => s + (v - mu) ** 2, 0) / (a.length - 1)) : 0 };
+};
+const r4 = (x) => Math.round(x * 10000) / 10000;
+
+/* 클럽원 '보통의 승패 차이' 기준값 (aggregate.js → data/meta/guide-baseline.json, 전적 검색도 사용)
+   members: 회원별 정상 종료 경기 배열 [[{ result, raw }…]…] — 승·패 각 minSide경기 이상인 회원만
+   → metrics[k] = { w: 이긴 경기 값 {mean, sd}, l: 진 경기 값, d: 차이(이긴 − 진) } (회원 단위 분포) */
+export function winLossBaseline(members, minSide = 15) {
+  const per = [];
+  for (const ms of members) {
+    const w = ms.filter((m) => m.result === "win"), l = ms.filter((m) => m.result === "lose");
+    if (w.length < minSide || l.length < minSide) continue;
+    const pm = new Map(ms.map((m) => [m, computeMetrics([m.raw])]));
+    const vals = (list, k) => list.filter((m) => !DEN[k] || (m.raw[DEN[k]] || 0) > 0).map((m) => pm.get(m)[k]).filter((v) => v != null && isFinite(v));
+    const se2 = {};
+    for (const k of Object.keys(METRICS)) { const e = diffSE(vals(w, k), vals(l, k)); if (e != null) se2[k] = e * e; }
+    per.push({ w: computeMetrics(w.map((m) => m.raw)), l: computeMetrics(l.map((m) => m.raw)), se2 });
+  }
+  const metrics = {};
+  if (per.length >= 5) {
+    for (const k of Object.keys(METRICS)) {
+      const ok = per.filter((p) => p.w[k] != null && p.l[k] != null && isFinite(p.w[k]) && isFinite(p.l[k]));
+      if (ok.length < 5) continue;
+      const pick = (fn) => { const x = meanSd(ok.map(fn)); return { mean: r4(x.mean), sd: r4(x.sd) }; };
+      const d = pick((p) => p.w[k] - p.l[k]);
+      const ns = ok.filter((p) => p.se2[k] != null);
+      d.noise = ns.length ? r4(Math.sqrt(ns.reduce((sum, p) => sum + p.se2[k], 0) / ns.length)) : 0;   // 회원별 표본 오차(RMS)
+      metrics[k] = { w: pick((p) => p.w[k]), l: pick((p) => p.l[k]), d };
+    }
+  }
+  return { v: 1, members: per.length, minSide, metrics };
+}
+
+/* 차이 표기: 비율은 %p, 그 외 ± 수치 */
+const fmtD = (k, x) => {
+  const u = METRICS[k].unit;
+  const v = u === "%" ? x * 100 : x, t = Math.abs(v).toFixed(1);
+  if (t === "0.0") return "0" + (u ? "%p" : "");                 // 반올림해서 0이면 부호 없이
+  return (v > 0 ? "+" : "−") + t + (u ? "%p" : "");
+};
 
 /* matches: [{ result, raw(withShots 적용된 styleRaw), shots, oppGoals, goalFor, goalAgainst }] — 정상 종료 경기만
    base: 랭커 기준값 stats { 지표: { mean, sd } }
-   opt.minSide: 승·패 각각 최소 경기 (클럽 15 · 전적 검색 30경기라 8) */
+   opt.minSide: 승·패 각각 최소 경기 (클럽 15 · 전적 검색 30경기라 8)
+   opt.wl: winLossBaseline 결과 (없으면 '이길 때·질 때 나만의 특징' 생략) */
 export function buildGuide(matches, base, opt = {}) {
   const minSide = opt.minSide ?? 15;
   const n = matches.length;
@@ -89,6 +136,7 @@ export function buildGuide(matches, base, opt = {}) {
   const mw = wins.length ? computeMetrics(wins.map((m) => m.raw)) : {};
   const ml = loses.length ? computeMetrics(loses.map((m) => m.raw)) : {};
   const split = wins.length >= minSide && loses.length >= minSide;
+  const wl = opt.wl && opt.wl.metrics && opt.wl.members >= 5 ? opt.wl : null;
 
   // 지표별 행: 내 값·랭커 평균·Z·이긴/진 경기 값·t
   // 경기별 지표는 한 번만 계산 (Worker CPU 10ms 한도 — 지표×경기마다 다시 계산하면 수 ms 낭비)
@@ -100,56 +148,69 @@ export function buildGuide(matches, base, opt = {}) {
     if (me[k] == null || SKIP.has(k)) continue;
     const b = base && base[k];
     const z = b && b.sd > 0 ? (me[k] - b.mean) / b.sd : null;
-    const t = split ? welch(per(wins, k), per(loses, k)) : 0;
-    rows.push({ k, label: METRICS[k].label, dir: DIR[k] || 0, v: me[k], avg: b ? b.mean : null, z, w: mw[k], l: ml[k], t,
-      sig: Math.abs(t) >= SIG_T });
+    // 이길 때·질 때: 내 차이 vs 클럽원 보통 차이
+    let wz = 0;
+    const c = wl && wl.metrics[k];
+    if (split && c && mw[k] != null && ml[k] != null) {
+      const se = diffSE(per(wins, k), per(loses, k));
+      const tau2 = Math.max(0, c.d.sd ** 2 - (c.d.noise || 0) ** 2);
+      const den = Math.sqrt(tau2 + (se || 0) ** 2);
+      if (se != null && den > 0) wz = (mw[k] - ml[k] - c.d.mean) / den;
+    }
+    rows.push({ k, label: METRICS[k].label, dir: DIR[k] || 0, v: me[k], avg: b ? b.mean : null, z, w: mw[k], l: ml[k], c,
+      wz, sig: Math.abs(wz) >= WL_Z });
   }
   const item = (r, text) => ({
     k: r.k, label: r.label, v: fmtV(r.k, r.v), avg: r.avg == null ? null : fmtV(r.k, r.avg),
     z: r.z == null ? null : Math.round(r.z * 100) / 100,
-    win: split ? fmtV(r.k, r.w) : null, lose: split ? fmtV(r.k, r.l) : null, sig: r.sig, text
+    win: split ? fmtV(r.k, r.w) : null, lose: split ? fmtV(r.k, r.l) : null, sig: r.sig,
+    cw: split && r.c ? fmtV(r.k, r.c.w.mean) : null, cl: split && r.c ? fmtV(r.k, r.c.l.mean) : null, text
   });
-  const winMore = (r) => r.sig && r.t > 0, loseMore = (r) => r.sig && r.t < 0;
-  // 결과 지표(결정력·실점 등)는 이긴 경기에서 좋은 게 당연 → '이긴 경기에서도' 문장을 붙이지 않음
-  const backedBy = (r) => !NOT_KEY.has(r.k) && (r.dir > 0 ? winMore(r) : loseMore(r));
   const used = new Set();
 
-  // 💪 장점: 랭커보다 좋은 방향 지표 + (방향 없는 지표 중) 내가 많이 하고 이긴 경기에서 더 나오는 것
+  // 💪 장점: 랭커보다 좋은 방향 지표
   const strengths = [];
   for (const r of rows) {
     if (r.z == null) continue;
-    if (r.dir && r.dir * r.z >= Z_GOOD && !NO_STRENGTH.has(r.k)) {
-      const backed = backedBy(r);
-      strengths.push({ s: r.dir * r.z + (backed ? 0.5 : 0), r, text: TIPS[r.k].good + (backed ? " 이긴 경기에서 특히 두드러져요." : "") });
-    } else if (!r.dir && !NOT_KEY.has(r.k) && r.z >= 0.3 && winMore(r)) {
-      // 랭커보다 많이 하고 있고(0.3σ 이상), 이긴 경기에서 더 나오는 스타일 = 살릴 무기
-      strengths.push({ s: r.z + Math.abs(r.t) / 4, r, text: `이긴 경기에서 더 많이 나와요 (${fmtV(r.k, r.w)} vs 진 경기 ${fmtV(r.k, r.l)}). 랭커 평균 이상으로 하고 있는 내 승리 패턴이에요.` });
-    }
+    if (r.dir && r.dir * r.z >= Z_GOOD && !NO_STRENGTH.has(r.k)) strengths.push({ s: r.dir * r.z, r, text: TIPS[r.k].good });
   }
   strengths.sort((a, b) => b.s - a.s);
 
-  // 🔧 보완점: 랭커보다 나쁜 방향 지표 + (방향 없는 지표 중) 내가 많이 하는데 진 경기에서 더 늘어나는 것
+  // 🔧 보완점: 랭커보다 나쁜 방향 지표 (목표 = 랭커 평균)
   const weaknesses = [];
   for (const r of rows) {
     if (r.z == null) continue;
-    if (r.dir && r.dir * r.z <= -Z_GOOD) {
-      const backed = backedBy(r);   // 이 지표가 좋을 때 이겼다 = 고치면 승리에 직결
-      weaknesses.push({ s: -r.dir * r.z + (backed ? 0.5 : 0), r,
-        text: TIPS[r.k].bad + ` 목표: 랭커 평균 ${fmtV(r.k, r.avg)}.` + (backed ? " 이긴 경기에선 이 수치가 더 좋았어요." : "") });
-    } else if (!r.dir && !NOT_KEY.has(r.k) && r.z >= 0.3 && loseMore(r)) {
-      weaknesses.push({ s: r.z + Math.abs(r.t) / 4, r, text: `진 경기에서 더 늘어나요 (${fmtV(r.k, r.l)} vs 이긴 경기 ${fmtV(r.k, r.w)}). 안 풀릴 때 나오는 습관인지 점검해 보세요.` });
-    }
+    if (r.dir && r.dir * r.z <= -Z_GOOD) weaknesses.push({ s: -r.dir * r.z, r, text: TIPS[r.k].bad + ` 목표: 랭커 평균 ${fmtV(r.k, r.avg)}.` });
   }
   weaknesses.sort((a, b) => b.s - a.s);
   const top = (arr) => arr.slice(0, 3).map((x) => { used.add(x.r.k); return item(x.r, x.text); });
   const S = top(strengths), W = top(weaknesses);
 
-  // 🔑 이길 때 vs 질 때: 결과 지표 제외, 차이가 확실한 것 중 |t| 큰 순 3개 (위에서 이미 나온 지표 제외)
-  const keys = split ? rows.filter((r) => r.sig && !NOT_KEY.has(r.k) && !used.has(r.k))
-    .sort((a, b) => Math.abs(b.t) - Math.abs(a.t)).slice(0, 3)
-    .map((r) => { used.add(r.k); const more = METRICS[r.k].unit ? "높아요" : "많아요";   // 비율 지표는 "높아요"
-      return item(r, `${r.t > 0 ? "이긴" : "진"} 경기에서 더 ${more}.`); }) : [];
-  // 🔑 항목 중 랭커 대비 거의 같은(±0.3σ 안) 지표도 그대로 둠 — 나 대 나 비교라 랭커 수준과 무관
+  // 🟢 이길 때 · 🔴 질 때 나만의 특징: 결과 지표 제외, 클럽원 보통 차이에서 벗어난 것 (|z| 큰 순, 각 3개)
+  //   장점·보완점에 나온 지표도 다시 보여 줌 (관점이 다름: 수준 vs 승패 패턴)
+  const special = (sd) => rows.filter((r) => r.sig && (sd === "win" ? r.wz > 0 : r.wz < 0) && !NOT_KEY.has(r.k) && !NO_SPECIAL.has(r.k))
+    .sort((a, b) => Math.abs(b.wz) - Math.abs(a.wz)).slice(0, 3)
+    .map((r) => {
+      // 제목은 숫자 그대로 읽히게: 내 차이(이긴 − 진)의 부호로 문장을 고름
+      //   🟢 내 차이 > 0: "이길 때 유난히 더 높아요" / ≤ 0: (보통은 이길 때 줄어드는데) "이길 때도 덜 줄어요"
+      //   🔴 내 차이 < 0: "질 때 유난히 더 높아요"   / ≥ 0: (보통은 질 때 줄어드는데) "질 때도 크게 줄지 않아요"
+      const ratio = !!METRICS[r.k].unit, myD = r.w - r.l;
+      const hi = ratio ? "높아요" : "많아요";
+      const flat = Math.abs(myD) < 0.3 * Math.abs(r.c.d.mean);   // 보통은 차이가 나는데 나는 거의 같음
+      const head = flat ? "이기든 지든 비슷해요" : sd === "win"
+        ? (myD > 0 ? `이길 때 유난히 더 ${hi}` : `이길 때도 덜 ${ratio ? "낮아져요" : "줄어요"}`)
+        : (myD < 0 ? `질 때 유난히 더 ${hi}` : `질 때도 크게 ${ratio ? "낮아지지" : "줄지"} 않아요`);
+      const fact = `진 경기 대비 이긴 경기 차이 — 클럽원 보통 ${fmtD(r.k, r.c.d.mean)}, 나 ${fmtD(r.k, myD)}.`;
+      // 권유 문장은 방향 없는 스타일 지표 + 뚜렷한 경우(내 차이 부호가 맞을 때)만. 파울 같은 방향 지표는 사실만
+      const tip = flat ? ` 보통은 ${r.c.d.mean > 0 ? "이길" : "질"} 때 더 ${hi.replace("요", "")}지는데, 나는 승패와 상관없이 비슷해요.`
+        : r.dir ? ""
+        : sd === "win" && myD > 0 ? " 이게 나올 때 이기는 나만의 패턴이에요. 더 자주 만들어 보세요."
+        : sd === "lose" && myD < 0 ? " 질 때 늘어나는 나만의 패턴이에요. 안 풀릴 때 이렇게 되는지 점검해 보세요."
+        : "";
+      return { ...item(r, fact + tip), head };
+    });
+  const winSpecial = special("win"), loseSpecial = special("lose");
+  for (const x of [...winSpecial, ...loseSpecial]) used.add(x.k);
 
   // ℹ️ 특징: 방향 없는 지표 중 랭커와 크게 다르지만 승패 차이는 없는 것 (장단점으로 단정하지 않음)
   const traits = rows.filter((r) => !r.dir && !NOT_KEY.has(r.k) && !used.has(r.k) && r.z != null && Math.abs(r.z) >= Z_TRAIT && !r.sig)
@@ -185,5 +246,6 @@ export function buildGuide(matches, base, opt = {}) {
   if (W[0]) summary += `${S[0] ? "" : " "}가장 먼저 손볼 곳은 ${ieyo(W[0].label)}.`;
   else if (S[0]) summary = summary.replace(/, $/, "") .replace(/무기는 (.+)$/, (_, x) => "무기는 " + ieyo(x) + ".");
 
-  return { v: GUIDE_VERSION, games: n, split, minSide, summary, strengths: S, weaknesses: W, keys, traits, time };
+  return { v: GUIDE_VERSION, games: n, split, minSide, wlMembers: wl ? wl.members : 0, summary, strengths: S, weaknesses: W,
+    winSpecial, loseSpecial, traits, time };
 }

@@ -661,6 +661,7 @@ a.ms-row:hover { background: var(--surface-2); }
 .gd-item.key { border-left-color: var(--warn); }
 .gd-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
 .gd-v { font-weight: 800; font-variant-numeric: tabular-nums; }
+.gd-tag { font-size: var(--fs-xs); font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); }
 .gd-split { font-size: var(--fs-xs); margin-top: 2px; font-variant-numeric: tabular-nums; }
 .gd-w { color: var(--ok); }
 .gd-l { color: var(--danger); }

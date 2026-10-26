@@ -66,8 +66,10 @@ function guideCard(g, note) {
   }
   const row = (x, kind) => `
     <div class="gd-item ${kind}">
-      <div class="gd-head"><b>${escapeHtml(x.label)}</b> <span class="gd-v">${escapeHtml(x.v)}</span>${x.avg != null ? ` <span class="in-dim">랭커 ${escapeHtml(x.avg)}</span>` : ""}</div>
-      ${x.win != null ? `<div class="gd-split"><span class="gd-w">이긴 경기 ${escapeHtml(x.win)}</span> · <span class="gd-l">진 경기 ${escapeHtml(x.lose)}</span>${x.sig ? "" : ` <span class="in-dim">(차이 작음)</span>`}</div>` : ""}
+      <div class="gd-head"><b>${escapeHtml(x.label)}</b> ${x.head
+        ? `<span class="gd-tag">${escapeHtml(x.head)}</span>`
+        : `<span class="gd-v">${escapeHtml(x.v)}</span>${x.avg != null ? ` <span class="in-dim">랭커 ${escapeHtml(x.avg)}</span>` : ""}`}</div>
+      ${x.head && x.win != null ? `<div class="gd-split"><span class="gd-w">이긴 경기 ${escapeHtml(x.win)}</span> · <span class="gd-l">진 경기 ${escapeHtml(x.lose)}</span>${x.cw != null ? ` <span class="in-dim">(클럽원 보통 ${escapeHtml(x.cw)} · ${escapeHtml(x.cl)})</span>` : ""}</div>` : ""}
       <div class="gd-text">${escapeHtml(x.text)}</div>
     </div>`;
   const sec = (title, list, kind, empty) => `
@@ -77,11 +79,13 @@ function guideCard(g, note) {
     <div class="gd-sum">${escapeHtml(g.summary)}</div>
     ${sec("💪 더 살릴 장점", g.strengths, "good", "랭커보다 확실히 앞서는 지표는 아직 없어요.")}
     ${sec("🔧 보완할 점", g.weaknesses, "bad", "랭커보다 확실히 뒤처지는 지표는 없어요. 👍")}
-    ${g.split ? sec("🔑 이길 때 vs 질 때", g.keys, "key", "이긴 경기와 진 경기 사이에 뚜렷한 차이가 나는 지표가 없어요.")
-      : `<div class="gd-sec"><div class="gd-sec-title">🔑 이길 때 vs 질 때</div><div class="in-dim gd-empty">이긴 경기·진 경기가 각각 ${g.minSide}경기 이상이면 비교해 드려요.</div></div>`}
+    ${!g.split ? `<div class="gd-sec"><div class="gd-sec-title">🟢 이길 때 · 🔴 질 때 나만의 특징</div><div class="in-dim gd-empty">이긴 경기·진 경기가 각각 ${g.minSide}경기 이상이면 비교해 드려요.</div></div>`
+      : !g.wlMembers ? ""
+      : sec("🟢 이길 때 나만의 특징", g.winSpecial, "good", "이길 때 다른 클럽원과 다르게 나타나는 점은 없어요.")
+        + sec("🔴 질 때 나만의 특징", g.loseSpecial, "bad", "질 때 다른 클럽원과 다르게 나타나는 점은 없어요.")}
     ${g.traits && g.traits.length ? sec("ℹ️ 내 특징", g.traits, "trait", "") : ""}
     ${g.time && g.time.length ? `<div class="gd-sec"><div class="gd-sec-title">⏱ 시간대</div>${g.time.map((t) => `<div class="gd-text">${escapeHtml(t)}</div>`).join("")}</div>` : ""}
-    <div class="in-dim" style="margin-top:var(--sp-2);">${escapeHtml(note || "")}랭커 = 공식경기 상위 랭커 표본 평균. '이긴 경기 vs 진 경기'는 같은 경기에서 함께 나타난 경향이에요(원인이라는 뜻은 아니에요). 차이는 우연으로 보기 어려울 때만 표시해요.</div>
+    <div class="in-dim" style="margin-top:var(--sp-2);">${escapeHtml(note || "")}랭커 = 공식경기 상위 랭커 표본 평균. 이길 때·질 때 특징은 누구나 보이는 차이(예: 이기면 점유율이 높음)를 빼고, 클럽원 ${g.wlMembers || ""}명의 보통 승패 차이에서 벗어난 것만 골랐어요. 함께 나타난 경향이지 원인이라는 뜻은 아니에요.</div>
   </div>`;
 }
 

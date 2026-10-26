@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
 import { latestLineupMatch, recentSquadIds } from "./lib/squad.js";
-import { buildGuide } from "./lib/guide.js";
+import { buildGuide, winLossBaseline } from "./lib/guide.js";
 import { computeMetrics, judge, METRICS, withShots } from "./lib/playstyle.js";
 import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
   GROUP_LABEL, P_METRICS } from "./lib/insight.js";
@@ -209,6 +209,7 @@ function buildInsights() {
   const endT = toDate(season.end).getTime() + (86400000 - 1000);
   const players = {};
   const scorerRows = [], assistRows = [], flowRows = [], mannerRows = [], specialistRows = [];
+  const guideInputs = {};   // ouid → 가이드 입력 경기 (v2.18.1)
   // 포지션 그룹별 랭커 기준값 (ranker-baseline.js, 없으면 에이스 비움)
   const rankerBase = readJSON(p("data", "meta", "ranker-baseline.json"), {});
   const posBaseline = rankerBase.positions || null;
@@ -277,12 +278,20 @@ function buildInsights() {
     manner.score = Math.round(((manner.yellow + manner.red) * 3 + manner.foul) / ms.length * 100) / 100;
     if (ms.length >= minGames) mannerRows.push({ ouid: m.ouid, nick: m.ingameNick, ...manner });
 
-    // 🧭 내 플레이 가이드 (v2.18.0, lib/guide.js 단일 소스 — 전적 검색 Worker와 공유)
-    const guide = rankerBase.stats ? buildGuide(ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots),
-      shots: x.shots, oppGoals: x.oppGoals, goalFor: x.goalFor, goalAgainst: x.goalAgainst })), rankerBase.stats, { minSide: 15 }) : null;
+    // 🧭 내 플레이 가이드 입력 — 클럽원 '보통 승패 차이'(전원 필요)를 먼저 만든 뒤 루프 밖에서 계산
+    guideInputs[m.ouid] = ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots),
+      shots: x.shots, oppGoals: x.oppGoals, goalFor: x.goalFor, goalAgainst: x.goalAgainst }));
 
     players[m.ouid] = { ctrl, games: ms.length, ace, goalMins: { for: goalFor, against: goalAgainst },
-      comebacks, lateWinners, manner, guide };
+      comebacks, lateWinners, manner };
+  }
+
+  // 🧭 내 플레이 가이드 (v2.18.0 → v2.18.1, lib/guide.js 단일 소스 — 전적 검색은 브라우저가 같은 파일로 계산)
+  //   클럽원 보통 승패 차이 → data/meta/guide-baseline.json (전적 검색도 이 파일 사용)
+  const wlBase = winLossBaseline(Object.values(guideInputs), 15);
+  writeJSON(p("data", "meta", "guide-baseline.json"), { updated: now.toISOString(), seasonId: season.id, ...wlBase });
+  if (rankerBase.stats) for (const [ouid, rows] of Object.entries(guideInputs)) {
+    players[ouid].guide = buildGuide(rows, rankerBase.stats, { minSide: 15, wl: wlBase });
   }
 
   const top = (arr, cmp, n) => [...arr].sort(cmp).slice(0, n);

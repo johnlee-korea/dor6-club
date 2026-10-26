@@ -82,13 +82,13 @@ for (const pg of PAGES) {
   const ms = JSON.parse(rd("data/matches/" + GUIDE_OUID + ".json")).matches
     .filter((x) => x.matchType === 50 && x.styleRaw && x.styleRaw.end === 0 && Array.isArray(x.shots)).slice(0, 30);
   const g = buildGuide(ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots), shots: x.shots, oppGoals: x.oppGoals,
-    goalFor: x.goalFor, goalAgainst: x.goalAgainst })), base, { minSide: 8 });
+    goalFor: x.goalFor, goalAgainst: x.goalAgainst })), base, { minSide: 8, wl: JSON.parse(rd("data/meta/guide-baseline.json")) });
   const few = buildGuide(ms.slice(0, 5).map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots) })), base);
   const { window } = new JSDOM("<div id=r></div>", { runScripts: "outside-only" });
   window.eval([rd("js/common.js"), rd("js/insight-ui.js")].join(";\n"));
   window.document.getElementById("r").innerHTML = window.guideCard(g, "") + window.guideCard(few, "");
   const ok = ms.length < 15 || (!!g.summary && window.document.querySelectorAll(".gd-sum").length === 1 && !few.summary && /경기 이상 쌓이면/.test(window.document.body.textContent));
-  console.log(`${ok ? "✅" : "❌"} 플레이 가이드(전적 검색 형식) ${ms.length}경기 요약:${!!g.summary} 장점${(g.strengths || []).length}·보완${(g.weaknesses || []).length}·승패${(g.keys || []).length} 부족 안내:${!few.summary}`);
+  console.log(`${ok ? "✅" : "❌"} 플레이 가이드(전적 검색 형식) ${ms.length}경기 요약:${!!g.summary} 장점${(g.strengths || []).length}·보완${(g.weaknesses || []).length}·이길때${(g.winSpecial || []).length}·질때${(g.loseSpecial || []).length} 부족 안내:${!few.summary}`);
   ok ? pass++ : fail++;
 }
 /* ---------- 구단운영 부품 (v2.2.0 → v2.4.0: 프로필 #manage 탭 · 전적 검색 #manage 탭) ----------
