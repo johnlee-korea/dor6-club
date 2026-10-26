@@ -130,14 +130,40 @@ export function bestMetric(unit, baseline) {
     z: Math.round(best.z * 100) / 100, title: best.z >= TITLE_Z ? titleFor(best.metric, unit.group) : null };
 }
 
-/* pStats 행 목록 → 선수별 '주 포지션 그룹'(선발 최다) 하나로 판정한 결과, Z 내림차순
-   (포메이션에 따라 RDM↔RCM처럼 표기만 바뀔 때 덜 뛴 포지션 기록이 대표로 뽑히지 않도록)
+/* 주 포지션 그룹을 정하는 최근 선발 수 (v2.16.2) */
+export const RECENT_STARTS = 20;
+
+/* pStats 행 목록(★최신 경기 먼저) → 선수별 '주 포지션 그룹' 하나로 판정한 결과, Z 내림차순
+   주 포지션 = 그 선수의 **최근 선발 RECENT_STARTS경기**에서 가장 많이 선 그룹(동률이면 더 최근 쪽) — 기록은 그 그룹의 시즌 전체
+   (v2.16.2 사용자 지적: 마테우스를 지금은 RAM으로 쓰는데 시즌 초 LDM 기록이 더 많아 수비형으로 판정됨)
+   최근 그룹이 선발 MIN_UNIT_GAMES 미만이면 기존처럼 선발 최다 그룹
+   (포메이션에 따라 RDM↔RCM처럼 표기만 바뀔 때 덜 뛴 포지션 기록이 대표로 뽑히지 않도록 선수당 하나만)
    에이스 = 앞에서 3명. 클럽 집계(aggregate.js)와 전적 검색(Worker)이 같은 규칙을 쓰도록 여기 한 곳에 둔다 */
 export function rankPlayers(pRows, baseline) {
+  // 선수별 최근 선발 그룹 집계 (행 순서 = 최신 먼저)
+  const recent = new Map();
+  for (const r of pRows) {
+    const g = posGroup(r[PI.pos]);
+    if (!g) continue;
+    const rc = recent.get(r[PI.spId]) || { n: 0, cnt: {}, order: [] };
+    if (rc.n >= RECENT_STARTS) continue;
+    rc.n++;
+    if (!rc.cnt[g]) rc.order.push(g);
+    rc.cnt[g] = (rc.cnt[g] || 0) + 1;
+    recent.set(r[PI.spId], rc);
+  }
+  const recentGroup = (spId) => {
+    const rc = recent.get(spId);
+    if (!rc) return null;
+    return rc.order.reduce((best, g) => (rc.cnt[g] > rc.cnt[best] ? g : best), rc.order[0]);  // 동률이면 먼저 나온(최근) 그룹
+  };
   const main = new Map();
   for (const u of unitAverages(pRows).values()) {
     const cur = main.get(u.spId);
     if (!cur || u.games > cur.games) main.set(u.spId, u);
+  }
+  for (const u of unitAverages(pRows).values()) {
+    if (u.group === recentGroup(u.spId) && u.games >= MIN_UNIT_GAMES) main.set(u.spId, u);
   }
   return [...main.values()].map((u) => bestMetric(u, baseline)).filter(Boolean).sort((a, b) => b.z - a.z);
 }
