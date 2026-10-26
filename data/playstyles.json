@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T16:08:32.002Z",
+  "updated": "2026-10-26T18:09:29.751Z",
   "baselineUpdated": "2026-10-25T21:19:45.415Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -204,11 +204,10 @@
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "games": 50,
       "style": {
-        "name": "뺏기면 끝",
-        "line": "공 잡을 땐 왕, 뺏기면 무방비",
+        "name": "오프사이드 제조기",
+        "line": "라인 끝에서 늘 한 발 먼저 출발",
         "basis": [
-          "poss+",
-          "block-"
+          "offside+"
         ]
       },
       "highs": [
@@ -216,56 +215,56 @@
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.78,
+          "v": 0.82,
           "avg": 0.459,
-          "z": 1.39,
-          "key": false
-        },
-        {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 87.92,
-          "avg": 78.411,
-          "z": 0.99,
-          "key": false
-        },
-        {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 53.12,
-          "avg": 50.596,
-          "z": 0.92,
+          "z": 1.56,
           "key": true
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.156,
+          "avg": 0.092,
+          "z": 0.97,
+          "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.56,
+          "avg": 0.498,
+          "z": 0.87,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.24,
-          "avg": 4.384,
-          "z": -1.44,
-          "key": true
-        },
-        {
           "k": "lateGoal",
           "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.497,
+          "v": 0.491,
           "avg": 0.601,
-          "z": -1.38,
+          "z": -1.46,
+          "key": false
+        },
+        {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.32,
+          "avg": 4.384,
+          "z": -1.34,
           "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.482,
+          "v": 0.493,
           "avg": 0.549,
-          "z": -1.24,
+          "z": -1.05,
           "key": false
         }
       ]
