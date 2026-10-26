@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T08:08:04.626Z",
+  "updated": "2026-10-26T10:08:55.139Z",
   "baselineUpdated": "2026-10-25T21:19:45.415Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1192,56 +1192,56 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.305,
+          "v": 0.31,
           "avg": 0.196,
-          "z": 1.44,
+          "z": 1.51,
           "key": true
         },
         {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.171,
+          "v": 0.172,
           "avg": 0.1,
-          "z": 1.2,
+          "z": 1.22,
           "key": true
         },
         {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
+          "k": "headGoal",
+          "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.781,
-          "avg": 0.69,
+          "v": 0.215,
+          "avg": 0.107,
           "z": 1.15,
           "key": false
         }
       ],
       "lows": [
         {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.716,
+          "avg": 0.803,
+          "z": -1.69,
+          "key": false
+        },
+        {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
           "v": 0.118,
           "avg": 0.288,
-          "z": -1.43,
+          "z": -1.44,
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
+          "k": "tackleRate",
+          "label": "태클 성공률",
           "unit": "%",
-          "v": 0.734,
-          "avg": 0.803,
-          "z": -1.34,
-          "key": false
-        },
-        {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.18,
-          "avg": 0.459,
-          "z": -1.21,
+          "v": 0.485,
+          "avg": 0.549,
+          "z": -1.2,
           "key": false
         }
       ]
