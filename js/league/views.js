@@ -166,7 +166,7 @@ function boostBox(ctx) {
   if (!s || s.activity !== "ok") return "";
   const list = s.teams.filter((t) => t.boost).sort((a, b) => gamesOf(b) - gamesOf(a) || (a.ouid < b.ouid ? -1 : 1));
   if (!list.length) return "";
-  const kinds = (a) => [["공식", a[0]], ["친선", a[1] + a[2]], ["감독", a[3]]].filter((x) => x[1]).map((x) => x[0] + " " + x[1]).join(" · ");
+  const kinds = (a) => [["공식", a[0]], ["친선", a[1] + a[2]], ["감독", a[3]], ["클래식", a[4] || 0]].filter((x) => x[1]).map((x) => x[0] + " " + x[1]).join(" · ");
   return `<details class="card lg-excl"><summary>🔥 ${dayLabel(s.activityDay || prevDay(s.date))} 판수 보너스 ${list.length}팀</summary>
     <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${gamesOf(t)}판 (${kinds(t.act)})</span></span><b>${boostText(t.boost)}</b></div>`).join("")}</div>
     <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 아주 조금 올라요 (10판까지 판당 +0.025, 이후 +0.01, 최대 +0.5)</div></details>`;

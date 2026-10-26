@@ -359,7 +359,8 @@ function buildActivity() {
 }
 
 /* ---------- ⑨ 🔥 하루 판수 (v2.14.0 도륙리그 전날 판수 보너스) ----------
-   최근 3일(KST) 회원별 [공식 50, 공식친선 60, 리그친선 30, 감독모드 52] 판수 → data/daily-games.json
+   최근 3일(KST) 회원별 [공식 50, 공식친선 60, 리그친선 30, 감독모드 52, 클래식 40] 판수 → data/daily-games.json
+   (클래식은 v2.17.1 추가 — 맨 뒤 칸이라 예전 4칸 스냅샷·화면과 호환, 보너스는 칸 합계)
    감독모드는 collect.js가 날짜만 모은 manager-dates.json. 판수가 0인 회원은 생략(용량) */
 const DAILY_DAYS = 3;
 function buildDailyGames() {
@@ -369,15 +370,15 @@ function buildDailyGames() {
   for (let i = 0; i < DAILY_DAYS; i++) days[kst(now.getTime() - i * 86400000)] = {};
   const add = (ouid, day, col) => {
     if (!days[day]) return;
-    const row = (days[day][ouid] = days[day][ouid] || [0, 0, 0, 0]);
+    const row = (days[day][ouid] = days[day][ouid] || [0, 0, 0, 0, 0]);
     row[col]++;
   };
-  const COL = { 50: 0, 60: 1, 30: 2 };
+  const COL = { 50: 0, 60: 1, 30: 2, 40: 4 };
   for (const m of members) {
     for (const x of matchesByOuid[m.ouid]) if (x.matchType in COL) add(m.ouid, matchDayKST(x.matchDate), COL[x.matchType]);
     for (const [, d] of (mgr[m.ouid] && mgr[m.ouid].dates) || []) add(m.ouid, matchDayKST(d), 3);
   }
-  writeJSON(p("data", "daily-games.json"), { updated: now.toISOString(), types: [50, 60, 30, 52], days });
+  writeJSON(p("data", "daily-games.json"), { updated: now.toISOString(), types: [50, 60, 30, 52, 40], days });
   return Object.keys(days[kst(now.getTime() - 86400000)]).length;
 }
 
