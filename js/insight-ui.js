@@ -56,6 +56,35 @@ function aceCard(ace, meta, labels, note) {
     <div class="in-dim" style="margin-top:var(--sp-2);">${note || "현재 스쿼드(최근 20경기 라인업) 선수 중 · 선수별 주 포지션(선발 최다)에서 같은 포지션 랭커 선수 평균 대비 가장 돋보이는 지표 기준 · 칭호는 눈에 띄게 높을 때만"}</div></div>`;
 }
 
+/* 🧭 내 플레이 가이드 (v2.18.0) — g: scripts/lib/guide.js buildGuide 결과(문장·숫자 모두 거기서 만듦, 여기선 그리기만)
+   note: 범위 안내(클럽 = 현재 시즌, 전적 검색 = 공식경기 최근 30경기) */
+function guideCard(g, note) {
+  const head = `<div class="in-title">🧭 내 플레이 가이드</div>`;
+  if (!g) return "";
+  if (!g.summary) {
+    return `<div class="card in-card gd">${head}<div class="empty" style="padding:var(--sp-3);">정상 종료 경기가 ${g.minGames || 15}경기 이상 쌓이면 가이드가 나와요 (지금 ${g.games || 0}경기).</div></div>`;
+  }
+  const row = (x, kind) => `
+    <div class="gd-item ${kind}">
+      <div class="gd-head"><b>${escapeHtml(x.label)}</b> <span class="gd-v">${escapeHtml(x.v)}</span>${x.avg != null ? ` <span class="in-dim">랭커 ${escapeHtml(x.avg)}</span>` : ""}</div>
+      ${x.win != null ? `<div class="gd-split"><span class="gd-w">이긴 경기 ${escapeHtml(x.win)}</span> · <span class="gd-l">진 경기 ${escapeHtml(x.lose)}</span>${x.sig ? "" : ` <span class="in-dim">(차이 작음)</span>`}</div>` : ""}
+      <div class="gd-text">${escapeHtml(x.text)}</div>
+    </div>`;
+  const sec = (title, list, kind, empty) => `
+    <div class="gd-sec"><div class="gd-sec-title">${title}</div>
+      ${list && list.length ? list.map((x) => row(x, kind)).join("") : `<div class="in-dim gd-empty">${empty}</div>`}</div>`;
+  return `<div class="card in-card gd">${head}
+    <div class="gd-sum">${escapeHtml(g.summary)}</div>
+    ${sec("💪 더 살릴 장점", g.strengths, "good", "랭커보다 확실히 앞서는 지표는 아직 없어요.")}
+    ${sec("🔧 보완할 점", g.weaknesses, "bad", "랭커보다 확실히 뒤처지는 지표는 없어요. 👍")}
+    ${g.split ? sec("🔑 이길 때 vs 질 때", g.keys, "key", "이긴 경기와 진 경기 사이에 뚜렷한 차이가 나는 지표가 없어요.")
+      : `<div class="gd-sec"><div class="gd-sec-title">🔑 이길 때 vs 질 때</div><div class="in-dim gd-empty">이긴 경기·진 경기가 각각 ${g.minSide}경기 이상이면 비교해 드려요.</div></div>`}
+    ${g.traits && g.traits.length ? sec("ℹ️ 내 특징", g.traits, "trait", "") : ""}
+    ${g.time && g.time.length ? `<div class="gd-sec"><div class="gd-sec-title">⏱ 시간대</div>${g.time.map((t) => `<div class="gd-text">${escapeHtml(t)}</div>`).join("")}</div>` : ""}
+    <div class="in-dim" style="margin-top:var(--sp-2);">${escapeHtml(note || "")}랭커 = 공식경기 상위 랭커 표본 평균. '이긴 경기 vs 진 경기'는 같은 경기에서 함께 나타난 경향이에요(원인이라는 뜻은 아니에요). 차이는 우연으로 보기 어려울 때만 표시해요.</div>
+  </div>`;
+}
+
 /* ② 골 시간대 — 위(득점)·아래(실점) 대칭 막대 + 역전승·극장골 배지 */
 function goalTimeCard(me, buckets) {
   const f = me.goalMins.for, a = me.goalMins.against;

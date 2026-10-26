@@ -13,6 +13,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rd = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 const FIRST_OUID = JSON.parse(rd("data/members.json")).members.find((m) => m.ouid).ouid;
+const GUIDE_OUID = Object.entries(JSON.parse(rd("data/insights.json")).players).find(([, p]) => p.guide && p.guide.summary)?.[0] || FIRST_OUID;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const PAGES = [
@@ -31,7 +32,10 @@ const PAGES = [
   { file: "rules.html",     scripts: ["js/common.js"],                          root: null },
   { file: "patchnotes.html", scripts: ["js/common.js", "js/patchnotes.js"], root: "pn-root", expect: ".pn-tag" },
   { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin-league.js", "js/admin.js"], root: null },
-  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null }
+  { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null },
+  // 🧭 내 플레이 가이드 (v2.18.0): 가이드가 있는 회원의 인사이트 탭
+  { file: "member.html", url: "http://localhost/member.html?id=" + GUIDE_OUID + "#insight",
+    scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/share.js", "js/member.js"], root: "profile-root", expect: ".gd-sum" }
 ];
 
 const localFetch = async (url) => {
@@ -68,6 +72,23 @@ for (const pg of PAGES) {
   const ok = errors.length === 0 && hasHeader && nav >= 1 && (expectCount === null || expectCount > 0);
   console.log(`${ok ? "✅" : "❌"} ${pg.file.padEnd(15)} header:${hasHeader} nav:${nav}${pg.expect ? ` ${pg.expect}:${expectCount}` : ""}`);
   [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
+  ok ? pass++ : fail++;
+}
+/* ---------- 🧭 전적 검색 플레이 가이드 (v2.18.0): Worker guideRows 형식 → lib/guide.js → guideCard ---------- */
+{
+  const { buildGuide } = await import(new URL("./lib/guide.js", import.meta.url));
+  const { withShots } = await import(new URL("./lib/playstyle.js", import.meta.url));
+  const base = JSON.parse(rd("data/meta/ranker-baseline.json")).stats;
+  const ms = JSON.parse(rd("data/matches/" + GUIDE_OUID + ".json")).matches
+    .filter((x) => x.matchType === 50 && x.styleRaw && x.styleRaw.end === 0 && Array.isArray(x.shots)).slice(0, 30);
+  const g = buildGuide(ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots), shots: x.shots, oppGoals: x.oppGoals,
+    goalFor: x.goalFor, goalAgainst: x.goalAgainst })), base, { minSide: 8 });
+  const few = buildGuide(ms.slice(0, 5).map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots) })), base);
+  const { window } = new JSDOM("<div id=r></div>", { runScripts: "outside-only" });
+  window.eval([rd("js/common.js"), rd("js/insight-ui.js")].join(";\n"));
+  window.document.getElementById("r").innerHTML = window.guideCard(g, "") + window.guideCard(few, "");
+  const ok = ms.length < 15 || (!!g.summary && window.document.querySelectorAll(".gd-sum").length === 1 && !few.summary && /경기 이상 쌓이면/.test(window.document.body.textContent));
+  console.log(`${ok ? "✅" : "❌"} 플레이 가이드(전적 검색 형식) ${ms.length}경기 요약:${!!g.summary} 장점${(g.strengths || []).length}·보완${(g.weaknesses || []).length}·승패${(g.keys || []).length} 부족 안내:${!few.summary}`);
   ok ? pass++ : fail++;
 }
 /* ---------- 구단운영 부품 (v2.2.0 → v2.4.0: 프로필 #manage 탭 · 전적 검색 #manage 탭) ----------

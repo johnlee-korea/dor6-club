@@ -166,6 +166,7 @@ async function tabInsight(body) {
     .flatMap((m) => m.shots);
   body.innerHTML = `
     <div class="in-note" style="margin-bottom:var(--sp-2);">${escapeHtml(ins.seasonName)} ${me.games}경기 기준</div>
+    ${guideCard(me.guide, `${ins.seasonName} 정상 종료 ${me.games}경기 기준 · `)}
     <div class="in-grid">
       ${aceCard(me.ace, meta, ins)}
       ${goalTimeCard(me, ins.buckets)}

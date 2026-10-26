@@ -195,7 +195,7 @@ const toLineup = (side) => ((side && side.player) || []).map((pl) => ({
 const SEARCH_MATCHES = 30;       // 공식경기 최근 N경기 (서브요청 한도 50 고려: 기본 3~4 + 상세 30 + 기준값 1)
 const SEARCH_BATCH = 5;          // 상세 동시 조회 수 (넥슨 429 방지)
 const STYLE_MIN_GAMES = 10;      // 플레이스타일 최소 경기 (클럽 config.playstyle.minGames와 동일)
-const ANALYSIS_VERSION = 1;      // 화면에서 '최신 업데이트로 조회한 결과'인지 구분
+const ANALYSIS_VERSION = 2;      // 화면에서 '최신 업데이트로 조회한 결과'인지 구분 (v2: 🧭 플레이 가이드용 guideRows 추가)
 
 /* 랭커 기준값 (Pages 정적 파일) — isolate 메모리에 6시간 캐시 */
 let _baseline = null, _baselineAt = 0;
@@ -295,19 +295,23 @@ async function publicSearch(ouid, env) {
     details.push(...await Promise.all(chunk.map((id) =>
       nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key, 1).catch(() => null))));
   }
-  const raws = [], pRows = [];
+  const raws = [], pRows = [], guideRows = [];
   for (const d of details) {
     if (!d) continue;
     const me = (d.matchInfo || []).find((i) => i.ouid === ouid);
     if (!me) continue;
     const opp = (d.matchInfo || []).find((i) => i.ouid !== ouid);
-    out.matches.push(searchRow(d, me, opp, 50));
+    const row = searchRow(d, me, opp, 50);
+    out.matches.push(row);
     // 분석용 원본 — 정상 종료 경기만 (클럽 집계와 같은 기준)
     const raw = styleRaw(me, opp);
     if (raw && raw.end === 0 && d.matchInfo.length === 2) {
       const ins = insightRaw(me, opp);
       raws.push(withShots(raw, ins.shots));   // v2.5.0 슈팅 유형 지표 포함 (클럽 집계와 같은 계산)
       pRows.push(...(ins.pStats || []));
+      // 🧭 플레이 가이드 원본 (v2.18.0) — 계산(lib/guide.js)은 브라우저가 함: Worker CPU 10ms 한도에 여유를 두려고
+      guideRows.push({ result: row.result, raw: raws[raws.length - 1], shots: ins.shots, oppGoals: ins.oppGoals,
+        goalFor: row.goalFor, goalAgainst: row.goalAgainst });
     }
   }
   // [더보기]용 다음 위치 (v2.6.0)
@@ -323,6 +327,7 @@ async function publicSearch(ouid, env) {
       version: ANALYSIS_VERSION, games: raws.length, minGames: STYLE_MIN_GAMES,
       playstyle: raws.length >= STYLE_MIN_GAMES ? judge(computeMetrics(raws), base.stats) : null,
       ace: base.positions ? rankPlayers(pRows, base.positions).slice(0, 3) : [],
+      guideRows,
       groupLabels: GROUP_LABEL, metricLabels: P_METRICS
     };
   } catch (e) {

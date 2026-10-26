@@ -650,3 +650,19 @@ a.ms-row:hover { background: var(--surface-2); }
 .nw-foot-btns { display: flex; justify-content: space-between; align-items: center; }
 .nw-close { border: 1px solid var(--border); background: var(--surface-3); color: var(--text-muted); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: var(--fs-xs); cursor: pointer; }
 .nw-credit { font-size: var(--fs-xs); color: var(--text-dim); margin-top: var(--sp-2); }
+
+/* 🧭 내 플레이 가이드 (v2.18.0) */
+.gd-sum { font-weight: 600; line-height: 1.55; padding: var(--sp-2) var(--sp-3); background: var(--surface-2); border-radius: 10px; margin-bottom: var(--sp-3); }
+.gd-sec { margin-top: var(--sp-3); }
+.gd-sec-title { font-weight: 800; font-size: var(--fs-sm); margin-bottom: var(--sp-1); }
+.gd-item { padding: var(--sp-2) 0 var(--sp-2) var(--sp-3); border-left: 3px solid var(--border); margin-bottom: var(--sp-2); }
+.gd-item.good { border-left-color: var(--ok); }
+.gd-item.bad { border-left-color: var(--danger); }
+.gd-item.key { border-left-color: var(--warn); }
+.gd-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.gd-v { font-weight: 800; font-variant-numeric: tabular-nums; }
+.gd-split { font-size: var(--fs-xs); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.gd-w { color: var(--ok); }
+.gd-l { color: var(--danger); }
+.gd-text { font-size: var(--fs-sm); line-height: 1.55; color: var(--text); margin-top: 4px; }
+.gd-empty { padding: 2px 0; }

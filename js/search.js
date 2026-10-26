@@ -311,8 +311,28 @@ async function renderAnalysis(d) {
     <div class="card in-card" style="margin-bottom:var(--sp-3);"><div class="in-title">🎭 플레이스타일</div>
       ${psBlock(style, a.minGames)}
       <div class="in-dim" style="margin-top:var(--sp-2);">랭커 평균 대비 가장 높은 지표 ▲3 · 낮은 지표 ▼3 (★ = 스타일 근거)</div></div>
-    ${aceCard(a.ace, meta, a, "선수별 주 포지션(선발 최다)에서 같은 포지션 랭커 선수 평균 대비 · 선발 5경기 이상 · 칭호는 눈에 띄게 높을 때만")}
+    <div id="search-guide">${a.guideRows ? "" : `<div class="ps-note" style="margin-bottom:var(--sp-3);">🔄 <b>최신 업데이트</b>를 누르면 🧭 내 플레이 가이드가 표시돼요.</div>`}</div>
+    ${aceCard(a.ace, meta, a, "선수별 주 포지션(최근 선발 20경기 최다)에서 같은 포지션 랭커 선수 평균 대비 · 선발 5경기 이상 · 칭호는 눈에 띄게 높을 때만")}
     <div style="height:var(--sp-4);"></div>`;
+  if (a.guideRows) renderSearchGuide(a);
+}
+
+/* 🧭 내 플레이 가이드 (v2.18.0) — Worker가 준 경기별 원본(guideRows)으로 브라우저에서 계산
+   (판정 규칙 scripts/lib/guide.js는 클럽 집계와 같은 파일 — 동적 import, 기준값은 Pages의 랭커 기준값) */
+const GUIDE_MIN_SIDE = 8;   // 공식경기 최근 30경기 표본이라 승·패 각 8경기 이상이면 비교 (클럽은 15)
+async function renderSearchGuide(a) {
+  const box = document.getElementById("search-guide");
+  try {
+    const [{ buildGuide }, base] = await Promise.all([
+      import(new URL("scripts/lib/guide.js", document.baseURI).href),
+      fetch("data/meta/ranker-baseline.json").then((r) => r.json())
+    ]);
+    const g = buildGuide(a.guideRows, base.stats, { minSide: GUIDE_MIN_SIDE });
+    if (box && box.isConnected) box.innerHTML = guideCard(g, `공식경기 최근 정상 종료 ${a.games}경기 기준 · `);
+  } catch (e) {
+    console.error("[전적 검색] 플레이 가이드 계산 실패:", e);
+    if (box) box.innerHTML = "";
+  }
 }
 
 window.addEventListener("hashchange", srShowTab);

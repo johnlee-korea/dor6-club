@@ -9,6 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
 import { latestLineupMatch, recentSquadIds } from "./lib/squad.js";
+import { buildGuide } from "./lib/guide.js";
 import { computeMetrics, judge, METRICS, withShots } from "./lib/playstyle.js";
 import { GOAL_BUCKETS, SHOT_RESULT, bucketOf, goalFlow, PI, rankPlayers,
   GROUP_LABEL, P_METRICS } from "./lib/insight.js";
@@ -276,8 +277,12 @@ function buildInsights() {
     manner.score = Math.round(((manner.yellow + manner.red) * 3 + manner.foul) / ms.length * 100) / 100;
     if (ms.length >= minGames) mannerRows.push({ ouid: m.ouid, nick: m.ingameNick, ...manner });
 
+    // 🧭 내 플레이 가이드 (v2.18.0, lib/guide.js 단일 소스 — 전적 검색 Worker와 공유)
+    const guide = rankerBase.stats ? buildGuide(ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots),
+      shots: x.shots, oppGoals: x.oppGoals, goalFor: x.goalFor, goalAgainst: x.goalAgainst })), rankerBase.stats, { minSide: 15 }) : null;
+
     players[m.ouid] = { ctrl, games: ms.length, ace, goalMins: { for: goalFor, against: goalAgainst },
-      comebacks, lateWinners, manner };
+      comebacks, lateWinners, manner, guide };
   }
 
   const top = (arr, cmp, n) => [...arr].sort(cmp).slice(0, n);
