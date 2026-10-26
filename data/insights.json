@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T10:08:55.139Z",
+  "updated": "2026-10-26T12:08:53.427Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1300,7 +1300,7 @@
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "ctrl": "gamepad",
-      "games": 158,
+      "games": 160,
       "ace": [
         {
           "spId": 856226161,
@@ -1356,29 +1356,29 @@
           70,
           69,
           72,
-          105,
-          84,
-          88,
-          47
+          106,
+          86,
+          89,
+          48
         ],
         "against": [
-          48,
+          50,
           72,
-          83,
+          84,
           89,
-          68,
-          79,
+          69,
+          81,
           51
         ]
       },
-      "comebacks": 31,
-      "lateWinners": 13,
+      "comebacks": 32,
+      "lateWinners": 14,
       "manner": {
-        "games": 158,
+        "games": 160,
         "yellow": 6,
         "red": 2,
-        "foul": 110,
-        "score": 0.85
+        "foul": 111,
+        "score": 0.84
       }
     },
     "75278aef5ddb1cb75d88dd114f68f0ab": {
@@ -2130,7 +2130,7 @@
     },
     "068895f008054937eb7c5fa1acbd5c30": {
       "ctrl": "keyboard",
-      "games": 134,
+      "games": 135,
       "ace": [
         {
           "spId": 877231866,
@@ -2149,22 +2149,6 @@
           "assists": 6
         },
         {
-          "spId": 866230621,
-          "group": "GK",
-          "pos": 0,
-          "games": 43,
-          "metric": "sav",
-          "value": 4.63,
-          "base": 2.62,
-          "z": 2.56,
-          "title": {
-            "emoji": "🧤",
-            "name": "수호신"
-          },
-          "goals": 0,
-          "assists": 0
-        },
-        {
           "spId": 845244260,
           "group": "AM",
           "pos": 18,
@@ -2179,15 +2163,31 @@
           },
           "goals": 9,
           "assists": 11
+        },
+        {
+          "spId": 863251854,
+          "group": "DM",
+          "pos": 11,
+          "games": 12,
+          "metric": "drb",
+          "value": 15,
+          "base": 9.33,
+          "z": 2.54,
+          "title": {
+            "emoji": "🪄",
+            "name": "드리블 마법사"
+          },
+          "goals": 6,
+          "assists": 9
         }
       ],
       "goalMins": {
         "for": [
-          54,
+          55,
           49,
           55,
-          62,
-          54,
+          63,
+          55,
           54,
           23
         ],
@@ -2204,10 +2204,10 @@
       "comebacks": 24,
       "lateWinners": 19,
       "manner": {
-        "games": 134,
+        "games": 135,
         "yellow": 3,
         "red": 1,
-        "foul": 78,
+        "foul": 79,
         "score": 0.67
       }
     },
