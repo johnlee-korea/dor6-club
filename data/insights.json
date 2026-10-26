@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T13:10:05.711Z",
+  "updated": "2026-10-26T13:37:54.093Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -1908,31 +1908,31 @@
     },
     "9052276188238316b9fc057307e0d58c": {
       "ctrl": "gamepad",
-      "games": 160,
+      "games": 161,
       "ace": [
         {
           "spId": 848120274,
           "group": "W",
           "pos": 16,
-          "games": 112,
+          "games": 113,
           "metric": "pas",
-          "value": 11.78,
+          "value": 11.75,
           "base": 8.32,
-          "z": 1.57,
+          "z": 1.56,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
           },
-          "goals": 38,
-          "assists": 91
+          "goals": 39,
+          "assists": 92
         },
         {
           "spId": 861001114,
           "group": "AM",
           "pos": 18,
-          "games": 111,
+          "games": 112,
           "metric": "drb",
-          "value": 13.42,
+          "value": 13.44,
           "base": 8.91,
           "z": 1.41,
           "title": {
@@ -1946,47 +1946,47 @@
           "spId": 867224232,
           "group": "W",
           "pos": 12,
-          "games": 108,
+          "games": 109,
           "metric": "pas",
           "value": 10.62,
           "base": 8.32,
-          "z": 1.04,
+          "z": 1.05,
           "title": {
             "emoji": "📨",
             "name": "패스 마스터"
           },
           "goals": 37,
-          "assists": 71
+          "assists": 72
         }
       ],
       "goalMins": {
         "for": [
           64,
-          65,
+          66,
           67,
-          92,
+          93,
           64,
-          78,
+          79,
           32
         ],
         "against": [
           52,
-          53,
+          54,
           77,
           62,
-          62,
-          74,
+          63,
+          75,
           19
         ]
       },
       "comebacks": 19,
       "lateWinners": 16,
       "manner": {
-        "games": 160,
+        "games": 161,
         "yellow": 1,
         "red": 1,
         "foul": 128,
-        "score": 0.84
+        "score": 0.83
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
@@ -2074,7 +2074,7 @@
     },
     "068895f008054937eb7c5fa1acbd5c30": {
       "ctrl": "keyboard",
-      "games": 135,
+      "games": 136,
       "ace": [
         {
           "spId": 848210035,
@@ -2112,11 +2112,11 @@
           "spId": 866230621,
           "group": "GK",
           "pos": 0,
-          "games": 44,
+          "games": 45,
           "metric": "sav",
-          "value": 4.57,
+          "value": 4.53,
           "base": 2.62,
-          "z": 2.48,
+          "z": 2.44,
           "title": {
             "emoji": "🧤",
             "name": "수호신"
@@ -2128,17 +2128,17 @@
       "goalMins": {
         "for": [
           55,
-          49,
+          50,
           55,
           63,
           55,
-          54,
+          55,
           23
         ],
         "against": [
-          40,
+          41,
           50,
-          42,
+          44,
           71,
           55,
           57,
@@ -2148,11 +2148,11 @@
       "comebacks": 24,
       "lateWinners": 19,
       "manner": {
-        "games": 135,
+        "games": 136,
         "yellow": 3,
         "red": 1,
-        "foul": 79,
-        "score": 0.67
+        "foul": 81,
+        "score": 0.68
       }
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
@@ -2349,8 +2349,8 @@
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
         "spId": 852233700,
-        "goals": 175,
-        "games": 151
+        "goals": 177,
+        "games": 152
       },
       {
         "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -2376,6 +2376,13 @@
         "games": 169
       },
       {
+        "ouid": "9052276188238316b9fc057307e0d58c",
+        "nick": "휴민트",
+        "spId": 848120274,
+        "assists": 92,
+        "games": 152
+      },
+      {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
         "nick": "FaceID",
         "spId": 861190045,
@@ -2388,13 +2395,6 @@
         "spId": 848037576,
         "assists": 91,
         "games": 144
-      },
-      {
-        "ouid": "9052276188238316b9fc057307e0d58c",
-        "nick": "휴민트",
-        "spId": 848120274,
-        "assists": 91,
-        "games": 151
       }
     ],
     "comebackKing": [
