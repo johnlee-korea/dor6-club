@@ -27,26 +27,20 @@ const pct = (x) => (x * 100).toFixed(1) + "%";
 
 console.log(`도륙리그 밸런스 테스트 — 엔진 v${ENGINE_VERSION}, ${TEAMS}팀 × ${DAYS}일\n`);
 
-let games = 0, goals = 0, draws = 0, homeWins = 0, upsetGames = 0, upsets = 0, ms = 0;
-const kings = [], champsLevel = [];
+let games = 0, goals = 0, draws = 0, homeWins = 0, ms = 0;
+const kings = [];
 const goalsByRole = {}, kingRoles = {};
-const ovrs = [];
+const powers = new Set();   // v3: 모든 팀 공격·수비력이 같은지 확인
 for (let d = 0; d < DAYS; d++) {
   const t0 = performance.now();
   const day = runDay({ daySeed: `TEST-${d}`, teamSeed: "TEST", teams: fakeTeams(TEAMS) });
   ms += performance.now() - t0;
-  if (d === 0) for (const sq of day.squads.values()) ovrs.push(sq.ovr);
+  for (const sq of day.squads.values()) powers.add(sq.att + "/" + sq.def);
   day.rounds.forEach((rd, r) => rd.matches.forEach((m, i) => {
     const res = day.results[r][i];
     games++; goals += res.hg + res.ag;
     if (res.hg === res.ag) draws++;
     if (res.hg > res.ag) homeWins++;
-    // 이변: 선발 오버롤이 낮은 팀(차이 3 이상)이 이긴 경기
-    const ho = day.squads.get(m.home).ovr, ao = day.squads.get(m.away).ovr;
-    if (Math.abs(ho - ao) >= 3 && res.hg !== res.ag) {
-      upsetGames++;
-      if ((ho < ao) === (res.hg > res.ag)) upsets++;
-    }
   }));
   const st = playerStats(day.rounds, day.results, day.totalRounds);
   const king = leaders(st, "g", 1)[0];
@@ -54,19 +48,15 @@ for (let d = 0; d < DAYS; d++) {
   const kr = day.squads.get(king.team).players[king.idx].role;
   kingRoles[kr] = (kingRoles[kr] || 0) + 1;
   for (const p of st.values()) { const role = day.squads.get(p.team).players[p.idx].role; goalsByRole[role] = (goalsByRole[role] || 0) + p.g; }
-  const sum = summarizeDay(day);
-  champsLevel.push(day.squads.get(sum.table[0].ouid).ovr);
 }
 const avg = (a) => a.reduce((s, x) => s + x, 0) / a.length;
 const R = roundCount(TEAMS);
 console.log(`라운드 ${R} · 팀당 ${TEAMS % 2 ? R - 2 : R}경기 · 하루 ${games / DAYS}경기`);
-console.log(`팀 오버롤 범위: ${Math.min(...ovrs)} ~ ${Math.max(...ovrs)}`);
+console.log(`팀 전력        ${powers.size === 1 ? "✅ 모든 팀 동일 (" + [...powers][0] + ")" : "❌ 팀마다 다름 " + powers.size + "종"}   (v3 순수 운, 보너스 없는 테스트 팀)`);
 console.log(`경기당 골      ${(goals / games).toFixed(2)}   (목표 2.5~3.0)`);
 console.log(`무승부         ${pct(draws / games)}   (목표 20~30%)`);
 console.log(`홈 승          ${pct(homeWins / games)}`);
 console.log(`득점왕 평균    ${avg(kings).toFixed(1)}골 (최소 ${Math.min(...kings)} · 최대 ${Math.max(...kings)}, 목표 20~35)`);
-console.log(`이변 비율      ${pct(upsets / upsetGames)}   (오버롤 3↑ 차이 경기 중 약팀 승, 목표 25%↑)`);
-console.log(`우승팀 오버롤  평균 ${avg(champsLevel).toFixed(1)} (최소 ${Math.min(...champsLevel)})`);
 console.log(`시뮬레이션     하루 평균 ${(ms / DAYS).toFixed(1)}ms`);
 const tg = Object.values(goalsByRole).reduce((a, b) => a + b, 0);
 console.log(`포지션별 골    ${Object.entries(goalsByRole).sort((a, b) => b[1] - a[1]).map(([r, g]) => `${r} ${(g / tg * 100).toFixed(0)}%`).join(" · ")}`);

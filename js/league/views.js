@@ -296,7 +296,7 @@ export function tabMyTeam(ctx, sel) {
     .sort((a, b) => (b.start - a.start) || roleRank(a.p) - roleRank(b.p) || a.p.idx - b.p.idx);
   return picker + note + `<div class="card lg-myhead">
       <div class="lg-title">${teamName(ctx, id)}</div>
-      <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"} · 팀 오버롤 ${sq.ovr}</div>
+      <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"}</div>
       ${myBoostLine(ctx, id)}
       ${ctx.k > 1 ? rankChart(ctx, id) : ""}</div>
     ${next ? `<div class="section-title">⏭ 다음 경기</div><div class="card">${matchCard(ctx, next[0], next[1])}</div>` : ""}
