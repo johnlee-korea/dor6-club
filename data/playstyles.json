@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27T12:43:40.584Z",
+  "updated": "2026-10-27T14:08:17.412Z",
   "baselineUpdated": "2026-10-25T21:19:45.415Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1809,56 +1809,56 @@
           "k": "lobRatio",
           "label": "띄우는 패스 비율",
           "unit": "%",
-          "v": 0.048,
+          "v": 0.047,
           "avg": 0.013,
-          "z": 3.79,
+          "z": 3.67,
           "key": true
         },
         {
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.549,
+          "v": 0.54,
           "avg": 0.193,
-          "z": 3.14,
+          "z": 3.06,
           "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.131,
+          "v": 0.129,
           "avg": 0.057,
-          "z": 2.38,
+          "z": 2.32,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.856,
-          "avg": 0.888,
-          "z": -1.59,
-          "key": false
-        },
-        {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.397,
+          "v": 0.391,
           "avg": 0.498,
-          "z": -1.42,
+          "z": -1.51,
+          "key": false
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.858,
+          "avg": 0.888,
+          "z": -1.5,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 65.9,
+          "v": 66.42,
           "avg": 78.411,
-          "z": -1.31,
+          "z": -1.25,
           "key": false
         }
       ]
