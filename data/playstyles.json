@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-28T02:08:37.652Z",
+  "updated": "2026-10-28T04:09:05.253Z",
   "baselineUpdated": "2026-10-25T21:19:45.415Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -204,11 +204,11 @@
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "games": 50,
       "style": {
-        "name": "침투만 하는 러너",
-        "line": "라인은 넘는데 슈팅은 아낀다",
+        "name": "가성비 스트라이커",
+        "line": "적게 쏘고 많이 넣는 원샷원킬",
         "basis": [
-          "offside+",
-          "shots-"
+          "shots-",
+          "finish+"
         ]
       },
       "highs": [
@@ -216,27 +216,27 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.582,
+          "v": 0.596,
           "avg": 0.498,
-          "z": 1.19,
-          "key": false
-        },
-        {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.7,
-          "avg": 0.459,
-          "z": 1.04,
+          "z": 1.38,
           "key": true
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.853,
+          "v": 0.86,
           "avg": 0.803,
-          "z": 0.99,
+          "z": 1.13,
+          "key": false
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.163,
+          "avg": 0.092,
+          "z": 1.08,
           "key": false
         }
       ],
@@ -245,26 +245,26 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.477,
+          "v": 0.476,
           "avg": 0.549,
-          "z": -1.34,
+          "z": -1.36,
           "key": false
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.46,
+          "v": 5.3,
           "avg": 6.722,
-          "z": -1.19,
+          "z": -1.34,
           "key": true
         },
         {
-          "k": "lateGoal",
-          "label": "후반 득점 비율",
-          "unit": "%",
-          "v": 0.522,
-          "avg": 0.601,
+          "k": "corner",
+          "label": "코너킥",
+          "unit": "",
+          "v": 0.88,
+          "avg": 1.361,
           "z": -1.05,
           "key": false
         }
@@ -1731,10 +1731,11 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "논스톱 발리러",
-        "line": "떨어지는 공은 무조건 논스톱",
+        "name": "원맨쇼",
+        "line": "패스는 필요 없다, 혼자 들고 가서 넣는다",
         "basis": [
-          "volley+"
+          "dribble+",
+          "throughRatio-"
         ]
       },
       "highs": [
@@ -1742,27 +1743,27 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.172,
+          "v": 0.165,
           "avg": 0.085,
-          "z": 1.5,
-          "key": true
+          "z": 1.37,
+          "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 88.82,
+          "v": 89.44,
           "avg": 78.411,
-          "z": 1.09,
-          "key": false
+          "z": 1.15,
+          "key": true
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.62,
+          "v": 0.64,
           "avg": 0.459,
-          "z": 0.7,
+          "z": 0.78,
           "key": false
         }
       ],
@@ -1777,21 +1778,21 @@
           "key": false
         },
         {
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.091,
+          "avg": 0.143,
+          "z": -1.08,
+          "key": true
+        },
+        {
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
           "v": 0.006,
           "avg": 0.107,
-          "z": -1.07,
-          "key": false
-        },
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 11.34,
-          "avg": 15.512,
-          "z": -1.05,
+          "z": -1.08,
           "key": false
         }
       ]
