@@ -27,7 +27,8 @@ const empty = (msg, emoji = "📭") => `<div class="empty"><span class="emoji">$
 const teamName = (ctx, id) => esc(ctx.day.names.get(id));
 const player = (ctx, team, idx) => ctx.day.squads.get(team).players[idx];
 const mine = (ctx, id) => (id === ctx.myId ? " lg-mine" : "");
-/* 라운드 k 결과 공개 시각 — 정식 리그는 07:00 기준(clock.js), 테스트 리그는 ctx.roundAt(시작 시각 + k × 간격) */
+/* 시각 k = 라운드 k(0부터)의 킥오프 — 정식 리그는 07:00 + k × 간격(clock.js), 테스트 리그는 ctx.roundAt
+   (v2.19.0부터 결과는 킥오프 뒤 경기 시간이 흐르며 문자중계로 공개, 약 9분 뒤 종료) */
 const rt = (ctx, k) => (ctx.roundAt ? ctx.roundAt(k) : C.roundMs(ctx.date, k, ctx.R));
 const tl = (ctx, ms) => (ctx.test ? C.hms(ms) : C.hm(ms));
 
@@ -59,7 +60,9 @@ export function matchCard(ctx, r, i, open = false) {
   const res = ctx.day.results[r][i];
   const win = done ? (res.hg > res.ag ? m.home : res.ag > res.hg ? m.away : null) : null;
   const cls = (id) => `lg-team${mine(ctx, id)}${id === win ? " lg-win" : ""}`;
-  const score = done ? `<b class="lg-score">${res.hg} : ${res.ag}</b>` : `<span class="lg-time">${tl(ctx, rt(ctx, r + 1))}</span>`;
+  const onAir = !done && ctx.live && ctx.live.r === r;
+  const score = done ? `<b class="lg-score">${res.hg} : ${res.ag}</b>`
+    : onAir ? `<a class="lg-time lg-onair" href="#live">🔴 LIVE</a>` : `<span class="lg-time">${tl(ctx, rt(ctx, r))}</span>`;
   const head = `<div class="lg-match-row"><span class="${cls(m.home)} h">${teamName(ctx, m.home)}</span>${score}<span class="${cls(m.away)} a">${teamName(ctx, m.away)}</span></div>`;
   if (!done || !res.ev.length) return `<div class="lg-match">${head}</div>`;
   return `<details class="lg-match"${open ? " open" : ""}><summary>${head}</summary><div class="lg-goals">${res.ev.map((e) => goalLine(ctx, m, e)).join("")}</div></details>`;
@@ -119,9 +122,10 @@ export function countdownText(ctx) {
   if (!ctx.day || !ctx.viewToday) return "";
   const now = ctx.now();
   let target, label;
+  if (ctx.live) return `🔴 ${ctx.live.r + 1}라운드 진행 중 <b>${minLabel(ctx.live.min)}</b>`;
   if (ctx.k >= ctx.R) return "🏁 모든 라운드 종료";
   if (now < rt(ctx, 0)) { target = rt(ctx, 0); label = "개막까지"; }
-  else { target = rt(ctx, ctx.k + 1); label = `${ctx.k + 1}라운드 결과까지`; }
+  else { target = rt(ctx, ctx.k); label = `${ctx.k + 1}라운드 킥오프까지`; }
   const s = Math.max(0, Math.ceil((target - now) / 1000));
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
   const t = h ? `${h}시간 ${m}분` : `${m}:${String(sec).padStart(2, "0")}`;
@@ -140,24 +144,97 @@ function statusMessage(ctx) {
 }
 
 /* ---------- 탭 ① 라이브 ---------- */
-export function tabLive(ctx) {
+export function tabLive(ctx, feed) {
   if (!ctx.day) return ctx.history.days.length ? lastResultCard(ctx.history.days[ctx.history.days.length - 1]) : "";
   const k = ctx.k, R = ctx.R;
   let html = "";
   if (k >= R) html += finalCard(ctx);
-  if (k === 0) {
+  if (ctx.live) {
+    // 📻 진행 중: 문자중계 (경기 1분마다 이 상자만 다시 그림 — league.js tick)
+    html += `<div id="lg-live">${liveRound(ctx, feed)}</div>`;
+  } else if (k === 0) {
     // 개막 전: 1라운드 대진
-    html += `<div class="section-title">🗓 1라운드 대진 <span class="lg-dim">${tl(ctx, rt(ctx, 1))} 결과</span></div>
+    html += `<div class="section-title">🗓 1라운드 대진 <span class="lg-dim">${tl(ctx, rt(ctx, 0))} 킥오프</span></div>
       <div class="card">${ctx.day.rounds[0].matches.map((_, i) => matchCard(ctx, 0, i)).join("")}${byeLine(ctx, 0)}</div>`;
   } else if (k < R || ctx.viewToday) {
     const r = k - 1;
-    html += `<div class="section-title">📣 ${k}라운드 결과 <span class="lg-dim">${tl(ctx, rt(ctx, k))}</span></div>
-      <div class="card">${ctx.day.rounds[r].matches.map((_, i) => matchCard(ctx, r, i)).join("")}${byeLine(ctx, r)}</div>`;
+    const next = k < R && ctx.viewToday ? `<div class="lg-note">⏭ ${k + 1}라운드는 <b>${tl(ctx, rt(ctx, k))}</b> 킥오프 — 시작하면 여기서 문자중계돼요</div>` : "";
+    html += `<div class="section-title">📣 ${k}라운드 결과</div>
+      <div class="card">${ctx.day.rounds[r].matches.map((_, i) => matchCard(ctx, r, i)).join("")}${byeLine(ctx, r)}</div>${next}`;
   }
-  html += `<div class="section-title">📊 순위 <a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
+  html += `<div class="section-title">📊 순위 <span class="lg-dim">${k ? k + "라운드 후" : "개막 전"}${ctx.live ? " · 경기가 끝나면 반영" : ""}</span><a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
   html += boostBox(ctx);
   html += excludedBox(ctx);
   return html;
+}
+
+/* ---------- 📻 문자중계 (v2.19.0) ----------
+   경기 1분 = 실제 6초 → 득점이 그 분이 되면 순서대로 나타남.
+   결과는 엔진이 미리 계산한 것과 같고, 보여 주는 시점만 경기 시간에 맞춤 */
+const minLabel = (m) => (m <= 0 ? "킥오프" : m <= 45 ? `전반 ${m}'` : m <= 90 ? `후반 ${m}'` : `후반 90+${m - 90}'`);
+const evLabel = (e) => (e.add ? `90+${e.add}'` : `${e.min}'`);
+/* 경기 분 min까지 나온 득점 → { h, a, shown: [{ e, h, a }] } (ev는 시각순 정렬돼 있음) */
+function scoreAt(res, min) {
+  let h = 0, a = 0;
+  const shown = [];
+  for (const e of res.ev) {
+    if (C.eventMin(e) > min) break;
+    if (e.side === "h") h++; else a++;
+    shown.push({ e, h, a });
+  }
+  return { h, a, shown };
+}
+/* 진행 중 경기 한 줄 (스코어 = 지금까지, 방금 골이면 반짝) */
+function liveRow(ctx, m, res, min) {
+  const sc = scoreAt(res, min);
+  const end = min >= 90 + res.ev.reduce((x, e) => Math.max(x, e.add || 0), 0);
+  const lead = sc.h > sc.a ? m.home : sc.a > sc.h ? m.away : null;
+  const cls = (id) => `lg-team${mine(ctx, id)}${id === lead ? " lg-win" : ""}`;
+  const last = sc.shown[sc.shown.length - 1];
+  const fresh = last && C.eventMin(last.e) >= min - 1 ? " lg-fresh" : "";
+  return `<div class="lg-match-row"><span class="${cls(m.home)} h">${teamName(ctx, m.home)}</span><b class="lg-score lg-live-score${fresh}${end ? " lg-ft" : ""}" title="${end ? "경기 종료" : "진행 중"}">${sc.h} : ${sc.a}</b><span class="${cls(m.away)} a">${teamName(ctx, m.away)}</span></div>`;
+}
+/* 라이브 탭 진행 중 라운드: 스코어보드 + 문자중계(최신이 위). feed = "all" | "mine" */
+export function liveRound(ctx, feed = "all") {
+  const L = ctx.live;
+  if (!L) return "";
+  const r = L.r, min = L.min, rd = ctx.day.rounds[r], results = ctx.day.results[r];
+  const myIn = !!ctx.myId && rd.matches.some((m) => m.home === ctx.myId || m.away === ctx.myId);
+  const only = feed === "mine" && myIn;
+  const items = [];
+  rd.matches.forEach((m, i) => {
+    if (only && m.home !== ctx.myId && m.away !== ctx.myId) return;
+    for (const { e, h, a } of scoreAt(results[i], min).shown) {
+      const team = e.side === "h" ? m.home : m.away;
+      const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(player(ctx, team, e.as).name)})</span>` : "";
+      const tn = (id) => (id === team ? `<b>${teamName(ctx, id)}</b>` : teamName(ctx, id));
+      const t = C.eventMin(e);
+      items.push({ t, o: i, html: `<div class="lg-feed-item goal${mine(ctx, team)}${t >= min - 1 ? " lg-fresh" : ""}"><span class="lg-feed-min">${evLabel(e)}</span><div>⚽ <b>골!</b> ${esc(player(ctx, team, e.s).name)}${as}<div class="lg-feed-sc">${tn(m.home)} <b>${h} : ${a}</b> ${tn(m.away)}</div></div></div>` });
+    }
+  });
+  const sys = (t, txt) => items.push({ t, o: -1, html: `<div class="lg-feed-item sys"><span class="lg-feed-min">${t}'</span><div>${txt}</div></div>` });
+  sys(0, `📢 ${r + 1}라운드 킥오프! ${rd.matches.length}경기 동시 진행`);
+  if (min >= 45) sys(45, "⏸ 전반 종료 — 후반 시작");
+  if (min >= 90 && L.endMin > 90) sys(90, "⏱ 정규 시간 종료 — 추가시간");
+  items.sort((x, y) => y.t - x.t || y.o - x.o);
+  const pct = Math.min(100, Math.round((min / L.endMin) * 100));
+  const chips = myIn ? `<div class="chip-row lg-feed-chips">${[["all", "전체"], ["mine", "내 팀 경기"]].map(([k, l]) =>
+    `<button type="button" class="chip${(only ? "mine" : "all") === k ? " active" : ""}" data-feed="${k}">${l}</button>`).join("")}</div>` : "";
+  return `<div class="section-title">🔴 LIVE ${r + 1}라운드 <span class="lg-live-min">${minLabel(min)}</span></div>
+    <div class="card lg-live-card"><div class="lg-mbar"><div class="bar" style="width:${pct}%"></div></div>
+      ${rd.matches.map((m, i) => liveRow(ctx, m, results[i], min)).join("")}${byeLine(ctx, r)}</div>
+    <div class="section-title">📻 문자중계 <span class="lg-dim">경기 10분 = 실제 1분</span></div>
+    ${chips}<div class="card lg-feed">${items.map((x) => x.html).join("")}</div>`;
+}
+/* 내 팀 탭: 진행 중인 내 경기 카드 (경기 1분마다 league.js가 이 카드만 바꿈) */
+export function myLiveCard(ctx, id) {
+  const L = ctx.live;
+  if (!L || !id) return "";
+  const i = ctx.day.rounds[L.r].matches.findIndex((m) => m.home === id || m.away === id);
+  if (i < 0) return "";
+  const m = ctx.day.rounds[L.r].matches[i], res = ctx.day.results[L.r][i];
+  const sc = scoreAt(res, L.min);
+  return `<div class="card" id="lg-myteam-live" data-team="${esc(id)}"><div class="lg-dim">${L.r + 1}라운드 · ${minLabel(L.min)}</div>${liveRow(ctx, m, res, L.min)}${sc.shown.length ? `<div class="lg-goals">${sc.shown.map(({ e }) => goalLine(ctx, m, e)).join("")}</div>` : ""}<a class="lg-more" href="#live">문자중계 보기 ›</a></div>`;
 }
 
 /* 🔥 전날 판수 보너스 목록 — 판수 많은 순 */
@@ -253,15 +330,16 @@ export function tabPlayers(ctx, kind = "g") {
 /* ---------- 탭 ④ 일정/결과 ---------- */
 export function tabFixtures(ctx, sel) {
   if (!ctx.day) return empty("표시할 리그가 없어요.");
-  const def = ctx.k >= ctx.R ? ctx.R : Math.max(1, ctx.k);
+  const def = ctx.k >= ctx.R ? ctx.R : ctx.live ? ctx.live.r + 1 : Math.max(1, ctx.k);
   const r = sel == null ? def : sel;
   const opts = ctx.day.rounds.map((_, i) => {
-    const n = i + 1, t = tl(ctx, rt(ctx, n));
-    return `<option value="${n}"${n === r ? " selected" : ""}>${n}라운드 · ${t}${n <= ctx.k ? " ✓" : ""}</option>`;
+    const n = i + 1, t = tl(ctx, rt(ctx, i));
+    const mark = n <= ctx.k ? " ✓" : ctx.live && ctx.live.r === i ? " 🔴" : "";
+    return `<option value="${n}"${n === r ? " selected" : ""}>${n}라운드 · ${t} 킥오프${mark}</option>`;
   }).join("");
   return `<div class="lg-tools"><select class="input lg-select" data-sel="fixtures">${opts}</select></div>
     <div class="card">${ctx.day.rounds[r - 1].matches.map((_, i) => matchCard(ctx, r - 1, i, false)).join("")}${byeLine(ctx, r - 1)}</div>
-    <div class="lg-dim lg-foot">${r <= ctx.k ? "경기를 누르면 득점자가 보여요." : `${tl(ctx, rt(ctx, r))}에 결과가 공개돼요.`}</div>`;
+    <div class="lg-dim lg-foot">${r <= ctx.k ? "경기를 누르면 득점자가 보여요." : ctx.live && ctx.live.r === r - 1 ? "지금 경기 중이에요 — 라이브 탭에서 문자중계로 보세요." : `${tl(ctx, rt(ctx, r - 1))}에 킥오프해요.`}</div>`;
 }
 
 /* ---------- 탭 ⑤ 내 팀 ---------- */
@@ -299,7 +377,8 @@ export function tabMyTeam(ctx, sel) {
       <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"}</div>
       ${myBoostLine(ctx, id)}
       ${ctx.k > 1 ? rankChart(ctx, id) : ""}</div>
-    ${next ? `<div class="section-title">⏭ 다음 경기</div><div class="card">${matchCard(ctx, next[0], next[1])}</div>` : ""}
+    ${next && ctx.live && next[0] === ctx.live.r ? `<div class="section-title">🔴 지금 경기 중</div>${myLiveCard(ctx, id)}`
+      : next ? `<div class="section-title">⏭ 다음 경기</div><div class="card">${matchCard(ctx, next[0], next[1])}</div>` : ""}
     ${shown.length ? `<div class="section-title">📋 지난 경기 <span class="lg-dim">${shown.length}경기</span></div>
       <div class="card">${recent.slice(0, 10).map(game).join("")}${recent.length > 10 ? `<details class="lg-older"><summary>이전 ${recent.length - 10}경기 보기</summary>${recent.slice(10).map(game).join("")}</details>` : ""}</div>` : ""}
     <div class="section-title">👥 선수단 <span class="lg-dim">${formationOf(sq)} · ${sq.real ? "최근 경기 스쿼드" : "가상 선수"} · 선발 ●</span></div>

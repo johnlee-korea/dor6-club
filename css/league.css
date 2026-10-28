@@ -109,3 +109,25 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-boost-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
 .lg-boost { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
 .lg-boost.lg-mine { font-weight: 700; }
+
+/* 📻 문자중계 (v2.19.0) — 경기 10분 = 실제 1분 */
+.lg-live-min { font-size: var(--fs-sm); color: var(--danger); font-weight: 800; font-variant-numeric: tabular-nums; }
+.lg-mbar { height: 4px; background: var(--surface-2); border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
+.lg-mbar .bar { height: 100%; background: var(--danger); transition: width .6s linear; }
+.lg-live-score { background: var(--surface-3); }
+.lg-live-score.lg-ft { background: var(--surface-2); color: var(--text-muted); }
+.lg-fresh { animation: lg-flash 1.6s ease-out 1; }
+@keyframes lg-flash { 0% { background: rgba(229,83,75,.45); } 100% { background: transparent; } }
+.lg-live-score.lg-fresh { animation: lg-flash-score 1.6s ease-out 1; }
+@keyframes lg-flash-score { 0% { background: var(--danger); color: #fff; } 100% { background: var(--surface-3); } }
+.lg-onair { color: var(--danger); font-weight: 700; }
+.lg-feed-chips { margin-bottom: var(--sp-2); }
+.lg-feed { padding-top: 4px; padding-bottom: 4px; }
+.lg-feed-item { display: flex; gap: var(--sp-3); padding: 8px 4px; border-bottom: 1px solid var(--border); font-size: var(--fs-sm); border-radius: 4px; }
+.lg-feed-item:last-child { border-bottom: none; }
+.lg-feed-item.sys { color: var(--text-muted); }
+.lg-feed-item.lg-mine { background: rgba(199,204,209,.06); }
+.lg-feed-min { flex: 0 0 44px; color: var(--text-dim); font-variant-numeric: tabular-nums; font-size: var(--fs-xs); padding-top: 2px; }
+.lg-feed-sc { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.lg-feed-sc b { color: var(--silver-bright); }
+@media (prefers-reduced-motion: reduce) { .lg-fresh, .lg-live-score.lg-fresh { animation: none; } .lg-mbar .bar { transition: none; } }

@@ -96,17 +96,47 @@ export async function mountLeague(root, opts = {}) {
     const { snap, day } = testCache;
     const R = day ? day.totalRounds : 0;
     const roundAt = (k) => testStart + k * testIv * 1000;
-    const c = { now, myId, config, history, test: true, roundAt, today: C.kstDate(now()), todayEntry: { no: "테스트", date: snap.date }, todaySnap: snap,
+    const c = { now, myId, config, history, test: true, roundAt, iv: testIv, today: C.kstDate(now()), todayEntry: { no: "테스트", date: snap.date }, todaySnap: snap,
       pending: null, viewToday: true, day, snap, no: "테스트", date: snap.date, R };
-    c.k = revealed(c, now());
+    setTime(c, now());
     c.status = statusOf(c, now());
     return c;
   }
-  /* 지금까지 공개된 라운드 수 */
+  /* 📻 문자중계 시간 흐름 (v2.19.0): 라운드 r(0부터)은 kick(r)에 킥오프 → 경기 1분 = msPerMin
+     → 그 라운드 마지막 분(90 + 추가시간)이 지나면 '끝난 라운드'로 공개 (순위·개인 기록 반영) */
+  const kick = (c, r) => (c.roundAt ? c.roundAt(r) : C.roundMs(c.date, r, c.R));
+  const ivOf = (c) => (c.test ? c.iv : C.intervalSec(c.R));
+  function endMin(c, r) {
+    c._endMin = c._endMin || [];
+    if (c._endMin[r] == null) c._endMin[r] = C.roundEndMin(c.day.results[r]);
+    return c._endMin[r];
+  }
+  /* 지금 진행 중인 라운드 { r, min, endMin } — 없으면 null (개막 전·라운드 사이 휴식·종료) */
+  function liveOf(c, n) {
+    if (!c.day || !c.viewToday || !c.R) return null;
+    const t0 = kick(c, 0);
+    if (n < t0) return null;
+    const r = Math.floor((n - t0) / 1000 / ivOf(c));
+    if (r >= c.R) return null;
+    const min = Math.floor((n - kick(c, r)) / C.liveMsPerMin(ivOf(c)));
+    const end = endMin(c, r);
+    return min < end ? { r, min, endMin: end } : null;
+  }
+  /* 지금까지 끝난(공개된) 라운드 수 */
   function revealed(c, n) {
     if (!c.day) return 0;
-    if (c.test) return Math.max(0, Math.min(c.R, Math.floor((n - testStart) / 1000 / testIv)));
-    return c.viewToday ? C.revealedRounds(c.date, c.R, n) : c.R;
+    if (!c.viewToday && !c.test) return c.R;
+    const t0 = kick(c, 0);
+    if (n < t0) return 0;
+    const r = Math.min(c.R, Math.floor((n - t0) / 1000 / ivOf(c)));
+    if (r >= c.R) return c.R;
+    return liveOf(c, n) ? r : r + 1;
+  }
+  /* ctx에 보는 시각 기준 라운드 상태를 채움 */
+  function setTime(c, n) {
+    c.live = liveOf(c, n);
+    c.k = revealed(c, n);
+    c.liveMsPerMin = c.day ? C.liveMsPerMin(ivOf(c)) : 0;
   }
 
   /* 지금 시각 기준 화면 컨텍스트 구성 — 오늘 리그가 없으면 가장 최근 지난 회차를 보여 줌 */
@@ -129,7 +159,7 @@ export async function mountLeague(root, opts = {}) {
       c.viewToday = false;
     }
     Object.assign(c, { day, snap, no: entry && entry.no, date: entry && entry.date, R: day ? day.totalRounds : 0 });
-    c.k = revealed(c, n);
+    setTime(c, n);
     c.status = statusOf(c, n);
     return c;
   }
@@ -166,7 +196,7 @@ export async function mountLeague(root, opts = {}) {
     root.querySelectorAll(".pf-tab").forEach((a) => a.classList.toggle("active", a.dataset.tab === tab));
     try {
       const html = {
-        live: () => V.tabLive(ctx),
+        live: () => V.tabLive(ctx, sel.feed),
         table: () => V.tabTable(ctx, sel.table),
         players: () => V.tabPlayers(ctx, sel.kind),
         fixtures: () => V.tabFixtures(ctx, sel.fixtures),
@@ -189,6 +219,13 @@ export async function mountLeague(root, opts = {}) {
     renderTab();
   });
   $body.addEventListener("click", (e) => {
+    const fb = e.target.closest("[data-feed]");
+    if (fb) {   // 문자중계 [전체 | 내 팀] 칩
+      sel.feed = fb.dataset.feed;
+      const box = root.querySelector("#lg-live");
+      if (box) box.innerHTML = V.liveRound(ctx, sel.feed);
+      return;
+    }
     const b = e.target.closest("[data-kind]");
     if (!b) return;
     sel.kind = b.dataset.kind;
@@ -206,16 +243,27 @@ export async function mountLeague(root, opts = {}) {
       const next = await buildCtx(true);
       if (next.todaySnap) { ctx = next; renderAll(); return; }
     }
+    const live0 = ctx.live;
     if (ctx.day && ctx.viewToday) {
-      const k = revealed(ctx, n);
+      const k0 = ctx.k;
+      setTime(ctx, n);
       const st = statusOf(ctx, n);
-      if (k !== ctx.k || st !== ctx.status) {
-        ctx.k = k; ctx.status = st;
+      const k = ctx.k;
+      // 라운드 킥오프·종료 → 전체 다시 그림
+      if (k !== k0 || st !== ctx.status || !!ctx.live !== !!live0) {
+        ctx.status = st;
         // 사용자가 '최신'을 보고 있었으면 따라가도록 라운드 선택 초기화
-        if (sel.table === k - 1) sel.table = undefined;
+        if (sel.table === k0) sel.table = undefined;
         renderAll();
         return;
       }
+    }
+    // 📻 경기 시간이 1분 흐를 때마다 문자중계 부분만 다시 그림 (접어 둔 상자·스크롤 유지)
+    if (ctx.live && live0 && ctx.live.min !== live0.min) {
+      const box = root.querySelector("#lg-live");
+      if (box) box.innerHTML = V.liveRound(ctx, sel.feed);
+      const mt = root.querySelector("#lg-myteam-live");
+      if (mt) mt.outerHTML = V.myLiveCard(ctx, mt.dataset.team);
     }
     const el = root.querySelector("#lg-count");
     if (el) el.innerHTML = V.countdownText(ctx);

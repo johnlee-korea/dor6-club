@@ -65,6 +65,22 @@ export function revealedRounds(date, rounds, now) {
   if (now < start) return 0;
   return Math.min(rounds, Math.floor((now - start) / 1000 / intervalSec(rounds)));
 }
+/* ---------- 📻 문자중계 시간 흐름 (v2.19.0) ----------
+   라운드 k(0부터)는 roundMs(k)에 킥오프 → 경기 1분 = 실제 6초(경기 10분 = 1분)로 흘러 90분이 9분 만에 끝남.
+   간격이 12분보다 짧으면(41팀 이상·테스트 리그) 간격의 75% 안에 끝나도록 빨라짐.
+   보는 속도만 정할 뿐 결과(엔진)와는 무관 */
+export const LIVE_SEC_PER_MIN = 6;
+/* 경기 1분이 실제 몇 ms인지 (간격 초 기준) */
+export function liveMsPerMin(ivSec) {
+  return Math.min(LIVE_SEC_PER_MIN * 1000, (ivSec * 1000 * 0.75) / 90);
+}
+/* 라운드의 마지막 경기 분 = 90 + 그 라운드 추가시간 골 중 최대(없으면 90) */
+export function roundEndMin(results) {
+  return 90 + results.reduce((m, res) => res.ev.reduce((x, e) => Math.max(x, e.add || 0), m), 0);
+}
+/* 이벤트의 경기 분 (90+2 → 92) */
+export const eventMin = (e) => e.min + (e.add || 0);
+
 /* 종료 시각 "HH:MM" (라운드 수만으로) */
 export function endLabel(rounds) {
   const sec = OPEN_H * 3600 + rounds * intervalSec(rounds);
