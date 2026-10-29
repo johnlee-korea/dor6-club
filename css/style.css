@@ -143,3 +143,10 @@ body::before {
 }
 .app-header .theme-btn:hover { border-color: var(--silver-dim); }
 @media (max-width: 380px) { .app-header { gap: var(--sp-2); padding: 0 var(--sp-3); } .app-header .theme-btn { width: 30px; height: 30px; } }
+
+/* 넓은 화면(PC)에서 헤더·메뉴를 본문 폭(--maxw)에 맞춰 가운데 정렬 (v2.21.1 — 메뉴가 왼쪽 끝에 붙어 보이던 문제)
+   좌우 여백 = (화면 폭 − 본문 폭) ÷ 2 + 본문 안쪽 여백 → 로고·메뉴 첫 칸이 본문 왼쪽 선과 맞음. 모바일은 기존 여백 그대로 */
+@media (min-width: 720px) {
+  .app-header { padding-inline: max(var(--sp-4), calc((100% - var(--maxw)) / 2 + var(--sp-4))); }
+  .app-nav    { padding-inline: max(var(--sp-3), calc((100% - var(--maxw)) / 2 + var(--sp-4))); }
+}
