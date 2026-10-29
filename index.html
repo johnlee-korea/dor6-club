@@ -10,14 +10,23 @@
   <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/home.css">
+  <!-- 글꼴: Pretendard (v2.21.0, 홈 먼저 적용 — tokens.css --font 첫 번째) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 </head>
 <body data-page="home">
   <main class="page">
-    <!-- 히어로 -->
-    <section style="text-align:center; padding: var(--sp-5) 0 var(--sp-6);">
-      <img src="dor6.png" alt="도륙 엠블럼" style="width:120px;height:120px;object-fit:contain;margin:0 auto var(--sp-3);filter:drop-shadow(0 6px 20px rgba(0,0,0,.6));">
-      <h1 class="page-title" style="margin-bottom:var(--sp-2);">도륙 <span style="color:var(--text-dim);font-weight:600;">Dor6</span></h1>
-      <p class="page-desc" style="margin-bottom:0;" id="season-name">시즌 정보를 불러오는 중…</p>
+    <!-- 🏟 히어로: 중계 배너 (v2.21.0, css/home.css) — 다크·밝은 모드 모두 어두운 배너 -->
+    <section class="hm-hero">
+      <div class="hm-hero-top">
+        <img class="hm-logo" src="dor6.png" alt="도륙 엠블럼">
+        <div>
+          <div class="hm-kicker"><span class="hm-dot"></span>FC ONLINE CLUB</div>
+          <h1 class="hm-name">도륙<span>DOR6</span></h1>
+          <div class="hm-sub" id="season-name">시즌 정보를 불러오는 중…</div>
+        </div>
+      </div>
+      <div class="hm-season" id="season-bar"></div>
     </section>
 
     <!-- FC온라인 공지사항·개발자 노트 (v2.10.0, 하루 1회 수집 data/notices.json) -->
@@ -34,7 +43,7 @@
 
     <!-- 바로가기 -->
     <div class="section-title">🔗 바로가기</div>
-    <div id="quicklinks" class="card-grid"></div>
+    <div id="quicklinks" class="hm-links"></div>
 
     <!-- 패치노트 · 저작권 (v2.1.0) — 홈 맨 아래 -->
     <a class="btn block pn-btn" href="patchnotes.html">📝 패치노트 <span class="in-note">· 업데이트 이력 보기</span></a>

@@ -1,24 +1,49 @@
 /* home.js — 홈: 이번 시즌 요약 + 바로가기 */
 
+// 바로가기 타일 (v2.21.0) — feature: 맨 위 가로로 넓게 강조 (도륙리그)
 const QUICK = [
-  { label: "클럽원 프로필", desc: "검색 → 플레이스타일·에이스·스쿼드·라이벌·경기", href: "members.html", emoji: "👥" },
-  { label: "시즌 판수",     desc: "달성률·중간점검 미달자 · 한 장 이미지", href: "dashboard.html", emoji: "🎯" },
+  { label: "도륙리그",       desc: "클럽원 1명 = 1팀 · 매일 아침 7시 문자중계", href: "league.html", emoji: "⚽", feature: true },
+  { label: "클럽원 프로필", desc: "플레이스타일·에이스·스쿼드·라이벌", href: "members.html", emoji: "👥" },
+  { label: "시즌 판수",     desc: "달성률·중간점검 미달자", href: "dashboard.html", emoji: "🎯" },
+  { label: "내 선수 키우기", desc: "16세 유망주를 레전드로", href: "career.html", emoji: "⭐" },
   { label: "클럽 내전",     desc: "클럽원 간 상대 전적",           href: "internal.html",  emoji: "⚔️" },
-  { label: "토너먼트",     desc: "명단 등록 → 추첨 → 대진표 진행", href: "tournament.html", emoji: "🏟️" },
+  { label: "토너먼트",     desc: "추첨 → 대진표 진행", href: "tournament.html", emoji: "🏟️" },
   { label: "명예의 전당",   desc: "시즌별 최다판수·최다승",         href: "hall.html",      emoji: "🏆" },
+  { label: "전적 검색",     desc: "아무 유저나 닉네임으로", href: "search.html",      emoji: "🔍" },
   { label: "규칙·공지",     desc: "운영 수칙·개편 공지",           href: "rules.html",     emoji: "📋" }
 ];
 
 function renderQuickLinks() {
   document.getElementById("quicklinks").innerHTML = QUICK.map(q => `
-    <a class="card" href="${q.href}" style="display:flex;gap:12px;align-items:center;">
-      <span style="font-size:26px;">${q.emoji}</span>
+    <a class="hm-link${q.feature ? " feature" : ""}" href="${q.href}">
+      <span class="hm-link-ico">${q.emoji}</span>
       <span>
-        <span style="font-weight:700;display:block;">${q.label}</span>
-        <span style="font-size:var(--fs-xs);color:var(--text-muted);">${q.desc}</span>
+        <span class="hm-link-name">${q.label}</span>
+        <span class="hm-link-desc" style="display:block;">${q.desc}</span>
       </span>
     </a>
   `).join("");
+}
+
+/* 🏟 배너 아래 시즌 진행 막대 — 오늘이 시즌의 며칠째인지, 중간점검 위치, 남은 날 (KST 날짜 기준) */
+function renderSeasonBar(season) {
+  const el = document.getElementById("season-bar");
+  if (!el || !season || !season.start || !season.end) return;
+  const day = (d) => Date.parse(d + "T00:00:00+09:00");
+  const today = day(new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10));
+  const start = day(season.start), end = day(season.end), DAY = 86400e3;
+  const total = Math.round((end - start) / DAY) + 1;
+  const nth = Math.round((today - start) / DAY) + 1;            // 오늘이 몇째 날
+  const left = Math.round((end - today) / DAY);                 // 종료까지 남은 날
+  const pct = Math.max(0, Math.min(100, (nth / total) * 100));
+  const midPct = season.midCheck ? Math.max(0, Math.min(100, ((Math.round((day(season.midCheck) - start) / DAY) + 1) / total) * 100)) : null;
+  const dday = left > 0 ? `D-${left}` : left === 0 ? "D-DAY" : "종료";
+  const note = left > 0 ? `${nth}일째 / ${total}일` : left === 0 ? "오늘 시즌 마지막 날" : "다음 시즌 준비 중";
+  const md = (d) => d.slice(5).replace("-", ".");
+  el.innerHTML = `
+    <div class="hm-season-row"><span>${escapeHtml(season.name)} 진행 · ${note}</span><span class="hm-dday">${dday}</span></div>
+    <div class="hm-track"><div class="bar" style="width:${pct}%"></div>${midPct != null ? `<span class="mid" style="left:${midPct}%" title="중간점검 ${season.midCheck}"></span>` : ""}</div>
+    <div class="hm-track-lab"><span>${md(season.start)} 개막</span>${season.midCheck ? `<span>중간점검 ${md(season.midCheck)}</span>` : ""}<span>${md(season.end)} 종료</span></div>`;
 }
 
 /* ---------- 📢 FC온라인 소식 (v2.10.0 · v2.10.1 전문) ----------
@@ -165,6 +190,13 @@ async function initHome() {
   if (activity) {
     document.getElementById("activity").innerHTML =
       streakBoards(activity, (members && members.members) || []) + weekBoard(activity);
+    // 중계 스타일: 연승 카드 레드 · 연패 카드 블루 띠 (css/home.css)
+    document.querySelectorAll("#activity .section-title").forEach((t) => {
+      const card = t.nextElementSibling;
+      if (!card) return;
+      if (t.textContent.includes("연승")) card.classList.add("hm-hot");
+      else if (t.textContent.includes("연패")) card.classList.add("hm-cold");
+    });
   }
 
   const summary = document.getElementById("summary");
@@ -176,7 +208,8 @@ async function initHome() {
     const curId = seasons.meta && seasons.meta.currentSeasonId;
     season = seasons.seasons.find(s => s.id === curId) || seasons.seasons[seasons.seasons.length - 1];
   }
-  seasonNameEl.textContent = season ? `${season.name} · 기준 ${season.targetGames}판 (중간점검 ${season.midTargetGames}판)` : "시즌 정보 없음";
+  seasonNameEl.innerHTML = season ? `<b>${escapeHtml(season.name)}</b> · 기준 ${season.targetGames}판 · 중간점검 ${season.midTargetGames}판` : "시즌 정보 없음";
+  renderSeasonBar(season);
 
   const totalMembers = members && members.members ? members.members.length : 0;
 
@@ -189,12 +222,16 @@ async function initHome() {
     midMiss = rows.filter(r => r.midMiss).length;
   }
 
+  // 점수판 타일 (v2.21.0): 평균 달성률엔 미니 막대, 중간점검 미달 있으면 빨간 타일
+  const mini = (p) => p == null ? "" : `<div class="hm-mini"><i style="width:${Math.min(100, p)}%"></i></div>`;
+  const active = dashboard && dashboard.rows ? dashboard.rows.filter(r => !r.resting).length : 0;
   summary.innerHTML = `
-    <div class="stat-tile"><div class="value">${totalMembers}</div><div class="label">클럽원</div></div>
-    <div class="stat-tile"><div class="value">${avgRate == null ? "-" : avgRate + "%"}</div><div class="label">평균 달성률</div></div>
-    <div class="stat-tile"><div class="value">${achieved == null ? "-" : achieved}</div><div class="label">기준 달성</div></div>
-    <div class="stat-tile"><div class="value" style="${midMiss ? "background:none;color:var(--danger);" : ""}">${midMiss == null ? "-" : midMiss}</div><div class="label">중간점검 미달</div></div>
-  `;
+    <div class="stat-tile"><div class="value">${totalMembers}<small>명</small></div><div class="label">클럽원</div></div>
+    <div class="stat-tile"><div class="value">${avgRate == null ? "-" : avgRate + "<small>%</small>"}</div>${mini(avgRate)}<div class="label">평균 달성률</div></div>
+    <div class="stat-tile"><div class="value">${achieved == null ? "-" : achieved}${achieved == null || !active ? "" : `<small>/${active}</small>`}</div><div class="label">기준 달성</div></div>
+    <div class="stat-tile${midMiss ? " alert" : ""}"><div class="value">${midMiss == null ? "-" : midMiss}<small>명</small></div><div class="label">중간점검 미달</div></div>
+`;
+
 
   if (!dashboard) {
     summary.insertAdjacentHTML("afterend",
