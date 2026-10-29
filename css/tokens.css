@@ -35,6 +35,17 @@
   --draw:          #8b929b;
   --lose:          #e5534b;
 
+  /* --- 테마별로 바뀌는 보조 색 (v2.20.0 밝은 모드 — 하드코딩 색 대신 사용) --- */
+  --gold:          #ffd479;   /* 칭호·우승 강조 글자 */
+  --info-soft:     #8fc3ff;   /* 옅은 파랑 글자 */
+  --hot:           #ff9a5c;   /* 주황(연승·수정) 글자 */
+  --mine-bg:       rgba(199,204,209,.07);   /* 내 팀·내 행 강조 배경 */
+  --header-bg:     rgba(11,12,14,.85);      /* 고정 헤더·네비 반투명 배경 */
+  --glow-1:        rgba(199,204,209,.06);   /* 배경 은은한 광택 */
+  --glow-2:        rgba(88,166,255,.04);
+  --nav-shadow:    rgba(199,204,209,.25);
+  color-scheme: dark;
+
   /* --- 간격 스케일 --- */
   --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
   --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
@@ -55,4 +66,51 @@
   /* --- 레이아웃 --- */
   --maxw: 960px;
   --header-h: 56px;
+}
+
+/* ============================================================
+   ☀️ 밝은 모드 (v2.20.0) — <html data-theme="light">  (js/theme.js가 설정)
+   같은 변수 이름을 덮어써서 모든 화면이 그대로 따라옴.
+   --silver-bright 는 '강조 글자'로 쓰이므로 밝은 모드에선 진한 색.
+   ============================================================ */
+:root[data-theme="light"] {
+  --bg:            #eef0f3;
+  --surface:       #ffffff;
+  --surface-2:     #f3f4f6;
+  --surface-3:     #e6e8ec;
+  --border:        #d6dae0;
+
+  --text:          #1b1f24;
+  --text-muted:    #545c66;
+  --text-dim:      #7c848e;
+
+  --silver:        #3b424b;
+  --silver-bright: #14171b;
+  --silver-dim:    #8b929b;
+  --metal-grad:    linear-gradient(135deg, #5b636d 0%, #2c3239 55%, #0f1215 100%);
+
+  --ok:            #1f883d;
+  --ok-bg:         rgba(31,136,61,.10);
+  --warn:          #9a6700;
+  --warn-bg:       rgba(154,103,0,.10);
+  --danger:        #cf222e;
+  --danger-bg:     rgba(207,34,46,.08);
+  --info:          #0969da;
+
+  --win:           #1f883d;
+  --draw:          #6e7781;
+  --lose:          #cf222e;
+
+  --gold:          #9a6a00;
+  --info-soft:     #0969da;
+  --hot:           #c2410c;
+  --mine-bg:       rgba(9,105,218,.07);
+  --header-bg:     rgba(255,255,255,.88);
+  --glow-1:        rgba(9,105,218,.05);
+  --glow-2:        rgba(154,106,0,.04);
+  --nav-shadow:    rgba(20,23,27,.18);
+
+  --shadow:    0 4px 16px rgba(20,23,27,.08);
+  --shadow-lg: 0 8px 32px rgba(20,23,27,.14);
+  color-scheme: light;
 }

@@ -8,6 +8,7 @@
   --cr-s2: #d95926;            /* 차트 계열 2 (상승분) */
   --cr-grid: rgba(255,255,255,.06);
 }
+:root[data-theme="light"] #career-root { --cr-grid: rgba(20,23,27,.08); }   /* ☀️ 밝은 모드 격자 */
 .cr-dim { color: var(--text-dim); font-weight: 400; }
 .cr-hit { color: var(--ok); }
 .cr-warn { color: var(--warn); }
@@ -206,7 +207,7 @@
 .cr-event { display: grid; gap: var(--sp-3); }
 .cr-event.major { border-color: #c9a227; box-shadow: 0 0 0 1px rgba(201,162,39,.5) inset; }
 .cr-ev-tag { font-size: var(--fs-xs); font-weight: 800; color: var(--silver); }
-.cr-ev-tag.major { color: #e3bf4a; }
+.cr-ev-tag.major { color: var(--gold); }
 .cr-ev-q { display: flex; gap: var(--sp-3); align-items: center; font-weight: 700; font-size: var(--fs-lg); line-height: 1.45; }
 .cr-ev-icon { font-size: 34px; line-height: 1; flex-shrink: 0; }
 .cr-ev-choices { display: grid; gap: var(--sp-2); }
@@ -219,5 +220,5 @@
 .cr-ev-res { display: flex; gap: var(--sp-3); align-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--sp-3); }
 .cr-ev-big { font-size: 32px; line-height: 1; }
 .cr-event.tier-small .cr-ev-res b, .cr-event.tier-big .cr-ev-res b { color: var(--ok); }
-.cr-event.tier-huge .cr-ev-res b { color: #e3bf4a; }
+.cr-event.tier-huge .cr-ev-res b { color: var(--gold); }
 .cr-ev-ovr { margin: 0; }

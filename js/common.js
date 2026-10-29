@@ -65,6 +65,7 @@ function renderChrome() {
     </a>
     <span class="spacer"></span>
     <span class="sec-switch">${switcher}</span>
+    <button type="button" class="theme-btn" aria-label="화면 밝기 바꾸기"></button>
     <a class="admin-link" href="admin.html">🔒</a>
   `;
 
@@ -76,6 +77,10 @@ function renderChrome() {
 
   document.body.prepend(nav);
   document.body.prepend(header);
+  // ☀️/🌙 테마 버튼 (js/theme.js) — theme.js가 없는 페이지면 버튼 숨김
+  const tb = header.querySelector(".theme-btn");
+  if (window.DOR6Theme) { tb.addEventListener("click", () => window.DOR6Theme.toggle()); window.DOR6Theme.refreshButton(); }
+  else tb.remove();
 
   // 활성 탭이 보이도록 스크롤 (구형/미구현 환경 방어)
   const active = nav.querySelector("a.active");

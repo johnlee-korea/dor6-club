@@ -24,8 +24,8 @@ body::before {
   content: "";
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(199,204,209,.06), transparent 60%),
-    radial-gradient(800px 400px at 100% 100%, rgba(88,166,255,.04), transparent 60%);
+    radial-gradient(1200px 600px at 50% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, var(--glow-2), transparent 60%);
 }
 
 /* --- 헤더 --- */
@@ -34,7 +34,7 @@ body::before {
   height: var(--header-h);
   display: flex; align-items: center; gap: var(--sp-3);
   padding: 0 var(--sp-4);
-  background: rgba(11,12,14,.85);
+  background: var(--header-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
@@ -74,7 +74,7 @@ body::before {
   position: sticky; top: var(--header-h); z-index: 40;
   display: flex; gap: var(--sp-1);
   padding: var(--sp-2) var(--sp-3);
-  background: rgba(11,12,14,.9);
+  background: var(--header-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   overflow-x: auto; scrollbar-width: none;
@@ -92,7 +92,7 @@ body::before {
 .app-nav a:hover { background: var(--surface-2); color: var(--text); }
 .app-nav a.active {
   color: var(--bg); background: var(--silver);
-  box-shadow: 0 2px 8px rgba(199,204,209,.25);
+  box-shadow: 0 2px 8px var(--nav-shadow);
 }
 
 /* --- 페이지 컨테이너 --- */
@@ -134,3 +134,12 @@ body::before {
   .page { padding-top: var(--sp-6); }
   .page-title { font-size: var(--fs-3xl); }
 }
+
+/* ☀️/🌙 테마 전환 버튼 (v2.20.0) — 헤더 오른쪽, 🔒 왼쪽 */
+.app-header .theme-btn {
+  flex: none; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer;
+}
+.app-header .theme-btn:hover { border-color: var(--silver-dim); }
+@media (max-width: 380px) { .app-header { gap: var(--sp-2); padding: 0 var(--sp-3); } .app-header .theme-btn { width: 30px; height: 30px; } }

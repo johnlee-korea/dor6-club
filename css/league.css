@@ -48,7 +48,7 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-table td, .lg-table th { padding: 7px 8px; }
 .lg-table .rank { width: 22px; height: 22px; font-size: 11px; }
 .lg-tname { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
-.lg-table tr.lg-mine td, .lg-squad tr.lg-mine td { background: rgba(199,204,209,.08); }
+.lg-table tr.lg-mine td, .lg-squad tr.lg-mine td { background: var(--mine-bg); }
 .lg-table tr.lg-mine .lg-tname { color: var(--silver-bright); font-weight: 800; }
 .lg-gap td { text-align: center; color: var(--text-dim); padding: 2px; }
 .lg-up { color: var(--win); font-size: 10px; }
@@ -66,7 +66,7 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-prow { display: flex; align-items: center; gap: var(--sp-3); padding: 8px 0; border-bottom: 1px solid var(--border); }
 .lg-prow:last-child { border-bottom: none; }
 .lg-prow.lg-mine .lg-pinfo b { color: var(--silver-bright); }
-.lg-prow.lg-mine { background: rgba(199,204,209,.05); }
+.lg-prow.lg-mine { background: var(--mine-bg); }
 .lg-pinfo { flex: 1; min-width: 0; }
 .lg-pinfo .lg-dim { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lg-pval { text-align: right; }
@@ -126,7 +126,7 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-feed-item { display: flex; gap: var(--sp-3); padding: 8px 4px; border-bottom: 1px solid var(--border); font-size: var(--fs-sm); border-radius: 4px; }
 .lg-feed-item:last-child { border-bottom: none; }
 .lg-feed-item.sys { color: var(--text-muted); }
-.lg-feed-item.lg-mine { background: rgba(199,204,209,.06); }
+.lg-feed-item.lg-mine { background: var(--mine-bg); }
 .lg-feed-min { flex: 0 0 44px; color: var(--text-dim); font-variant-numeric: tabular-nums; font-size: var(--fs-xs); padding-top: 2px; }
 .lg-feed-sc { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
 .lg-feed-sc b { color: var(--silver-bright); }

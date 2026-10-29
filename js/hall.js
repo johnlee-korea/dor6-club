@@ -68,7 +68,7 @@ function insightBoards(ins, meta) {
   const manner = (x) => `${x.score} ${dim(`경기당 · 카드 ${x.yellow + x.red} · 파울 ${x.foul}`)}`;
   // 포지션 스페셜리스트: 칭호 + 선수 칩, 값은 '지표 수치 · 랭커 평균 대비 배수'
   const specialist = (x) => `${escapeHtml(x.nick)}
-    <div style="margin-top:2px;color:#ffd479;font-weight:800;">${x.title.emoji} ${escapeHtml(x.title.name)}</div>
+    <div style="margin-top:2px;color:var(--gold);font-weight:800;">${x.title.emoji} ${escapeHtml(x.title.name)}</div>
     <div style="margin-top:4px;">${sqPlayerChip(x.spId, meta)}</div>`;
   const specialistVal = (x) => {
     const ratio = x.base > 0 && x.metric !== "rt" ? ` · ${(x.value / x.base).toFixed(1)}배` : "";

@@ -51,9 +51,9 @@
   padding: 2px 8px; border-radius: 999px;
   border: 1px solid var(--border); color: var(--text-muted);
 }
-.badge.role-회장    { color: #ffd479; border-color: #ffd47955; background: rgba(255,212,121,.1); }
+.badge.role-회장    { color: var(--gold); border-color: #ffd47955; background: rgba(255,212,121,.1); }
 .badge.role-클럽장  { color: var(--silver-bright); border-color: var(--silver-dim); background: rgba(199,204,209,.1); }
-.badge.role-부클럽장 { color: #9ecbff; border-color: #58a6ff55; background: rgba(88,166,255,.1); }
+.badge.role-부클럽장 { color: var(--info-soft); border-color: #58a6ff55; background: rgba(88,166,255,.1); }
 .badge.role-클럽원  { color: var(--text-muted); }
 .badge.ok     { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
 .badge.warn   { color: var(--warn); border-color: var(--warn); background: var(--warn-bg); }
@@ -166,7 +166,7 @@ table.data td.num, table.data th.num { text-align: right; }
   background: var(--surface-3); color: var(--text-muted);
 }
 .rank.r1 { background: linear-gradient(135deg,#ffe08a,#d4a017); color:#3a2c00; }
-.rank.r2 { background: var(--metal-grad); color:#1a1c1f; }
+.rank.r2 { background: linear-gradient(135deg, #e6e9ec 0%, #a9b0b8 45%, #6f767e 100%); color:#1a1c1f; }
 .rank.r3 { background: linear-gradient(135deg,#e0a479,#a05a2c); color:#2a1400; }
 
 /* --- 작은 버튼 (명단 행 [스쿼드] 등) --- */
@@ -303,10 +303,10 @@ button.tn-slot:hover { background: var(--surface-3); }
 .tn-slot.lose { color: var(--text-dim); text-decoration: line-through; }
 .tn-slot.bye, .tn-slot.tbd { color: var(--text-dim); font-style: italic; }
 
-.tn-champ { text-align: center; margin-bottom: var(--sp-4); border-color: #ffd47966; }
+.tn-champ { text-align: center; margin-bottom: var(--sp-4); border-color: #d4a01766; }
 .tn-trophy { font-size: 56px; animation: tn-bounce 1.2s ease infinite; }
 @keyframes tn-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-.tn-champ-name { font-size: 26px; font-weight: 800; color: #ffd479; margin: var(--sp-2) 0; }
+.tn-champ-name { font-size: 26px; font-weight: 800; color: var(--gold); margin: var(--sp-2) 0; }
 .tn-runner { margin: var(--sp-2) 0 var(--sp-3); color: var(--silver); }
 
 /* ---------- 경기 상세 인사이트 (v1.9.0) — 전적 페이지 카드 3종 + 명예의 전당 선수 칩 ---------- */
@@ -330,7 +330,7 @@ button.tn-slot:hover { background: var(--surface-3); }
 .in-ace { align-items: flex-start; }
 .in-ace .rank { margin-top: 2px; }
 .in-ace-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.in-ace-title { font-weight: 800; color: #ffd479; }
+.in-ace-title { font-weight: 800; color: var(--gold); }
 .in-ace-title.plain { font-weight: 600; color: var(--text-dim); font-size: var(--fs-xs); }
 .in-ace-player { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
 .in-ace-stat { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.4; }
@@ -363,7 +363,7 @@ button.tn-slot:hover { background: var(--surface-3); }
 .sm-goal { fill: #ffd479; stroke: #1d3a26; stroke-width: .25; }
 .sm-on { fill: none; stroke: #8fd0ff; stroke-width: .35; }
 .sm-off { stroke: #ff8a80; stroke-width: .35; opacity: .75; }
-.sm-k.goal { color: #ffd479; } .sm-k.on { color: #8fd0ff; } .sm-k.off { color: #ff8a80; }
+.sm-k.goal { color: var(--gold); } .sm-k.on { color: var(--info-soft); } .sm-k.off { color: var(--danger); }
 
 /* 명단 컨트롤러 아이콘 */
 .ctrl-ico { font-size: 13px; opacity: .85; cursor: help; }
@@ -376,8 +376,8 @@ button.tn-slot:hover { background: var(--surface-3); }
 .form-dots i.draw { color: var(--draw); }
 .form-line { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; margin-top: 2px; }
 .streak-badge { font-size: var(--fs-xs); font-weight: 800; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
-.streak-badge.hot { background: rgba(255,120,60,.16); color: #ff9a5c; }
-.streak-badge.cold { background: rgba(120,180,255,.14); color: #8fc3ff; }
+.streak-badge.hot { background: rgba(255,120,60,.16); color: var(--hot); }
+.streak-badge.cold { background: rgba(120,180,255,.14); color: var(--info-soft); }
 
 /* ---------- 클럽 내전 라이벌 (v1.13.0) ---------- */
 .rv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
@@ -464,8 +464,8 @@ a.ms-row:hover { background: var(--surface-2); }
 .pn-list li:last-child { border-bottom: none; }
 .pn-tag { flex: none; font-size: var(--fs-xs); font-weight: 700; padding: 1px 8px; border-radius: 999px; white-space: nowrap; margin-top: 1px; }
 .pn-tag.new { background: rgba(63,185,80,.14); color: var(--win); }
-.pn-tag.improve { background: rgba(143,195,255,.14); color: #8fc3ff; }
-.pn-tag.fix { background: rgba(255,154,92,.14); color: #ff9a5c; }
+.pn-tag.improve { background: rgba(143,195,255,.14); color: var(--info-soft); }
+.pn-tag.fix { background: rgba(255,154,92,.14); color: var(--hot); }
 
 /* ---------- 구단운영 (v2.2.0, manage.html) ---------- */
 .mg-cnt { font-size: 11px; font-weight: 600; opacity: .7; }
@@ -525,7 +525,7 @@ a.ms-row:hover { background: var(--surface-2); }
 .mg-bar-t i { display: block; height: 100%; border-radius: 4px; }
 .mg-bar-t i.me.up { background: var(--win); }
 .mg-bar-t i.me.down { background: var(--lose); }
-.mg-bar-t i.card { background: #8fc3ff; }
+.mg-bar-t i.card { background: var(--info-soft); }
 .mg-bar-t i.pos { background: var(--silver-dim); }
 .mg-bar b { text-align: right; font-variant-numeric: tabular-nums; }
 .mg-extra { display: flex; flex-direction: column; gap: 4px; }
