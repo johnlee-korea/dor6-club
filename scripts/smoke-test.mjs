@@ -190,6 +190,17 @@ for (const pg of PAGES) {
     const doc = window.document;
     const status = app && app.ctx ? app.ctx().status : "-";
     const expectOk = doc.querySelectorAll(expectSel).length > 0;
+    // 📻 v2.19.1 경기별 문자중계: 펼친 경기는 경기 시계가 흘러 다시 그려져도 펼친 채 유지
+    if (want === "live" && expectSel.includes("lg-feed") && app) {
+      const d0 = doc.querySelector("#lg-live details[data-live]");
+      if (!d0) errors.push("라이브 경기 펼침 없음");
+      else {
+        d0.open = true; d0.dispatchEvent(new window.Event("toggle"));
+        window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(30);   // 탭 전체 다시 그림
+        const d1 = doc.querySelector(`#lg-live details[data-live="${d0.dataset.live}"]`);
+        if (!d1 || !d1.open) errors.push("다시 그린 뒤 펼침 풀림");
+      }
+    }
     const change = (sel, v) => { const el = doc.querySelector(sel); if (el) { el.value = v; el.dispatchEvent(new window.Event("change", { bubbles: true })); } };
     const tabsOk = [];
     for (const t of ["live", "table", "players", "fixtures", "myteam", "records"]) {

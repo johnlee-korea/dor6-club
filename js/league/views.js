@@ -144,14 +144,14 @@ function statusMessage(ctx) {
 }
 
 /* ---------- 탭 ① 라이브 ---------- */
-export function tabLive(ctx, feed) {
+export function tabLive(ctx, open) {
   if (!ctx.day) return ctx.history.days.length ? lastResultCard(ctx.history.days[ctx.history.days.length - 1]) : "";
   const k = ctx.k, R = ctx.R;
   let html = "";
   if (k >= R) html += finalCard(ctx);
   if (ctx.live) {
     // 📻 진행 중: 문자중계 (경기 1분마다 이 상자만 다시 그림 — league.js tick)
-    html += `<div id="lg-live">${liveRound(ctx, feed)}</div>`;
+    html += `<div id="lg-live">${liveRound(ctx, open)}</div>`;
   } else if (k === 0) {
     // 개막 전: 1라운드 대진
     html += `<div class="section-title">🗓 1라운드 대진 <span class="lg-dim">${tl(ctx, rt(ctx, 0))} 킥오프</span></div>
@@ -194,37 +194,35 @@ function liveRow(ctx, m, res, min) {
   const fresh = last && C.eventMin(last.e) >= min - 1 ? " lg-fresh" : "";
   return `<div class="lg-match-row"><span class="${cls(m.home)} h">${teamName(ctx, m.home)}</span><b class="lg-score lg-live-score${fresh}${end ? " lg-ft" : ""}" title="${end ? "경기 종료" : "진행 중"}">${sc.h} : ${sc.a}</b><span class="${cls(m.away)} a">${teamName(ctx, m.away)}</span></div>`;
 }
-/* 라이브 탭 진행 중 라운드: 스코어보드 + 문자중계(최신이 위). feed = "all" | "mine" */
-export function liveRound(ctx, feed = "all") {
+/* 경기 한 개의 문자중계 줄(최신이 위): 골·도움·그 시점 스코어 + 킥오프·전반 종료·경기 종료 */
+function matchFeed(ctx, m, res, min) {
+  const items = [];
+  for (const { e, h, a } of scoreAt(res, min).shown) {
+    const team = e.side === "h" ? m.home : m.away;
+    const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(player(ctx, team, e.as).name)})</span>` : "";
+    const t = C.eventMin(e);
+    items.push({ t, o: 1, html: `<div class="lg-feed-item goal${mine(ctx, team)}${t >= min - 1 ? " lg-fresh" : ""}"><span class="lg-feed-min">${evLabel(e)}</span><div>⚽ <b>골!</b> ${esc(player(ctx, team, e.s).name)}${as} <span class="lg-dim">· ${teamName(ctx, team)}</span><div class="lg-feed-sc"><b>${h} : ${a}</b></div></div></div>` });
+  }
+  const sys = (t, lab, txt, o = 0) => items.push({ t, o, html: `<div class="lg-feed-item sys"><span class="lg-feed-min">${lab}</span><div>${txt}</div></div>` });
+  const endMin = 90 + res.ev.reduce((x, e) => Math.max(x, e.add || 0), 0);
+  sys(0, "0'", "📢 킥오프!");
+  if (min >= 45) sys(45, "45'", "⏸ 전반 종료 — 후반 시작");
+  if (min >= endMin) sys(endMin, "종료", `🏁 경기 종료 ${res.hg} : ${res.ag}`, 2);
+  items.sort((x, y) => y.t - x.t || y.o - x.o);
+  return `<div class="lg-feed">${items.map((x) => x.html).join("")}</div>`;
+}
+/* 라이브 탭 진행 중 라운드: 경기별 스코어 줄 — 누르면 그 아래 문자중계가 펼쳐지고 다시 누르면 접힘.
+   open = 펼쳐 둔 경기 번호 Set (경기 1분마다 다시 그려도 유지 — league.js) */
+export function liveRound(ctx, open = new Set()) {
   const L = ctx.live;
   if (!L) return "";
   const r = L.r, min = L.min, rd = ctx.day.rounds[r], results = ctx.day.results[r];
-  const myIn = !!ctx.myId && rd.matches.some((m) => m.home === ctx.myId || m.away === ctx.myId);
-  const only = feed === "mine" && myIn;
-  const items = [];
-  rd.matches.forEach((m, i) => {
-    if (only && m.home !== ctx.myId && m.away !== ctx.myId) return;
-    for (const { e, h, a } of scoreAt(results[i], min).shown) {
-      const team = e.side === "h" ? m.home : m.away;
-      const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(player(ctx, team, e.as).name)})</span>` : "";
-      const tn = (id) => (id === team ? `<b>${teamName(ctx, id)}</b>` : teamName(ctx, id));
-      const t = C.eventMin(e);
-      items.push({ t, o: i, html: `<div class="lg-feed-item goal${mine(ctx, team)}${t >= min - 1 ? " lg-fresh" : ""}"><span class="lg-feed-min">${evLabel(e)}</span><div>⚽ <b>골!</b> ${esc(player(ctx, team, e.s).name)}${as}<div class="lg-feed-sc">${tn(m.home)} <b>${h} : ${a}</b> ${tn(m.away)}</div></div></div>` });
-    }
-  });
-  const sys = (t, txt) => items.push({ t, o: -1, html: `<div class="lg-feed-item sys"><span class="lg-feed-min">${t}'</span><div>${txt}</div></div>` });
-  sys(0, `📢 ${r + 1}라운드 킥오프! ${rd.matches.length}경기 동시 진행`);
-  if (min >= 45) sys(45, "⏸ 전반 종료 — 후반 시작");
-  if (min >= 90 && L.endMin > 90) sys(90, "⏱ 정규 시간 종료 — 추가시간");
-  items.sort((x, y) => y.t - x.t || y.o - x.o);
   const pct = Math.min(100, Math.round((min / L.endMin) * 100));
-  const chips = myIn ? `<div class="chip-row lg-feed-chips">${[["all", "전체"], ["mine", "내 팀 경기"]].map(([k, l]) =>
-    `<button type="button" class="chip${(only ? "mine" : "all") === k ? " active" : ""}" data-feed="${k}">${l}</button>`).join("")}</div>` : "";
+  const rows = rd.matches.map((m, i) => `<details class="lg-match lg-live-match" data-live="${i}"${open.has(i) ? " open" : ""}><summary>${liveRow(ctx, m, results[i], min)}</summary>${matchFeed(ctx, m, results[i], min)}</details>`).join("");
   return `<div class="section-title">🔴 LIVE ${r + 1}라운드 <span class="lg-live-min">${minLabel(min)}</span></div>
     <div class="card lg-live-card"><div class="lg-mbar"><div class="bar" style="width:${pct}%"></div></div>
-      ${rd.matches.map((m, i) => liveRow(ctx, m, results[i], min)).join("")}${byeLine(ctx, r)}</div>
-    <div class="section-title">📻 문자중계 <span class="lg-dim">경기 10분 = 실제 1분</span></div>
-    ${chips}<div class="card lg-feed">${items.map((x) => x.html).join("")}</div>`;
+      ${rows}${byeLine(ctx, r)}</div>
+    <div class="lg-dim lg-foot">📻 경기를 누르면 문자중계가 보여요 · 경기 10분 = 실제 1분</div>`;
 }
 /* 내 팀 탭: 진행 중인 내 경기 카드 (경기 1분마다 league.js가 이 카드만 바꿈) */
 export function myLiveCard(ctx, id) {
@@ -234,7 +232,7 @@ export function myLiveCard(ctx, id) {
   if (i < 0) return "";
   const m = ctx.day.rounds[L.r].matches[i], res = ctx.day.results[L.r][i];
   const sc = scoreAt(res, L.min);
-  return `<div class="card" id="lg-myteam-live" data-team="${esc(id)}"><div class="lg-dim">${L.r + 1}라운드 · ${minLabel(L.min)}</div>${liveRow(ctx, m, res, L.min)}${sc.shown.length ? `<div class="lg-goals">${sc.shown.map(({ e }) => goalLine(ctx, m, e)).join("")}</div>` : ""}<a class="lg-more" href="#live">문자중계 보기 ›</a></div>`;
+  return `<div class="card" id="lg-myteam-live" data-team="${esc(id)}"><div class="lg-dim">${L.r + 1}라운드 · ${minLabel(L.min)}</div>${liveRow(ctx, m, res, L.min)}${sc.shown.length ? `<div class="lg-goals">${sc.shown.map(({ e }) => goalLine(ctx, m, e)).join("")}</div>` : ""}<a class="lg-more" href="#live">라이브에서 보기 ›</a></div>`;
 }
 
 /* 🔥 전날 판수 보너스 목록 — 판수 많은 순 */

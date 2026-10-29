@@ -196,7 +196,7 @@ export async function mountLeague(root, opts = {}) {
     root.querySelectorAll(".pf-tab").forEach((a) => a.classList.toggle("active", a.dataset.tab === tab));
     try {
       const html = {
-        live: () => V.tabLive(ctx, sel.feed),
+        live: () => V.tabLive(ctx, liveOpen()),
         table: () => V.tabTable(ctx, sel.table),
         players: () => V.tabPlayers(ctx, sel.kind),
         fixtures: () => V.tabFixtures(ctx, sel.fixtures),
@@ -219,18 +219,25 @@ export async function mountLeague(root, opts = {}) {
     renderTab();
   });
   $body.addEventListener("click", (e) => {
-    const fb = e.target.closest("[data-feed]");
-    if (fb) {   // 문자중계 [전체 | 내 팀] 칩
-      sel.feed = fb.dataset.feed;
-      const box = root.querySelector("#lg-live");
-      if (box) box.innerHTML = V.liveRound(ctx, sel.feed);
-      return;
-    }
     const b = e.target.closest("[data-kind]");
     if (!b) return;
     sel.kind = b.dataset.kind;
     renderTab();
   });
+  // 📻 라이브 경기 펼침 상태 — 경기 1분마다 #lg-live를 다시 그려도 펼친 경기는 그대로 (라운드가 바뀌면 초기화)
+  let openLive = { r: -1, set: new Set() };
+  function liveOpen() {
+    const r = ctx.live ? ctx.live.r : -1;
+    if (openLive.r !== r) openLive = { r, set: new Set() };
+    return openLive.set;
+  }
+  // toggle 이벤트는 버블링되지 않아 캡처로 받음
+  $body.addEventListener("toggle", (e) => {
+    const d = e.target;
+    if (!(d instanceof W.HTMLElement) || !d.matches("details[data-live]")) return;
+    const i = Number(d.dataset.live);
+    if (d.open) liveOpen().add(i); else liveOpen().delete(i);
+  }, true);
   const onHash = () => renderTab();
   W.addEventListener("hashchange", onHash);
 
@@ -261,7 +268,7 @@ export async function mountLeague(root, opts = {}) {
     // 📻 경기 시간이 1분 흐를 때마다 문자중계 부분만 다시 그림 (접어 둔 상자·스크롤 유지)
     if (ctx.live && live0 && ctx.live.min !== live0.min) {
       const box = root.querySelector("#lg-live");
-      if (box) box.innerHTML = V.liveRound(ctx, sel.feed);
+      if (box) box.innerHTML = V.liveRound(ctx, liveOpen());
       const mt = root.querySelector("#lg-myteam-live");
       if (mt) mt.outerHTML = V.myLiveCard(ctx, mt.dataset.team);
     }

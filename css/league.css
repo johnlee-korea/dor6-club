@@ -131,3 +131,7 @@ details.lg-match[open] .lg-score { background: var(--surface-3); }
 .lg-feed-sc { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
 .lg-feed-sc b { color: var(--silver-bright); }
 @media (prefers-reduced-motion: reduce) { .lg-fresh, .lg-live-score.lg-fresh { animation: none; } .lg-mbar .bar { transition: none; } }
+/* 📻 v2.19.1 경기별 문자중계 — 라이브 스코어 줄을 누르면 그 경기 중계가 아래로 펼쳐짐 */
+.lg-live-match > .lg-feed { padding: 0 0 10px; margin: 0 0 4px; background: var(--surface-2); border-radius: 6px; }
+.lg-live-match .lg-feed-item { padding: 6px 8px; }
+details.lg-live-match[open] .lg-live-score { outline: 1px solid var(--silver-dim); }
