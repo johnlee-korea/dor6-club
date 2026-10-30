@@ -32,8 +32,29 @@ export function home(app) {
       <button class="btn" data-act="go" data-to="achievements">🏅 업적 ${done}/${ACHIEVEMENTS.length}</button>
       <button class="btn" data-act="go" data-to="settings">⚙ 설정·저장</button>
     </div>
+    ${leagueLinkCard(app)}
     <p class="cr-note">기록은 이 기기(브라우저)에만 저장돼요. 기기를 바꾸려면 ⚙ 설정에서 내보내기/가져오기를 쓰세요.</p>
   </div>`;
+}
+
+/* ⭐ 도륙리그 연동 안내 (v2.24.0) — 내 프로필이 있으면 결과, 없으면 한 줄 안내 */
+const POS_KO = { ST: "스트라이커", WG: "윙어", AM: "공격형 미드", DM: "수비형 미드", CB: "센터백", FB: "풀백" };
+function leagueLinkCard(app) {
+  if (!app.linked || !app.linked()) {
+    return `<p class="cr-note">⚽ 도륙 클럽원이라면 사이트에서 <b>⭐ 내 프로필</b>을 설정해 두세요 — 여기서 키운 최고 OVR 선수가 도륙리그 내 팀에 자동으로 입단해요.</p>`;
+  }
+  const r = app.leagueLink();
+  if (!r) return "";
+  if (r.error) return `<section class="card cr-link"><b>⚽ 도륙리그 연동</b><div class="cr-note">${esc(r.error)}</div></section>`;
+  if (!r.star) return "";
+  const s = r.star, b = r.boost || {};
+  const bonus = b.boostAtt ? `공격력 +${b.boostAtt / 1000}` : b.boostDef ? `수비력 +${b.boostDef / 1000}` : "전력 보너스는 OVR 80부터";
+  const mine = r.used ? "" : r.blocked
+    ? `<div class="cr-note">이 기기 기록은 운영자가 리그 반영에서 뺐어요.</div>`
+    : `<div class="cr-note">다른 기기 기록(${r.topSeasons}시즌)이 더 많아 그쪽 선수가 반영돼요 — 이 기기 ${r.deviceSeasons}시즌.</div>`;
+  return `<section class="card cr-link"><b>⚽ 도륙리그 연동 — ${esc(r.team || "")} 팀</b>
+    <div>⭐ <b>${esc(s.name)}</b> · ${POS_KO[s.pos] || s.pos} · 최고 OVR <b>${s.ovr}</b>${s.retired ? " (은퇴)" : ""} → <b>${bonus}</b></div>
+    <div class="cr-note">다음 리그 편성(06:40)부터 내 팀 선발로 뛰어요.</div>${mine}</section>`;
 }
 
 /* ---------- 선수 생성 ---------- */

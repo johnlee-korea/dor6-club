@@ -258,6 +258,46 @@ for (const pg of PAGES) {
     ok ? pass++ : fail++;
   }
 
+  // v2.24.0 평점 v2 · ⭐ 커리어 선수 입단·공수 보너스 · 커리어 자동 전송
+  {
+    const { runDay, playerStats, mvp } = await import(new URL("../js/engine/index.js", import.meta.url));
+    const { snapshotTeams } = await import(new URL("../js/league/roster.js", import.meta.url));
+    const { starBoost, applyStar, validStar } = await import(new URL("../js/league/career-link.js", import.meta.url));
+    const { syncLeague, bestStar } = await import(new URL("../js/career/league-sync.js", import.meta.url));
+    const run = (snap) => runDay({ daySeed: snap.seed, teamSeed: snap.teamSeed, teams: snapshotTeams(snap) });
+    const d0 = run(fxSnap);
+    const gpt = d0.rounds.reduce((s, rd) => s + rd.matches.length * 2, 0) / d0.ids.length;
+    const best = mvp(playerStats(d0.rounds, d0.results, d0.totalRounds), Math.ceil(gpt / 2));
+    const rateOk = best && best.avg >= 7.8 && best.avg <= 9.6;
+    const sq = fxSnap.teams.find((t) => t.squad);
+    const st = { name: "테스트", pos: "CB", ovr: 92, seasons: 15, retired: true };
+    const b = starBoost(st);
+    const starred = { ...fxSnap, teams: fxSnap.teams.map((t) => (t === sq ? { ...t, star: st, boostDef: b.boostDef } : t)) };
+    const d1 = run(starred);
+    const team = d1.squads.get(sq.ouid);
+    const starOk = b.boostDef === 550 && !b.boostAtt && team.players.some((p) => p.starter && p.name === "⭐테스트" && /CB/.test(p.role))
+      && Math.abs(team.def - d0.squads.get(sq.ouid).def - 0.55) < 1e-9
+      && starBoost({ ...st, pos: "ST", ovr: 85 }).boostAtt === 250 && !starBoost({ ...st, ovr: 79 }).boostDef
+      && validStar({ ...st, ovr: 95, seasons: 4 }, 30) && !validStar(st, 30)
+      && applyStar(undefined, st) === undefined;
+    // 커리어 자동 전송: 내 프로필 없으면 안 보냄 / 있으면 명예의 전당·진행 중 중 최고 OVR 1명
+    const mem = new Map(); const sent = [];
+    const storage = { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => mem.set(k, String(v)), removeItem: (k) => mem.delete(k) };
+    const meta = { hall: [{ id: "C-a", name: "옛 전설", types: ["ST:sht+spd", "WG:dri+spd"], maxOvr: 93, seasons: 18 }] };
+    const state = { seed: "C-b", phase: "offseason", player: { name: "현역", pos: "DM", typeKey: "def+pas" }, totals: { maxOvr: 88, seasons: 9 } };
+    const fake = async (url, o) => { sent.push(JSON.parse(o.body)); return { json: async () => ({ ok: true, used: true, star: JSON.parse(o.body).star }) }; };
+    const win = { crypto: globalThis.crypto };
+    const r0 = await syncLeague({ storage, win, state, meta, workerUrl: "https://w", fetchFn: fake });
+    mem.set("dor6.me", "abc");
+    await syncLeague({ storage, win, state, meta, workerUrl: "https://w", fetchFn: fake });
+    await syncLeague({ storage, win, state, meta, workerUrl: "https://w", fetchFn: fake });   // 같은 내용 → 다시 안 보냄
+    const syncOk = r0 === null && sent.length === 1 && sent[0].star.name === "옛 전설" && sent[0].star.pos === "WG" && sent[0].seasons === 27
+      && /^[a-z0-9]{8,32}$/.test(sent[0].device) && bestStar(state, { hall: [] }).name === "현역";
+    const ok = rateOk && starOk && syncOk;
+    console.log(`${ok ? "✅" : "❌"} league v4 평점 MVP ${best && best.avg.toFixed(2)}:${rateOk} ⭐입단·보너스:${starOk} 커리어 전송:${syncOk}`);
+    ok ? pass++ : fail++;
+  }
+
   // 엔진 금지 함수 검사 (주석 제외) — 기기마다 결과가 달라질 수 있는 함수·현재 시각 사용 금지 (CLAUDE.md 25-5)
   const bad = [];
   for (const f of fs.readdirSync(path.join(ROOT, "js/engine"))) {

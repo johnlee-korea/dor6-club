@@ -78,8 +78,30 @@ export function simulateMatch(home, away, seedStr) {
   return { hg, ag, ev, rt };
 }
 
+/* 도륙리그 평점 v2 (엔진 v4, 2026-10-31 사용자 요청 "평점이 너무 짜 — 1위는 8점대 중반")
+   team.rateV === 2인 팀만 (runDay가 붙임 — 커리어 시뮬레이터는 기존 평점 그대로)
+   기본 6.8 · 승패 ±0.5(2골 차부터 한 골마다 ±0.2, 최대 ±1.1) · 골 +2.0(두 번째 골부터 +0.5 추가) · 도움 +1.3
+   GK·DF 무실점 +1.6 / 실점당 −0.4(최대 −1.5) · MF 무실점 +0.6 / 실점당 −0.2(최대 −0.6) · 공격 포인트 없는 FW −0.6
+   그날 폼 p.form(±1.2, runDay가 하루 시드로 고정) + 경기 컨디션 ±0.8
+   실측(실제 10회): 평균 6.94 · 상위 10% 9.5 · 하루 MVP 평균 8.55 (8.42~8.75) */
+export const RATE_V2 = { base: 68, goal: 20, multi: 5, ast: 13, cs: 16, con: 4, conMax: 15, mcs: 6, mcon: 2, mconMax: 6, fwNo: 6, noise: 8, form: 12 };
+function rateTeamV2(rng, team, goals, assists, gf, ga) {
+  const c = RATE_V2, diff = gf - ga;
+  const res = diff > 0 ? 5 + Math.min(3, diff - 1) * 2 : diff < 0 ? -5 - Math.min(3, -diff - 1) * 2 : 0;
+  return team.starters.map((i) => {
+    const p = team.players[i], g = goals[i] || 0, a = assists[i] || 0;
+    let r = c.base + res + g * c.goal + (g >= 2 ? (g - 1) * c.multi : 0) + a * c.ast + (p.form | 0) + (p.rb | 0);
+    if (p.pos === "GK" || p.pos === "DF") r += ga === 0 ? c.cs : -Math.min(c.conMax, ga * c.con);
+    else if (p.pos === "MF") r += ga === 0 ? c.mcs : -Math.min(c.mconMax, ga * c.mcon);
+    else if (!g && !a) r -= c.fwNo;
+    r += rng.int(c.noise * 2 + 1) - c.noise;
+    return [i, clamp(Math.round(r), 30, 100)];
+  });
+}
+
 /* 평점 (×10 정수로 계산 → 반올림 오차 없음): 6.0 기준, 3.0~10.0 */
 function rateTeam(rng, team, goals, assists, gf, ga) {
+  if (team.rateV === 2) return rateTeamV2(rng, team, goals, assists, gf, ga);
   const res = gf > ga ? 3 : gf < ga ? -3 : 0;
   const rate = (i, part) => {
     const p = team.players[i];

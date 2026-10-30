@@ -9,6 +9,11 @@ GH_BRANCH = "main"
 ALLOWED_ORIGIN = "https://johnlee-korea.github.io"
 SITE_URL = "https://johnlee-korea.github.io/dor6-club"   # 전적 검색 분석용 랭커 기준값(data/meta/ranker-baseline.json) 위치
 
+# ⭐ 내 선수 키우기 → 도륙리그 연동(v2.24.0): 클럽원별 기기·최고 선수 저장 (키 c:<ouid>)
+[[kv_namespaces]]
+binding = "CAREER"
+id = "6a5cb4368d474d7588752baa2c69666c"
+
 # 예약 실행 (UTC) — 2시간마다 05분에 GitHub Actions 수집 워크플로 호출
 # (GitHub 자체 schedule은 누락이 잦아 예비용으로만 사용, collect.yml 참고)
 [triggers]

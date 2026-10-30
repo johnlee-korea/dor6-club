@@ -70,8 +70,39 @@
         <a class="btn block" href="league.html?test&iv=20" target="_blank" rel="noopener">🧪 테스트 리그 바로 돌려 보기 <span class="lg-dim">(20초 간격 · 기록에 안 남음)</span></a>
         <button class="btn sm" data-act="refresh" style="justify-self:start;">↻ 상태 새로고침</button>
       </div>
-      <div id="league-admin-msg" style="margin-top:var(--sp-3);font-size:var(--fs-sm);"></div>`;
+      <div id="league-admin-msg" style="margin-top:var(--sp-3);font-size:var(--fs-sm);"></div>
+      <details id="career-admin" style="margin-top:var(--sp-3);"><summary style="cursor:pointer;"><b>⭐ 커리어 선수 연동 현황</b> <span class="lg-dim">(클럽원별 기기 · 여러 기기면 시즌 많은 기기 반영)</span></summary>
+        <div id="career-admin-body" class="lg-dim">펼치면 불러와요…</div></details>`;
     el.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => act(b.dataset.act, s, b)));
+    const det = el.querySelector("#career-admin");
+    det.addEventListener("toggle", () => { if (det.open) loadCareer(); });
+  }
+
+  /* ⭐ 커리어 연동 (v2.24.0): 클럽원별 기기 목록 · 기기 제외/해제 */
+  async function loadCareer() {
+    const body = document.getElementById("career-admin-body");
+    if (!body) return;
+    body.textContent = "불러오는 중…";
+    let r;
+    try { r = await auth.call("/league/career-list", {}); if (r.error) throw new Error(r.error); }
+    catch (e) { console.error("[도륙리그 관리] 커리어 목록 실패:", e); body.innerHTML = `<span style="color:var(--danger);">${escapeHtml(e.message)}</span>`; return; }
+    if (!r.items.length) { body.textContent = "아직 연동한 클럽원이 없어요."; return; }
+    const ago = (t) => kstTime(new Date(t).toISOString());
+    body.innerHTML = r.items.map((it) => `<div style="margin:8px 0;"><b>${escapeHtml(it.name)}</b>
+      ${it.devices.map((d) => {
+        const off = it.blocked.includes(d.id), used = it.pick === d.id;
+        return `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:var(--fs-sm);margin:2px 0 2px 8px;">
+          <span>${used ? "✅" : off ? "🚫" : "▫️"} 기기 ${escapeHtml(d.id.slice(0, 6))} · ${d.seasons}시즌 · ⭐${escapeHtml(d.star.name)} ${d.star.pos} OVR ${d.star.ovr} · ${ago(d.at)}</span>
+          <button class="btn sm" data-cb="${escapeHtml(it.ouid)}|${escapeHtml(d.id)}|${off ? 0 : 1}">${off ? "다시 반영" : "제외"}</button></div>`;
+      }).join("")}</div>`).join("");
+    body.querySelectorAll("[data-cb]").forEach((b) => b.addEventListener("click", async () => {
+      const [ouid, device, block] = b.dataset.cb.split("|");
+      if (+block && !confirm("이 기기 기록을 리그 반영에서 뺄까요? (다음 편성부터)")) return;
+      b.disabled = true;
+      try { const x = await auth.call("/league/career-block", { ouid, device, block: !!+block }); if (x.error) throw new Error(x.error); }
+      catch (e) { alert(e.message); }
+      loadCareer();
+    }));
   }
 
   async function act(kind, s, btn) {

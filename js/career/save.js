@@ -38,7 +38,13 @@ export const clearSave = (storage) => storage.removeItem(STORE.save);
 
 export function loadMeta(storage) {
   const m = read(storage, STORE.meta) || {};
-  return { achievements: m.achievements || {}, hall: m.hall || [], settings: { fast: true, ...(m.settings || {}) } };
+  return {
+    achievements: m.achievements || {}, hall: m.hall || [], settings: { fast: true, ...(m.settings || {}) },
+    // v2.24.0 이 기기 총 플레이 시즌 수 (도륙리그 연동 — 여러 기기 중 많이 한 기기 판정). 없으면 league-sync.js가 추정
+    ...(Number.isInteger(m.seasonsPlayed) ? { seasonsPlayed: m.seasonsPlayed } : {}),
+    // 역대 최고 OVR 선수 요약 — 명예의 전당에 안 올리고 새 커리어를 시작해도 기록이 남도록
+    ...(m.leagueBest ? { leagueBest: m.leagueBest } : {})
+  };
 }
 export const writeMeta = (storage, meta) => write(storage, STORE.meta, meta);
 

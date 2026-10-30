@@ -8,6 +8,7 @@ import { indexBase } from "./world.js";
 import { makeStorage, loadSave, writeSave, clearSave, loadMeta, writeMeta, mergeAchievements, exportText, parseImport } from "./save.js";
 import { newCareer, chooseStartClub, playSeason, decide, setFocus, buyTraining, convertPosition, retire, careerSummary, defaultFocus, chooseEvent } from "./career.js";
 import { pendingEvent } from "./events.js";
+import { syncLeague, bestStar, deviceSeasons, lastResult, linkedProfile } from "./league-sync.js";
 import * as setup from "./views/setup.js";
 import * as off from "./views/offseason.js";
 import * as season from "./views/season.js";
@@ -52,6 +53,22 @@ export async function mountCareer(root, opts = {}) {
       app.saveFailed = !(ok && ok2);
       return !app.saveFailed;
     },
+    /* ⭐ 도륙리그 연동 (v2.24.0): 역대 최고 선수 기억 → 내 프로필 기기면 자동 전송 (실패해도 게임엔 영향 없음) */
+    async syncLeague() {
+      try { return await app._sync(); } catch (e) { console.error("[career] 도륙리그 연동 처리 실패", e); return null; }
+    },
+    async _sync() {
+      const best = bestStar(app.state, app.meta);
+      if (best && (!app.meta.leagueBest || best.ovr > app.meta.leagueBest.ovr || (best.ovr === app.meta.leagueBest.ovr && best.seasons > app.meta.leagueBest.seasons))) {
+        app.meta.leagueBest = best; writeMeta(storage, app.meta);
+      }
+      const workerUrl = opts.workerUrl ?? (win.DOR6 && win.DOR6.workerUrl);
+      const r = await syncLeague({ storage, win, state: app.state, meta: app.meta, workerUrl, fetchFn: opts.syncFetch });
+      if (r) { app.view.leagueLink = r; if (app.route === "home") render(); }
+      return r;
+    },
+    leagueLink: () => app.view.leagueLink || lastResult(storage),
+    linked: () => linkedProfile(storage),
     render
   };
 
@@ -175,12 +192,15 @@ export async function mountCareer(root, opts = {}) {
       // 계산 전에 '진행 중' 화면을 먼저 그리도록 한 박자 쉼
       win.setTimeout(() => {
         try {
+          const played = deviceSeasons(app.state, app.meta);
           const out = playSeason(app.state, clubsJson);
+          app.meta.seasonsPlayed = played + 1;
           app.lastReport = out;
           const fresh = mergeAchievements(app.meta, out.summary.achievements, app.state.seed, nowIso());
           out.summary.deviceNew = fresh;
           app.view.focusTouched = false; app.view.shopMsg = null; app.view.shopCat = null;
           app.persist();
+          app.syncLeague();
           app.view.playing = { n: out.summary.n };
           app.go(app.meta.settings.fast === false ? "report" : "season");
           if (app.meta.settings.fast === false) app.view.playing = null;
@@ -197,7 +217,7 @@ export async function mountCareer(root, opts = {}) {
       // 나이 제한 없음 (v2.13.2 사용자 요청: 맘에 안 들면 접고 다시) — 35세 전은 '조기 은퇴'
       const early = app.state.player.age < 35;
       if (!win.confirm(early ? "이 선수를 접고 은퇴할까요? 업적은 유지되고, 명예의 전당 등록 여부는 다음 화면에서 고를 수 있어요." : "은퇴하면 이 선수로는 더 이상 뛸 수 없어요. 은퇴할까요?")) return;
-      retire(app.state); app.persist(); app.go("retire");
+      retire(app.state); app.persist(); app.syncLeague(); app.go("retire");
     },
     "hall-register": () => {
       const sum = careerSummary(app.state);
@@ -251,6 +271,7 @@ export async function mountCareer(root, opts = {}) {
   app.acts = acts;
   const start = routeFromHash();
   setRoute(start || (app.state ? (app.state.phase === "retired" ? "retire" : app.state.phase === "start-club" ? "start-club" : "offseason") : "home"));
+  app.syncLeague();   // 앱을 열 때 한 번 (내 프로필을 나중에 설정한 경우·지난 전송 실패 대비)
   return app;
 }
 

@@ -5,6 +5,7 @@
      (엔진 결과는 이름과 무관 — 이름 파일을 못 불러와도 결과 동일)
    - 능력치·강화 등급은 쓰지 않음(사용자 결정) — 포지션만 사용
    ============================================================ */
+import { applyStar } from "./career-link.js";
 
 /* 넥슨 spPosition 코드 → 세부 포지션 (data/meta/spposition.json과 같은 순서, 28 = 교체) */
 export const POS_CODE = ["GK", "SW", "RWB", "RB", "RCB", "CB", "LCB", "LB", "LWB", "RDM", "CDM", "LDM", "RM", "RCM", "CM",
@@ -30,7 +31,13 @@ export function squadToRoster(squad, names) {
 /* 스냅샷 → 엔진 teams 입력 */
 export function snapshotTeams(snap, names) {
   // boost: 🔥 전날 판수 보너스(league/boost.js, v2.14.0) — 없으면 엔진 결과 기존과 동일
-  return snap.teams.map((t) => ({ id: t.ouid, name: t.name, roster: squadToRoster(t.squad, names), ...(t.boost ? { boost: t.boost } : {}) }));
+  // star·boostAtt·boostDef: ⭐ 커리어 선수 입단(league/career-link.js, v2.24.0) — 이름만 바꾸고 전력은 공격/수비 보정으로
+  return snap.teams.map((t) => ({
+    id: t.ouid, name: t.name, roster: applyStar(squadToRoster(t.squad, names), t.star),
+    ...(t.boost ? { boost: t.boost } : {}),
+    ...(t.boostAtt ? { boostAtt: t.boostAtt } : {}),
+    ...(t.boostDef ? { boostDef: t.boostDef } : {})
+  }));
 }
 
 export const hasSquads = (snap) => !!(snap && snap.teams && snap.teams.some((t) => t.squad));

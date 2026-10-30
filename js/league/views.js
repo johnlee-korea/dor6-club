@@ -7,10 +7,16 @@ import { reasonLabel } from "./eligibility.js";
 import { playerStats, leaders } from "../engine/index.js";
 import { formationOf } from "../engine/team.js";
 import { gamesOf, countedGames, boostText, prevDay } from "./boost.js";
+import { starBoostText } from "./career-link.js";
 
 /* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
 const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
-const fire = (ctx, id) => { const t = snapTeam(ctx, id); return t && t.boost ? ` <span class="lg-fire" title="전날 ${gamesOf(t)}판 · 전력 ${boostText(t.boost)}">🔥</span>` : ""; };
+const fire = (ctx, id) => {
+  const t = snapTeam(ctx, id);
+  if (!t) return "";
+  return (t.boost ? ` <span class="lg-fire" title="전날 ${gamesOf(t)}판 · 전력 ${boostText(t.boost)}">🔥</span>` : "")
+    + (t.star ? ` <span class="lg-fire" title="커리어 선수 ${esc(t.star.name)} OVR ${t.star.ovr} · ${starBoostText(t.star)}">⭐</span>` : "");
+};
 const dayLabel = (d) => `${+d.slice(5, 7)}/${+d.slice(8, 10)}`;
 
 /* 포지션 표시: 실제 스쿼드면 세부 포지션(ST·CAM…), 교체는 "교체" */
@@ -167,6 +173,7 @@ export function tabLive(ctx, open) {
   }
   html += `<div class="section-title">📊 순위 <span class="lg-dim">${k ? k + "라운드 후" : "개막 전"}${ctx.live ? " · 경기가 끝나면 반영" : ""}</span><a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
   html += boostBox(ctx);
+  html += starBox(ctx);
   html += excludedBox(ctx);
   return html;
 }
@@ -236,6 +243,16 @@ export function myLiveCard(ctx, id) {
   const m = ctx.day.rounds[L.r].matches[i], res = ctx.day.results[L.r][i];
   const sc = scoreAt(res, L.min);
   return `<div class="card" id="lg-myteam-live" data-team="${esc(id)}"><div class="lg-dim">${L.r + 1}라운드 · ${minLabel(L.min)}</div>${liveRow(ctx, m, res, L.min)}${sc.shown.length ? `<div class="lg-goals">${sc.shown.map(({ e }) => goalLine(ctx, m, e)).join("")}</div>` : ""}<a class="lg-more" href="#live">라이브에서 보기 ›</a></div>`;
+}
+
+/* ⭐ 커리어 선수 입단 팀 목록 (v2.24.0) — OVR 높은 순 */
+function starBox(ctx) {
+  const s = ctx.snap;
+  const list = s && s.teams ? s.teams.filter((t) => t.star).sort((a, b) => b.star.ovr - a.star.ovr || (a.ouid < b.ouid ? -1 : 1)) : [];
+  if (!list.length) return "";
+  return `<details class="card lg-excl"><summary>⭐ 커리어 선수 입단 ${list.length}팀</summary>
+    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">⭐${esc(t.star.name)} · OVR ${t.star.ovr}</span></span><b>${starBoostText(t.star)}</b></div>`).join("")}</div>
+    <div class="lg-dim" style="margin-top:6px;">⭐ 내 선수 키우기의 역대 최고 OVR 선수가 내 팀 선발로 뛰어요 (⭐ 내 프로필 설정 기기 자동 반영 · OVR 80+ 0.1 · 85+ 0.25 · 90+ 0.5 · 95+ 0.8, 공격수·윙어·공미는 공격력, 수미·수비수는 수비력 ×1.1)</div></details>`;
 }
 
 /* 감독모드 절반 계산으로 인정 판수가 실제 판수와 다를 때만 " · 인정 N판" */
@@ -395,7 +412,12 @@ export function tabMyTeam(ctx, sel) {
 
 function myBoostLine(ctx, id) {
   const t = snapTeam(ctx, id);
-  if (!t || !ctx.snap || ctx.snap.activity !== "ok") return "";
+  if (!t || !ctx.snap) return "";
+  const star = t.star ? `<div class="lg-sub">⭐ 커리어 선수 <b>${esc(t.star.name)}</b> (최고 OVR ${t.star.ovr}) 입단 → <b>${starBoostText(t.star)}</b></div>` : "";
+  if (ctx.snap.activity !== "ok") return star;
+  return star + myFireLine(ctx, t);
+}
+function myFireLine(ctx, t) {
   const day = dayLabel(ctx.snap.activityDay || prevDay(ctx.snap.date));
   return t.boost ? `<div class="lg-sub">🔥 ${day} ${gamesOf(t)}판${countedText(t)} → 전력 <b>${boostText(t.boost)}</b></div>`
     : `<div class="lg-sub lg-dim">${day} 판수 0 — 전날 한 판이라도 하면 🔥 보너스</div>`;

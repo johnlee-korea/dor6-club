@@ -222,3 +222,6 @@
 .cr-event.tier-small .cr-ev-res b, .cr-event.tier-big .cr-ev-res b { color: var(--ok); }
 .cr-event.tier-huge .cr-ev-res b { color: var(--gold); }
 .cr-ev-ovr { margin: 0; }
+
+/* ⭐ 도륙리그 연동 카드 (v2.24.0) */
+.cr-link { display: grid; gap: 4px; border-left: 3px solid var(--accent); }

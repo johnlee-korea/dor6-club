@@ -14,6 +14,8 @@ import {
 import { judgeEligibility } from "../../js/league/eligibility.js";
 import { attachBoost } from "../../js/league/boost.js";
 import { squadFromLineup } from "../../js/league/roster.js";
+import { starBoost } from "../../js/league/career-link.js";
+import { careerStar, careerList, careerBlock } from "./career.js";
 import { ENGINE_VERSION, roundCount } from "../../js/engine/index.js";
 
 export const LEAGUE_SNAPSHOT_CRON = "40,50 21 * * *";   // 06:40·06:50 KST — wrangler.toml crons와 같은 문자열
@@ -96,6 +98,14 @@ async function makeSnapshot(env, now, opts) {
     const squad = squadFromLineup(sq[t.ouid]);
     return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
   }), dgFile && dgFile.json, today);
+  // v2.24.0 ⭐ 커리어 선수: 클럽원별 최고 OVR 선수 1명 + 포지션·OVR 구간 전력 보너스를 얼려 둠 (KV 없거나 실패면 없이 진행)
+  const stars = await Promise.all(boosted.teams.map((t) => careerStar(env, t.ouid).catch(() => null)));
+  boosted.teams = boosted.teams.map((t, i) => {
+    const star = stars[i];
+    if (!star) return t;
+    const b = starBoost(star);
+    return { ...t, star, ...(b.boostAtt ? { boostAtt: b.boostAtt } : {}), ...(b.boostDef ? { boostDef: b.boostDef } : {}) };
+  });
   const snap = {
     date: today, no: entry.no,
     seed: `${config.seed}-${today}`, teamSeed: config.seed,
@@ -224,6 +234,8 @@ export async function leagueRoute(action, body, env) {
     if (action === "reserve") return await reserve(env, now, body || {});
     if (action === "cancel") return await cancel(env, now);
     if (action === "auto") return await setAuto(env, now, body || {});
+    if (action === "career-list") return await careerList(env);
+    if (action === "career-block") return await careerBlock(env, body || {});
     if (action === "snapshot") {
       const r = await makeSnapshot(env, now, { source: "admin", force: true });
       if (r.skipped) throw new LeagueError(r.reason);

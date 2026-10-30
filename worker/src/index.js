@@ -14,6 +14,7 @@ import { insightRaw, rankPlayers, GROUP_LABEL, P_METRICS } from "../../scripts/l
 import { compactMatch } from "../../scripts/lib/manage.js";
 import { RANK_RT, rankSearchUrl, parseRankSearch } from "../../scripts/lib/rank.js";
 import { leagueRoute, leagueScheduled, LEAGUE_SNAPSHOT_CRON, LEAGUE_ARCHIVE_CRON } from "./league.js";
+import { careerSync } from "./career.js";
 
 const TOKEN_TTL = 60 * 60 * 6; // 6시간
 const COLLECT_WORKFLOW = "collect.yml"; // .github/workflows/ 아래 수집 워크플로 파일명
@@ -87,6 +88,13 @@ export default {
         const body = await request.json();
         const data = await manageRoute(url.pathname.slice(8), body, env);
         return json(data, data.error ? 404 : 200);
+      }
+
+      // 공개: ⭐ 내 선수 키우기 → 도륙리그 연동 (v2.24.0) — 클럽원 명단 ouid만, 값 정합성 검사
+      if (url.pathname === "/career/sync" && request.method === "POST") {
+        const body = await request.json().catch(() => ({}));
+        const data = await careerSync(body, env);
+        return json(data, data.error ? 400 : 200);
       }
 
       // 이하 인증 필요
