@@ -1,18 +1,23 @@
 {
-  "updated": "2026-10-30T16:08:58.895Z",
+  "updated": "2026-10-30T18:09:27.790Z",
   "squads": {
     "82c59dce895a829f78a8e10c10122249": {
-      "matchId": "6ae49a11b74634093118a5b5",
-      "matchDate": "2026-10-30T13:34:06",
+      "matchId": "6ae4ad9312fe30675d6527f5",
+      "matchDate": "2026-10-30T14:56:38",
       "matchType": 50,
-      "result": "win",
-      "goalFor": 4,
-      "goalAgainst": 3,
-      "opponentNick": "왕상",
+      "result": "lose",
+      "goalFor": 3,
+      "goalAgainst": 6,
+      "opponentNick": "해딩두",
       "lineup": [
         {
           "spId": 821001041,
-          "spPosition": 3,
+          "spPosition": 2,
+          "spGrade": 11
+        },
+        {
+          "spId": 827001183,
+          "spPosition": 28,
           "spGrade": 11
         },
         {
@@ -27,12 +32,7 @@
         },
         {
           "spId": 867135455,
-          "spPosition": 9,
-          "spGrade": 11
-        },
-        {
-          "spId": 835138123,
-          "spPosition": 11,
+          "spPosition": 13,
           "spGrade": 11
         },
         {
@@ -52,7 +52,7 @@
         },
         {
           "spId": 852191189,
-          "spPosition": 17,
+          "spPosition": 16,
           "spGrade": 11
         },
         {
@@ -71,13 +71,18 @@
           "spGrade": 13
         },
         {
+          "spId": 867208128,
+          "spPosition": 15,
+          "spGrade": 11
+        },
+        {
           "spId": 867224232,
-          "spPosition": 19,
+          "spPosition": 12,
           "spGrade": 11
         },
         {
           "spId": 856226268,
-          "spPosition": 7,
+          "spPosition": 8,
           "spGrade": 11
         },
         {
@@ -94,22 +99,17 @@
           "spId": 856235840,
           "spPosition": 0,
           "spGrade": 9
-        },
-        {
-          "spId": 851268896,
-          "spPosition": 28,
-          "spGrade": 8
         }
       ]
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
-      "matchId": "6ae372513df78a65a6a89ced",
-      "matchDate": "2026-10-29T16:32:32",
-      "matchType": 50,
-      "result": "win",
-      "goalFor": 4,
-      "goalAgainst": 3,
-      "opponentNick": "미리지",
+      "matchId": "6ae4b6e68b961f7571d06a47",
+      "matchDate": "2026-10-30T15:36:14",
+      "matchType": 40,
+      "result": "lose",
+      "goalFor": 0,
+      "goalAgainst": 0,
+      "opponentNick": "미드필더",
       "lineup": [
         {
           "spId": 268005479,
@@ -125,11 +125,6 @@
           "spId": 519073562,
           "spPosition": 28,
           "spGrade": 8
-        },
-        {
-          "spId": 845158023,
-          "spPosition": 28,
-          "spGrade": 11
         },
         {
           "spId": 835183277,
@@ -199,6 +194,11 @@
         {
           "spId": 836252371,
           "spPosition": 18,
+          "spGrade": 11
+        },
+        {
+          "spId": 866259532,
+          "spPosition": 28,
           "spGrade": 11
         }
       ]
@@ -810,47 +810,32 @@
       ]
     },
     "2dd2edb174f63716078ffc324199edd1": {
-      "matchId": "6ae3a362b684c110a1e5c64d",
-      "matchDate": "2026-10-29T19:59:39",
-      "matchType": 50,
+      "matchId": "6ae4b6e68b961f7571d06a47",
+      "matchDate": "2026-10-30T15:36:14",
+      "matchType": 40,
       "result": "win",
-      "goalFor": 2,
+      "goalFor": 0,
       "goalAgainst": 0,
-      "opponentNick": "EIlk",
+      "opponentNick": "문선생",
       "lineup": [
         {
-          "spId": 852001088,
-          "spPosition": 28,
-          "spGrade": 11
-        },
-        {
-          "spId": 861001109,
-          "spPosition": 28,
-          "spGrade": 11
-        },
-        {
           "spId": 861001114,
-          "spPosition": 27,
+          "spPosition": 16,
           "spGrade": 11
         },
         {
-          "spId": 867001419,
-          "spPosition": 4,
+          "spId": 868001419,
+          "spPosition": 6,
           "spGrade": 11
         },
         {
-          "spId": 100005003,
-          "spPosition": 28,
-          "spGrade": 10
+          "spId": 868005589,
+          "spPosition": 12,
+          "spGrade": 11
         },
         {
           "spId": 877007763,
-          "spPosition": 15,
-          "spGrade": 11
-        },
-        {
-          "spId": 877028130,
-          "spPosition": 23,
+          "spPosition": 28,
           "spGrade": 11
         },
         {
@@ -860,64 +845,79 @@
         },
         {
           "spId": 877041236,
+          "spPosition": 18,
+          "spGrade": 11
+        },
+        {
+          "spId": 868107715,
+          "spPosition": 4,
+          "spGrade": 11
+        },
+        {
+          "spId": 877135455,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 848180930,
           "spPosition": 25,
           "spGrade": 11
         },
         {
-          "spId": 868045674,
+          "spId": 848184941,
           "spPosition": 28,
           "spGrade": 11
         },
         {
-          "spId": 866177003,
-          "spPosition": 13,
+          "spId": 861191189,
+          "spPosition": 9,
           "spGrade": 11
         },
         {
-          "spId": 272188377,
-          "spPosition": 28,
-          "spGrade": 13
-        },
-        {
-          "spId": 100192181,
-          "spPosition": 28,
-          "spGrade": 10
-        },
-        {
-          "spId": 515205812,
-          "spPosition": 0,
-          "spGrade": 13
-        },
-        {
-          "spId": 814206058,
+          "spId": 260210514,
           "spPosition": 3,
           "spGrade": 13
         },
         {
-          "spId": 100214098,
-          "spPosition": 6,
+          "spId": 877224232,
+          "spPosition": 28,
           "spGrade": 11
         },
         {
-          "spId": 280232656,
+          "spId": 280226268,
           "spPosition": 7,
           "spGrade": 13
         },
         {
-          "spId": 287240638,
-          "spPosition": 10,
+          "spId": 280232656,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 834233096,
+          "spPosition": 28,
+          "spGrade": 11
+        },
+        {
+          "spId": 815234102,
+          "spPosition": 28,
+          "spGrade": 13
+        },
+        {
+          "spId": 834235840,
+          "spPosition": 0,
           "spGrade": 13
         }
       ]
     },
     "c4d139e665756377869b9a9dfc998e6b": {
-      "matchId": "6ae49ec01bf088b4d2066c75",
-      "matchDate": "2026-10-30T13:54:21",
+      "matchId": "6ae4b04ae91fab15e3372a94",
+      "matchDate": "2026-10-30T15:07:43",
       "matchType": 50,
-      "result": "win",
-      "goalFor": 5,
-      "goalAgainst": 1,
-      "opponentNick": "SUPERCOPAdeESPAN",
+      "result": "lose",
+      "goalFor": 2,
+      "goalAgainst": 4,
+      "opponentNick": "오랑우탄5",
       "lineup": [
         {
           "spId": 861049369,
@@ -1416,13 +1416,13 @@
       ]
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
-      "matchId": "6ae47ea1178dbc14bd2f5b27",
-      "matchDate": "2026-10-30T11:35:46",
+      "matchId": "6ae4bc6b9127ac3df17d7925",
+      "matchDate": "2026-10-30T15:59:45",
       "matchType": 50,
-      "result": "lose",
-      "goalFor": 2,
-      "goalAgainst": 7,
-      "opponentNick": "stare2435",
+      "result": "draw",
+      "goalFor": 1,
+      "goalAgainst": 1,
+      "opponentNick": "간결한Touch",
       "lineup": [
         {
           "spId": 861001040,
@@ -1502,7 +1502,7 @@
         {
           "spId": 300243952,
           "spPosition": 0,
-          "spGrade": 10
+          "spGrade": 11
         },
         {
           "spId": 853261128,
@@ -2628,13 +2628,13 @@
       ]
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
-      "matchId": "6ae42da0be711759a74125f2",
-      "matchDate": "2026-10-30T05:51:11",
-      "matchType": 40,
-      "result": "win",
-      "goalFor": 11,
-      "goalAgainst": 2,
-      "opponentNick": "양화리",
+      "matchId": "6ae4c7fa064842cabcb9574d",
+      "matchDate": "2026-10-30T16:49:01",
+      "matchType": 50,
+      "result": "draw",
+      "goalFor": 2,
+      "goalAgainst": 0,
+      "opponentNick": null,
       "lineup": [
         {
           "spId": 877000488,
@@ -2707,6 +2707,11 @@
           "spGrade": 11
         },
         {
+          "spId": 866213331,
+          "spPosition": 4,
+          "spGrade": 10
+        },
+        {
           "spId": 863229558,
           "spPosition": 6,
           "spGrade": 11
@@ -2718,11 +2723,6 @@
         },
         {
           "spId": 848237086,
-          "spPosition": 4,
-          "spGrade": 11
-        },
-        {
-          "spId": 300238186,
           "spPosition": 28,
           "spGrade": 11
         }
