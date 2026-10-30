@@ -6,7 +6,7 @@ import * as C from "./clock.js";
 import { reasonLabel } from "./eligibility.js";
 import { playerStats, leaders } from "../engine/index.js";
 import { formationOf } from "../engine/team.js";
-import { gamesOf, boostText, prevDay } from "./boost.js";
+import { gamesOf, countedGames, boostText, prevDay } from "./boost.js";
 
 /* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
 const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
@@ -235,6 +235,9 @@ export function myLiveCard(ctx, id) {
   return `<div class="card" id="lg-myteam-live" data-team="${esc(id)}"><div class="lg-dim">${L.r + 1}라운드 · ${minLabel(L.min)}</div>${liveRow(ctx, m, res, L.min)}${sc.shown.length ? `<div class="lg-goals">${sc.shown.map(({ e }) => goalLine(ctx, m, e)).join("")}</div>` : ""}<a class="lg-more" href="#live">라이브에서 보기 ›</a></div>`;
 }
 
+/* 감독모드 절반 계산으로 인정 판수가 실제 판수와 다를 때만 " · 인정 N판" */
+const countedText = (t) => { const c = countedGames(t.act); return c !== gamesOf(t) ? ` · 인정 ${c}판` : ""; };
+
 /* 🔥 전날 판수 보너스 목록 — 판수 많은 순 */
 function boostBox(ctx) {
   const s = ctx.snap;
@@ -243,8 +246,8 @@ function boostBox(ctx) {
   if (!list.length) return "";
   const kinds = (a) => [["공식", a[0]], ["친선", a[1] + a[2]], ["감독", a[3]], ["클래식", a[4] || 0]].filter((x) => x[1]).map((x) => x[0] + " " + x[1]).join(" · ");
   return `<details class="card lg-excl"><summary>🔥 ${dayLabel(s.activityDay || prevDay(s.date))} 판수 보너스 ${list.length}팀</summary>
-    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${gamesOf(t)}판 (${kinds(t.act)})</span></span><b>${boostText(t.boost)}</b></div>`).join("")}</div>
-    <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 아주 조금 올라요 (10판까지 판당 +0.025, 이후 +0.01, 최대 +0.5)</div></details>`;
+    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${gamesOf(t)}판 (${kinds(t.act)})${countedText(t)}</span></span><b>${boostText(t.boost)}</b></div>`).join("")}</div>
+    <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 조금 올라요 (판당 +0.03, 최대 +0.9 = 30판 · 감독모드는 0.5판으로 계산)</div></details>`;
 }
 
 function byeLine(ctx, r) {
@@ -391,7 +394,7 @@ function myBoostLine(ctx, id) {
   const t = snapTeam(ctx, id);
   if (!t || !ctx.snap || ctx.snap.activity !== "ok") return "";
   const day = dayLabel(ctx.snap.activityDay || prevDay(ctx.snap.date));
-  return t.boost ? `<div class="lg-sub">🔥 ${day} ${gamesOf(t)}판 → 전력 <b>${boostText(t.boost)}</b></div>`
+  return t.boost ? `<div class="lg-sub">🔥 ${day} ${gamesOf(t)}판${countedText(t)} → 전력 <b>${boostText(t.boost)}</b></div>`
     : `<div class="lg-sub lg-dim">${day} 판수 0 — 전날 한 판이라도 하면 🔥 보너스</div>`;
 }
 
