@@ -114,7 +114,14 @@ export function pendingReservation(config, now) {
   return ((config && config.days) || []).find((d) => d.date > today || (d.date === today && now < kstMs(today, OPEN_H))) || null;
 }
 
-/* 오늘 리그 진행 중? todayRounds: 오늘 스냅샷 기준 라운드 수(모르면 null → 23:00까지 진행 중으로 간주) */
+/* 🔁 자동 개최(v2.23.0, config.auto) — 다음 자동 개막일: 오늘이 아직 개최일이 아니고 07:00 전이면 오늘, 아니면 내일
+   (실제 개최는 06:40 크론이 참가 자격자 2명 이상일 때 config.days에 추가) */
+export function nextAutoDate(config, now) {
+  const today = kstDate(now);
+  return !dayEntry(config, today) && now < kstMs(today, OPEN_H) ? today : addDays(today, 1);
+}
+
+/* 오늘 리그 진행 중?todayRounds: 오늘 스냅샷 기준 라운드 수(모르면 null → 23:00까지 진행 중으로 간주) */
 export function todayRunning(config, now, todayRounds) {
   const today = kstDate(now);
   if (!dayEntry(config, today)) return false;

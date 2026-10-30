@@ -48,7 +48,8 @@
     const snapBtnLabel = can.snapshot.overwrite ? "🔄 오늘 스냅샷 다시 만들기" : "🧊 오늘 스냅샷 만들기";
     el.innerHTML = `
       <dl class="lg-admin-grid">
-        <dt>다음 개최</dt><dd>${s.pending ? `<b>제${s.pending.no}회 ${dayLabel(s.pending.date)} 07:00</b>` : "예약 없음"}</dd>
+        <dt>자동 개최</dt><dd>${s.auto ? `<b style="color:var(--ok);">🔁 켜짐</b> <span class="lg-dim">매일 07:00 (06:40 편성 · 참가 자격자 2명 이상일 때)</span>` : `꺼짐 <span class="lg-dim">([리그 시작]으로 하루씩 직접 개최)</span>`}</dd>
+        <dt>다음 개최</dt><dd>${s.pending ? `<b>제${s.pending.no}회 ${dayLabel(s.pending.date)} 07:00</b>` : s.auto && s.autoNext ? `<b>${dayLabel(s.autoNext)} 07:00</b> <span class="lg-dim">(자동)</span>` : "예약 없음"}</dd>
         <dt>오늘</dt><dd>${today}</dd>
         <dt>오늘 스냅샷</dt><dd>${snap}</dd>
         <dt>누적 개최</dt><dd>${s.totalHeld}회</dd>
@@ -58,8 +59,10 @@
         <dt>엔진</dt><dd>v${s.engine} <span class="lg-dim">· 서버 시각 ${kstTime(s.now)} KST</span></dd>
       </dl>
       <div class="lg-admin-actions">
-        <button class="btn primary block" data-act="reserve" ${can.reserve.ok ? "" : "disabled"}>⚽ 리그 시작${can.reserve.ok ? ` — 제${can.reserve.no}회 ${dayLabel(can.reserve.date)} 07:00` : ""}</button>
-        ${can.reserve.ok ? "" : `<div class="lg-admin-why">${escapeHtml(can.reserve.reason)}</div>`}
+        <button class="btn ${s.auto ? "" : "primary "}block" data-act="auto">${s.auto ? "⏸ 자동 개최 끄기" : "🔁 매일 자동 개최 켜기"}</button>
+        <div class="lg-admin-why">${s.auto ? "쉬어 갈 날은 그날 06:40 편성 전에 끄면 열리지 않아요." : "켜면 매일 06:40 그날 참가 자격자로 자동 편성해 07:00에 개막해요."}</div>
+        ${s.auto ? "" : `<button class="btn primary block" data-act="reserve" ${can.reserve.ok ? "" : "disabled"}>⚽ 리그 시작${can.reserve.ok ? ` — 제${can.reserve.no}회 ${dayLabel(can.reserve.date)} 07:00` : ""}</button>
+        ${can.reserve.ok ? "" : `<div class="lg-admin-why">${escapeHtml(can.reserve.reason)}</div>`}`}
         ${s.pending ? `<button class="btn danger block" data-act="cancel" ${can.cancel.ok ? "" : "disabled"}>예약 취소</button>
           ${can.cancel.ok ? `<div class="lg-admin-why">해당일 06:30 전까지만 취소할 수 있어요.</div>` : `<div class="lg-admin-why">${escapeHtml(can.cancel.reason)}</div>`}` : ""}
         ${s.todayEntry ? `<button class="btn block" data-act="snapshot" ${can.snapshot.ok ? "" : "disabled"}>${snapBtnLabel}</button>
@@ -79,6 +82,11 @@
       const r = s.can.reserve;
       question = `제${r.no}회 도륙리그를 ${dayLabel(r.date)} 07:00에 개최합니다. 진행할까요?\n\n(그날 06:40 기준 참가 자격자로 자동 편성 · 하루만 열려요)`;
       path = "/league/reserve"; body = { expectDate: r.date };
+    } else if (kind === "auto") {
+      question = s.auto
+        ? "자동 개최를 끌까요?\n\n(이미 편성된 오늘 리그는 그대로 진행 · 이후엔 [리그 시작]으로 직접 열어야 해요)"
+        : `매일 자동 개최를 켤까요?\n\n${dayLabel(s.autoNext || s.roster.expectDate)}부터 매일 06:40 참가 자격자로 편성 → 07:00 개막`;
+      path = "/league/auto"; body = { on: !s.auto };
     } else if (kind === "cancel") {
       question = `제${s.pending.no}회(${dayLabel(s.pending.date)}) 예약을 취소할까요?`;
       path = "/league/cancel";

@@ -139,8 +139,11 @@ function statusMessage(ctx) {
   if (st === "forming") return `<div class="lg-note">🛠 오늘 리그 편성 중이에요. 07:00 개막 — 잠시 후 다시 확인해 주세요.</div>`;
   if (st === "delayed") return `<div class="lg-note warn">⚠ 오늘 리그 편성이 늦어지고 있어요. 운영자 확인이 필요해요.</div>`;
   if (st === "rest") return `<div class="lg-note">😴 참가팀이 부족해 오늘은 쉬어요.</div>`;
-  if (st === "none") return pend || `<div class="lg-note">다음 리그는 운영자가 예약하면 열려요.</div>`;
-  return pend;
+  // 🔁 자동 개최: 예약이 없어도 매일 07:00 자동 개막 (참가 자격자 2명 이상일 때)
+  const auto = !pend && ctx.config && ctx.config.auto && !ctx.test
+    ? `<div class="lg-note">📅 다음 리그: <b>${C.dateLabel(C.nextAutoDate(ctx.config, ctx.now()))} 07:00</b> 자동 개막 <span class="lg-dim">(06:40 편성)</span></div>` : "";
+  if (st === "none") return pend || auto || `<div class="lg-note">다음 리그는 운영자가 예약하면 열려요.</div>`;
+  return pend || auto;
 }
 
 /* ---------- 탭 ① 라이브 ---------- */

@@ -2,12 +2,13 @@
    worker/src/league.js — ⚽ 도륙리그 관리 API · 예약 실행 (CLAUDE.md 25-7·25-8)
    - 관리자 API(로그인 필요): status · reserve · cancel · snapshot
    - Cron: 06:40/06:50 KST 당일 참가팀 스냅샷 생성, 00:30 KST 전날 기록 보관 워크플로 호출
+   - 🔁 자동 개최(v2.23.0): config.auto가 켜져 있으면 06:40/06:50 크론이 오늘을 개최일로 먼저 추가(참가 자격자 2명 이상일 때)
    - 서버는 경기 결과를 계산하지 않는다. 설정(config)과 스냅샷 파일만 커밋 → 결과는 브라우저가 결정론으로 계산
    - 쓰는 파일: data/league/config.json · data/league/days/*.json 만 (members.json은 읽기만)
    - 시각 판정은 항상 Worker 서버 시각 기준 (관리자 기기 시계가 틀려도 안전)
    ============================================================ */
 import {
-  kstDate, kstMs, addDays, dateLabel, OPEN_H, dayEntry,
+  kstDate, kstMs, addDays, dateLabel, OPEN_H, dayEntry, lastNo, nextAutoDate,
   canReserve, canCancel, canSnapshot, pendingReservation, todayRunning
 } from "../../js/league/clock.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
@@ -124,12 +125,13 @@ async function leagueStatus(env, now) {
   const pend = pendingReservation(config, now);
   // 예상 참가: 예약이 있으면 그 날짜, 없으면 지금 [리그 시작]하면 열릴 날짜 기준 (최종 판정은 개최일 06:40)
   const reserve = canReserve(config, now, todayRounds);
-  const expectDate = pend ? pend.date : (reserve.date || kstDate(now));
+  const expectDate = pend ? pend.date : config.auto ? nextAutoDate(config, now) : (reserve.date || kstDate(now));
   const { members, dashboard } = await readRoster(env);
   const judged = judgeEligibility(members, dashboard, expectDate);
   return {
     now: new Date(now).toISOString(),
     today, engine: ENGINE_VERSION,
+    auto: !!config.auto, autoNext: config.auto ? nextAutoDate(config, now) : null,
     totalHeld: config.days.filter((d) => d.date < today || (d.date === today && now >= kstMs(today, OPEN_H))).length,
     lastNo: config.days.reduce((m, d) => Math.max(m, d.no), 0),
     pending: pend,
@@ -178,6 +180,42 @@ async function cancel(env, now) {
   throw new LeagueError("다른 저장과 겹쳤어요. 잠시 후 다시 시도해 주세요.");
 }
 
+/* ---------- 🔁 자동 개최 ---------- */
+/* 크론(06:40/06:50): 자동 개최가 켜져 있고 오늘이 아직 개최일이 아니면 오늘을 추가.
+   07:00 이후엔 추가하지 않음(개막 시각이 지난 리그를 새로 열지 않음) · 참가 자격자 2명 미만이면 그날은 쉼 */
+async function autoOpen(env, now) {
+  const today = kstDate(now);
+  if (now >= kstMs(today, OPEN_H)) return { skipped: true, reason: "07:00 이후" };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { json: config, sha } = await readConfig(env);
+    if (!config.auto) return { skipped: true, reason: "자동 개최 꺼짐" };
+    if (dayEntry(config, today)) return { skipped: true, reason: "이미 개최일" };
+    const { members, dashboard } = await readRoster(env);
+    const judged = judgeEligibility(members, dashboard, today);
+    if (judged.teams.length < 2) return { skipped: true, reason: `참가 자격자 ${judged.teams.length}명 (2명 미만)` };
+    const no = lastNo(config) + 1;
+    config.days.push({ no, date: today, reservedAt: new Date(now).toISOString(), auto: true });
+    const msg = `[자동] 도륙리그 제${no}회 자동 개최 (${today})`;
+    if (await ghWrite(env, CONFIG, config, sha, msg)) return { ok: true, no, date: today };
+  }
+  throw new LeagueError("자동 개최 저장이 다른 저장과 겹쳤어요.");
+}
+
+/* 관리자: 자동 개최 켜기/끄기 */
+async function setAuto(env, now, body) {
+  const on = !!(body && body.on);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { json: config, sha } = await readConfig(env);
+    if (!!config.auto === on) return { ok: true, auto: on, message: `이미 자동 개최가 ${on ? "켜져" : "꺼져"} 있어요` };
+    config.auto = on;
+    const msg = `[기능] 도륙리그 자동 개최 ${on ? "켜기" : "끄기"}`;
+    if (await ghWrite(env, CONFIG, config, sha, msg)) {
+      return { ok: true, auto: on, message: on ? `자동 개최를 켰어요 — ${dateLabel(nextAutoDate(config, now))} 07:00부터 매일 열려요` : "자동 개최를 껐어요 — 이제 [리그 시작]으로 직접 열어야 해요" };
+    }
+  }
+  throw new LeagueError("다른 저장과 겹쳤어요. 잠시 후 다시 시도해 주세요.");
+}
+
 /* ---------- 라우터 (index.js에서 인증 후 호출) ---------- */
 export async function leagueRoute(action, body, env) {
   const now = Date.now();
@@ -185,6 +223,7 @@ export async function leagueRoute(action, body, env) {
     if (action === "status") return await leagueStatus(env, now);
     if (action === "reserve") return await reserve(env, now, body || {});
     if (action === "cancel") return await cancel(env, now);
+    if (action === "auto") return await setAuto(env, now, body || {});
     if (action === "snapshot") {
       const r = await makeSnapshot(env, now, { source: "admin", force: true });
       if (r.skipped) throw new LeagueError(r.reason);
@@ -201,6 +240,9 @@ export async function leagueRoute(action, body, env) {
 export async function leagueScheduled(cron, env, dispatch) {
   const now = Date.now();
   if (cron === LEAGUE_SNAPSHOT_CRON) {
+    // 자동 개최가 켜져 있으면 오늘을 개최일로 먼저 추가 (실패해도 06:50에 다시 시도)
+    const a = await autoOpen(env, now).catch((e) => ({ skipped: true, reason: "오류 — " + e.message }));
+    console.log(`[league cron] 자동 개최: ${a.ok ? `제${a.no}회 ${a.date} 추가` : "건너뜀 — " + a.reason}`);
     // 개최일이고 스냅샷이 없을 때만 생성 (06:50은 06:40 실패 대비 — 이미 있으면 아무것도 안 함)
     const r = await makeSnapshot(env, now, { source: "cron", force: false });
     console.log(`[league cron] 스냅샷: ${r.ok ? `${r.date} ${r.teams}팀 생성` : "건너뜀 — " + r.reason}`);
