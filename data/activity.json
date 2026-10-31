@@ -1,14 +1,14 @@
 {
-  "updated": "2026-10-31T08:08:35.503Z",
+  "updated": "2026-10-31T10:09:00.564Z",
   "week": {
-    "from": "2026-10-24T08:08:35.503Z",
+    "from": "2026-10-24T10:09:00.564Z",
     "rows": [
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "FO4커벌",
-        "games": 125,
+        "games": 119,
         "wins": 66,
-        "winRate": 53
+        "winRate": 55
       },
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -20,16 +20,16 @@
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
-        "games": 79,
-        "wins": 39,
-        "winRate": 49
+        "games": 81,
+        "wins": 41,
+        "winRate": 51
       },
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
         "nick": "Dor6똘콩스",
-        "games": 75,
-        "wins": 40,
-        "winRate": 53
+        "games": 77,
+        "wins": 42,
+        "winRate": 55
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -111,20 +111,23 @@
       }
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
-      "games": 510,
+      "games": 512,
       "form": [
+        "win",
+        "win",
         "draw",
         "win",
         "draw",
         "win",
         "win",
-        "lose",
-        "lose",
         "lose",
         "lose",
         "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 2
+      },
       "rivals": {
         "nemesis": {
           "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -632,46 +635,46 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 228,
+      "games": 236,
       "form": [
-        "win",
         "lose",
         "lose",
         "win",
         "lose",
-        "draw",
-        "draw",
-        "draw",
         "win",
-        "win"
+        "win",
+        "draw",
+        "lose",
+        "win",
+        "lose"
       ],
       "streak": {
-        "type": "win",
-        "n": 1
+        "type": "lose",
+        "n": 2
       },
       "rivals": {
         "nemesis": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
           "nick": "Dor6똘콩스",
-          "games": 5,
+          "games": 7,
           "win": 0,
           "draw": 2,
-          "lose": 3,
-          "rate": 13
+          "lose": 5,
+          "rate": 10
         },
         "prey": null,
         "frequent": [
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
             "nick": "Dor6똘콩스",
-            "games": 5,
+            "games": 7,
             "win": 0,
             "draw": 2,
-            "lose": 3,
-            "rate": 13
+            "lose": 5,
+            "rate": 10
           }
         ],
-        "internalGames": 5
+        "internalGames": 7
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -700,22 +703,22 @@
       }
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
-      "games": 269,
+      "games": 272,
       "form": [
+        "lose",
+        "win",
+        "lose",
         "win",
         "win",
         "lose",
         "lose",
         "lose",
         "draw",
-        "win",
-        "lose",
-        "win",
-        "draw"
+        "win"
       ],
       "streak": {
-        "type": "win",
-        "n": 2
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
@@ -793,8 +796,10 @@
       }
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 545,
+      "games": 547,
       "form": [
+        "win",
+        "win",
         "draw",
         "win",
         "win",
@@ -802,11 +807,12 @@
         "lose",
         "win",
         "lose",
-        "win",
-        "win",
-        "draw"
+        "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 2
+      },
       "rivals": {
         "nemesis": {
           "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
@@ -855,7 +861,7 @@
             "rate": 29
           }
         ],
-        "internalGames": 145
+        "internalGames": 147
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
