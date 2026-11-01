@@ -352,6 +352,9 @@ for (const pg of PAGES) {
       await click('[data-act="create-pos"][data-pos="WG"]');
       await click('[data-act="create-cat"][data-cat="spd"]'); await click('[data-act="create-cat"][data-cat="dri"]');
       steps.push(doc.querySelector(".cr-result-type") ? "생성" : "생성✗");
+      // 👕 외모 선택 (v2.26.0)
+      await click('[data-act="look-hair"][data-h="curly"]'); await click('[data-act="look-skin"][data-i="3"]');
+      if (!doc.querySelector(".cr-look-av svg.cr-av") || app.view.draft.look.hair !== "curly") errors.push("외모 선택 안 됨");
       await click('[data-act="create-start"]');
       steps.push(doc.querySelectorAll('[data-act="start-pick"]').length ? "시작구단" : "시작구단✗");
       await click('[data-act="start-tab"][data-c="it"]');
@@ -380,6 +383,29 @@ for (const pg of PAGES) {
         await click('[data-act="to-offseason"]');
         await click('[data-act="event-pick"][data-i="2"]');
         if (!app.state.off.event || app.state.off.event.n !== season + 2 || app.state.off.event.choice !== 2) errors.push("다음 시즌 이벤트 없음");
+        if (season === 0) {
+          // 👕 코스튬: 시즌당 1개 구매 · 옷장 갈아입기 · 아바타
+          const p = app.state.player;
+          if (p.look.hair !== "curly" || p.look.skin !== 3) errors.push("외모가 저장되지 않음");
+          p.money = Math.max(p.money, 30);
+          await click('[data-act="off-step"][data-step="costume"]');
+          if (!doc.querySelector(".cr-cos-av svg.cr-av") || !doc.querySelector(".cr-player-av svg")) errors.push("아바타 없음");
+          await click('[data-act="cos-try"][data-id="boots-spd-3"]');
+          if (app.state.player.equip.boots) errors.push("입어 보기가 저장됨");
+          const m0 = p.money;
+          await click('[data-act="cos-buy"][data-id="boots-spd-3"]');
+          if (p.equip.boots !== "boots-spd-3" || Math.abs(m0 - p.money - 20) > 0.01) errors.push("코스튬 구매 안 됨");
+          app.acts["cos-buy"]({ id: "socks-phy-1" }); await sleep(5);
+          if (p.wardrobe.length !== 1 || !app.view.cosMsg) errors.push("시즌당 1개 제한 안 됨");
+          await click('[data-act="cos-equip"][data-slot="boots"][data-id=""]');
+          if (p.equip.boots) errors.push("벗기 안 됨");
+          await click('[data-act="cos-equip"][data-slot="boots"][data-id="boots-spd-3"]');
+          if (!doc.querySelector(".cr-gear")) errors.push("장비 보정 표시 없음");
+          const { ensureCostume, gearDelta } = await import(new URL("../js/career/costume.js", import.meta.url));
+          const old = ensureCostume({ seed: "C-old", player: { pos: "ST", subs: p.subs } });
+          if (!old.player.look || gearDelta(old.player) !== 0 || !(gearDelta(p) > 0)) errors.push("예전 저장 외모 자동 생성/장비 보정 오류");
+          steps.push("코스튬");
+        }
         await click('[data-act="off-step"][data-step="club"]');
         if (doc.querySelector('[data-act="off-decide"][data-type="transfer"]')) await click('[data-act="off-decide"][data-type="transfer"]');
       }

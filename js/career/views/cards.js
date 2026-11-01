@@ -4,6 +4,8 @@
 import { CATS, ROLE_LABEL } from "../rules.js";
 import { catValues } from "../attrs.js";
 import { playerOvr } from "../career.js";
+import { avatarSvg } from "../avatar.js";
+import { gearDelta } from "../costume.js";
 import { leagueOf } from "../world.js";
 import { esc, money, clubLabel, leagueShort, roleBadge, catLabel, posLabel, typeLabel, typeIdLabel, trustDots } from "../ui.js";
 
@@ -13,9 +15,13 @@ export function playerCard(app, extra = "") {
   const ovr = Math.round(playerOvr(s));
   const pen = p.penaltySeason === s.world.season;
   const cv = catValues(p.subs);
+  const gear = gearDelta(p);
+  const playId = s.off && s.off.decision ? s.off.decision.clubId : p.loan ? p.loan.clubId : p.clubId;
+  const color = playId ? (app.base.get(playId) || {}).color : null;
   return `<section class="card cr-player">
     <div class="cr-player-top">
-      <div class="cr-ovr" title="포지션 OVR — 이적·역할·훈련 가격·성장 둔화의 기준">${ovr}<small>OVR${pen ? " (적응 −3)" : ""}</small></div>
+      <div class="cr-player-av">${avatarSvg({ look: p.look, equip: p.equip, color, size: 44, pos: p.pos, label: p.name + " 아바타" })}</div>
+      <div class="cr-ovr" title="포지션 OVR(맨몸) — 이적·훈련 가격·성장 둔화의 기준${gear >= 0.05 ? ` · 경기에서는 장비 포함 ${Math.round(playerOvr(s) + gear)}` : ""}">${ovr}<small>OVR${pen ? " (적응 −3)" : ""}${gear >= 0.05 ? ` <span class="cr-gear">+${gear.toFixed(1)} 👕</span>` : ""}</small></div>
       <div class="cr-player-info">
         <div class="cr-player-name">${esc(p.name)} <span class="cr-dim">${p.age}세 · ${posLabel(p.pos)}</span></div>
         <div class="cr-type">${esc(typeLabel(p.pos, p.typeKey))}</div>

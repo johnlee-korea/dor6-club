@@ -1,6 +1,7 @@
 /* ============================================================
    career/views/offseason.js — 오프시즌 단계형 화면 (CLAUDE.md 26-12 ④, v2.13.2 사용자 피드백 반영)
-   ⓪ 🎲 시즌 이벤트(v2.15.0, 고르기 전엔 다음 단계로 못 감) → ① 구단(잔류 기본 · 제안/임대는 접어 둠) → ② 훈련(건너뛰기) → ③ 집중 육성(추천 미리 선택) → ▶ 시즌 시작
+   ⓪ 🎲 시즌 이벤트(v2.15.0, 고르기 전엔 다음 단계로 못 감) → ① 구단(잔류 기본 · 제안/임대는 접어 둠) → ② 훈련(건너뛰기)
+   → ③ 👕 코스튬(v2.26.0, 시즌당 1개 구매 · 옷장 갈아입기 무료, 건너뛰기) → ④ 집중 육성(추천 미리 선택) → ▶ 시즌 시작
    고르면 다음 단계로 바로 넘어감. 설명 문구는 최소한으로.
    ============================================================ */
 import { CATS, W, MAX_CONVERSIONS, CONVERT_PENALTY, SHOP, levelCoef } from "../rules.js";
@@ -14,14 +15,16 @@ import { previewTraining } from "../growth.js";
 import { goalText } from "../goals.js";
 import { esc, money, catLabel, posLabel, clubLabel, roleBadge } from "../ui.js";
 import { playerCard, clubCardHtml } from "./cards.js";
+import { avatarSvg, CAT_COLOR } from "../avatar.js";
+import { SLOTS, SLOT_LABEL, GRADE_LABEL, slotItems, parseItem, itemName, equipBonus, gearDelta, ensureCostume } from "../costume.js";
 
-const STEPS = [["event", "이벤트"], ["club", "구단"], ["shop", "훈련"], ["focus", "집중 육성"]];
+const STEPS = [["event", "이벤트"], ["club", "구단"], ["shop", "훈련"], ["costume", "코스튬"], ["focus", "집중 육성"]];
 
 export function offseason(app) {
   const s = app.state, p = s.player;
   ensureEvent(s);                                   // 예전 저장분(이벤트 도입 전)도 이번 시즌 이벤트를 만듦
   const step = pendingEvent(s) ? "event" : (app.view.offStep || "club");
-  const body = { event: eventStep, club: clubStep, shop: shopStep, focus: focusStep, pos: posStep }[step](app);
+  const body = { event: eventStep, club: clubStep, shop: shopStep, costume: costumeStep, focus: focusStep, pos: posStep }[step](app);
   const at = STEPS.findIndex((x) => x[0] === step);
   return `${playerCard(app)}
     <div class="cr-season-head"><b>시즌 ${s.world.season} 준비</b> <span class="cr-dim">${p.age}세</span>
@@ -93,7 +96,7 @@ function shopStep(app) {
   if (off.shopUsed) {
     const u = off.shopUsed;
     return `<section class="card"><b>✔ ${u.kind === "special" ? "특급 훈련 캠프" : "일반 훈련"}</b> ${catLabel(u.cat)} +${u.amount.toFixed(1)}</section>
-      <button class="btn primary block" data-act="off-step" data-step="focus">다음: 집중 육성 →</button>`;
+      <button class="btn primary block" data-act="off-step" data-step="costume">다음: 코스튬 →</button>`;
   }
   const ovr = Math.round(playerOvr(s, false));
   const price = shopPrice(ovr);
@@ -115,13 +118,59 @@ function shopStep(app) {
     <p class="cr-dim">보유 ${money(p.money)}${levelCoef(ovr) < 1 ? ` · 효과 ×${levelCoef(ovr).toFixed(2)}` : ""}${lack ? ` · <span class="cr-warn">${money(cost - p.money)} 부족</span>` : ""}</p>
     ${app.view.shopMsg ? `<p class="cr-warn">${esc(app.view.shopMsg)}</p>` : ""}
     <div class="cr-actions-inline">
-      <button class="btn" data-act="off-step" data-step="focus">건너뛰기 →</button>
+      <button class="btn" data-act="off-step" data-step="costume">건너뛰기 →</button>
       <button class="btn primary" data-act="shop-buy" ${cat && !lack ? "" : "disabled"}>구매하고 다음 →</button>
     </div>
   </section>`;
 }
 
-/* ---------- ③ 집중 육성 + 시즌 시작 ---------- */
+/* ---------- ③ 👕 코스튬 (30-4) ---------- */
+const bonusText = (b) => Object.keys(b).filter((c) => b[c] > 0).map((c) => `${catLabel(c)} +${b[c].toFixed(1)}`).join(" · ");
+export function costumeStep(app) {
+  const s = app.state, p = s.player, off = s.off;
+  ensureCostume(s);
+  const slot = SLOTS.includes(app.view.cosSlot) ? app.view.cosSlot : "boots";
+  const tryIt = parseItem(app.view.cosTry);
+  const eq = { ...p.equip };
+  if (tryIt) eq[tryIt.slot] = tryIt.id;
+  // 이번 시즌 뛸 구단 색 (이적·임대를 골랐으면 그 구단)
+  const color = (app.base.get(off.decision.clubId) || {}).color;
+  const used = off.costumeUsed ? parseItem(off.costumeUsed) : null;
+  const gNow = gearDelta(p), gTry = tryIt ? gearDelta({ ...p, equip: eq }) : null;
+  const b = equipBonus(p);
+  const items = slotItems(slot).map((it) => {
+    const owned = p.wardrobe.includes(it.id), worn = p.equip[slot] === it.id, trying = tryIt && tryIt.id === it.id;
+    const lack = p.money < it.price;
+    const btns = owned
+      ? (worn ? `<button class="btn sm" data-act="cos-equip" data-slot="${slot}" data-id="">벗기</button>` : `<button class="btn sm primary" data-act="cos-equip" data-slot="${slot}" data-id="${it.id}">착용</button>`)
+      : `<button class="btn sm ${trying ? "active" : ""}" data-act="cos-try" data-id="${trying ? "" : it.id}">${trying ? "그만 입기" : "입어 보기"}</button>
+         <button class="btn sm primary" data-act="cos-buy" data-id="${it.id}" ${used || lack ? "disabled" : ""}>${money(it.price)} 구매</button>`;
+    return `<div class="cr-cos-item g${it.grade}${worn ? " worn" : ""}${trying ? " trying" : ""}">
+      <span class="cr-cos-sw" style="background:${it.grade === 3 ? `linear-gradient(135deg,${CAT_COLOR[it.cat]} 55%,#d9b04a 55%)` : CAT_COLOR[it.cat]}"></span>
+      <div class="cr-cos-info"><b>${esc(itemName(it))}</b>
+        <small><span class="cr-cos-g">${GRADE_LABEL[it.grade]}</span> · ${catLabel(it.cat)} +${it.amt.toFixed(1)}${owned ? " · ✔ 보유" : lack ? ` · <span class="cr-warn">${money(it.price - p.money)} 부족</span>` : ""}</small></div>
+      <div class="cr-cos-btns">${btns}</div></div>`;
+  }).join("");
+  const owned = p.wardrobe.map(parseItem).filter(Boolean);
+  return `<section class="card cr-cos">
+    <div class="cr-cos-top">
+      <div class="cr-cos-av">${avatarSvg({ look: p.look, equip: eq, color, size: 132, label: p.name + " 아바타" })}</div>
+      <div class="cr-cos-side">
+        <p>${used ? `✔ 이번 시즌 구매: <b>${esc(itemName(used))}</b>` : `🛍 이번 시즌 <b>1개</b> 구매 가능`}<br><span class="cr-dim">보유 ${money(p.money)}</span></p>
+        <p class="cr-dim">장비 효과: ${bonusText(b) || "없음"}<br>→ 경기 OVR <b>+${gNow.toFixed(1)}</b>${gTry !== null && Math.abs(gTry - gNow) > 0.001 ? ` <span class="cr-hit">(입어 보기 +${gTry.toFixed(1)})</span>` : ""}</p>
+      </div>
+    </div>
+    <div class="chip-row cr-cos-slots">${SLOTS.map((k) => `<button class="chip ${slot === k ? "active" : ""}" data-act="cos-slot" data-slot="${k}">${SLOT_LABEL[k]}${p.equip[k] ? " •" : ""}</button>`).join("")}</div>
+    <div class="cr-cos-list">${items}</div>
+    ${app.view.cosMsg ? `<p class="cr-warn">${esc(app.view.cosMsg)}</p>` : ""}
+    ${owned.length ? `<details class="cr-fold"><summary>👔 옷장 ${owned.length}개 — 눌러서 갈아입기 (무료)</summary><div class="chip-row">${owned.map((it) =>
+      `<button class="chip ${p.equip[it.slot] === it.id ? "active" : ""}" data-act="cos-equip" data-slot="${it.slot}" data-id="${p.equip[it.slot] === it.id ? "" : it.id}">${SLOT_LABEL[it.slot].split(" ")[0]} ${esc(itemName(it))}</button>`).join("")}</div></details>` : ""}
+    <p class="cr-note">장비 효과는 경기 안 활약(득점·도움·평점)과 시즌 목표에만 반영돼요. 출전 역할·성장·훈련 가격·업적 OVR은 맨몸 기준이에요.</p>
+  </section>
+  <button class="btn primary block" data-act="off-step" data-step="focus">다음: 집중 육성 →</button>`;
+}
+
+/* ---------- ④ 집중 육성 + 시즌 시작 ---------- */
 function focusStep(app) {
   const s = app.state, p = s.player, off = s.off;
   const pv = decisionPreview(s);

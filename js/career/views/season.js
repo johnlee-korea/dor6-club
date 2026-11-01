@@ -10,6 +10,8 @@ import { seasonLabel } from "../config.js";
 import { GOAL_KIND_LABEL } from "../types.js";
 import { renderLine, attrBars } from "../charts.js";
 import { esc, money, catLabel, posLabel, clubLabel, clubText, leagueShort, roleBadge, typeLabel, fmt1 } from "../ui.js";
+import { avatarSvg } from "../avatar.js";
+import { parseItem, itemName } from "../costume.js";
 
 const SUB_LABEL = Object.fromEntries(CATS.flatMap((c) => SUBS[c].map(([k, n]) => [`${c}.${k}`, n])));
 const APP = { S: "선발", U: "교체", N: "벤치", Y: "2군" };
@@ -84,7 +86,8 @@ export function report(app) {
   const tabs = [["matches", "경기별 기록"], ["rank", "순위 추이"], ["leaders", "개인 순위"], ["table", "최종 순위표"]];
   return `<div class="cr-report">
     <div class="cr-season-head"><b>시즌 ${s.n} 리포트</b> <span class="cr-dim">${seasonLabel(s.n)} · ${s.age}세</span></div>
-    <p class="cr-rep-club">${clubLabel(app.base, s.club, { strong: true })} ${s.parent ? `<span class="cr-tag">임대</span>` : ""} <span class="cr-dim">${esc(lg.label)} · ${finishTxt}</span></p>
+    <div class="cr-rep-top"><span class="cr-rep-av">${avatarSvg({ look: app.state.player.look, equip: s.equip || {}, color: (app.base.get(s.club) || {}).color, size: 46, pos: s.pos, label: app.state.player.name + " 아바타" })}</span>
+    <p class="cr-rep-club">${clubLabel(app.base, s.club, { strong: true })} ${s.parent ? `<span class="cr-tag">임대</span>` : ""} <span class="cr-dim">${esc(lg.label)} · ${finishTxt}</span></p></div>
     ${s.legend ? `<div class="cr-legend-banner">🌟 레전드 시즌 🌟</div>` : ""}
     ${hl || ach ? `<div class="cr-hls">${hl}${ach}</div>` : ""}
     <section class="card">
@@ -97,6 +100,7 @@ export function report(app) {
       ${s.stage < 1 ? `<p class="cr-warn">⚠️ 지금 무대가 너무 쉬워요 (성장 효율 −${Math.round((1 - s.stage) * 100)}%) — 더 높은 무대가 필요해요</p>` : ""}
       <p>역할 ${role} · 감독 신뢰도 ${s.trust > 0 ? "+" : ""}${s.trust}${s.awards.length ? ` · 🏅 ${s.awards.map(esc).join(" · ")}` : ""}</p>
       <p>${s.met ? "✅" : "❌"} 시즌 목표: ${esc(goalText(s.goal))} → <b>${goalValue(s.goal.kind, s).toString()}</b>${s.slump ? " · 💧 슬럼프 시즌" : ""}${s.revival ? " · 🔥 부활" : ""}</p>
+      ${s.gear >= 0.05 || s.costume ? `<p>👕 ${s.costume && parseItem(s.costume) ? `새 코스튬 <b>${esc(itemName(parseItem(s.costume)))}</b> · ` : ""}장비 효과 경기 OVR +${(s.gear || 0).toFixed(1)}</p>` : ""}
       <p>💰 수입 ${money(s.income)} <span class="cr-dim">(연봉 ${money(s.salary)} + 보너스)</span> · 보유 ${money(s.money)}</p>
       ${s.typeAfter !== s.type ? `<p class="cr-hit">🧬 유형 진화: ${esc(typeLabel(s.pos, s.type))} → <b>${esc(typeLabel(s.pos, s.typeAfter))}</b></p>` : ""}
     </section>

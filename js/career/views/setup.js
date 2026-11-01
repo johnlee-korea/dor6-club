@@ -12,9 +12,13 @@ import { NOTICE } from "../config.js";
 import { esc, money, catLabel, posLabel, countryName, clubLabel, leagueShort } from "../ui.js";
 import { playerCard, clubCardHtml } from "./cards.js";
 import { starBoost, CAREER_BOOST } from "../../league/career-link.js";
+import { avatarSvg } from "../avatar.js";
+import { randomLook, SKINS, HAIRS, HAIR_LABEL, HAIR_COLORS } from "../costume.js";
 
 let nameSeq = 0;
 export const randomName = () => makeMyName(makeRng("name|" + Date.now() + "|" + nameSeq++));
+export const randomLookDraft = (pos) => randomLook(makeRng("look|" + Date.now() + "|" + nameSeq++), pos);
+export const newDraft = () => ({ name: randomName(), pos: "ST", pair: ["spd", "sht"], look: randomLookDraft("ST") });
 
 /* ---------- 타이틀 ---------- */
 export function home(app) {
@@ -85,10 +89,21 @@ export function create(app) {
   return `<div class="cr-create">
     <h2 class="section-title">1. 이름</h2>
     <div class="cr-row"><input id="cr-name" class="input" maxlength="10" value="${esc(d.name)}" aria-label="선수 이름 (가상)"><button class="btn sm" data-act="create-name" title="랜덤 이름">🎲</button></div>
-    <h2 class="section-title">2. 포지션</h2>
+    <h2 class="section-title">2. 외모</h2>
+    <div class="cr-look">
+      <div class="cr-look-av">${avatarSvg({ look: d.look, color: "#6b7480", size: 96, pos: d.pos, label: "외모 미리보기" })}</div>
+      <div class="cr-look-opts">
+        <div class="cr-look-row"><span class="cr-dim">피부</span>${SKINS.map((c, i) => `<button class="cr-sw ${d.look.skin === i ? "on" : ""}" style="background:${c}" data-act="look-skin" data-i="${i}" aria-label="피부톤 ${i + 1}"></button>`).join("")}</div>
+        <div class="cr-look-row"><span class="cr-dim">머리색</span>${HAIR_COLORS.map((c, i) => `<button class="cr-sw ${d.look.hairColor === i ? "on" : ""}" style="background:${c}" data-act="look-hc" data-i="${i}" aria-label="머리색 ${i + 1}"></button>`).join("")}</div>
+        <div class="cr-look-row"><span class="cr-dim">등번호</span><input id="cr-num" class="input cr-num" type="number" min="1" max="99" value="${d.look.number}" aria-label="등번호"><button class="btn sm" data-act="look-random" title="외모 랜덤">🎲</button></div>
+      </div>
+    </div>
+    <div class="chip-row">${HAIRS.map((h) => `<button class="chip ${d.look.hair === h ? "active" : ""}" data-act="look-hair" data-h="${h}">${HAIR_LABEL[h]}</button>`).join("")}</div>
+    <p class="cr-note">유니폼 색은 입단한 구단 색으로 바뀌어요. 축구화·유니폼 등 코스튬은 오프시즌에 연봉으로 살 수 있어요.</p>
+    <h2 class="section-title">3. 포지션</h2>
     <div class="chip-row">${POSITIONS.map((p) => `<button class="chip ${d.pos === p ? "active" : ""}" data-act="create-pos" data-pos="${p}">${posLabel(p)}</button>`).join("")}</div>
     <p class="cr-note">골키퍼는 없어요. 포지션마다 중요한 능력치가 달라요.</p>
-    <h2 class="section-title">3. 강점 2개</h2>
+    <h2 class="section-title">4. 강점 2개</h2>
     <div class="chip-row">${CATS.map((c) => `<button class="chip ${d.pair.includes(c) ? "active" : ""}" data-act="create-cat" data-cat="${c}">${catLabel(c)}</button>`).join("")}</div>
     ${pair ? `<section class="card cr-result">
       <div class="cr-result-type">${star ? "★ " : ""}${esc(typeName(d.pos, key))}</div>

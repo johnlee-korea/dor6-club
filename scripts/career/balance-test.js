@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { hashSeed } from "../../js/engine/rng.js";
+import { SLOTS, slotItems, buyCostume, gearDelta } from "../../js/career/costume.js";
 import { LEAGUES } from "../../js/career/rules.js";
 import { createWorld, endSeason, indexBase } from "../../js/career/world.js";
 import { simulateSeason } from "../../js/career/season.js";
@@ -109,6 +110,16 @@ function runCareerAuto(seed, pos, pol) {
       if (p.age >= 19 && p.money >= price.special) buyTraining(state, "special", top);
       else if (p.money >= price.normal) buyTraining(state, "normal", top);
     }
+    // 👕 --costume: 훈련 뒤 남은 돈으로 경기 OVR이 가장 많이 오르는 코스튬 1개 (v2.26.0 밸런스 검수)
+    if (args.includes("--costume")) {
+      let best = null, bestG = gearDelta(p) + 0.0001;
+      for (const slot of SLOTS) for (const it of slotItems(slot)) {
+        if (p.wardrobe.includes(it.id) || p.money < it.price) continue;
+        const g = gearDelta({ ...p, equip: { ...p.equip, [slot]: it.id } });
+        if (g > bestG) { bestG = g; best = it.id; }
+      }
+      if (best) buyCostume(state, best);
+    }
     const own = { ...clubCard(state, p.clubId, { trust: p.trust }), stay: true };
     let choice = own;
     if (pol.club !== "stay") {
@@ -134,7 +145,7 @@ if (args.includes("--careers")) {
   const t0 = performance.now();
   for (const pn of pols) {
     const at = {}, peaks = [], peakAges = [], big27 = [], b25 = [], topAge = [], ret = [];
-    let evGain = 0, evN = 0;
+    let evGain = 0, evN = 0, gearMax = 0, gear27 = [];
     let legP = 0, legN = 0, slumpN = 0, slumpBase = 0, statDiffs = [];
     for (let r = 0; r < N; r++) {
       const pos = POSITIONS[r % POSITIONS.length];
@@ -148,6 +159,7 @@ if (args.includes("--careers")) {
         if (s.age >= 27 && s.age <= 32) { legN++; if (s.legend) legP++; }
         if (s.role !== "B") { slumpBase++; if (s.slump) slumpN++; }
         if (s.event) { evN++; evGain += s.event.gain; }
+        if (s.gear) { gearMax = Math.max(gearMax, s.gear); if (s.age === 27) gear27.push(s.gear); }
       }
       peaks.push(Math.round(peak)); peakAges.push(pa); big27.push(big !== null && big <= 27); b25.push(big !== null && big < 25);
       if (top !== null) topAge.push(top);
@@ -162,6 +174,7 @@ if (args.includes("--careers")) {
     console.log(`\n[${pn}] ${N}회 — OVR(시즌 시작): ` + [16, 18, 21, 24, 27, 30, 31, 33, 36].map((a) => `${a}세 ${at[a] ? mean(at[a]).toFixed(1) : "-"}`).join(" · "));
     console.log(`  정점 평균 ${mean(peaks).toFixed(1)} · 분포 ${Object.entries(dist).map(([k, v]) => `${k} ${pct(v)}%`).join(" · ")}`);
     console.log(`  정점 27~32세 ${pct(peakAges.filter((a) => a >= 27 && a <= 32).length)}% · 27세까지 빅클럽 주전 ${pct(big27.filter(Boolean).length)}% · 25세 전 ${pct(b25.filter(Boolean).length)}% · 최상위 주전 중앙 ${topAge.length ? med(topAge) + "세" : "-"}(${pct(topAge.length)}%)`);
+    if (gearMax) console.log(`  👕 장비 보정 경기 OVR 27세 평균 +${mean(gear27).toFixed(2)} · 최대 +${gearMax.toFixed(2)}`);
     if (evN) console.log(`  🎲 이벤트 평균 OVR +${(evGain / evN).toFixed(2)}/시즌 · 커리어당 +${(evGain / N).toFixed(1)}`);
     console.log(`  레전드(27~32세 시즌당) ${(100 * legP / (legN || 1)).toFixed(1)}% · 슬럼프(주전·로테이션 시즌당) ${(100 * slumpN / (slumpBase || 1)).toFixed(1)}% · 은퇴 평균 ${mean(ret).toFixed(1)}세`);
   }

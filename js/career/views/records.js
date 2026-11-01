@@ -7,6 +7,7 @@ import { NOTICE, seasonLabel } from "../config.js";
 import { renderLine } from "../charts.js";
 import { esc, money, clubLabel, clubText, leagueShort, roleBadge, typeIdLabel, posLabel } from "../ui.js";
 import { parseType } from "../types.js";
+import { avatarSvg } from "../avatar.js";
 
 /* ---------- 커리어 기록 ---------- */
 export function career(app) {
@@ -52,6 +53,7 @@ export function retire(app) {
   if (!s) return hall(app);
   const sum = careerSummary(s);
   return `<div class="cr-retire-box">
+    <div class="cr-retire-av">${avatarSvg({ look: s.player.look, equip: s.player.equip, color: (app.base.get(s.player.clubId) || {}).color, size: 110, pos: s.player.pos, label: s.player.name + " 아바타" })}</div>
     <h2 class="cr-h2">🏁 ${esc(s.player.name)} 은퇴</h2>
     <p class="cr-dim">${sum.retiredAge}세 · ${sum.seasons}시즌 · 시작 유형 ${esc(typeIdLabel(sum.startType))}${sum.star ? "" : " (도전 모드)"}</p>
     ${totalsCard(s.totals)}
@@ -72,7 +74,7 @@ export function hall(app) {
   return `<h2 class="cr-h2">🏛 내 선수 명예의 전당</h2>
     <p class="cr-dim">이 기기에서 은퇴한 선수들이에요. "이번엔 저 기록을 넘겨 보자!"</p>
     <div class="chip-row">${sorts.map(([key, l]) => `<button class="chip ${k === key ? "active" : ""}" data-act="hall-sort" data-k="${key}">${l}</button>`).join("")}</div>
-    ${list.length ? list.map((h, i) => `<details class="card cr-hall"><summary><b>${i + 1}.</b> ${esc(h.name)} <span class="cr-dim">${esc(typeIdLabel(h.types[h.types.length - 1]))}</span>
+    ${list.length ? list.map((h, i) => `<details class="card cr-hall"><summary>${h.look ? `<span class="cr-hall-av">${avatarSvg({ look: h.look, equip: h.equip, color: (app.base.get(h.lookClub) || {}).color, size: 26, label: h.name })}</span>` : ""}<b>${i + 1}.</b> ${esc(h.name)} <span class="cr-dim">${esc(typeIdLabel(h.types[h.types.length - 1]))}</span>
       <span class="cr-hall-v">${k === "income" ? money(h.income) : k === "maxOvr" ? "OVR " + h.maxOvr : k === "goals" ? h.goals + "골" : h.titles + "회 우승"}</span></summary>
       <p>${h.seasons}시즌 · ${h.apps}경기 ${h.goals}골 ${h.assists}도움 · 우승 ${h.titles} · 레전드 ${h.legends} · ${money(h.income)}</p>
       <p class="cr-dim">유형: ${h.types.map((id) => esc(typeIdLabel(id))).join(" → ")}</p>

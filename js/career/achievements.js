@@ -1,9 +1,10 @@
 /* ============================================================
-   career/achievements.js — 커리어 업적 38개 (CLAUDE.md 26-10)
+   career/achievements.js — 커리어 업적 40개 (CLAUDE.md 26-10)
    판정은 커리어 상태(totals·history)만으로 → 화면이 기기 누적 목록(meta)에 합침
    ============================================================ */
 import { BIG_CLUB } from "./rules.js";
 import { leagueOf } from "./world.js";
+import { equipStats, SLOTS } from "./costume.js";
 
 const T = (s) => s.totals;
 export const ACHIEVEMENTS = [
@@ -55,6 +56,9 @@ export const ACHIEVEMENTS = [
   { id: "iron", cat: "노장", icon: "🗿", name: "철인", desc: "40세 시즌까지 현역", test: (s) => s.history.some((h) => h.age >= 40) },
   // 유망주
   { id: "prodigy", cat: "유망주", icon: "🍼", name: "신동", desc: "18세 이하에 1군 주전", test: (s) => !!T(s).youngStarter },
+  // 👕 코스튬 (v2.26.0)
+  { id: "fashion", cat: "코스튬", icon: "👗", name: "패셔니스타", desc: "코스튬 7부위 모두 착용하고 시즌 마치기", test: (s) => equipStats(s.player).worn >= SLOTS.length },
+  { id: "limited", cat: "코스튬", icon: "✨", name: "한정판 컬렉터", desc: "한정판 코스튬 7부위 모두 착용하고 시즌 마치기", test: (s) => equipStats(s.player).limited >= SLOTS.length },
   { id: "wonderkid", cat: "유망주", icon: "💎", name: "원더키드", desc: "21세에 OVR 75 이상", test: (s) => s.history.some((h) => h.age === 21 && Math.round(h.ovrEnd) >= 75) }
 ];
 export const ACH_CATS = [...new Set(ACHIEVEMENTS.map((a) => a.cat))];

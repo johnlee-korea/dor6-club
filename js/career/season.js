@@ -71,7 +71,9 @@ function meController({ world, seed, me, squad, rounds }) {
   };
   squad.players.push(mePlayer);
   let trust = me.trust;
-  let role = roleFor(squad, me.pos, roleScore(me.ovr, me.pref, trust));
+  // 역할 판정은 맨몸 OVR (👕 장비는 경기 안 활약에만 — v2.26.0 밸런스 검수: 역할에 넣으면 주전 기회가 복리로 커짐)
+  const roleOvr = me.roleOvr ?? me.ovr;
+  let role = roleFor(squad, me.pos, roleScore(roleOvr, me.pref, trust));
   const startRole = role;
   const base = defaultLineup(squad);
   // 내 포지션 주전 중 가장 약한 선수(교체·선발 시 내가 그 자리)
@@ -139,7 +141,7 @@ function meController({ world, seed, me, squad, rounds }) {
       else if (others.length && myAvg <= Math.min(...others)) d = -1;
       const before = role;
       trust = clamp(trust + d, TRUST_MIN, TRUST_MAX);
-      const next = roleFor(squad, me.pos, roleScore(me.ovr, me.pref, trust));
+      const next = roleFor(squad, me.pos, roleScore(roleOvr, me.pref, trust));
       const rank = { B: 0, R: 1, S: 2 };
       role = rank[next] > rank[role] ? (role === "B" ? "R" : "S") : rank[next] < rank[role] ? (role === "S" ? "R" : "B") : role;
       ctl.mid = { trust: d, from: before, to: role };

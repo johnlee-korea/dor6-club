@@ -29,7 +29,7 @@
 
 /* 선수 카드 */
 .cr-player { padding: var(--sp-4); }
-.cr-player-top { display: flex; gap: var(--sp-4); align-items: center; }
+.cr-player-top { display: flex; gap: var(--sp-3); align-items: center; }
 .cr-ovr { font-size: 44px; font-weight: 900; line-height: 1; color: var(--silver-bright); font-variant-numeric: tabular-nums; text-align: center; min-width: 76px; }
 .cr-ovr small { display: block; font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted); margin-top: 4px; }
 .cr-player-info { min-width: 0; flex: 1; }
@@ -84,7 +84,7 @@
 .cr-conv { display: flex; justify-content: space-between; gap: var(--sp-2); align-items: center; padding: var(--sp-2) 0; border-bottom: 1px solid var(--border); }
 
 /* 단계형 오프시즌 (v2.13.2) */
-.cr-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: var(--sp-2) 0 var(--sp-3); }
+.cr-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: var(--sp-2) 0 var(--sp-3); }
 .cr-step { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); border-radius: var(--radius-sm); padding: 8px 2px; font-size: var(--fs-sm); white-space: nowrap; font-weight: 700; cursor: pointer; }
 .cr-step.done { color: var(--silver); }
 .cr-step.on { background: var(--silver); color: var(--bg); border-color: var(--silver); }
@@ -225,3 +225,42 @@
 
 /* ⭐ 도륙리그 연동 카드 (v2.24.0) */
 .cr-link { display: grid; gap: 4px; border-left: 3px solid var(--accent); }
+
+/* ---------- 👕 아바타 · 코스튬 (v2.26.0, CLAUDE.md 30장) ---------- */
+.cr-av { display: block; overflow: visible; }
+.cr-player-av { flex: none; width: 44px; margin: -4px -4px -4px 0; }
+.cr-player-top .cr-ovr { min-width: 64px; }
+.cr-gear { color: var(--ok); font-weight: 800; white-space: nowrap; }
+.cr-cos-top { display: flex; gap: var(--sp-3); align-items: center; }
+.cr-cos-av { flex: none; width: 132px; display: flex; justify-content: center; background: radial-gradient(circle at 50% 60%, var(--surface-2), transparent 70%); border-radius: var(--radius-sm); }
+.cr-cos-side { flex: 1; min-width: 0; font-size: var(--fs-sm); }
+.cr-cos-side p { margin: 0 0 var(--sp-2); }
+.cr-cos-slots { margin-top: var(--sp-3); }
+.cr-cos-list { display: grid; gap: 6px; margin-top: var(--sp-2); }
+.cr-cos-item { display: flex; align-items: center; gap: var(--sp-2); padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); }
+.cr-cos-item.g3 { border-color: #d9b04a; }
+.cr-cos-item.worn { outline: 2px solid var(--ok); outline-offset: -2px; }
+.cr-cos-item.trying { outline: 2px dashed var(--silver); outline-offset: -2px; }
+.cr-cos-sw { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .3); }
+.cr-cos-info { flex: 1; min-width: 0; font-size: var(--fs-sm); }
+.cr-cos-info b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-cos-info small { display: block; color: var(--text-muted); }
+.cr-cos-g { font-size: var(--fs-xs); color: var(--text-muted); }
+.cr-cos-item.g3 .cr-cos-g { color: var(--gold, #d9b04a); font-weight: 700; }
+.cr-cos-btns { flex: none; display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
+.cr-cos-btns .btn { padding: 4px 8px; font-size: var(--fs-xs); }
+@media (max-width: 420px) { .cr-steps .cr-step { font-size: 12px; letter-spacing: -0.03em; } }
+.cr-look { display: flex; gap: var(--sp-3); align-items: center; }
+.cr-look-av { flex: none; width: 96px; }
+.cr-look-opts { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.cr-look-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: var(--fs-sm); }
+.cr-look-row > .cr-dim { width: 44px; flex: none; }
+.cr-sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; padding: 0; }
+.cr-sw.on { border-color: var(--silver-bright); box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--silver-bright); }
+.cr-num { width: 64px; }
+.cr-rep-top { display: flex; align-items: center; gap: var(--sp-2); }
+.cr-rep-top .cr-rep-club { margin: 0; }
+.cr-rep-av { flex: none; width: 46px; }
+.cr-retire-av { display: flex; justify-content: center; }
+.cr-hall-av { display: inline-block; width: 26px; vertical-align: middle; margin-right: 4px; }
+.cr-hall-av .cr-av { display: inline-block; }

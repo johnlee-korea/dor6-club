@@ -15,11 +15,12 @@ import { makeGoal, goalMet, addTrust } from "./goals.js";
 import { clubCard, makeOffers, loanOptions, startOptions, shopPrice, salaryOf } from "./market.js";
 import { checkAchievements } from "./achievements.js";
 import { prepareEvent, resolveEvent, eventDef, TIERS } from "./events.js";
+import { ensureCostume, gearDelta, equipBonus, cleanLook, randomLook } from "./costume.js";
 
 const ri = (v) => Math.round(v);
 
 /* ---------- 새 커리어 ---------- */
-export function newCareer({ name, pos, pair, seed, clubsJson, createdAt }) {
+export function newCareer({ name, pos, pair, seed, clubsJson, createdAt, look }) {
   const rng = makeRng(seed + "|player");
   const subs = makeStart(pos, pair, rng);
   const key = comboKey(pair[0], pair[1]);
@@ -27,7 +28,9 @@ export function newCareer({ name, pos, pair, seed, clubsJson, createdAt }) {
     v: SAVE_VERSION, seed, createdAt: createdAt || null, phase: "start-club",
     world: createWorld(clubsJson, seed),
     player: { name, pos, typeKey: key, startType: `${pos}:${key}`, star: isStar(pos, pair), subs, age: 16,
-              clubId: null, loan: null, trust: 0, money: 0, conversions: 0, penaltySeason: 0, lastFocus: null },
+              clubId: null, loan: null, trust: 0, money: 0, conversions: 0, penaltySeason: 0, lastFocus: null,
+              // 👕 v2.26.0 외모·옷장·착용 (CLAUDE.md 30장)
+              look: look ? cleanLook(look, pos) : randomLook(makeRng(seed + "|look"), pos), wardrobe: [], equip: {} },
     off: null, history: [], recent: [],
     totals: { seasons: 0, apps: 0, goals: 0, assists: 0, hatTricks: 0, income: 0, titles: 0, awards: {}, legends: 0, slumps: 0,
               typeChanges: 0, maxOvr: ri(posOvr(subs, pos)), clubs: {}, countries: [], debut: null, tier1Debut: null, firstGoal: null,
@@ -61,12 +64,14 @@ export function defaultFocus(state, clubId) {
 }
 
 export function prepareOffseason(state, last) {
+  ensureCostume(state);
   const p = state.player;
   const own = clubCard(state, p.clubId, { trust: p.trust, penalty: p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0 });
   state.off = {
     offers: last ? makeOffers(state, last) : [],
     loans: last ? loanOptions(state, own.role) : [],
     shopUsed: null,
+    costumeUsed: null,
     focus: (p.lastFocus && p.lastFocus.length === 3) ? p.lastFocus.slice() : defaultFocus(state),
     decision: { type: "stay", clubId: p.clubId },
     converted: null
@@ -82,7 +87,7 @@ export function decisionPreview(state) {
   const trust = d.type === "stay" ? p.trust : 0;
   const card = clubCard(state, clubId, { trust, penalty: p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0 });
   const games = 2 * (leagueClubCount(state, card.league) - 1);
-  const ovr = ri(posOvr(p.subs, p.pos) - (p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0));
+  const ovr = ri(posOvr(p.subs, p.pos) + gearDelta(p) - (p.penaltySeason === state.world.season ? CONVERT_PENALTY : 0));
   const goal = makeGoal(card.role, p.pos, games, state.history[state.history.length - 1], { ovr, R: card.R, typeRb: typeEffects(p.pos, p.typeKey).rb });
   return { card, goal, games };
 }
@@ -133,6 +138,7 @@ export function convertPosition(state, pos) {
 /* ---------- 시즌 진행 ---------- */
 export function playSeason(state, clubsJson) {
   const base = indexBase(clubsJson);
+  ensureCostume(state);
   const p = state.player, world = state.world, n = world.season;
   const d = state.off.decision;
   const prevClub = p.clubId;
@@ -144,12 +150,14 @@ export function playSeason(state, clubsJson) {
   const leagueId = club.league, clubR = club.R;   // 시즌 종료 처리(승강·등급 재배분) 전에 고정
   const penalty = p.penaltySeason === n ? CONVERT_PENALTY : 0;
   const ovrStart = posOvr(p.subs, p.pos);
-  const ovrShown = ri(ovrStart - penalty);
+  const ovrShown = ri(ovrStart - penalty);              // 맨몸 (성장·기록 기준)
+  const gear = gearDelta(p), gearB = equipBonus(p);
+  const ovrPlay = ri(ovrStart + gear - penalty);          // 👕 경기 OVR (경기 안 활약·목표, 역할 판정은 맨몸) — 장비 없으면 ovrShown과 같음
   const pm = prefMatch(p.pos, p.typeKey, club.pref);
   const cv = catValues(p.subs);
   const attrs = {};
   const [a, b] = p.typeKey.split("+");
-  for (const c of CATS) attrs[c] = ri(cv[c]) + (pm === "full" && (c === a || c === b) ? 2 : 0);
+  for (const c of CATS) attrs[c] = ri(cv[c] + gearB[c]) + (pm === "full" && (c === a || c === b) ? 2 : 0);
   if (pm === "partial") { const pc = club.pref.split(":")[1].split("+"); for (const c of [a, b]) if (pc.includes(c)) attrs[c] += 1; }
   const fx = typeEffects(p.pos, p.typeKey);
   const trustIn = p.loan ? 0 : p.trust;
@@ -157,9 +165,9 @@ export function playSeason(state, clubsJson) {
   const focus = state.off.focus.slice();
 
   const res = simulateSeason({ world, seed: state.seed,
-    me: { clubId: playId, name: p.name, pos: p.pos, ovr: ovrShown, attrs, fx, pref: pm, trust: trustIn, age: p.age } });
+    me: { clubId: playId, name: p.name, pos: p.pos, ovr: ovrPlay, roleOvr: ovrShown, attrs, fx, pref: pm, trust: trustIn, age: p.age } });
   const mine = res.mine;
-  const goal = makeGoal(mine.startRole, p.pos, mine.games, last, { ovr: ovrShown, R: clubR, typeRb: fx.rb });
+  const goal = makeGoal(mine.startRole, p.pos, mine.games, last, { ovr: ovrPlay, R: clubR, typeRb: fx.rb });
   const met = goalMet(goal, mine);
   const champion = res.leagues[club.league].order[0] === playId;
   // 레전드 시즌은 2시즌 연속 나오지 않음 (다음 시즌은 견제가 심해짐)
@@ -225,6 +233,7 @@ export function playSeason(state, clubsJson) {
     efficiency: growth.efficiency, ratio: Math.round(growth.ratio * 100) / 100, stage: growth.S, focus, coach: club.coach.slice(),
     legend, slump: !!slump, revival: !!revival, goal, met, trust: p.trust, salary, income, money: p.money,
     pref: pm, short: mine.short, converted: state.off.converted, shop: state.off.shopUsed, event: eventSummary(state.off.event),
+    gear: round1(gear), equip: { ...p.equip }, costume: state.off.costumeUsed || null,
     subTop: Object.keys(p.subs).map((k) => [k, round1(p.subs[k] - subsBefore[k])]).sort((x, y) => y[1] - x[1]).slice(0, 5)
   };
   const totalsBefore = JSON.parse(JSON.stringify(state.totals));
@@ -340,6 +349,7 @@ export function careerSummary(state) {
     id: `${state.seed}`, name: p.name, startType: p.startType, star: p.star, types, retiredAge: p.age - 1 < 16 ? 16 : p.age - 1,
     maxOvr: t.maxOvr, seasons: t.seasons, apps: t.apps, goals: t.goals, assists: t.assists, titles: t.titles,
     awards: t.awards, legends: t.legends, income: t.income,
+    look: p.look ? { ...p.look } : null, equip: { ...(p.equip || {}) }, lookClub: p.clubId,
     clubs: Object.keys(t.clubs), bestClub: hs.reduce((m, s) => (!m || s.R > m.R ? s : m), null)?.club || null,
     history: hs.map((s) => ({ n: s.n, age: s.age, club: s.club, league: s.league, role: s.role, apps: s.starts + s.subs, g: s.goals, a: s.assists, avg: s.avg, ovr: s.ovrShown, legend: s.legend, champion: s.champion }))
   };

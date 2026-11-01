@@ -8,6 +8,7 @@ import { indexBase } from "./world.js";
 import { makeStorage, loadSave, writeSave, clearSave, loadMeta, writeMeta, mergeAchievements, exportText, parseImport } from "./save.js";
 import { newCareer, chooseStartClub, playSeason, decide, setFocus, buyTraining, convertPosition, retire, careerSummary, defaultFocus, chooseEvent } from "./career.js";
 import { pendingEvent } from "./events.js";
+import { ensureCostume, buyCostume, equipItem, cleanLook, HAIRS } from "./costume.js";
 import { syncLeague, bestStar, deviceSeasons, lastResult, linkedProfile } from "./league-sync.js";
 import * as setup from "./views/setup.js";
 import * as off from "./views/offseason.js";
@@ -41,7 +42,7 @@ export async function mountCareer(root, opts = {}) {
 
   const app = {
     root, doc, win, storage, clubsJson, base: indexBase(clubsJson),
-    state: loadSave(storage), meta: loadMeta(storage),
+    state: ensureCostume(loadSave(storage)), meta: loadMeta(storage),
     view: {},          // 화면별 임시 상태 (선수 생성 초안·탭 선택 등)
     lastReport: null,  // 방금 끝난 시즌 결과(성장 계수 등 저장하지 않는 세부)
     saveFailed: false,
@@ -115,7 +116,12 @@ export async function mountCareer(root, opts = {}) {
   const acts = {
     go: (d) => app.go(d.to),
     // 선수 생성
-    "create-pos": (d) => { app.view.draft.pos = d.pos; render(); },
+    "create-pos": (d) => {
+      const dr = app.view.draft;
+      // 등번호를 직접 바꾼 적 없으면 포지션 대표 번호로
+      if (!dr.numTouched) dr.look.number = cleanLook({ ...dr.look, number: 0 }, d.pos).number;
+      dr.pos = d.pos; render();
+    },
     "create-cat": (d) => {
       const sel = app.view.draft.pair;
       const i = sel.indexOf(d.cat);
@@ -124,13 +130,20 @@ export async function mountCareer(root, opts = {}) {
     },
     "create-combo": (d) => { app.view.draft.pair = d.combo.split("+"); render(); },
     "create-name": () => { app.view.draft.name = setup.randomName(); render(); },
+    // 👕 외모 (v2.26.0)
+    "look-skin": (d) => { app.view.draft.look.skin = +d.i; render(); },
+    "look-hair": (d) => { if (HAIRS.includes(d.h)) app.view.draft.look.hair = d.h; render(); },
+    "look-hc": (d) => { app.view.draft.look.hairColor = +d.i; render(); },
+    "look-random": () => { app.view.draft.look = setup.randomLookDraft(app.view.draft.pos); render(); },
     "create-start": () => {
       const dr = app.view.draft;
       const nameEl = root.querySelector("#cr-name");
       const name = ((nameEl && nameEl.value) || dr.name || "").trim().slice(0, 10) || setup.randomName();
       if (!dr.pos || dr.pair.length !== 2) return;
+      const numEl = root.querySelector("#cr-num");
+      const look = cleanLook({ ...dr.look, number: numEl ? +numEl.value : dr.look.number }, dr.pos);
       if (app.state && app.state.phase !== "retired" && !win.confirm("진행 중인 커리어가 지워져요. 새로 시작할까요?")) return;
-      app.state = newCareer({ name, pos: dr.pos, pair: dr.pair, seed: seedFn(), clubsJson, createdAt: nowIso() });
+      app.state = newCareer({ name, pos: dr.pos, pair: dr.pair, seed: seedFn(), clubsJson, createdAt: nowIso(), look });
       app.view.country = null;
       app.persist();
       app.go("start-club");
@@ -170,9 +183,20 @@ export async function mountCareer(root, opts = {}) {
     "shop-buy": () => {
       const r = buyTraining(app.state, app.view.shopKind || "normal", app.view.shopCat);
       app.persist();
-      if (r.ok) { app.view.offStep = "focus"; render(); app.view.shopMsg = null; return; }
+      if (r.ok) { app.view.offStep = "costume"; render(); app.view.shopMsg = null; return; }
       app.view.shopMsg = r.reason; render();
     },
+    // 👕 코스튬
+    "cos-slot": (d) => { app.view.cosSlot = d.slot; app.view.cosTry = null; app.view.cosMsg = null; render(); },
+    "cos-try": (d) => { app.view.cosTry = d.id || null; app.view.cosMsg = null; render(); },
+    "cos-buy": (d) => {
+      const r = buyCostume(app.state, d.id);
+      app.view.cosTry = null;
+      app.view.cosMsg = r.ok ? null : r.reason;
+      if (r.ok) app.persist();
+      render();
+    },
+    "cos-equip": (d) => { equipItem(app.state, d.slot, d.id || null); app.view.cosTry = null; app.persist(); render(); },
     "convert": (d) => {
       if (!win.confirm("포지션을 바꾸면 이번 시즌 OVR −3(적응 기간)이에요. 커리어 중 2번까지만 가능해요. 바꿀까요?")) return;
       convertPosition(app.state, d.pos);
@@ -198,7 +222,7 @@ export async function mountCareer(root, opts = {}) {
           app.lastReport = out;
           const fresh = mergeAchievements(app.meta, out.summary.achievements, app.state.seed, nowIso());
           out.summary.deviceNew = fresh;
-          app.view.focusTouched = false; app.view.shopMsg = null; app.view.shopCat = null;
+          app.view.focusTouched = false; app.view.shopMsg = null; app.view.shopCat = null; app.view.cosTry = null; app.view.cosMsg = null;
           app.persist();
           app.syncLeague();
           app.view.playing = { n: out.summary.n };
@@ -229,7 +253,7 @@ export async function mountCareer(root, opts = {}) {
     "discard": () => {
       // 기록 없이 새로 시작 (명예의 전당에 남기지 않음, 업적은 이미 기기에 저장됨)
       app.state = null; clearSave(storage); app.persist();
-      app.view.draft = { name: setup.randomName(), pos: "ST", pair: ["spd", "sht"] };
+      app.view.draft = setup.newDraft();
       app.go("create");
     },
     "hall-sort": (d) => { app.view.hallSort = d.k; render(); },
@@ -249,7 +273,7 @@ export async function mountCareer(root, opts = {}) {
       const r = parseImport(t ? t.value : "");
       if (r.error) { app.view.setMsg = r.error; render(); return; }
       if (!win.confirm("지금 기기의 커리어·업적·명예의 전당을 가져온 내용으로 바꿀까요?")) return;
-      app.state = r.state; if (r.meta) app.meta = { ...loadMeta({ getItem: () => JSON.stringify(r.meta) }) };
+      app.state = ensureCostume(r.state); if (r.meta) app.meta = { ...loadMeta({ getItem: () => JSON.stringify(r.meta) }) };
       app.persist(); app.view.setMsg = "가져오기 완료!"; app.go("home");
     },
     "reset": () => {
@@ -259,7 +283,10 @@ export async function mountCareer(root, opts = {}) {
     }
   };
   // 이름 입력은 다시 그려도 유지되게 초안에 바로 반영
-  root.addEventListener("input", (e) => { if (e.target.id === "cr-name") app.view.draft.name = e.target.value; });
+  root.addEventListener("input", (e) => {
+    if (e.target.id === "cr-name") app.view.draft.name = e.target.value;
+    if (e.target.id === "cr-num") { app.view.draft.look.number = +e.target.value; app.view.draft.numTouched = true; }
+  });
   root.addEventListener("click", (e) => {
     const t = e.target.closest("[data-act]");
     if (!t || !root.contains(t) || t.disabled) return;
@@ -267,7 +294,7 @@ export async function mountCareer(root, opts = {}) {
     if (fn) { e.preventDefault(); fn(t.dataset); }
   });
 
-  app.view.draft = { name: setup.randomName(), pos: "ST", pair: ["spd", "sht"] };
+  app.view.draft = setup.newDraft();
   app.acts = acts;
   const start = routeFromHash();
   setRoute(start || (app.state ? (app.state.phase === "retired" ? "retire" : app.state.phase === "start-club" ? "start-club" : "offseason") : "home"));

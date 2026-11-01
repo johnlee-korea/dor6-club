@@ -113,6 +113,18 @@ export const SHOP = {
 };
 export const shopPrice = (ovr) => { const [n, s] = lerp(SHOP.price, ovr); return { normal: round1(n), special: round1(s) }; };
 
+/* ---------- 👕 코스튬 (v2.26.0, CLAUDE.md 30장 — costume.js·avatar.js) ----------
+   부위별로 올릴 수 있는 대분류 · 등급별 효과(대분류 값 +)·가격(만 €, OVR 무관 고정)
+   효과는 '경기 OVR'(경기·역할·목표)에만 — 성장·훈련 가격·업적·영입 범위는 맨몸 기준 */
+export const COSTUME = {
+  slots: [
+    ["boots", ["spd", "sht", "dri"]], ["socks", ["phy"]], ["top", ["dri", "pas"]], ["shorts", ["spd"]],
+    ["gloves", ["def"]], ["glasses", ["pas"]], ["ball", ["sht", "pas", "dri"]]
+  ],
+  grades: [null, { amt: 0.3, price: 0.5 }, { amt: 0.6, price: 3 }, { amt: 1.0, price: 20 }],
+  perSeason: 1
+};
+
 /* ---------- 리그 (26-7-1) ---------- */
 export const LEAGUES = [
   { id: "en.1", country: "en", tier: 1, label: "잉글랜드 1부 리그", band: [72, 84], down: 3 },
