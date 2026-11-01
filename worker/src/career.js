@@ -6,11 +6,24 @@
      (시즌마다 GitHub 커밋을 만들지 않으려고 KV 사용 — 편성 때만 스냅샷 파일로 얼려 커밋)
    - 여러 기기 → 총 시즌 수가 가장 많은 기기 기준 (pickDevice) · 관리자가 기기 제외 가능
    - 로그인이 없으므로 클럽원 명단에 있는 ouid만 받고 값 정합성(validStar)만 검사 (사용자 결정 2026-10-31)
+   - v2.25.0 전날 활동: 기기별 days { "YYYY-MM-DD"(KST, 서버 시각): 시즌 수 } — 전송마다 '총 시즌 수 증가분'을 그날에 더함
+     · 처음 보는 기기는 증가분 0(예전 누적이 하루에 몰리지 않게) · 전송 1회 증가분 최대 SYNC_MAX_DELTA(조작 완화)
+     · 편성 때 개최 전날 값을 막지 않은 기기 전부 합산 → star.yday로 스냅샷에 얼림
    ============================================================ */
 import { validStar, pickDevice, starBoost } from "../../js/league/career-link.js";
+import { kstDate } from "../../js/league/clock.js";
 
 const key = (ouid) => `c:${ouid}`;
 const MAX_DEVICES = 10;
+const SYNC_MAX_DELTA = 3;   // 시즌 종료마다 보내므로 보통 1 — 전송 실패가 몇 번 겹쳐도 3이면 충분
+const KEEP_DAYS = 4;
+
+/* 막지 않은 기기들의 그날 시즌 수 합 */
+export function seasonsOn(rec, day) {
+  if (!rec || !rec.devices) return 0;
+  const blocked = new Set(rec.blocked || []);
+  return Object.entries(rec.devices).reduce((s, [id, d]) => s + (blocked.has(id) || !d || !d.days ? 0 : d.days[day] || 0), 0);
+}
 
 /* 클럽원 명단 — Pages의 data/members.json을 isolate 메모리에 10분 캐시 */
 let memberCache = { at: 0, set: null };
@@ -28,10 +41,11 @@ export async function readCareer(env, ouid) {
   return (await env.CAREER.get(key(ouid), "json")) || null;
 }
 
-/* 편성용: 클럽원 ouid → 반영할 커리어 선수 (없으면 null) */
-export async function careerStar(env, ouid) {
-  const pick = pickDevice(await readCareer(env, ouid).catch((e) => { console.error("[career] KV 읽기 실패:", e.message); return null; }));
-  return pick ? pick.star : null;
+/* 편성용: 클럽원 ouid → 반영할 커리어 선수 + 그날(개최 전날) 시즌 수 yday (없으면 null) */
+export async function careerStar(env, ouid, day) {
+  const rec = await readCareer(env, ouid).catch((e) => { console.error("[career] KV 읽기 실패:", e.message); return null; });
+  const pick = pickDevice(rec);
+  return pick ? { ...pick.star, yday: seasonsOn(rec, day) } : null;
 }
 
 const clean = (s) => ({
@@ -50,7 +64,12 @@ export async function careerSync(body, env) {
   if (bad) return { error: bad };
   const rec = (await readCareer(env, ouid)) || { devices: {}, blocked: [] };
   const prev = rec.devices[device];
-  const next = { seasons, star: clean(star), at: Date.now() };
+  const today = kstDate(Date.now());
+  const delta = prev ? Math.min(Math.max(seasons - (prev.seasons || 0), 0), SYNC_MAX_DELTA) : 0;
+  const days = {};
+  for (const [d, n] of Object.entries((prev && prev.days) || {}).sort().slice(-KEEP_DAYS)) days[d] = n;
+  if (delta) days[today] = (days[today] || 0) + delta;
+  const next = { seasons, star: clean(star), at: Date.now(), days };
   // 같은 내용을 30초 안에 다시 보내면 쓰지 않음 (KV 무료 쓰기 하루 1,000회 보호)
   const same = prev && prev.seasons === next.seasons && JSON.stringify(prev.star) === JSON.stringify(next.star);
   if (!(same && Date.now() - prev.at < 30 * 1000)) {
@@ -60,11 +79,14 @@ export async function careerSync(body, env) {
     await env.CAREER.put(key(ouid), JSON.stringify(rec));
   }
   const pick = pickDevice(rec);
+  // 오늘 플레이한 시즌 → 내일 리그 보너스 미리보기
+  const todaySeasons = seasonsOn(rec, today);
   return {
     ok: true, team: members.get(ouid),
     used: !!pick && pick.id === device,
     blocked: (rec.blocked || []).includes(device),
-    star: pick ? pick.star : null, boost: pick ? starBoost(pick.star) : null,
+    star: pick ? pick.star : null, boost: pick ? starBoost({ ...pick.star, yday: todaySeasons }) : null,
+    todaySeasons,
     deviceSeasons: seasons, topSeasons: pick ? pick.seasons : 0
   };
 }
@@ -83,7 +105,7 @@ export async function careerList(env) {
       const pick = pickDevice(rec);
       items.push({
         ouid, name: members.get(ouid) || ouid, pick: pick ? pick.id : null, blocked: rec.blocked || [],
-        devices: Object.entries(rec.devices || {}).map(([id, d]) => ({ id, seasons: d.seasons, at: d.at, star: d.star }))
+        devices: Object.entries(rec.devices || {}).map(([id, d]) => ({ id, seasons: d.seasons, at: d.at, star: d.star, days: d.days || {} }))
           .sort((a, b) => b.seasons - a.seasons)
       });
     }

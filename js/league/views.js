@@ -6,8 +6,8 @@ import * as C from "./clock.js";
 import { reasonLabel } from "./eligibility.js";
 import { playerStats, leaders } from "../engine/index.js";
 import { formationOf } from "../engine/team.js";
-import { gamesOf, countedGames, boostText, prevDay } from "./boost.js";
-import { starBoostText } from "./career-link.js";
+import { gamesOf, countedGames, boostText, prevDay, BOOST } from "./boost.js";
+import { starBoostText, CAREER_BOOST } from "./career-link.js";
 
 /* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
 const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
@@ -252,7 +252,7 @@ function starBox(ctx) {
   if (!list.length) return "";
   return `<details class="card lg-excl"><summary>⭐ 커리어 선수 입단 ${list.length}팀</summary>
     <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">⭐${esc(t.star.name)} · OVR ${t.star.ovr}</span></span><b>${starBoostText(t.star)}</b></div>`).join("")}</div>
-    <div class="lg-dim" style="margin-top:6px;">⭐ 내 선수 키우기의 역대 최고 OVR 선수가 내 팀 선발로 뛰어요 (⭐ 내 프로필 설정 기기 자동 반영 · OVR 80+ 0.1 · 85+ 0.25 · 90+ 0.5 · 95+ 0.8, 공격수·윙어·공미는 공격력, 수미·수비수는 수비력 ×1.1)</div></details>`;
+    <div class="lg-dim" style="margin-top:6px;">⭐ 내 선수 키우기의 역대 최고 OVR 선수가 내 팀 선발로 뛰어요 (⭐ 내 프로필 설정 기기 자동 반영). 전력 보너스는 <b>전날 플레이한 커리어 시즌 수</b> 기준 — 1시즌 +${CAREER_BOOST.step / 1000}, 최대 ${CAREER_BOOST.maxSeasons}시즌 +${CAREER_BOOST.step * CAREER_BOOST.maxSeasons / 1000} (공격수·윙어·공미는 공격력, 수미·수비수는 수비력 ×1.1)</div></details>`;
 }
 
 /* 감독모드 절반 계산으로 인정 판수가 실제 판수와 다를 때만 " · 인정 N판" */
@@ -267,7 +267,7 @@ function boostBox(ctx) {
   const kinds = (a) => [["공식", a[0]], ["친선", a[1] + a[2]], ["감독", a[3]], ["클래식", a[4] || 0]].filter((x) => x[1]).map((x) => x[0] + " " + x[1]).join(" · ");
   return `<details class="card lg-excl"><summary>🔥 ${dayLabel(s.activityDay || prevDay(s.date))} 판수 보너스 ${list.length}팀</summary>
     <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${gamesOf(t)}판 (${kinds(t.act)})${countedText(t)}</span></span><b>${boostText(t.boost)}</b></div>`).join("")}</div>
-    <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 조금 올라요 (판당 +0.03, 최대 +0.9 = 30판 · 감독모드는 0.5판으로 계산)</div></details>`;
+    <div class="lg-dim" style="margin-top:6px;">전날 판수만큼 팀 공격·수비력이 올라요 (판당 +${BOOST.step / 1000}, 최대 +${BOOST.step * BOOST.maxGames / 1000} = ${BOOST.maxGames}판 · 감독모드는 0.5판으로 계산)</div></details>`;
 }
 
 function byeLine(ctx, r) {

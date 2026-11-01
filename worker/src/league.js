@@ -12,7 +12,7 @@ import {
   canReserve, canCancel, canSnapshot, pendingReservation, todayRunning
 } from "../../js/league/clock.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
-import { attachBoost } from "../../js/league/boost.js";
+import { attachBoost, prevDay } from "../../js/league/boost.js";
 import { squadFromLineup } from "../../js/league/roster.js";
 import { starBoost } from "../../js/league/career-link.js";
 import { careerStar, careerList, careerBlock } from "./career.js";
@@ -98,8 +98,9 @@ async function makeSnapshot(env, now, opts) {
     const squad = squadFromLineup(sq[t.ouid]);
     return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
   }), dgFile && dgFile.json, today);
-  // v2.24.0 ⭐ 커리어 선수: 클럽원별 최고 OVR 선수 1명 + 포지션·OVR 구간 전력 보너스를 얼려 둠 (KV 없거나 실패면 없이 진행)
-  const stars = await Promise.all(boosted.teams.map((t) => careerStar(env, t.ouid).catch(() => null)));
+  // v2.24.0 ⭐ 커리어 선수: 클럽원별 최고 OVR 선수 1명 입단 (KV 없거나 실패면 없이 진행)
+  // v2.25.0 전력 보너스는 개최 전날(KST) 플레이한 커리어 시즌 수(star.yday) 기준
+  const stars = await Promise.all(boosted.teams.map((t) => careerStar(env, t.ouid, prevDay(today)).catch(() => null)));
   boosted.teams = boosted.teams.map((t, i) => {
     const star = stars[i];
     if (!star) return t;

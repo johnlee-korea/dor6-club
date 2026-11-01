@@ -1,7 +1,10 @@
 /* ============================================================
    league/career-link.js — ⭐ 내 선수 키우기 → 도륙리그 연동 (v2.24.0, CLAUDE.md 25-21)
    - 클럽원의 '역대 최고 OVR 커리어 선수' 1명이 그 클럽원 리그 팀 선발로 입단
-   - 포지션·OVR 구간별 전력 보너스: 공격수·윙어·공미 → 팀 공격력 / 수미·수비수 → 팀 수비력(×1.1 — 실측 승점 효과를 맞춤)
+   - v2.25.0 전력 보너스 = 개최 전날(KST) 이 클럽원이 플레이한 커리어 시즌 수(star.yday) 기준 (사용자 결정 "A안")
+     — v2.24.0은 최고 OVR 구간이라 한 번 키워 두면 안 해도 매일 보너스가 붙었음
+     공격수·윙어·공미 → 팀 공격력 / 수미·수비수 → 팀 수비력(×1.1 — 실측 승점 효과를 맞춤)
+   - 전날 시즌 수는 Worker가 서버 시각으로 셈(기기 시계와 무관, worker/src/career.js)
    - 개최일 06:40 스냅샷에 star·boostAtt·boostDef로 얼려 둠 → 이후 커리어 진행은 다음 리그부터
    - 순수 함수 — Worker(편성·검사)·커리어 화면(미리보기)·리그 화면·테스트 공용
    ============================================================ */
@@ -9,8 +12,11 @@
 export const CAREER_POS = ["ST", "WG", "AM", "DM", "CB", "FB"];
 export const ATTACK_POS = new Set(["ST", "WG", "AM"]);
 
-/* OVR 구간 → 공격 기준 보너스 (0.001 단위). 수비 포지션은 ×1.1
+/* 전날 커리어 1시즌당 +0.15, 최대 +1.5(10시즌) — 0.001 단위, 수비 포지션은 ×1.1
+   공격력·수비력 한쪽만 오르므로 같은 수치면 판수 보너스(양쪽)의 약 절반 효과 → 리그 보너스의 중심은 FC온라인 판수
    시뮬레이션(실제 스냅샷 10회 × 300): 같은 크기면 득실 효과 동일, 승점은 공격이 약 10% 커서 수비에 1.1배 */
+export const CAREER_BOOST = { step: 150, maxSeasons: 10 };
+/* v2.24.0 OVR 구간 보너스 — yday가 없는 예전 스냅샷(10-31·11-01) 문구용으로만 남김 */
 export const STAR_TIERS = [[95, 800], [90, 500], [85, 250], [80, 100]];
 export const DEF_MUL = 1.1;
 
@@ -29,19 +35,25 @@ const FALLBACK = {
 };
 const MID_ROLES = ["CM", "RCM", "LCM"];   // 중앙 미드는 AM·DM 어느 쪽이 없을 때 대체 자리
 
+/* 전날 시즌 수 → 보너스 크기(0.001 단위, 공격 기준) */
+export const careerSeasonBoost = (n) => Math.min(Math.max(Math.floor(Number(n) || 0), 0), CAREER_BOOST.maxSeasons) * CAREER_BOOST.step;
+
 export function starBoost(star) {
   if (!star) return { boostAtt: 0, boostDef: 0 };
-  const tier = STAR_TIERS.find(([min]) => star.ovr >= min);
-  const v = tier ? tier[1] : 0;
+  let v;
+  if (star.yday !== undefined) v = careerSeasonBoost(star.yday);
+  else { const tier = STAR_TIERS.find(([min]) => star.ovr >= min); v = tier ? tier[1] : 0; }   // 예전 스냅샷
   return ATTACK_POS.has(star.pos) ? { boostAtt: v, boostDef: 0 } : { boostAtt: 0, boostDef: Math.round(v * DEF_MUL) };
 }
 
-/* 화면 문구: "공격력 +0.5" */
+/* 화면 문구: "공격력 +0.45 (전날 3시즌)" */
 export function starBoostText(star) {
   const b = starBoost(star);
-  if (b.boostAtt) return `공격력 +${b.boostAtt / 1000}`;
-  if (b.boostDef) return `수비력 +${b.boostDef / 1000}`;
-  return "보너스 없음 (OVR 80부터)";
+  const daily = star && star.yday !== undefined;
+  const tail = daily ? ` (전날 ${star.yday}시즌)` : "";
+  if (b.boostAtt) return `공격력 +${b.boostAtt / 1000}${tail}`;
+  if (b.boostDef) return `수비력 +${b.boostDef / 1000}${tail}`;
+  return daily ? "전날 플레이 없음 — 보너스 없음" : "보너스 없음 (OVR 80부터)";
 }
 
 /* 커리어 쪽 정합성 검사 — 조작 의심 값은 거절 (Worker /career/sync)

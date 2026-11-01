@@ -11,6 +11,7 @@ import { ACHIEVEMENTS } from "../achievements.js";
 import { NOTICE } from "../config.js";
 import { esc, money, catLabel, posLabel, countryName, clubLabel, leagueShort } from "../ui.js";
 import { playerCard, clubCardHtml } from "./cards.js";
+import { starBoost, CAREER_BOOST } from "../../league/career-link.js";
 
 let nameSeq = 0;
 export const randomName = () => makeMyName(makeRng("name|" + Date.now() + "|" + nameSeq++));
@@ -41,20 +42,26 @@ export function home(app) {
 const POS_KO = { ST: "스트라이커", WG: "윙어", AM: "공격형 미드", DM: "수비형 미드", CB: "센터백", FB: "풀백" };
 function leagueLinkCard(app) {
   if (!app.linked || !app.linked()) {
-    return `<p class="cr-note">⚽ 도륙 클럽원이라면 사이트에서 <b>⭐ 내 프로필</b>을 설정해 두세요 — 여기서 키운 최고 OVR 선수가 도륙리그 내 팀에 자동으로 입단해요.</p>`;
+    return `<p class="cr-note">⚽ 도륙 클럽원이라면 사이트에서 <b>⭐ 내 프로필</b>을 설정해 두세요 — 여기서 키운 최고 OVR 선수가 도륙리그 내 팀에 자동으로 입단하고, 전날 플레이한 시즌 수만큼 팀 전력이 올라요.</p>`;
   }
   const r = app.leagueLink();
   if (!r) return "";
   if (r.error) return `<section class="card cr-link"><b>⚽ 도륙리그 연동</b><div class="cr-note">${esc(r.error)}</div></section>`;
   if (!r.star) return "";
-  const s = r.star, b = r.boost || {};
-  const bonus = b.boostAtt ? `공격력 +${b.boostAtt / 1000}` : b.boostDef ? `수비력 +${b.boostDef / 1000}` : "전력 보너스는 OVR 80부터";
+  const s = r.star;
+  // v2.25.0 보너스 = 오늘(KST) 플레이한 시즌 수 → 내일 리그. 마지막 전송이 어제 이전이면 오늘은 아직 0시즌
+  const kst = (ms) => new Date(ms + 9 * 3600000).toISOString().slice(0, 10);
+  const fresh = r.at && kst(r.at) === kst(Date.now()) && Number.isInteger(r.todaySeasons);
+  const today = fresh ? r.todaySeasons : 0;
+  const b = starBoost({ ...s, yday: today });
+  const bonus = b.boostAtt ? `공격력 +${b.boostAtt / 1000}` : b.boostDef ? `수비력 +${b.boostDef / 1000}` : "보너스 없음";
   const mine = r.used ? "" : r.blocked
     ? `<div class="cr-note">이 기기 기록은 운영자가 리그 반영에서 뺐어요.</div>`
     : `<div class="cr-note">다른 기기 기록(${r.topSeasons}시즌)이 더 많아 그쪽 선수가 반영돼요 — 이 기기 ${r.deviceSeasons}시즌.</div>`;
   return `<section class="card cr-link"><b>⚽ 도륙리그 연동 — ${esc(r.team || "")} 팀</b>
-    <div>⭐ <b>${esc(s.name)}</b> · ${POS_KO[s.pos] || s.pos} · 최고 OVR <b>${s.ovr}</b>${s.retired ? " (은퇴)" : ""} → <b>${bonus}</b></div>
-    <div class="cr-note">다음 리그 편성(06:40)부터 내 팀 선발로 뛰어요.</div>${mine}</section>`;
+    <div>⭐ <b>${esc(s.name)}</b> · ${POS_KO[s.pos] || s.pos} · 최고 OVR <b>${s.ovr}</b>${s.retired ? " (은퇴)" : ""} — 다음 리그 편성(06:40)부터 내 팀 선발</div>
+    <div>🔥 오늘 <b>${today}시즌</b> 플레이 → 내일 리그 <b>${bonus}</b></div>
+    <div class="cr-note">전력 보너스는 전날 플레이한 시즌 수로 정해져요 (1시즌 +${CAREER_BOOST.step / 1000}, 최대 ${CAREER_BOOST.maxSeasons}시즌 +${CAREER_BOOST.step * CAREER_BOOST.maxSeasons / 1000}).</div>${mine}</section>`;
 }
 
 /* ---------- 선수 생성 ---------- */

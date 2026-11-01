@@ -88,11 +88,13 @@
     catch (e) { console.error("[도륙리그 관리] 커리어 목록 실패:", e); body.innerHTML = `<span style="color:var(--danger);">${escapeHtml(e.message)}</span>`; return; }
     if (!r.items.length) { body.textContent = "아직 연동한 클럽원이 없어요."; return; }
     const ago = (t) => kstTime(new Date(t).toISOString());
+    // v2.25.0 최근 날짜별 플레이 시즌 수 (전날 값이 리그 보너스)
+    const dayText = (days) => { const e = Object.entries(days || {}).sort().slice(-3); return e.length ? ` (${e.map(([d, n]) => `${+d.slice(5, 7)}/${+d.slice(8)} ${n}`).join(" · ")})` : ""; };
     body.innerHTML = r.items.map((it) => `<div style="margin:8px 0;"><b>${escapeHtml(it.name)}</b>
       ${it.devices.map((d) => {
         const off = it.blocked.includes(d.id), used = it.pick === d.id;
         return `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:var(--fs-sm);margin:2px 0 2px 8px;">
-          <span>${used ? "✅" : off ? "🚫" : "▫️"} 기기 ${escapeHtml(d.id.slice(0, 6))} · ${d.seasons}시즌 · ⭐${escapeHtml(d.star.name)} ${d.star.pos} OVR ${d.star.ovr} · ${ago(d.at)}</span>
+          <span>${used ? "✅" : off ? "🚫" : "▫️"} 기기 ${escapeHtml(d.id.slice(0, 6))} · ${d.seasons}시즌${dayText(d.days)} · ⭐${escapeHtml(d.star.name)} ${d.star.pos} OVR ${d.star.ovr} · ${ago(d.at)}</span>
           <button class="btn sm" data-cb="${escapeHtml(it.ouid)}|${escapeHtml(d.id)}|${off ? 0 : 1}">${off ? "다시 반영" : "제외"}</button></div>`;
       }).join("")}</div>`).join("");
     body.querySelectorAll("[data-cb]").forEach((b) => b.addEventListener("click", async () => {

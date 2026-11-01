@@ -230,7 +230,7 @@ for (const pg of PAGES) {
     const { activityBoost, countedGames, attachBoost, prevDay } = await import(new URL("../js/league/boost.js", import.meta.url));
     const { runDay } = await import(new URL("../js/engine/index.js", import.meta.url));
     const { snapshotTeams } = await import(new URL("../js/league/roster.js", import.meta.url));
-    const formulaOk = activityBoost(0) === 0 && activityBoost(5) === 150 && activityBoost(10) === 300 && activityBoost(30) === 900 && activityBoost(99) === 900
+    const formulaOk = activityBoost(0) === 0 && activityBoost(5) === 400 && activityBoost(10) === 800 && activityBoost(30) === 2400 && activityBoost(99) === 2400
       && countedGames([2, 0, 0, 5, 1]) === 5 && countedGames([0, 0, 0, 70, 0]) === 35 && prevDay("2026-11-01") === "2026-10-31";
     const daily = { days: { "2026-10-14": { [fxSnap.teams[0].ouid]: [12, 3, 0, 20], [fxSnap.teams[1].ouid]: [2, 0, 1, 0] } } };
     const att = attachBoost(fxSnap.teams, daily, "2026-10-15");
@@ -238,7 +238,7 @@ for (const pg of PAGES) {
     const sig = (snap) => { const d = runDay({ daySeed: snap.seed, teamSeed: snap.teamSeed, teams: snapshotTeams(snap) }); return JSON.stringify(d.tables[d.totalRounds].map((r) => [r.id, r.pts, r.gf])); };
     const plain = attachBoost(fxSnap.teams, { days: {} }, "2026-10-15");
     const sameOk = plain.activity === "skipped" && sig({ ...fxSnap, teams: plain.teams }) === sig(fxSnap) && sig({ ...fxSnap, teams: fxSnap.teams.map((t) => ({ ...t, act: [0, 0, 0, 0] })) }) === sig(fxSnap);
-    const diffOk = att.teams[0].boost === 750 && att.teams[1].boost === 90 && !att.teams[2].boost && sig(boosted) !== sig(fxSnap);
+    const diffOk = att.teams[0].boost === 2000 && att.teams[1].boost === 240 && !att.teams[2].boost && sig(boosted) !== sig(fxSnap);
     // 화면: 10-15 스냅샷을 보너스 붙인 것으로 바꿔 진행 중 화면·내 팀 탭 확인
     const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
     const { window } = dom;
@@ -251,7 +251,7 @@ for (const pg of PAGES) {
     const doc = window.document;
     const liveOk = doc.querySelectorAll(".lg-fire").length > 0 && /판수 보너스 2팀/.test(doc.querySelector("#lg-body").textContent);
     window.location.hash = "myteam"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(30);
-    const myOk = /35판 · 인정 25판 → 전력 \+0\.75/.test(doc.querySelector("#lg-body").textContent);
+    const myOk = /35판 · 인정 25판 → 전력 \+2(?![.\d])/.test(doc.querySelector("#lg-body").textContent);
     app.destroy();
     const ok = formulaOk && sameOk && diffOk && liveOk && myOk;
     console.log(`${ok ? "✅" : "❌"} league 🔥판수 보너스 식:${formulaOk} 없으면 불변:${sameOk} 반영:${diffOk} 화면:${liveOk} 내팀:${myOk}`);
@@ -270,14 +270,15 @@ for (const pg of PAGES) {
     const best = mvp(playerStats(d0.rounds, d0.results, d0.totalRounds), Math.ceil(gpt / 2));
     const rateOk = best && best.avg >= 7.8 && best.avg <= 9.6;
     const sq = fxSnap.teams.find((t) => t.squad);
-    const st = { name: "테스트", pos: "CB", ovr: 92, seasons: 15, retired: true };
+    const st = { name: "테스트", pos: "CB", ovr: 92, seasons: 15, retired: true, yday: 3 };
     const b = starBoost(st);
     const starred = { ...fxSnap, teams: fxSnap.teams.map((t) => (t === sq ? { ...t, star: st, boostDef: b.boostDef } : t)) };
     const d1 = run(starred);
     const team = d1.squads.get(sq.ouid);
-    const starOk = b.boostDef === 550 && !b.boostAtt && team.players.some((p) => p.starter && p.name === "⭐테스트" && /CB/.test(p.role))
-      && Math.abs(team.def - d0.squads.get(sq.ouid).def - 0.55) < 1e-9
-      && starBoost({ ...st, pos: "ST", ovr: 85 }).boostAtt === 250 && !starBoost({ ...st, ovr: 79 }).boostDef
+    const starOk = b.boostDef === 495 && !b.boostAtt && team.players.some((p) => p.starter && p.name === "⭐테스트" && /CB/.test(p.role))
+      && Math.abs(team.def - d0.squads.get(sq.ouid).def - 0.495) < 1e-9
+      && starBoost({ ...st, pos: "ST", yday: 12 }).boostAtt === 1500 && !starBoost({ ...st, yday: 0 }).boostDef
+      && starBoost({ name: "옛", pos: "ST", ovr: 85 }).boostAtt === 250
       && validStar({ ...st, ovr: 95, seasons: 4 }, 30) && !validStar(st, 30)
       && applyStar(undefined, st) === undefined;
     // 커리어 자동 전송: 내 프로필 없으면 안 보냄 / 있으면 명예의 전당·진행 중 중 최고 OVR 1명
