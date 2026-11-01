@@ -297,6 +297,35 @@ for (const pg of PAGES) {
     const ok = rateOk && starOk && syncOk;
     console.log(`${ok ? "✅" : "❌"} league v4 평점 MVP ${best && best.avg.toFixed(2)}:${rateOk} ⭐입단·보너스:${starOk} 커리어 전송:${syncOk}`);
     ok ? pass++ : fail++;
+
+    // v2.27.0 ⭐ 커리어 선수 아바타: 전송에 외모 포함 · Worker 정리 · 리그 화면 표시 · 결과 불변
+    const { clean } = await import(new URL("../worker/src/career.js", import.meta.url));
+    const look = { skin: 2, hair: "curly", hairColor: 1, number: 7 };
+    const st2 = { ...state, player: { ...state.player, look, equip: { boots: "boots-spd-3" }, clubId: "x" } };
+    const bs = bestStar(st2, { hall: [] }, (id) => (id === "x" ? "#123abc" : null));
+    const sendOk = bs.look === look && bs.equip.boots === "boots-spd-3" && bs.color === "#123abc";
+    const cl = clean({ name: "A", pos: "ST", ovr: 80, seasons: 5, look: { skin: 99, hair: "<x>", number: 500 }, equip: { boots: "boots-pas-3", ball: "ball-sht-2", hat: "x" }, color: "red" });
+    const cleanOk = cl.look.skin === 1 && cl.look.hair === "short" && cl.look.number === 9 && !cl.equip.boots && cl.equip.ball === "ball-sht-2" && !cl.equip.hat && !("color" in cl)
+      && !("look" in clean({ name: "B", pos: "CB", ovr: 70, seasons: 3 }));
+    const avStar = { ...st, look, equip: { top: "top-pas-3" }, color: "#2255aa" };
+    const avSnap = { ...fxSnap, teams: fxSnap.teams.map((t) => (t === sq ? { ...t, star: avStar, boostDef: b.boostDef } : t)) };
+    const sameRes = JSON.stringify(run(avSnap).results) === JSON.stringify(d1.results);
+    const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    window.fetch = localFetch;
+    window.eval(rd("js/common.js"));
+    window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+    const fx3 = async (url) => String(url).includes("days/2026-10-15.json")
+      ? { ok: true, status: 200, json: async () => JSON.parse(JSON.stringify(avSnap)) } : leagueFetch(url);
+    const lapp = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: fx3, nowParam: "2026-10-15T13:00", myId: sq.ouid });
+    const doc = window.document;
+    const liveAv = !!doc.querySelector("#lg-body .lg-boost .lg-av svg.cr-av");
+    window.location.hash = "myteam"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(30);
+    const myAv = !!doc.querySelector(".lg-star-card .lg-av svg") && !!doc.querySelector(".lg-squad .lg-av.face svg");
+    lapp.destroy();
+    const ok2 = sendOk && cleanOk && sameRes && liveAv && myAv;
+    console.log(`${ok2 ? "✅" : "❌"} league ⭐아바타 전송:${sendOk} Worker 정리:${cleanOk} 결과 불변:${sameRes} 라이브:${liveAv} 내팀·선수단:${myAv}`);
+    ok2 ? pass++ : fail++;
   }
 
   // 엔진 금지 함수 검사 (주석 제외) — 기기마다 결과가 달라질 수 있는 함수·현재 시각 사용 금지 (CLAUDE.md 25-5)

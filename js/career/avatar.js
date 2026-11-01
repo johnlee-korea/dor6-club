@@ -1,6 +1,6 @@
 /* ============================================================
    career/avatar.js — 👕 선수 아바타 (인라인 SVG, 외부 이미지·라이브러리 없음 — CLAUDE.md 30-1)
-   avatarSvg({ look, equip, color, size, label }) → SVG 문자열
+   avatarSvg({ look, equip, color, size, label, face }) → SVG 문자열 (face: true면 얼굴만 잘라 정사각형 — 표·중계 줄용)
    - look: { skin, hair, hairColor, number } (costume.js cleanLook) · equip: { 부위: 아이템 id }
    - color: 유니폼 바탕 = 소속 구단 배지 색(clubs.json color, 시드로 정한 가상 색 — 실제 구단 색 아님)
    - 부위별 모양은 아이템(부위·대분류·등급)으로 정해짐: 색 = 대분류 색, 등급 2 = 흰 장식, 3 = 금색 장식 + 반짝
@@ -76,8 +76,10 @@ export function avatarSvg(opts = {}) {
   const sparkle = [boots, socks, top, shorts, gloves, glasses, ball].some((x) => x && x.grade === 3);
   const size = opts.size || 120;
   const label = opts.label || "선수 아바타";
+  const box = opts.face ? "36 4 48 48" : "0 0 120 200";
+  const height = opts.face ? size : Math.round(size * 200 / 120);
 
-  return `<svg class="cr-av" viewBox="0 0 120 200" width="${size}" height="${Math.round(size * 200 / 120)}" role="img" aria-label="${label.replace(/"/g, "")}" xmlns="http://www.w3.org/2000/svg">
+  return `<svg class="cr-av${opts.face ? " face" : ""}" viewBox="${box}" width="${size}" height="${height}" role="img" aria-label="${label.replace(/"/g, "")}" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="60" cy="191" rx="34" ry="4.5" fill="rgba(0,0,0,.22)"/>
   <!-- 다리 -->
   <rect x="45" y="128" width="11" height="26" fill="${skin}"/><rect x="64" y="128" width="11" height="26" fill="${skin}"/>

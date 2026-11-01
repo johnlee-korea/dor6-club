@@ -2,6 +2,7 @@
    career/league-sync.js — ⭐ 도륙리그 자동 연동 (v2.24.0, CLAUDE.md 25-21)
    - ⭐ 내 프로필(dor6.me)이 설정된 기기만: 시즌 종료·은퇴·앱 시작 때 Worker /career/sync로 자동 전송
    - 보내는 것: 기기 ID(무작위) · 이 기기 총 플레이 시즌 수 · 역대 최고 OVR 선수 1명 요약 — 개인정보 없음
+     v2.27.0: 요약에 아바타 외모(look)·코스튬(equip)·유니폼 색(color, 가상 배지 색)도 — 리그 화면 표시용, 전력 무관
    - 같은 내용은 다시 보내지 않음 · 실패해도 게임 진행엔 영향 없음(콘솔 로그만)
    - 클럽원이 아니거나 내 프로필이 없으면 아무것도 보내지 않음 → 지금처럼 그냥 게임
    ============================================================ */
@@ -30,16 +31,22 @@ export function deviceSeasons(state, meta) {
   return hall + cur;
 }
 
-/* 역대 최고 OVR 선수 (기기에 기억한 최고 선수 + 명예의 전당 + 진행 중 선수) — 동률이면 시즌 많은 쪽 */
-export function bestStar(state, meta) {
-  const list = meta.leagueBest ? [meta.leagueBest] : [];
-  list.push(...(meta.hall || []).map((h) => ({
+/* 역대 최고 OVR 선수 (명예의 전당 + 진행 중 선수 + 기기에 기억한 최고 선수) — 동률이면 시즌 많은 쪽
+   colorOf(구단 id) → 유니폼 색. 같은 선수면 지금 모습(진행 중·전당)이 기억값보다 먼저 (안정 정렬) */
+const looks = (look, equip, color) => ({
+  ...(look ? { look } : {}), ...(equip && Object.keys(equip).length ? { equip } : {}), ...(color ? { color } : {})
+});
+export function bestStar(state, meta, colorOf = () => null) {
+  const list = (meta.hall || []).map((h) => ({
     name: h.name, pos: String((h.types || []).slice(-1)[0] || "").split(":")[0], type: String((h.types || []).slice(-1)[0] || "").split(":")[1],
-    ovr: h.maxOvr, seasons: h.seasons || 0, retired: true
-  })));
+    ovr: h.maxOvr, seasons: h.seasons || 0, retired: true, ...looks(h.look, h.equip, h.lookClub && colorOf(h.lookClub))
+  }));
   if (state && state.player && state.totals && state.phase !== "start-club") {
-    list.push({ name: state.player.name, pos: state.player.pos, type: state.player.typeKey, ovr: state.totals.maxOvr, seasons: state.totals.seasons || 0, retired: state.phase === "retired" });
+    const p = state.player;
+    list.push({ name: p.name, pos: p.pos, type: p.typeKey, ovr: state.totals.maxOvr, seasons: state.totals.seasons || 0, retired: state.phase === "retired",
+      ...looks(p.look, p.equip, p.clubId && colorOf(p.clubId)) });
   }
+  if (meta.leagueBest) list.push(meta.leagueBest);
   return list.filter((s) => s.pos && Number.isInteger(s.ovr))
     .sort((a, b) => b.ovr - a.ovr || b.seasons - a.seasons)[0] || null;
 }
@@ -48,10 +55,10 @@ export const linkedProfile = (storage) => get(storage, ME_KEY);
 export const lastResult = (storage) => { try { return JSON.parse(get(storage, K.res)) || null; } catch (e) { return null; } };
 
 /* 자동 전송 — 내 프로필 없으면 아무것도 안 함. 반환: 결과 객체 | null */
-export async function syncLeague({ storage, win, state, meta, workerUrl, fetchFn, force }) {
+export async function syncLeague({ storage, win, state, meta, workerUrl, fetchFn, force, colorOf }) {
   const ouid = linkedProfile(storage);
   if (!ouid || !workerUrl) return null;
-  const star = bestStar(state, meta);
+  const star = bestStar(state, meta, colorOf);
   if (!star) return null;
   const body = { ouid, device: deviceId(storage, win), seasons: deviceSeasons(state, meta), star };
   const sig = JSON.stringify(body);

@@ -3,6 +3,14 @@
    색·간격은 tokens.css 변수만 사용. 접두사 lg- (다른 페이지와 섞이지 않게)
    ============================================================ */
 
+/* ---------- ⭐ 커리어 선수 아바타 (v2.27.0, CLAUDE.md 31장) ---------- */
+.lg-av { display: inline-block; vertical-align: middle; flex: none; }
+.lg-av .cr-av { display: block; }
+.lg-av.face { margin-right: 4px; border-radius: 50%; background: var(--surface-2); overflow: hidden; vertical-align: -4px; }
+.lg-star-who { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.lg-star-who .lg-dim { white-space: nowrap; }
+.lg-star-card { display: flex; gap: 10px; align-items: center; padding: 6px 0; }
+
 .lg-travel { background: var(--warn-bg); border: 1px solid var(--warn); color: var(--warn); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); margin-bottom: var(--sp-3); }
 .lg-travel a { text-decoration: underline; }
 .lg-travel.lg-test { background: rgba(88,166,255,.10); border-color: var(--info); color: var(--info); }

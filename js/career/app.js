@@ -59,12 +59,16 @@ export async function mountCareer(root, opts = {}) {
       try { return await app._sync(); } catch (e) { console.error("[career] 도륙리그 연동 처리 실패", e); return null; }
     },
     async _sync() {
-      const best = bestStar(app.state, app.meta);
-      if (best && (!app.meta.leagueBest || best.ovr > app.meta.leagueBest.ovr || (best.ovr === app.meta.leagueBest.ovr && best.seasons > app.meta.leagueBest.seasons))) {
+      const colorOf = (id) => (app.base.get(id) || {}).color || null;
+      const best = bestStar(app.state, app.meta, colorOf);
+      // 더 좋은 선수이거나, 같은 선수의 모습(외모·코스튬)이 바뀌었으면 기억값 갱신
+      const lb = app.meta.leagueBest;
+      if (best && (!lb || best.ovr > lb.ovr || (best.ovr === lb.ovr && best.seasons > lb.seasons)
+          || (best.name === lb.name && best.ovr === lb.ovr && JSON.stringify([best.look, best.equip, best.color]) !== JSON.stringify([lb.look, lb.equip, lb.color])))) {
         app.meta.leagueBest = best; writeMeta(storage, app.meta);
       }
       const workerUrl = opts.workerUrl ?? (win.DOR6 && win.DOR6.workerUrl);
-      const r = await syncLeague({ storage, win, state: app.state, meta: app.meta, workerUrl, fetchFn: opts.syncFetch });
+      const r = await syncLeague({ storage, win, state: app.state, meta: app.meta, workerUrl, fetchFn: opts.syncFetch, colorOf });
       if (r) { app.view.leagueLink = r; if (app.route === "home") render(); }
       return r;
     },

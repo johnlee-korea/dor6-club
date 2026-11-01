@@ -11,6 +11,7 @@
      · 편성 때 개최 전날 값을 막지 않은 기기 전부 합산 → star.yday로 스냅샷에 얼림
    ============================================================ */
 import { validStar, pickDevice, starBoost } from "../../js/league/career-link.js";
+import { cleanLook, parseItem, SLOTS } from "../../js/career/costume.js";
 import { kstDate } from "../../js/league/clock.js";
 
 const key = (ouid) => `c:${ouid}`;
@@ -48,10 +49,23 @@ export async function careerStar(env, ouid, day) {
   return pick ? { ...pick.star, yday: seasonsOn(rec, day) } : null;
 }
 
-const clean = (s) => ({
-  name: String(s.name).trim().slice(0, 12), pos: s.pos, ovr: s.ovr, seasons: s.seasons, retired: !!s.retired,
-  ...(typeof s.type === "string" ? { type: s.type.slice(0, 20) } : {})
-});
+/* v2.27.0 아바타: 외모는 cleanLook으로 범위 안 값만, 코스튬은 형식·부위가 맞는 id만, 색은 #rrggbb만 (리그 전력과 무관한 꾸미기 값) */
+function cleanEquip(eq) {
+  if (!eq || typeof eq !== "object") return null;
+  const out = {};
+  for (const slot of SLOTS) { const it = parseItem(eq[slot]); if (it && it.slot === slot) out[slot] = it.id; }
+  return Object.keys(out).length ? out : null;
+}
+export const clean = (s) => {
+  const equip = cleanEquip(s.equip);
+  return {
+    name: String(s.name).trim().slice(0, 12), pos: s.pos, ovr: s.ovr, seasons: s.seasons, retired: !!s.retired,
+    ...(typeof s.type === "string" ? { type: s.type.slice(0, 20) } : {}),
+    ...(s.look && typeof s.look === "object" ? { look: cleanLook(s.look, s.pos) } : {}),
+    ...(equip ? { equip } : {}),
+    ...(typeof s.color === "string" && /^#[0-9a-f]{6}$/i.test(s.color) ? { color: s.color.toLowerCase() } : {})
+  };
+};
 
 /* 공개: 기기 → 서버 동기화 */
 export async function careerSync(body, env) {

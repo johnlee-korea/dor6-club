@@ -8,9 +8,15 @@ import { playerStats, leaders } from "../engine/index.js";
 import { formationOf } from "../engine/team.js";
 import { gamesOf, countedGames, boostText, prevDay, BOOST } from "./boost.js";
 import { starBoostText, CAREER_BOOST } from "./career-link.js";
+import { avatarSvg } from "../career/avatar.js";
 
 /* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
 const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
+/* ⭐ 커리어 선수 아바타 (v2.27.0) — 외모 정보가 있는 스냅샷만. 엔진 선수 이름이 "⭐"로 시작하면 그 팀의 커리어 선수 */
+const starAv = (star, size, face) => star && star.look
+  ? `<span class="lg-av${face ? " face" : ""}">${avatarSvg({ look: star.look, equip: star.equip, color: star.color, size, pos: star.pos, face, label: "⭐" + star.name })}</span>` : "";
+const starOf = (ctx, team, p) => (p && String(p.name).startsWith("⭐") ? (snapTeam(ctx, team) || {}).star || null : null);
+const pFace = (ctx, team, p) => starAv(starOf(ctx, team, p), 18, true);
 const fire = (ctx, id) => {
   const t = snapTeam(ctx, id);
   if (!t) return "";
@@ -56,7 +62,7 @@ function goalLine(ctx, m, e) {
   const team = e.side === "h" ? m.home : m.away;
   const t = e.add ? `90+${e.add}'` : `${e.min}'`;
   const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(player(ctx, team, e.as).name)})</span>` : "";
-  return `<div class="lg-goal ${e.side}"><span class="lg-min">${t}</span> ⚽ ${esc(player(ctx, team, e.s).name)}${as}</div>`;
+  return `<div class="lg-goal ${e.side}"><span class="lg-min">${t}</span> ⚽ ${pFace(ctx, team, player(ctx, team, e.s))}${esc(player(ctx, team, e.s).name)}${as}</div>`;
 }
 
 /* 경기 카드 (결과 공개 전이면 예정 시각) */
@@ -211,7 +217,7 @@ function matchFeed(ctx, m, res, min) {
     const team = e.side === "h" ? m.home : m.away;
     const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(player(ctx, team, e.as).name)})</span>` : "";
     const t = C.eventMin(e);
-    items.push({ t, o: 1, html: `<div class="lg-feed-item goal${mine(ctx, team)}${t >= min - 1 ? " lg-fresh" : ""}"><span class="lg-feed-min">${evLabel(e)}</span><div>⚽ <b>골!</b> ${esc(player(ctx, team, e.s).name)}${as} <span class="lg-dim">· ${teamName(ctx, team)}</span><div class="lg-feed-sc"><b>${h} : ${a}</b></div></div></div>` });
+    items.push({ t, o: 1, html: `<div class="lg-feed-item goal${mine(ctx, team)}${t >= min - 1 ? " lg-fresh" : ""}"><span class="lg-feed-min">${evLabel(e)}</span><div>⚽ <b>골!</b> ${pFace(ctx, team, player(ctx, team, e.s))}${esc(player(ctx, team, e.s).name)}${as} <span class="lg-dim">· ${teamName(ctx, team)}</span><div class="lg-feed-sc"><b>${h} : ${a}</b></div></div></div>` });
   }
   const sys = (t, lab, txt, o = 0) => items.push({ t, o, html: `<div class="lg-feed-item sys"><span class="lg-feed-min">${lab}</span><div>${txt}</div></div>` });
   const endMin = 90 + res.ev.reduce((x, e) => Math.max(x, e.add || 0), 0);
@@ -251,7 +257,7 @@ function starBox(ctx) {
   const list = s && s.teams ? s.teams.filter((t) => t.star).sort((a, b) => b.star.ovr - a.star.ovr || (a.ouid < b.ouid ? -1 : 1)) : [];
   if (!list.length) return "";
   return `<details class="card lg-excl"><summary>⭐ 커리어 선수 입단 ${list.length}팀</summary>
-    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">⭐${esc(t.star.name)} · OVR ${t.star.ovr}</span></span><b>${starBoostText(t.star)}</b></div>`).join("")}</div>
+    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span class="lg-star-who">${starAv(t.star, 30)}<span>${esc(t.name)} <span class="lg-dim">⭐${esc(t.star.name)} · OVR ${t.star.ovr}</span></span></span><b>${starBoostText(t.star)}</b></div>`).join("")}</div>
     <div class="lg-dim" style="margin-top:6px;">⭐ 내 선수 키우기의 역대 최고 OVR 선수가 내 팀 선발로 뛰어요 (⭐ 내 프로필 설정 기기 자동 반영). 전력 보너스는 <b>전날 플레이한 커리어 시즌 수</b> 기준 — 1시즌 +${CAREER_BOOST.step / 1000}, 최대 ${CAREER_BOOST.maxSeasons}시즌 +${CAREER_BOOST.step * CAREER_BOOST.maxSeasons / 1000} (공격수·윙어·공미는 공격력, 수미·수비수는 수비력 ×1.1)</div></details>`;
 }
 
@@ -339,7 +345,7 @@ export function tabPlayers(ctx, kind = "g") {
   return chips(kind) + `<div class="card">${list.length ? list.map((s, i) => {
     const p = player(ctx, s.team, s.idx);
     return `<div class="lg-prow${mine(ctx, s.team)}"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
-      <div class="lg-pinfo"><b>${esc(p.name)}</b> <span class="lg-pos">${posLabel(p)}</span><div class="lg-dim">${teamName(ctx, s.team)}</div></div>
+      <div class="lg-pinfo">${pFace(ctx, s.team, p)}<b>${esc(p.name)}</b> <span class="lg-pos">${posLabel(p)}</span><div class="lg-dim">${teamName(ctx, s.team)}</div></div>
       <div class="lg-pval"><b>${val(s)}</b><div class="lg-dim">${sub(s)}</div></div></div>`;
   }).join("") : empty("기록이 없어요.")}</div>
   ${kind === "avg" ? `<div class="lg-dim lg-foot">평균 평점은 팀 경기 수의 1/3(${minApps}경기) 이상 출전 선수만.</div>` : ""}`;
@@ -405,15 +411,18 @@ export function tabMyTeam(ctx, sel) {
     <div class="section-title">👥 선수단 <span class="lg-dim">${formationOf(sq)} · ${sq.real ? "최근 경기 스쿼드" : "가상 선수"} · 선발 ●</span></div>
     <div class="card"><div class="table-wrap"><table class="data lg-squad"><thead><tr><th>포지션</th><th>선수</th>
       <th class="num">골</th><th class="num">도움</th><th class="num">평점</th></tr></thead><tbody>
-      ${players.map(({ p, s, start }) => `<tr><td><span class="lg-pos">${posLabel(p)}</span></td><td>${start ? "● " : "<span class='lg-dim'>○</span> "}${esc(p.name)}</td>
+      ${players.map(({ p, s, start }) => `<tr><td><span class="lg-pos">${posLabel(p)}</span></td><td>${start ? "● " : "<span class='lg-dim'>○</span> "}${pFace(ctx, id, p)}${esc(p.name)}</td>
                 <td class="num">${s.g || ""}</td><td class="num">${s.a || ""}</td><td class="num">${s.apps ? s.avg.toFixed(1) : ""}</td></tr>`).join("")}
     </tbody></table></div></div>`;
 }
 
+const STAR_POS = { ST: "스트라이커", WG: "윙어", AM: "공격형 미드", DM: "수비형 미드", CB: "센터백", FB: "풀백" };
 function myBoostLine(ctx, id) {
   const t = snapTeam(ctx, id);
   if (!t || !ctx.snap) return "";
-  const star = t.star ? `<div class="lg-sub">⭐ 커리어 선수 <b>${esc(t.star.name)}</b> (최고 OVR ${t.star.ovr}) 입단 → <b>${starBoostText(t.star)}</b></div>` : "";
+  const star = !t.star ? "" : t.star.look
+    ? `<div class="lg-star-card">${starAv(t.star, 64)}<div>⭐ 커리어 선수 <b>${esc(t.star.name)}</b><div class="lg-dim">${STAR_POS[t.star.pos] || t.star.pos} · 최고 OVR <b>${t.star.ovr}</b>${t.star.retired ? " (은퇴)" : ""}</div><div>입단 → <b>${starBoostText(t.star)}</b></div></div></div>`
+    : `<div class="lg-sub">⭐ 커리어 선수 <b>${esc(t.star.name)}</b> (최고 OVR ${t.star.ovr}) 입단 → <b>${starBoostText(t.star)}</b></div>`;
   if (ctx.snap.activity !== "ok") return star;
   return star + myFireLine(ctx, t);
 }
