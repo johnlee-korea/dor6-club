@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T16:08:14.675Z",
+  "updated": "2026-11-01T18:08:57.890Z",
   "seasonId": "s5",
   "seasonName": "시즌5",
   "seasonStart": "2026-09-03",
@@ -796,22 +796,6 @@
       "games": 219,
       "ace": [
         {
-          "spId": 300231443,
-          "group": "W",
-          "pos": 12,
-          "games": 5,
-          "metric": "int",
-          "value": 0.8,
-          "base": 0.34,
-          "z": 1.83,
-          "title": {
-            "emoji": "🦅",
-            "name": "볼 사냥꾼"
-          },
-          "goals": 2,
-          "assists": 1
-        },
-        {
           "spId": 856237678,
           "group": "CB",
           "pos": 4,
@@ -842,6 +826,19 @@
           },
           "goals": 0,
           "assists": 0
+        },
+        {
+          "spId": 846216267,
+          "group": "FB",
+          "pos": 7,
+          "games": 87,
+          "metric": "pas",
+          "value": 8.44,
+          "base": 7.01,
+          "z": 0.81,
+          "title": null,
+          "goals": 5,
+          "assists": 14
         }
       ],
       "goalMins": {
@@ -1748,38 +1745,6 @@
       "games": 16,
       "ace": [
         {
-          "spId": 877213345,
-          "group": "W",
-          "pos": 23,
-          "games": 9,
-          "metric": "sht",
-          "value": 2,
-          "base": 0.56,
-          "z": 4.06,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 3,
-          "assists": 1
-        },
-        {
-          "spId": 866243854,
-          "group": "CB",
-          "pos": 6,
-          "games": 12,
-          "metric": "win",
-          "value": 4.42,
-          "base": 2.58,
-          "z": 3.29,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 1
-        },
-        {
           "spId": 866264652,
           "group": "W",
           "pos": 27,
@@ -1794,6 +1759,22 @@
           },
           "goals": 7,
           "assists": 10
+        },
+        {
+          "spId": 300271918,
+          "group": "GK",
+          "pos": 0,
+          "games": 11,
+          "metric": "sav",
+          "value": 4,
+          "base": 2.62,
+          "z": 1.76,
+          "title": {
+            "emoji": "🧤",
+            "name": "수호신"
+          },
+          "goals": 0,
+          "assists": 0
         }
       ],
       "goalMins": {
