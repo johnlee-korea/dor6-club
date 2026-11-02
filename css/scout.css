@@ -1,0 +1,66 @@
+/* scout.css — ⚔️ 상대 분석 (v2.28.0) · 색은 tokens.css 변수만 사용 (다크·밝은 모드 공통) */
+
+.sc-search { margin-bottom: var(--sp-4); }
+.sc-row { display: flex; gap: var(--sp-2); align-items: center; }
+.sc-input { font-size: 18px; font-weight: 700; min-height: 48px; }   /* 16px 이상 — iOS 입력 확대 방지 */
+.sc-go { flex: 0 0 auto; min-height: 48px; min-width: 76px; font-size: var(--fs-lg); }
+.sc-recent { margin: var(--sp-3) 0 0; }
+.sc-msg { margin-top: var(--sp-2); font-size: var(--fs-sm); color: var(--warn); }
+.sc-msg:empty { display: none; }
+.sc-me { margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--border); font-size: var(--fs-sm); }
+.sc-me-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.sc-me-act { margin-left: auto; display: flex; gap: var(--sp-1); }
+.sc-me-set { display: flex; flex-direction: column; gap: var(--sp-2); color: var(--text-muted); }
+.sc-me-set .input { min-width: 0; }
+
+.sc-dim { color: var(--text-dim); font-size: var(--fs-xs); font-weight: 400; }
+.sc-bad { color: var(--danger); font-size: var(--fs-xs); }
+
+/* 머리 카드 */
+.sc-head { border-top: 3px solid var(--hot); margin-bottom: var(--sp-3); }
+.sc-head-top { display: flex; align-items: baseline; gap: var(--sp-2); flex-wrap: wrap; }
+.sc-vs { font-weight: 900; font-style: italic; color: var(--hot); font-size: var(--fs-sm); letter-spacing: .05em; }
+.sc-nick { font-weight: 800; font-size: var(--fs-xl); word-break: break-all; }
+.sc-div { margin-left: auto; color: var(--silver-bright); font-weight: 700; font-size: var(--fs-sm); }
+.sc-rec { margin-top: var(--sp-2); font-size: var(--fs-sm); color: var(--text-muted); }
+.sc-rec b { color: var(--text); }
+.sc-form { margin-top: var(--sp-2); font-size: var(--fs-xs); color: var(--text-dim); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.sc-style { margin-top: var(--sp-2); font-size: var(--fs-sm); font-weight: 700; }
+.sc-quick { margin-top: var(--sp-3); padding: var(--sp-2) var(--sp-3); border-radius: var(--radius-sm); background: var(--surface-2);
+  display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); line-height: 1.45; }
+
+/* 섹션 카드 */
+.sc-card { margin-bottom: var(--sp-3); }
+.card + .card.sc-card { margin-top: 0; }
+.sc-title { font-weight: 800; margin-bottom: var(--sp-2); }
+.sc-sub { font-weight: 700; font-size: var(--fs-sm); margin: var(--sp-3) 0 var(--sp-1); }
+
+.sc-tac { display: flex; flex-direction: column; gap: 6px; }
+.sc-tac-row { display: grid; grid-template-columns: 64px 1fr; column-gap: var(--sp-2); align-items: baseline; font-size: var(--fs-sm); }
+.sc-tac-row > span { color: var(--text-dim); font-size: var(--fs-xs); }
+.sc-tac-row > b { font-size: var(--fs-base); }
+.sc-tac-row > em { grid-column: 2; font-style: normal; color: var(--text-dim); font-size: var(--fs-xs); }
+.sc-tac-row.plain > b { color: var(--text-muted); font-weight: 600; }
+
+.sc-item { padding: var(--sp-2) 0 var(--sp-2) var(--sp-3); border-left: 3px solid var(--border); margin-top: var(--sp-2); }
+.sc-item.bad { border-left-color: var(--danger); }
+.sc-item.good { border-left-color: var(--ok); }
+.sc-item-head { font-weight: 700; font-size: var(--fs-sm); line-height: 1.45; }
+.sc-item-ev { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.sc-item-tip { font-size: var(--fs-sm); margin-top: 2px; line-height: 1.45; }
+
+/* 나 vs 상대 막대 */
+.sc-legend { font-size: var(--fs-xs); display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.sc-legend .opp { color: var(--hot); } .sc-legend .me { color: var(--info); }
+.sc-bar { margin-top: var(--sp-2); }
+.sc-bar-label { font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 2px; }
+.sc-bar-line { position: relative; display: flex; align-items: center; gap: var(--sp-2); height: 16px; }
+.sc-bar-line i { display: block; height: 10px; border-radius: 5px; }
+.sc-bar-line.opp i { background: var(--hot); }
+.sc-bar-line.me i { background: var(--info); }
+.sc-bar-line b { font-size: var(--fs-xs); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.sc-h2h { font-size: var(--fs-sm); line-height: 2; }
+
+.sc-note { font-size: var(--fs-xs); color: var(--text-dim); margin: var(--sp-3) 0; line-height: 1.5; }
+.sc-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-5); }

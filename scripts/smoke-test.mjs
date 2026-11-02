@@ -33,6 +33,7 @@ const PAGES = [
   { file: "patchnotes.html", scripts: ["js/common.js", "js/patchnotes.js"], root: "pn-root", expect: ".pn-tag" },
   { file: "admin.html",     scripts: ["js/common.js", "js/auth.js", "js/admin-league.js", "js/admin.js"], root: null },
   { file: "search.html",    scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/search.js"], root: null },
+  { file: "scout.html",     scripts: ["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/share.js", "js/scout.js"], root: null },   // v2.28.0 조회 전 빈 화면
   // 🧭 내 플레이 가이드 (v2.18.0): 가이드가 있는 회원의 인사이트 탭
   { file: "member.html", url: "http://localhost/member.html?id=" + GUIDE_OUID + "#insight",
     scripts: ["js/common.js", "js/squad.js", "js/insight-ui.js", "js/activity-ui.js", "js/share.js", "js/member.js"], root: "profile-root", expect: ".gd-sum" }
@@ -469,6 +470,75 @@ for (const pg of PAGES) {
   await run(true);
   await run(false);
   namesMode.useReal = true;
+}
+
+/* ---------- ⚔️ 상대 분석 (v2.28.0): Worker /search 형식 픽스처(클럽원 2명 공식 30경기) → scout.html 장표 ----------
+   js/scout.js의 동적 import(lib)는 jsdom에서 못 쓰므로 미리 불러온 lib로 바꿔 실행 */
+{
+  const scout = await import(new URL("./lib/scout.js", import.meta.url));
+  const insight = await import(new URL("./lib/insight.js", import.meta.url));
+  const { withShots } = await import(new URL("./lib/playstyle.js", import.meta.url));
+  const membersAll = JSON.parse(rd("data/members.json")).members;
+  const official = (o) => { try { return JSON.parse(rd("data/matches/" + o + ".json")).matches.filter((x) => x.matchType === 50 && x.styleRaw && x.styleRaw.end === 0 && Array.isArray(x.shots)).slice(0, 30); } catch { return []; } };
+  const pair = membersAll.filter((m) => m.ouid && official(m.ouid).length >= 15).slice(0, 2);
+  const fake = (m) => {
+    const ms = official(m.ouid);
+    return { ouid: m.ouid, nickname: m.ingameNick, level: 1, maxDivision: "챌린저1",
+      matches: ms.map((x) => ({ matchId: x.matchId, matchType: 50, matchDate: x.matchDate, result: x.result, goalFor: x.goalFor, goalAgainst: x.goalAgainst,
+        opponentNick: x.opponentNick, possession: null, lineup: x.lineup || [], oppLineup: [] })),
+      summary: { games: ms.length, wins: ms.filter((x) => x.result === "win").length },
+      analysis: { version: 2, games: ms.length, minGames: 10, playstyle: null, ace: [], groupLabels: {}, metricLabels: {},
+        guideRows: ms.map((x) => ({ result: x.result, raw: withShots(x.styleRaw, x.shots), shots: x.shots, oppGoals: x.oppGoals, goalFor: x.goalFor, goalAgainst: x.goalAgainst })) } };
+  };
+  const errors = [];
+  let ok = pair.length === 2, detail = "클럽원 표본 부족";
+  if (ok) {
+    const [opp, me] = pair.map(fake);
+    // 순수 계산: 장표 구성·속도
+    const t0 = performance.now();
+    const s = scout.buildScout(opp.analysis.guideRows, JSON.parse(rd("data/meta/ranker-baseline.json")).stats, me.analysis.guideRows);
+    const ms = performance.now() - t0;
+    const few = scout.buildScout(opp.analysis.guideRows.slice(0, 5), {}, null);
+    const calcOk = !!s.record && s.tactics.length === 4 && !!s.vs && s.vs.bars.length >= 8 && !few.record && few.minGames === 10;
+    // 화면
+    const store = new Map([["dor6.scout.me", JSON.stringify(me.nickname)]]);
+    const dom = new JSDOM(rd("scout.html"), { url: "http://localhost/scout.html?q=" + encodeURIComponent(opp.nickname), pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
+    window.addEventListener("unhandledrejection", (e) => errors.push("reject: " + (e.reason?.message || e.reason)));
+    Object.defineProperty(window, "localStorage", { value: { getItem: (k) => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, String(v)), removeItem: (k) => store.delete(k) } });
+    let calls = 0;
+    window.fetch = async (url, opt) => {
+      if (!String(url).endsWith("/search")) return localFetch(url);
+      calls++;
+      const nick = JSON.parse(opt.body).nickname;
+      const data = nick === me.nickname ? me : opp;
+      return { ok: true, status: 200, json: async () => data };
+    };
+    window.__scLib = { scout, insight };
+    const src = rd("js/scout.js")
+      .replace('import(new URL("scripts/lib/scout.js", document.baseURI).href)', "Promise.resolve(window.__scLib.scout)")
+      .replace('import(new URL("scripts/lib/insight.js", document.baseURI).href)', "Promise.resolve(window.__scLib.insight)");
+    try {
+      window.eval(["js/common.js", "js/auth.js", "js/squad.js", "js/insight-ui.js", "js/share.js"].map(rd).join("\n;\n") + "\n;\n" + src);
+      window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+    } catch (e) { errors.push("eval: " + e.message); }
+    await sleep(1200);
+    const q = (sel) => window.document.querySelectorAll(sel).length;
+    const txt = window.document.getElementById("sc-root").textContent;
+    const domOk = q("#sc-sheet .sc-head") === 1 && q(".sc-tac-row") === 5 && /이것만 막아라/.test(txt) && /여길 노려라/.test(txt)
+      && q(".sc-bar") >= 8 && q("#sc-shots svg.shotmap") === 1 && q('.app-nav a[href="scout.html"].active') === 1
+      && store.has("dor6.scout.mine") && store.has("dor6.search." + opp.nickname.toLowerCase());
+    // 같은 상대 다시 → 저장본 사용(추가 호출 없음)
+    const before = calls;
+    window.document.getElementById("sc-go").click();
+    await sleep(300);
+    ok = calcOk && domOk && calls === before && errors.length === 0;
+    detail = `계산 ${ms.toFixed(1)}ms 막아라${s.threats.length}·노려라${s.holes.length}·주의${s.vs.cautions.length}·유리${s.vs.chances.length} 부족 안내:${!few.record} 화면:${domOk} 재조회 생략:${calls === before} 호출${calls}회`;
+  }
+  console.log(`${ok ? "✅" : "❌"} scout.html 상대 분석 ${detail}`);
+  [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
+  ok ? pass++ : fail++;
 }
 
 console.log(`\n결과: ${pass} 통과, ${fail} 실패`);

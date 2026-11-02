@@ -208,6 +208,7 @@ function renderResult(root, d, fetchedAt) {
       <div style="display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);">
         <button class="btn sm" type="button" data-squad ${hasSquad ? "" : "disabled title=\"라인업 정보 없음 — 최신 업데이트 후 이용\""}>스쿼드</button>
         <button class="btn sm" type="button" data-refresh>🔄 최신 업데이트</button>
+        <a class="btn sm" href="scout.html?q=${encodeURIComponent(d.nickname || current.nick)}">⚔️ 상대 분석</a>
         <span style="flex:1;min-width:0;text-align:right;font-size:var(--fs-xs);color:var(--text-dim);">
           마지막 업데이트 ${fetchedAt ? fmt.dateTime(fetchedAt) : "-"}</span>
       </div>

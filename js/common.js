@@ -36,7 +36,8 @@ const DOR6_SECTIONS = {
     label: "일반 정보",
     home: "search.html",
     nav: [
-      { key: "search",    label: "전적 검색",  href: "search.html" }
+      { key: "search",    label: "전적 검색",  href: "search.html" },
+      { key: "scout",     label: "⚔️ 상대 분석", href: "scout.html" }   // v2.28.0 경기 직전 스카우팅 (CLAUDE.md 32장)
     ]
   }
 };

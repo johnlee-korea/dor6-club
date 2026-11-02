@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>상대 분석 · 도륙 Dor6</title>
+  <link rel="icon" href="dor6.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/scout.css">
+</head>
+<body data-page="scout" data-section="general">
+  <main class="page">
+    <h1 class="page-title">⚔️ 상대 분석</h1>
+    <p class="page-desc">공식경기 매칭되면 상대 닉네임만 넣으세요. 최근 30경기로 막을 것 · 노릴 곳 · 나와 비교한 주의점을 한 장에 보여 드려요.</p>
+
+    <div class="card sc-search">
+      <div class="sc-row">
+        <input id="sc-q" class="input sc-input" placeholder="상대 닉네임" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <button id="sc-go" class="btn primary sc-go" type="button">분석</button>
+      </div>
+      <div id="sc-recent"></div>
+      <div id="sc-me" class="sc-me"></div>
+      <div id="sc-msg" class="sc-msg"></div>
+    </div>
+
+    <div id="sc-root"></div>
+  </main>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/squad.js"></script>
+  <script src="js/insight-ui.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/scout.js"></script>
+</body>
+</html>

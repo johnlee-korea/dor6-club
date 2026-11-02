@@ -10,6 +10,7 @@ const QUICK = [
   { label: "토너먼트",     desc: "추첨 → 대진표 진행", href: "tournament.html", emoji: "🏟️" },
   { label: "명예의 전당",   desc: "시즌별 최다판수·최다승",         href: "hall.html",      emoji: "🏆" },
   { label: "전적 검색",     desc: "아무 유저나 닉네임으로", href: "search.html",      emoji: "🔍" },
+  { label: "상대 분석",     desc: "매칭 직후 상대 닉 → 막을 것·노릴 곳", href: "scout.html", emoji: "🕵️" },
   { label: "규칙·공지",     desc: "운영 수칙·개편 공지",           href: "rules.html",     emoji: "📋" }
 ];
 
