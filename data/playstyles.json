@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T02:07:59.495Z",
+  "updated": "2026-11-02T04:08:21.815Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1736,14 +1736,23 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "원맨쇼",
-        "line": "패스는 필요 없다, 혼자 들고 가서 넣는다",
+        "name": "측면 끝 슈터",
+        "line": "측면 깊숙이 들어가서 직접 해결",
         "basis": [
-          "dribble+",
-          "throughRatio-"
+          "wideShot+",
+          "lobRatio-"
         ]
       },
       "highs": [
+        {
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.603,
+          "avg": 0.543,
+          "z": 1.01,
+          "key": false
+        },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
@@ -1751,36 +1760,36 @@
           "v": 0.359,
           "avg": 0.284,
           "z": 0.96,
-          "key": false
+          "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 86,
+          "v": 84.8,
           "avg": 77.226,
-          "z": 0.92,
-          "key": true
-        },
-        {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.128,
-          "avg": 0.08,
-          "z": 0.81,
+          "z": 0.79,
           "key": false
         }
       ],
       "lows": [
         {
+          "k": "block",
+          "label": "블락 시도",
+          "unit": "",
+          "v": 3.2,
+          "avg": 4.33,
+          "z": -1.31,
+          "key": false
+        },
+        {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.081,
+          "v": 0.08,
           "avg": 0.139,
-          "z": -1.28,
-          "key": true
+          "z": -1.29,
+          "key": false
         },
         {
           "k": "lobRatio",
@@ -1788,17 +1797,8 @@
           "unit": "%",
           "v": 0.002,
           "avg": 0.011,
-          "z": -1.16,
-          "key": false
-        },
-        {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.34,
-          "avg": 4.33,
-          "z": -1.15,
-          "key": false
+          "z": -1.18,
+          "key": true
         }
       ]
     },
