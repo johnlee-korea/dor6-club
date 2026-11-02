@@ -100,6 +100,32 @@ function renderMe(state, err) {
 let current = null;   // { nick, fetchedAt, data }
 let scBusy = false;
 
+/* 미리 조회 (v2.28.1 속도) — 입력이 PREFETCH_MS 동안 멈추면 엔터 전에 조회를 시작하고,
+   엔터를 누르면 같은 닉의 진행 중 요청을 그대로 이어받음. 실패(없는 닉 등)는 조용히 버리고 엔터 때 다시 */
+const PREFETCH_MS = 700;
+const inflight = new Map();   // 닉 소문자 → Promise<data> (성공은 1분 보관)
+function searchOpp(nick, force = false) {
+  const k = nick.toLowerCase();
+  if (force) inflight.delete(k);
+  if (!inflight.has(k)) {
+    const p = auth.call("/search", { nickname: nick });
+    inflight.set(k, p);
+    p.then(() => setTimeout(() => { if (inflight.get(k) === p) inflight.delete(k); }, 60000),
+      () => { if (inflight.get(k) === p) inflight.delete(k); });
+  }
+  return inflight.get(k);
+}
+let prefetchTimer = null;
+function schedulePrefetch() {
+  clearTimeout(prefetchTimer);
+  prefetchTimer = setTimeout(() => {
+    const nick = document.getElementById("sc-q").value.trim();
+    if (nick.length < 2 || scBusy || sameNick(nick, scGet(SC_ME_KEY))) return;
+    if (fresh(scGet(SC_SEARCH_PREFIX + nick.toLowerCase()), OPP_TTL)) return;
+    searchOpp(nick).catch(() => {});
+  }, PREFETCH_MS);
+}
+
 async function runScout(force = false) {
   const input = document.getElementById("sc-q");
   const msg = document.getElementById("sc-msg");
@@ -117,10 +143,11 @@ async function runScout(force = false) {
   if (!entry) {
     scBusy = true;
     const t0 = Date.now();
+    clearTimeout(prefetchTimer);
     root.innerHTML = `<div class="card"><div class="loading">🔍 ${escapeHtml(nick)} 최근 30경기 분석 중… <b id="sc-sec">0</b>초</div></div>`;
     const timer = setInterval(() => { const s = document.getElementById("sc-sec"); if (s) s.textContent = Math.floor((Date.now() - t0) / 1000); }, 500);
     try {
-      const data = await auth.call("/search", { nickname: nick });
+      const data = await searchOpp(nick, force);
       entry = { fetchedAt: new Date().toISOString(), data };
       scSet(SC_SEARCH_PREFIX + nick.toLowerCase(), entry);   // 전적 검색에서도 바로 보이게
     } catch (e) {
@@ -344,6 +371,7 @@ async function initScout() {
   const input = document.getElementById("sc-q");
   document.getElementById("sc-go").addEventListener("click", () => runScout());
   input.addEventListener("keydown", (e) => { if (e.key === "Enter") runScout(); });
+  input.addEventListener("input", schedulePrefetch);   // 입력이 멈추면 미리 조회 (엔터 대기 시간 단축)
   document.querySelector("main").addEventListener("click", onClick);
   document.querySelector("main").addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.target.id === "sc-me-q") document.querySelector("[data-me-save]").click();

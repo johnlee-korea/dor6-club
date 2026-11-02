@@ -152,9 +152,20 @@ async function proxyImage(u) {
 /* ---------- 넥슨 API 공통 ---------- */
 const NX = "https://open.api.nexon.com";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/* 엣지 캐시 (v2.28.1 조회 속도) — 경기 상세는 끝난 경기라 바뀌지 않음 → 7일, 닉→ouid는 닉 변경 대비 10분.
+   성공(2xx) 응답만 캐시, 오류·429는 캐시하지 않음. 캐시 키는 URL(키 헤더 무관 — 공개 데이터) */
+const NX_CACHE = [
+  [/^\/fconline\/v1\/match-detail\?/, 7 * 86400],
+  [/^\/fconline\/v1\/id\?/, 600]
+];
+function nexonCacheOpt(path) {
+  const hit = NX_CACHE.find(([re]) => re.test(path));
+  return hit ? { cacheEverything: true, cacheTtlByStatus: { "200-299": hit[1], "300-599": 0 } } : undefined;
+}
 async function nexonGet(path, key, retries = 2) {
+  const cf = nexonCacheOpt(path);
   for (let i = 0; i <= retries; i++) {
-    const res = await fetch(NX + path, { headers: { "x-nxopen-api-key": key } });
+    const res = await fetch(NX + path, { headers: { "x-nxopen-api-key": key }, ...(cf ? { cf } : {}) });
     if (res.ok) return res.json();
     // 429(수집 중 동시호출) / 5xx → 잠깐 대기 후 재시도
     if ((res.status === 429 || res.status >= 500) && i < retries) { await sleep(600 * (i + 1)); continue; }
@@ -201,7 +212,18 @@ const toLineup = (side) => ((side && side.player) || []).map((pl) => ({
 
 /* 전적 검색 분석(플레이스타일·에이스) 기준 — 클럽 페이지와 같은 판정 로직(scripts/lib)을 번들에 포함 */
 const SEARCH_MATCHES = 30;       // 공식경기 최근 N경기 (서브요청 한도 50 고려: 기본 3~4 + 상세 30 + 기준값 1)
-const SEARCH_BATCH = 5;          // 상세 동시 조회 수 (넥슨 429 방지)
+const SEARCH_BATCH = 5;          // [더보기] 상세 동시 조회 수 (넥슨 429 방지)
+const SEARCH_POOL = 6;           // /search 상세 동시 조회 — Cloudflare 요청당 동시 연결 한도 6 (v2.28.1: 묶음 대기 → 쉬지 않는 풀)
+
+/* 순서를 지키며 최대 n개씩 쉬지 않고 처리 (묶음 방식은 가장 느린 요청을 기다리느라 빈 시간이 생김) */
+async function poolMap(list, n, fn) {
+  const out = new Array(list.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(n, list.length) }, async () => {
+    while (next < list.length) { const i = next++; out[i] = await fn(list[i], i); }
+  }));
+  return out;
+}
 const STYLE_MIN_GAMES = 10;      // 플레이스타일 최소 경기 (클럽 config.playstyle.minGames와 동일)
 const ANALYSIS_VERSION = 2;      // 화면에서 '최신 업데이트로 조회한 결과'인지 구분 (v2: 🧭 플레이 가이드용 guideRows 추가)
 
@@ -287,22 +309,26 @@ async function searchMore(body, env) {
 async function publicSearch(ouid, env) {
   const key = env.NEXON_API_KEY;
   const out = { ouid, nickname: null, level: null, maxDivision: "-", matches: [] };
-  try { const b = await nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key); out.nickname = b.nickname; out.level = b.level; } catch {}
-  try {
-    const divs = await nexonGet(`/fconline/v1/user/maxdivision?ouid=${ouid}`, key);
+  const t0 = Date.now();
+  // v2.28.1: 기본정보·최고등급·경기 목록·기준값을 동시에 (예전엔 차례로 → 약 0.5초 대기)
+  const [basic, divs, idList, base] = await Promise.all([
+    nexonGet(`/fconline/v1/user/basic?ouid=${ouid}`, key).catch(() => null),
+    nexonGet(`/fconline/v1/user/maxdivision?ouid=${ouid}`, key).catch(() => null),
+    nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=50&offset=0&limit=${SEARCH_MATCHES}`, key).catch(() => []),
+    rankerBaseline(env).catch((e) => { console.error("[search] 기준값 실패:", e.message); return null; }),
+    divisionName(null)   // 등급 메타 캐시 채우기
+  ]);
+  if (basic) { out.nickname = basic.nickname; out.level = basic.level; }
+  if (Array.isArray(divs)) {
     const off = divs.find((d) => d.matchType === 50) || divs[0];
     if (off) out.maxDivision = await divisionName(off.division);
-  } catch {}
-
-  let ids = [];
-  try { ids = await nexonGet(`/fconline/v1/user/match?ouid=${ouid}&matchtype=50&offset=0&limit=${SEARCH_MATCHES}`, key); } catch {}
-  // 상세는 SEARCH_BATCH개씩 병렬 조회 (순서 유지)
-  const details = [];
-  for (let i = 0; i < ids.length; i += SEARCH_BATCH) {
-    const chunk = ids.slice(i, i + SEARCH_BATCH);
-    details.push(...await Promise.all(chunk.map((id) =>
-      nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key, 1).catch(() => null))));
   }
+  const ids = Array.isArray(idList) ? idList : [];
+  const t1 = Date.now();
+  // 상세 — 순서 유지, 동시 SEARCH_POOL개 (엣지 캐시: 한 번 본 경기는 다시 넥슨에 묻지 않음)
+  const details = await poolMap(ids, SEARCH_POOL, (id) =>
+    nexonGet(`/fconline/v1/match-detail?matchid=${id}`, key, 1).catch(() => null));
+  out.timing = { head: t1 - t0, details: Date.now() - t1 };   // 진단용(ms) — 화면은 안 씀
   const raws = [], pRows = [], guideRows = [];
   for (const d of details) {
     if (!d) continue;
@@ -330,7 +356,7 @@ async function publicSearch(ouid, env) {
 
   // 플레이스타일·에이스 판정 (기준값 조회 실패 시 분석만 생략, 전적은 그대로 응답)
   try {
-    const base = await rankerBaseline(env);
+    if (!base) throw new Error("기준값 없음");
     out.analysis = {
       version: ANALYSIS_VERSION, games: raws.length, minGames: STYLE_MIN_GAMES,
       playstyle: raws.length >= STYLE_MIN_GAMES ? judge(computeMetrics(raws), base.stats) : null,
