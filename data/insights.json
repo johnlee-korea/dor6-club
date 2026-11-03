@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T14:08:23.644Z",
+  "updated": "2026-11-03T16:09:31.679Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -57,101 +57,101 @@
   "players": {
     "82c59dce895a829f78a8e10c10122249": {
       "ctrl": "gamepad",
-      "games": 29,
+      "games": 34,
       "ace": [
+        {
+          "spId": 867208128,
+          "group": "DM",
+          "pos": 11,
+          "games": 14,
+          "metric": "sht",
+          "value": 1.29,
+          "base": 0.48,
+          "z": 2.74,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 9,
+          "assists": 8
+        },
+        {
+          "spId": 878247888,
+          "group": "AM",
+          "pos": 18,
+          "games": 5,
+          "metric": "gol",
+          "value": 1.6,
+          "base": 0.6,
+          "z": 2.46,
+          "title": {
+            "emoji": "🔫",
+            "name": "골 사냥꾼"
+          },
+          "goals": 11,
+          "assists": 5
+        },
         {
           "spId": 852191189,
           "group": "W",
           "pos": 16,
-          "games": 19,
+          "games": 24,
           "metric": "int",
-          "value": 0.84,
+          "value": 0.75,
           "base": 0.36,
-          "z": 2.04,
+          "z": 1.65,
           "title": {
             "emoji": "🦅",
             "name": "볼 사냥꾼"
           },
-          "goals": 7,
-          "assists": 15
-        },
-        {
-          "spId": 867135455,
-          "group": "CM",
-          "pos": 13,
-          "games": 13,
-          "metric": "int",
-          "value": 1.31,
-          "base": 0.71,
-          "z": 1.67,
-          "title": {
-            "emoji": "🧹",
-            "name": "진공청소기"
-          },
-          "goals": 1,
-          "assists": 7
-        },
-        {
-          "spId": 867224232,
-          "group": "W",
-          "pos": 12,
-          "games": 19,
-          "metric": "win",
-          "value": 2.26,
-          "base": 1.44,
-          "z": 1.49,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 10,
-          "assists": 15
+          "goals": 9,
+          "assists": 17
         }
       ],
       "goalMins": {
         "for": [
-          8,
+          9,
           6,
-          13,
-          17,
-          8,
-          13,
+          19,
+          19,
+          11,
+          14,
           13
         ],
         "against": [
           5,
-          8,
-          12,
-          15,
-          15,
+          9,
+          14,
+          17,
           16,
+          18,
           5
         ]
       },
-      "comebacks": 6,
+      "comebacks": 7,
       "lateWinners": 4,
       "manner": {
-        "games": 29,
+        "games": 34,
         "yellow": 0,
         "red": 0,
-        "foul": 22,
+        "foul": 26,
         "score": 0.76
       },
       "guide": {
         "v": 2,
-        "games": 29,
+        "games": 34,
         "split": false,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "29경기 12승 5무 12패 (승률 41%) · 경기당 득점 2.7 · 실점 2.6. 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "34경기 15승 5무 14패 (승률 44%) · 경기당 득점 2.7 · 실점 2.5. 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [],
         "weaknesses": [
           {
             "k": "finish",
             "label": "결정력",
-            "v": "33%",
+            "v": "35%",
             "avg": "46%",
-            "z": -2.04,
+            "z": -1.86,
             "win": null,
             "lose": null,
             "sig": false,
@@ -162,9 +162,9 @@
           {
             "k": "effRate",
             "label": "유효슈팅 비율",
-            "v": "74%",
+            "v": "72%",
             "avg": "79%",
-            "z": -1.11,
+            "z": -1.46,
             "win": null,
             "lose": null,
             "sig": false,
@@ -175,9 +175,9 @@
           {
             "k": "passRate",
             "label": "패스 성공률",
-            "v": "87%",
+            "v": "88%",
             "avg": "89%",
-            "z": -0.83,
+            "z": -0.57,
             "win": null,
             "lose": null,
             "sig": false,
@@ -192,9 +192,9 @@
           {
             "k": "longShot",
             "label": "중거리 슈팅 비율",
-            "v": "30%",
+            "v": "32%",
             "avg": "18%",
-            "z": 1.72,
+            "z": 2.06,
             "win": null,
             "lose": null,
             "sig": false,
@@ -204,15 +204,15 @@
           }
         ],
         "time": [
-          "실점이 76-90분에 가장 많아요 (실점 71골 중 16골, 23%).",
-          "득점이 46-60분에 가장 많아요 (득점 65골 중 17골, 26%).",
-          "역전승 6번 · 80분 이후 결승골(극장골) 4번."
+          "실점이 76-90분에 가장 많아요 (실점 79골 중 18골, 23%).",
+          "득점이 31-45분에 가장 많아요 (득점 78골 중 19골, 24%).",
+          "역전승 7번 · 80분 이후 결승골(극장골) 4번."
         ]
       }
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
       "ctrl": "keyboard",
-      "games": 22,
+      "games": 25,
       "ace": [
         {
           "spId": 851207421,
@@ -265,53 +265,66 @@
       ],
       "goalMins": {
         "for": [
-          7,
+          8,
           11,
+          12,
+          10,
+          17,
           11,
-          9,
-          14,
-          9,
           6
         ],
         "against": [
           10,
-          4,
           7,
-          10,
+          8,
           11,
+          12,
           10,
-          3
+          4
         ]
       },
       "comebacks": 6,
-      "lateWinners": 7,
+      "lateWinners": 8,
       "manner": {
-        "games": 22,
-        "yellow": 2,
+        "games": 25,
+        "yellow": 3,
         "red": 0,
-        "foul": 17,
-        "score": 1.05
+        "foul": 19,
+        "score": 1.12
       },
       "guide": {
         "v": 2,
-        "games": 22,
+        "games": 25,
         "split": false,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "22경기 13승 3무 6패 (승률 59%) · 경기당 득점 3.0 · 실점 2.5. 가장 큰 무기는 결정력, 가장 먼저 손볼 곳은 카드예요.",
+        "summary": "25경기 15승 3무 7패 (승률 60%) · 경기당 득점 3.0 · 실점 2.5. 가장 큰 무기는 결정력, 가장 먼저 손볼 곳은 카드예요.",
         "strengths": [
           {
             "k": "finish",
             "label": "결정력",
-            "v": "52%",
+            "v": "51%",
             "avg": "46%",
-            "z": 0.98,
+            "z": 0.77,
             "win": null,
             "lose": null,
             "sig": false,
             "cw": null,
             "cl": null,
             "text": "찬스를 골로 바꾸는 힘이 좋아요. 지금처럼 확실한 자리까지 만들어 차세요."
+          },
+          {
+            "k": "setGoal",
+            "label": "세트피스골",
+            "v": "0.1",
+            "avg": "0.1",
+            "z": 0.56,
+            "win": null,
+            "lose": null,
+            "sig": false,
+            "cw": null,
+            "cl": null,
+            "text": "세트피스로 골을 잘 만들어요. 프리킥·PK 키커를 유지하세요."
           }
         ],
         "weaknesses": [
@@ -320,7 +333,7 @@
             "label": "카드",
             "v": "0.1",
             "avg": "0.0",
-            "z": 0.81,
+            "z": 1.23,
             "win": null,
             "lose": null,
             "sig": false,
@@ -337,20 +350,7 @@
             "label": "띄우는 패스 비율",
             "v": "0.3%",
             "avg": "1.1%",
-            "z": -1.07,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "랭커보다 적어요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
-          },
-          {
-            "k": "shots",
-            "label": "경기당 슈팅",
-            "v": "5.8",
-            "avg": "7.0",
-            "z": -1.04,
+            "z": -1.06,
             "win": null,
             "lose": null,
             "sig": false,
@@ -360,9 +360,8 @@
           }
         ],
         "time": [
-          "실점이 61-75분에 가장 많아요 (실점 52골 중 11골, 21%).",
-          "득점이 61-75분에 가장 많아요 (득점 61골 중 14골, 23%).",
-          "역전승 6번 · 80분 이후 결승골(극장골) 7번."
+          "득점이 61-75분에 가장 많아요 (득점 69골 중 17골, 25%).",
+          "역전승 6번 · 80분 이후 결승골(극장골) 8번."
         ]
       }
     },
@@ -1014,7 +1013,7 @@
     },
     "2dd2edb174f63716078ffc324199edd1": {
       "ctrl": "keyboard",
-      "games": 35,
+      "games": 36,
       "ace": [
         {
           "spId": 287240638,
@@ -1072,15 +1071,15 @@
           18,
           19,
           20,
-          17,
+          18,
           5
         ],
         "against": [
           14,
           14,
-          15,
+          16,
           18,
-          9,
+          10,
           11,
           5
         ]
@@ -1088,45 +1087,45 @@
       "comebacks": 7,
       "lateWinners": 3,
       "manner": {
-        "games": 35,
+        "games": 36,
         "yellow": 0,
         "red": 0,
-        "foul": 31,
-        "score": 0.89
+        "foul": 33,
+        "score": 0.92
       },
       "guide": {
         "v": 2,
-        "games": 35,
-        "split": false,
+        "games": 36,
+        "split": true,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "35경기 16승 5무 14패 (승률 46%) · 경기당 득점 2.8 · 실점 2.5. 가장 큰 무기는 결정력, 가장 먼저 손볼 곳은 패스 성공률이에요.",
+        "summary": "36경기 16승 5무 15패 (승률 44%) · 경기당 득점 2.8 · 실점 2.4. 가장 큰 무기는 유효슈팅 비율, 가장 먼저 손볼 곳은 패스 성공률이에요.",
         "strengths": [
-          {
-            "k": "finish",
-            "label": "결정력",
-            "v": "52%",
-            "avg": "46%",
-            "z": 0.86,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "찬스를 골로 바꾸는 힘이 좋아요. 지금처럼 확실한 자리까지 만들어 차세요."
-          },
           {
             "k": "effRate",
             "label": "유효슈팅 비율",
             "v": "83%",
             "avg": "79%",
-            "z": 0.84,
-            "win": null,
-            "lose": null,
+            "z": 0.88,
+            "win": "82%",
+            "lose": "88%",
             "sig": false,
             "cw": null,
             "cl": null,
             "text": "슈팅이 골문 안으로 잘 가요."
+          },
+          {
+            "k": "finish",
+            "label": "결정력",
+            "v": "52%",
+            "avg": "46%",
+            "z": 0.85,
+            "win": "57%",
+            "lose": "45%",
+            "sig": false,
+            "cw": null,
+            "cl": null,
+            "text": "찬스를 골로 바꾸는 힘이 좋아요. 지금처럼 확실한 자리까지 만들어 차세요."
           }
         ],
         "weaknesses": [
@@ -1135,9 +1134,9 @@
             "label": "패스 성공률",
             "v": "87%",
             "avg": "89%",
-            "z": -0.9,
-            "win": null,
-            "lose": null,
+            "z": -0.86,
+            "win": "88%",
+            "lose": "86%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1148,9 +1147,9 @@
             "label": "오프사이드",
             "v": "0.6",
             "avg": "0.5",
-            "z": 0.6,
-            "win": null,
-            "lose": null,
+            "z": 0.53,
+            "win": "0.6",
+            "lose": "0.5",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1163,11 +1162,11 @@
           {
             "k": "shots",
             "label": "경기당 슈팅",
-            "v": "5.4",
+            "v": "5.3",
             "avg": "7.0",
-            "z": -1.39,
-            "win": null,
-            "lose": null,
+            "z": -1.48,
+            "win": "6.4",
+            "lose": "4.0",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1178,9 +1177,9 @@
             "label": "스루패스 비율",
             "v": "20%",
             "avg": "14%",
-            "z": 1.31,
-            "win": null,
-            "lose": null,
+            "z": 1.28,
+            "win": "20%",
+            "lose": "19%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1188,37 +1187,21 @@
           }
         ],
         "time": [
-          "실점이 46-60분에 가장 많아요 (실점 81골 중 18골, 22%).",
-          "득점이 61-75분에 가장 많아요 (득점 93골 중 20골, 22%).",
+          "실점이 46-60분에 가장 많아요 (실점 83골 중 18골, 22%).",
+          "득점이 61-75분에 가장 많아요 (득점 94골 중 20골, 21%).",
           "역전승 7번 · 80분 이후 결승골(극장골) 3번."
         ]
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
       "ctrl": "keyboard",
-      "games": 60,
+      "games": 67,
       "ace": [
-        {
-          "spId": 877216267,
-          "group": "FB",
-          "pos": 7,
-          "games": 60,
-          "metric": "win",
-          "value": 4.08,
-          "base": 2.49,
-          "z": 2.46,
-          "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 3
-        },
         {
           "spId": 866236772,
           "group": "AM",
           "pos": 18,
-          "games": 52,
+          "games": 58,
           "metric": "sht",
           "value": 2.83,
           "base": 1.24,
@@ -1227,62 +1210,78 @@
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 56,
-          "assists": 32
+          "goals": 62,
+          "assists": 36
+        },
+        {
+          "spId": 877216267,
+          "group": "FB",
+          "pos": 7,
+          "games": 67,
+          "metric": "win",
+          "value": 3.91,
+          "base": 2.49,
+          "z": 2.2,
+          "title": {
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
+          },
+          "goals": 0,
+          "assists": 3
         },
         {
           "spId": 866264652,
           "group": "W",
           "pos": 27,
-          "games": 57,
+          "games": 61,
           "metric": "sht",
-          "value": 1.39,
+          "value": 1.33,
           "base": 0.63,
-          "z": 2.17,
+          "z": 2.01,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 30,
-          "assists": 17
+          "goals": 31,
+          "assists": 18
         }
       ],
       "goalMins": {
         "for": [
           23,
+          33,
+          29,
           31,
-          25,
           28,
-          24,
-          32,
+          36,
           11
         ],
         "against": [
-          16,
-          26,
-          26,
-          31,
-          39,
-          25,
-          10
+          19,
+          28,
+          28,
+          32,
+          42,
+          27,
+          11
         ]
       },
-      "comebacks": 9,
+      "comebacks": 10,
       "lateWinners": 5,
       "manner": {
-        "games": 60,
+        "games": 67,
         "yellow": 2,
         "red": 0,
-        "foul": 61,
+        "foul": 69,
         "score": 1.12
       },
       "guide": {
         "v": 2,
-        "games": 60,
+        "games": 67,
         "split": true,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "60경기 26승 9무 25패 (승률 43%) · 경기당 득점 2.9 · 실점 2.9. 가장 먼저 손볼 곳은 패스 성공률이에요.",
+        "summary": "67경기 29승 11무 27패 (승률 43%) · 경기당 득점 2.9 · 실점 2.8. 가장 먼저 손볼 곳은 패스 성공률이에요.",
         "strengths": [],
         "weaknesses": [
           {
@@ -1290,7 +1289,7 @@
             "label": "패스 성공률",
             "v": "82%",
             "avg": "89%",
-            "z": -3.27,
+            "z": -3.24,
             "win": "83%",
             "lose": "81%",
             "sig": false,
@@ -1305,7 +1304,7 @@
             "avg": "0.5",
             "z": 2.33,
             "win": "1.1",
-            "lose": "1.0",
+            "lose": "0.9",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1316,9 +1315,9 @@
             "label": "결정력",
             "v": "32%",
             "avg": "46%",
-            "z": -2.27,
+            "z": -2.22,
             "win": "40%",
-            "lose": "25%",
+            "lose": "24%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1331,24 +1330,24 @@
           {
             "k": "shots",
             "label": "경기당 슈팅",
-            "v": "9.1",
+            "v": "8.8",
             "avg": "7.0",
-            "z": 1.89,
-            "win": "9.8",
-            "lose": "8.3",
+            "z": 1.67,
+            "win": "9.7",
+            "lose": "8.0",
             "sig": false,
             "cw": null,
             "cl": null,
             "text": "랭커보다 많아요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
           },
           {
-            "k": "wideShot",
-            "label": "측면 각도 슈팅",
-            "v": "17%",
-            "avg": "28%",
-            "z": -1.47,
-            "win": "17%",
-            "lose": "19%",
+            "k": "poss",
+            "label": "점유율",
+            "v": "46%",
+            "avg": "51%",
+            "z": -1.51,
+            "win": "48%",
+            "lose": "45%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1356,8 +1355,8 @@
           }
         ],
         "time": [
-          "실점이 61-75분에 가장 많아요 (실점 163골 중 39골, 24%).",
-          "역전승 9번 · 80분 이후 결승골(극장골) 5번."
+          "실점이 61-75분에 가장 많아요 (실점 176골 중 42골, 24%).",
+          "역전승 10번 · 80분 이후 결승골(극장골) 5번."
         ]
       }
     },
@@ -1402,40 +1401,40 @@
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
       "ctrl": "gamepad",
-      "games": 1,
+      "games": 4,
       "ace": [],
       "goalMins": {
         "for": [
           0,
           0,
+          4,
           1,
-          0,
-          1,
-          0,
+          2,
+          3,
           0
         ],
         "against": [
           0,
-          0,
-          0,
-          0,
-          0,
+          2,
           1,
-          0
+          0,
+          2,
+          1,
+          1
         ]
       },
-      "comebacks": 0,
+      "comebacks": 1,
       "lateWinners": 0,
       "manner": {
-        "games": 1,
+        "games": 4,
         "yellow": 0,
         "red": 0,
-        "foul": 1,
-        "score": 1
+        "foul": 2,
+        "score": 0.5
       },
       "guide": {
         "v": 2,
-        "games": 1,
+        "games": 4,
         "minGames": 15
       }
     },
@@ -1710,17 +1709,17 @@
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
       "ctrl": "keyboard",
-      "games": 16,
+      "games": 17,
       "ace": [
         {
           "spId": 861001040,
           "group": "DM",
           "pos": 11,
-          "games": 16,
+          "games": 17,
           "metric": "sht",
-          "value": 1.5,
+          "value": 1.53,
           "base": 0.48,
-          "z": 3.47,
+          "z": 3.57,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1732,11 +1731,11 @@
           "spId": 846020801,
           "group": "ST",
           "pos": 25,
-          "games": 16,
+          "games": 17,
           "metric": "sht",
-          "value": 4.19,
+          "value": 3.94,
           "base": 2.29,
-          "z": 2.49,
+          "z": 2.17,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -1745,20 +1744,20 @@
           "assists": 7
         },
         {
-          "spId": 867200145,
-          "group": "DM",
-          "pos": 9,
-          "games": 16,
+          "spId": 866070966,
+          "group": "CB",
+          "pos": 6,
+          "games": 17,
           "metric": "win",
-          "value": 3.63,
-          "base": 2.47,
-          "z": 2.08,
+          "value": 3.65,
+          "base": 2.58,
+          "z": 1.86,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
-          "goals": 4,
-          "assists": 2
+          "goals": 0,
+          "assists": 1
         }
       ],
       "goalMins": {
@@ -1774,9 +1773,9 @@
         "against": [
           9,
           9,
+          12,
+          9,
           10,
-          9,
-          9,
           5,
           5
         ]
@@ -1784,26 +1783,26 @@
       "comebacks": 4,
       "lateWinners": 4,
       "manner": {
-        "games": 16,
+        "games": 17,
         "yellow": 1,
         "red": 0,
-        "foul": 19,
-        "score": 1.38
+        "foul": 20,
+        "score": 1.35
       },
       "guide": {
         "v": 2,
-        "games": 16,
+        "games": 17,
         "split": false,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "16경기 6승 2무 8패 (승률 38%) · 경기당 득점 3.1 · 실점 3.5. 가장 큰 무기는 세트피스골, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "17경기 6승 2무 9패 (승률 35%) · 경기당 득점 2.9 · 실점 3.5. 가장 큰 무기는 세트피스골, 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [
           {
             "k": "setGoal",
             "label": "세트피스골",
             "v": "0.1",
             "avg": "0.1",
-            "z": 0.62,
+            "z": 0.53,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1816,9 +1815,9 @@
           {
             "k": "finish",
             "label": "결정력",
-            "v": "34%",
+            "v": "33%",
             "avg": "46%",
-            "z": -1.95,
+            "z": -2.13,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1831,7 +1830,7 @@
             "label": "경기당 실점",
             "v": "3.5",
             "avg": "2.4",
-            "z": 1.91,
+            "z": 1.85,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1844,7 +1843,7 @@
             "label": "패스 성공률",
             "v": "86%",
             "avg": "89%",
-            "z": -1.19,
+            "z": -1.15,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1859,9 +1858,9 @@
           {
             "k": "longShot",
             "label": "중거리 슈팅 비율",
-            "v": "39%",
+            "v": "40%",
             "avg": "18%",
-            "z": 3.08,
+            "z": 3.28,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1874,7 +1873,7 @@
             "label": "측면 각도 슈팅",
             "v": "13%",
             "avg": "28%",
-            "z": -1.93,
+            "z": -1.97,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1884,6 +1883,7 @@
           }
         ],
         "time": [
+          "실점이 31-45분에 가장 많아요 (실점 54골 중 12골, 22%).",
           "득점이 61-75분에 가장 많아요 (득점 44골 중 10골, 23%).",
           "역전승 4번 · 80분 이후 결승골(극장골) 4번."
         ]
@@ -1891,93 +1891,93 @@
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "ctrl": "gamepad",
-      "games": 32,
+      "games": 36,
       "ace": [
         {
-          "spId": 848224232,
-          "group": "FB",
-          "pos": 3,
-          "games": 21,
-          "metric": "win",
-          "value": 3.43,
-          "base": 2.49,
-          "z": 1.45,
+          "spId": 852191189,
+          "group": "DM",
+          "pos": 11,
+          "games": 23,
+          "metric": "sht",
+          "value": 0.87,
+          "base": 0.48,
+          "z": 1.33,
           "title": {
-            "emoji": "🥷",
-            "name": "볼 탈취왕"
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 10,
+          "assists": 4
+        },
+        {
+          "spId": 886001040,
+          "group": "FB",
+          "pos": 7,
+          "games": 21,
+          "metric": "drb",
+          "value": 6.38,
+          "base": 4.59,
+          "z": 1.18,
+          "title": {
+            "emoji": "🏃",
+            "name": "측면 돌파왕"
           },
           "goals": 0,
-          "assists": 3
+          "assists": 6
         },
         {
           "spId": 848184941,
           "group": "AM",
           "pos": 17,
-          "games": 19,
+          "games": 23,
           "metric": "win",
-          "value": 2.05,
+          "value": 1.87,
           "base": 1.3,
-          "z": 1.41,
+          "z": 1.07,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 5,
           "assists": 12
-        },
-        {
-          "spId": 852191189,
-          "group": "DM",
-          "pos": 11,
-          "games": 19,
-          "metric": "pas",
-          "value": 17.84,
-          "base": 13.96,
-          "z": 1.27,
-          "title": {
-            "emoji": "🎼",
-            "name": "중원의 지휘자"
-          },
-          "goals": 10,
-          "assists": 4
         }
       ],
       "goalMins": {
         "for": [
-          15,
-          11,
-          20,
-          20,
+          18,
           13,
-          17,
+          22,
+          21,
+          14,
+          18,
           10
         ],
         "against": [
-          12,
           15,
+          17,
           14,
-          16,
-          16,
-          13,
+          20,
+          20,
+          15,
           8
         ]
       },
       "comebacks": 8,
       "lateWinners": 5,
       "manner": {
-        "games": 32,
+        "games": 36,
         "yellow": 0,
         "red": 2,
-        "foul": 31,
-        "score": 1.16
+        "foul": 33,
+        "score": 1.08
       },
       "guide": {
         "v": 2,
-        "games": 32,
-        "split": false,
+        "games": 36,
+        "split": true,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "32경기 16승 2무 14패 (승률 50%) · 경기당 득점 3.3 · 실점 2.9. 가장 큰 무기는 패스 성공률, 가장 먼저 손볼 곳은 경기당 실점이에요.",
+        "summary": "36경기 16승 3무 17패 (승률 44%) · 경기당 득점 3.2 · 실점 3.0. 가장 큰 무기는 패스 성공률, 가장 먼저 손볼 곳은 경기당 실점이에요.",
         "strengths": [
           {
             "k": "passRate",
@@ -1985,8 +1985,8 @@
             "v": "90%",
             "avg": "89%",
             "z": 0.51,
-            "win": null,
-            "lose": null,
+            "win": "91%",
+            "lose": "89%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -1997,11 +1997,11 @@
           {
             "k": "ga",
             "label": "경기당 실점",
-            "v": "2.9",
+            "v": "3.0",
             "avg": "2.4",
-            "z": 0.92,
-            "win": null,
-            "lose": null,
+            "z": 1.08,
+            "win": "2.3",
+            "lose": "3.7",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -2013,8 +2013,8 @@
             "v": "0.0",
             "avg": "0.1",
             "z": -0.86,
-            "win": null,
-            "lose": null,
+            "win": "0.0",
+            "lose": "0.0",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -2025,9 +2025,9 @@
             "label": "결정력",
             "v": "43%",
             "avg": "46%",
-            "z": -0.53,
-            "win": null,
-            "lose": null,
+            "z": -0.52,
+            "win": "46%",
+            "lose": "38%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -2040,11 +2040,11 @@
           {
             "k": "longShot",
             "label": "중거리 슈팅 비율",
-            "v": "28%",
+            "v": "29%",
             "avg": "18%",
-            "z": 1.53,
-            "win": null,
-            "lose": null,
+            "z": 1.61,
+            "win": "24%",
+            "lose": "33%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -2053,11 +2053,11 @@
           {
             "k": "finesse",
             "label": "감아차기 비율",
-            "v": "17%",
+            "v": "16%",
             "avg": "30%",
-            "z": -1.15,
-            "win": null,
-            "lose": null,
+            "z": -1.22,
+            "win": "15%",
+            "lose": "20%",
             "sig": false,
             "cw": null,
             "cl": null,
@@ -2065,7 +2065,6 @@
           }
         ],
         "time": [
-          "득점이 31-45분에 가장 많아요 (득점 96골 중 20골, 21%).",
           "역전승 8번 · 80분 이후 결승골(극장골) 5번."
         ]
       }
@@ -2588,38 +2587,38 @@
     },
     "9052276188238316b9fc057307e0d58c": {
       "ctrl": "gamepad",
-      "games": 44,
+      "games": 47,
       "ace": [
         {
           "spId": 867053302,
           "group": "DM",
           "pos": 9,
-          "games": 44,
+          "games": 47,
           "metric": "int",
-          "value": 1.41,
+          "value": 1.36,
           "base": 0.89,
-          "z": 1.47,
+          "z": 1.34,
           "title": {
             "emoji": "🧹",
             "name": "진공청소기"
           },
           "goals": 6,
-          "assists": 5
+          "assists": 6
         },
         {
           "spId": 861001114,
           "group": "AM",
           "pos": 18,
-          "games": 33,
+          "games": 35,
           "metric": "sht",
-          "value": 2.15,
+          "value": 2.14,
           "base": 1.24,
-          "z": 1.29,
+          "z": 1.27,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 27,
+          "goals": 29,
           "assists": 15
         },
         {
@@ -2635,53 +2634,53 @@
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 7,
-          "assists": 5
+          "goals": 8,
+          "assists": 6
         }
       ],
       "goalMins": {
         "for": [
-          15,
-          21,
-          11,
-          20,
-          24,
           16,
-          4
+          22,
+          11,
+          21,
+          27,
+          16,
+          5
         ],
         "against": [
           11,
-          13,
           14,
-          21,
-          16,
           15,
-          2
+          22,
+          16,
+          18,
+          3
         ]
       },
       "comebacks": 5,
-      "lateWinners": 3,
+      "lateWinners": 4,
       "manner": {
-        "games": 44,
+        "games": 47,
         "yellow": 1,
         "red": 0,
-        "foul": 41,
-        "score": 1
+        "foul": 45,
+        "score": 1.02
       },
       "guide": {
         "v": 2,
-        "games": 44,
+        "games": 47,
         "split": false,
         "minSide": 15,
         "wlMembers": 0,
-        "summary": "44경기 21승 12무 11패 (승률 48%) · 경기당 득점 2.5 · 실점 2.1. 가장 큰 무기는 태클 성공률, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "47경기 22승 13무 12패 (승률 47%) · 경기당 득점 2.5 · 실점 2.1. 가장 큰 무기는 태클 성공률, 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [
           {
             "k": "tackleRate",
             "label": "태클 성공률",
-            "v": "59%",
+            "v": "58%",
             "avg": "54%",
-            "z": 0.73,
+            "z": 0.66,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2694,7 +2693,7 @@
             "label": "경기당 실점",
             "v": "2.1",
             "avg": "2.4",
-            "z": -0.56,
+            "z": -0.53,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2707,9 +2706,9 @@
           {
             "k": "finish",
             "label": "결정력",
-            "v": "41%",
+            "v": "42%",
             "avg": "46%",
-            "z": -0.77,
+            "z": -0.7,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2718,24 +2717,11 @@
             "text": "슈팅 대비 골이 적어요. 먼 거리·각도 없는 슈팅을 줄이고 박스 안 좋은 자리까지 한 번 더 연결해 보세요. 목표: 랭커 평균 46%."
           },
           {
-            "k": "setGoal",
-            "label": "세트피스골",
-            "v": "0.0",
-            "avg": "0.1",
-            "z": -0.59,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "세트피스 골이 적어요. 목표: 랭커 평균 0.1."
-          },
-          {
             "k": "offside",
             "label": "오프사이드",
             "v": "0.6",
             "avg": "0.5",
-            "z": 0.56,
+            "z": 0.68,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2750,9 +2736,9 @@
           {
             "k": "block",
             "label": "블락 시도",
-            "v": "3.0",
+            "v": "3.1",
             "avg": "4.3",
-            "z": -1.49,
+            "z": -1.47,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2761,23 +2747,23 @@
             "text": "랭커보다 적어요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
           },
           {
-            "k": "throughRatio",
-            "label": "스루패스 비율",
-            "v": "7.8%",
-            "avg": "14%",
-            "z": -1.33,
+            "k": "wideShot",
+            "label": "측면 각도 슈팅",
+            "v": "39%",
+            "avg": "28%",
+            "z": 1.39,
             "win": null,
             "lose": null,
             "sig": false,
             "cw": null,
             "cl": null,
-            "text": "랭커보다 적어요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
+            "text": "랭커보다 많아요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
           }
         ],
         "time": [
-          "실점이 46-60분에 가장 많아요 (실점 90골 중 21골, 23%).",
-          "득점이 61-75분에 가장 많아요 (득점 107골 중 24골, 22%).",
-          "역전승 5번 · 80분 이후 결승골(극장골) 3번."
+          "실점이 46-60분에 가장 많아요 (실점 96골 중 22골, 23%).",
+          "득점이 61-75분에 가장 많아요 (득점 113골 중 27골, 24%).",
+          "역전승 5번 · 80분 이후 결승골(극장골) 4번."
         ]
       }
     },
@@ -3301,6 +3287,13 @@
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
         "nick": "미도물산",
         "spId": 866236772,
+        "goals": 62,
+        "games": 67
+      },
+      {
+        "ouid": "c4d139e665756377869b9a9dfc998e6b",
+        "nick": "미도물산",
+        "spId": 845049369,
         "goals": 56,
         "games": 60
       },
@@ -3310,13 +3303,6 @@
         "spId": 846031432,
         "goals": 51,
         "games": 35
-      },
-      {
-        "ouid": "c4d139e665756377869b9a9dfc998e6b",
-        "nick": "미도물산",
-        "spId": 845049369,
-        "goals": 49,
-        "games": 53
       }
     ],
     "topAssists": [
@@ -3338,8 +3324,8 @@
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
         "nick": "미도물산",
         "spId": 845049369,
-        "assists": 38,
-        "games": 53
+        "assists": 43,
+        "games": 60
       },
       {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
@@ -3352,8 +3338,8 @@
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
         "nick": "미도물산",
         "spId": 866236772,
-        "assists": 32,
-        "games": 60
+        "assists": 36,
+        "games": 67
       }
     ],
     "comebackKing": [
@@ -3367,9 +3353,9 @@
       {
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
         "nick": "미도물산",
-        "comebacks": 9,
+        "comebacks": 10,
         "lateWinners": 5,
-        "games": 60
+        "games": 67
       },
       {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
@@ -3384,8 +3370,8 @@
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "Dor6문선생",
         "comebacks": 6,
-        "lateWinners": 7,
-        "games": 22
+        "lateWinners": 8,
+        "games": 25
       },
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
@@ -3397,9 +3383,9 @@
       {
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
         "nick": "미도물산",
-        "comebacks": 9,
+        "comebacks": 10,
         "lateWinners": 5,
-        "games": 60
+        "games": 67
       }
     ],
     "gentleman": [
@@ -3453,11 +3439,11 @@
       {
         "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
         "nick": "chelse굴리트",
-        "games": 16,
+        "games": 17,
         "yellow": 1,
         "red": 0,
-        "foul": 19,
-        "score": 1.38
+        "foul": 20,
+        "score": 1.35
       }
     ],
     "specialists": [
@@ -3499,11 +3485,11 @@
         "spId": 861001040,
         "group": "DM",
         "pos": 11,
-        "games": 16,
+        "games": 17,
         "metric": "sht",
-        "value": 1.5,
+        "value": 1.53,
         "base": 0.48,
-        "z": 3.47,
+        "z": 3.57,
         "title": {
           "emoji": "🏹",
           "name": "슈팅 머신"
