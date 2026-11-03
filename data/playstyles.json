@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T07:18:04.845Z",
+  "updated": "2026-11-03T08:08:41.745Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -429,50 +429,50 @@
           "key": false
         },
         {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.904,
-          "avg": 0.888,
-          "z": 0.77,
-          "key": false
-        },
-        {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.121,
+          "v": 0.123,
           "avg": 0.081,
-          "z": 0.72,
+          "z": 0.76,
+          "key": false
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.902,
+          "avg": 0.888,
+          "z": 0.68,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "tackleTry",
-          "label": "태클 시도",
+          "k": "gf",
+          "label": "경기당 득점",
           "unit": "",
-          "v": 10.22,
-          "avg": 16.007,
+          "v": 2.28,
+          "avg": 3.208,
           "z": -1.49,
           "key": true
         },
         {
-          "k": "gf",
-          "label": "경기당 득점",
+          "k": "tackleTry",
+          "label": "태클 시도",
           "unit": "",
-          "v": 2.32,
-          "avg": 3.208,
-          "z": -1.42,
+          "v": 10.28,
+          "avg": 16.007,
+          "z": -1.47,
           "key": true
         },
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.5,
+          "v": 5.4,
           "avg": 6.966,
-          "z": -1.33,
+          "z": -1.42,
           "key": false
         }
       ]
