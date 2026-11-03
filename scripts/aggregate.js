@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { computeMemberSeason, toDate, matchTime, matchDayKST } from "./lib/season.js";
+import { computeMemberSeason, seasonStartMs, seasonEndMs, toDate, matchTime, matchDayKST } from "./lib/season.js";
 import { latestLineupMatch, recentSquadIds } from "./lib/squad.js";
 import { buildGuide, winLossBaseline } from "./lib/guide.js";
 import { computeMetrics, judge, METRICS, withShots } from "./lib/playstyle.js";
@@ -101,8 +101,8 @@ function buildHall() {
   const seasons = [];
   for (const season of seasonsFile.seasons || []) {
     const stats = members.map((m) => {
-      const startT = toDate(season.start).getTime();
-      const endT = toDate(season.end).getTime() + (86400000 - 1000);
+      const startT = seasonStartMs(season);
+      const endT = seasonEndMs(season);
       const ms = matchesByOuid[m.ouid].filter((x) => {
         const t = matchTime(x.matchDate).getTime();
         return t >= startT && t <= endT && counted.includes(x.matchType);
@@ -205,8 +205,8 @@ function buildInsights() {
     || (seasonsFile.seasons || []).slice(-1)[0];
   if (!season) return 0;
   const minGames = (config.playstyle && config.playstyle.minGames) || 10;
-  const startT = toDate(season.start).getTime();
-  const endT = toDate(season.end).getTime() + (86400000 - 1000);
+  const startT = seasonStartMs(season);
+  const endT = seasonEndMs(season);
   const players = {};
   const scorerRows = [], assistRows = [], flowRows = [], mannerRows = [], specialistRows = [];
   const guideInputs = {};   // ouid → 가이드 입력 경기 (v2.18.1)
@@ -306,7 +306,7 @@ function buildInsights() {
   };
   writeJSON(p("data", "insights.json"), {
     updated: now.toISOString(), seasonId: season.id, seasonName: season.name,
-    seasonStart: season.start, seasonEnd: season.end, countedTypes: analysisTypes,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
+    seasonStart: season.start, seasonEnd: season.end, seasonStartMs: startT, seasonEndMs: endT, countedTypes: analysisTypes,   // 전적 화면 슈팅맵이 같은 범위로 거르도록
     minGames, buckets: GOAL_BUCKETS,
     // 에이스 카드 표기용 — 그룹명·지표명·랭커 표본 수 (정의는 lib/insight.js 단일 소스)
     groupLabels: GROUP_LABEL, metricLabels: P_METRICS,

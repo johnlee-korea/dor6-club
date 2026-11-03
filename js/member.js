@@ -158,8 +158,8 @@ async function tabInsight(body) {
   }
   const meta = await sqLoadMeta();
   // 시즌 날짜는 KST, 경기 시각은 UTC(parseTime) — aggregate.js와 같은 범위
-  const startT = new Date(ins.seasonStart + "T00:00:00+09:00").getTime();
-  const endT = new Date(ins.seasonEnd + "T23:59:59+09:00").getTime();
+  const startT = ins.seasonStartMs || new Date(ins.seasonStart + "T00:00:00+09:00").getTime();
+  const endT = ins.seasonEndMs || new Date(ins.seasonEnd + "T23:59:59+09:00").getTime();
   const shots = PF.matches
     .filter((m) => Array.isArray(m.shots) && ins.countedTypes.includes(m.matchType) && m.styleRaw && m.styleRaw.end === 0 &&
       parseTime(m.matchDate).getTime() >= startT && parseTime(m.matchDate).getTime() <= endT)

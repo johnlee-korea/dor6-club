@@ -1,8 +1,8 @@
 {
   "meta": {
-    "updated": "2026-09-24",
-    "note": "시즌5 진행중. 중간점검(전반기 종료)=2026-10-01 (게임 표시 '7일 남음' 기준, 확정). 시작일·종료일은 시즌 6~8주 가정한 추정값 → 정확한 날짜 확인되면 start/end 수정.",
-    "currentSeasonId": "s5"
+    "updated": "2026-11-03",
+    "note": "시즌6 진행중. 개막 2026-10-29 12:00(KST, startTime) · 전반기 종료(중간점검) 2026-11-26 (사용자 확정). 종료일 12-24는 시즌5와 같은 4주+4주 가정 추정값 → 확정되면 end 수정. 시즌5는 10-29 12:00(endTime)에 종료.",
+    "currentSeasonId": "s6"
   },
   "seasons": [
     {
@@ -11,6 +11,17 @@
       "start": "2026-09-03",
       "midCheck": "2026-10-01",
       "end": "2026-10-29",
+      "endTime": "12:00",
+      "targetGames": 50,
+      "midTargetGames": 25
+    },
+    {
+      "id": "s6",
+      "name": "시즌6",
+      "start": "2026-10-29",
+      "startTime": "12:00",
+      "midCheck": "2026-11-26",
+      "end": "2026-12-24",
       "targetGames": 50,
       "midTargetGames": 25
     }

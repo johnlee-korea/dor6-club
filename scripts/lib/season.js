@@ -58,11 +58,22 @@ export function getCurrentSeason(seasonsFile) {
   return seasonsFile.seasons.find((s) => s.id === id) || seasonsFile.seasons[seasonsFile.seasons.length - 1];
 }
 
+/* 시즌 경계 시각(ms) — start/end는 날짜("YYYY-MM-DD", KST), 선택값 startTime/endTime("HH:MM", KST)
+   startTime 없으면 시작일 00:00, endTime 없으면 종료일 23:59:59까지 포함
+   (2026-11-03: 시즌6이 10/29 정오 시작 — 시즌5 마지막 날 오전 경기가 새 시즌에 섞이지 않도록) */
+export function seasonStartMs(season) {
+  return toDate(season.start + (season.startTime ? `T${season.startTime}:00` : "")).getTime();
+}
+export function seasonEndMs(season) {
+  return season.endTime ? toDate(`${season.end}T${season.endTime}:00`).getTime() - 1000
+    : toDate(season.end).getTime() + (DAY - 1000);
+}
+
 /* 시즌 구간 + 인정 유형으로 매치 판수 카운트 */
 export function countGames(matches = [], season, countedTypes, until = null) {
-  const start = toDate(season.start).getTime();
-  // 종료일은 그날 끝(23:59:59)까지 포함
-  const end = (until ? toDate(until) : toDate(season.end)).getTime() + (DAY - 1000);
+  const start = seasonStartMs(season);
+  // 종료일은 그날 끝(23:59:59)까지 포함 (endTime 있으면 그 시각 직전까지)
+  const end = until ? toDate(until).getTime() + (DAY - 1000) : seasonEndMs(season);
   const typeSet = new Set(countedTypes);
   return matches.filter((m) => {
     const t = matchTime(m.matchDate).getTime();
@@ -76,7 +87,7 @@ export function countGames(matches = [], season, countedTypes, until = null) {
   반환: { played, target, mid, playedByMid, midMiss, resting, restDays, prorated }
 */
 export function computeMemberSeason(member, matches, season, countedTypes, now = new Date()) {
-  const start = toDate(season.start);
+  const start = new Date(seasonStartMs(season));
   const end = toDate(season.end);
   const mid = toDate(season.midCheck);
   const join = member.joinDate ? toDate(member.joinDate) : start;
