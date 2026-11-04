@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T10:08:22.440Z",
+  "updated": "2026-11-04T12:09:00.628Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1040,12 +1040,14 @@
     "001221eab7f2c49f8571511731cc2573": {
       "games": 50,
       "style": {
-        "name": "골문 앞 인간 방패",
-        "line": "점유율 내주고 몸으로 막는다",
+        "name": "ZD 중독자",
+        "line": "박스 밖 감아차기, 오늘도 골대 옆으로",
         "basis": [
-          "block+",
-          "poss-"
-        ]
+          "finesse+",
+          "longShot+",
+          "finish-"
+        ],
+        "rare": true
       },
       "highs": [
         {
@@ -1055,7 +1057,7 @@
           "v": 5.96,
           "avg": 4.33,
           "z": 1.89,
-          "key": true
+          "key": false
         },
         {
           "k": "finesse",
@@ -1064,16 +1066,16 @@
           "v": 0.475,
           "avg": 0.302,
           "z": 1.51,
-          "key": false
+          "key": true
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 8.18,
-          "avg": 6.966,
-          "z": 1.1,
-          "key": false
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
+          "unit": "%",
+          "v": 0.255,
+          "avg": 0.179,
+          "z": 1.11,
+          "key": true
         }
       ],
       "lows": [
@@ -1081,27 +1083,27 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 45.86,
+          "v": 45.78,
           "avg": 50.791,
-          "z": -1.72,
-          "key": true
+          "z": -1.75,
+          "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.367,
+          "v": 0.363,
           "avg": 0.462,
-          "z": -1.53,
-          "key": false
+          "z": -1.59,
+          "key": true
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.733,
+          "v": 0.73,
           "avg": 0.788,
-          "z": -1.22,
+          "z": -1.28,
           "key": false
         }
       ]
@@ -1259,27 +1261,27 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.658,
+          "v": 0.668,
           "avg": 0.543,
-          "z": 1.93,
+          "z": 2.1,
           "key": true
-        },
-        {
-          "k": "finesse",
-          "label": "감아차기 비율",
-          "unit": "%",
-          "v": 0.481,
-          "avg": 0.302,
-          "z": 1.57,
-          "key": false
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.8,
+          "v": 0.84,
           "avg": 0.46,
-          "z": 1.47,
+          "z": 1.64,
+          "key": false
+        },
+        {
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.48,
+          "avg": 0.302,
+          "z": 1.56,
           "key": false
         }
       ],
@@ -1288,9 +1290,9 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 8.06,
+          "v": 7.94,
           "avg": 16.007,
-          "z": -2.04,
+          "z": -2.07,
           "key": true
         },
         {
@@ -1299,7 +1301,7 @@
           "unit": "%",
           "v": 0.377,
           "avg": 0.462,
-          "z": -1.37,
+          "z": -1.36,
           "key": false
         },
         {
@@ -1308,7 +1310,7 @@
           "unit": "%",
           "v": 0.001,
           "avg": 0.011,
-          "z": -1.27,
+          "z": -1.31,
           "key": false
         }
       ]
@@ -1870,11 +1872,11 @@
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
       "games": 50,
       "style": {
-        "name": "투박한 타깃맨",
-        "line": "감아차기는 모른다, 머리로 들이받는다",
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
         "basis": [
-          "headShot+",
-          "finesse-"
+          "longRatio+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -1882,10 +1884,10 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.583,
+          "v": 0.585,
           "avg": 0.189,
-          "z": 3.77,
-          "key": true
+          "z": 3.79,
+          "key": false
         },
         {
           "k": "longRatio",
@@ -1893,8 +1895,8 @@
           "unit": "%",
           "v": 0.155,
           "avg": 0.057,
-          "z": 3.31,
-          "key": false
+          "z": 3.33,
+          "key": true
         },
         {
           "k": "boxGoal",
@@ -1913,37 +1915,37 @@
           "unit": "%",
           "v": 0.833,
           "avg": 0.888,
-          "z": -2.69,
-          "key": false
+          "z": -2.71,
+          "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 54.12,
+          "v": 54.22,
           "avg": 77.226,
-          "z": -2.42,
+          "z": -2.41,
           "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.046,
+          "v": 0.049,
           "avg": 0.302,
-          "z": -2.24,
-          "key": true
+          "z": -2.22,
+          "key": false
         }
       ]
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 37,
+      "games": 39,
       "style": {
-        "name": "두드려도 안 열리는",
-        "line": "코너킥까지 뽑는데 골문은 안 열린다",
+        "name": "투박한 타깃맨",
+        "line": "감아차기는 모른다, 머리로 들이받는다",
         "basis": [
-          "corner+",
-          "finish-"
+          "headShot+",
+          "finesse-"
         ]
       },
       "highs": [
@@ -1951,28 +1953,28 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 21.27,
+          "v": 21.513,
           "avg": 16.007,
-          "z": 1.35,
+          "z": 1.42,
           "key": false
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 1.892,
+          "v": 1.872,
           "avg": 1.431,
-          "z": 1.15,
-          "key": true
+          "z": 1.1,
+          "key": false
         },
         {
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.295,
+          "v": 0.293,
           "avg": 0.189,
-          "z": 1.01,
-          "key": false
+          "z": 0.99,
+          "key": true
         }
       ],
       "lows": [
@@ -1980,28 +1982,28 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.482,
+          "v": 0.485,
           "avg": 0.543,
-          "z": -1.03,
+          "z": -0.97,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.398,
+          "v": 0.404,
           "avg": 0.462,
-          "z": -1.03,
-          "key": true
+          "z": -0.94,
+          "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.213,
+          "v": 0.207,
           "avg": 0.302,
-          "z": -0.78,
-          "key": false
+          "z": -0.83,
+          "key": true
         }
       ]
     }
