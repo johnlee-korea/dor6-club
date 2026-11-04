@@ -1,14 +1,14 @@
 {
-  "updated": "2026-11-04T14:09:17.672Z",
+  "updated": "2026-11-04T16:08:41.842Z",
   "week": {
-    "from": "2026-10-28T14:09:17.672Z",
+    "from": "2026-10-28T16:08:41.842Z",
     "rows": [
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "FO4커벌",
-        "games": 106,
-        "wins": 55,
-        "winRate": 52
+        "games": 102,
+        "wins": 54,
+        "winRate": 53
       },
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
@@ -18,25 +18,25 @@
         "winRate": 51
       },
       {
-        "ouid": "2dd2edb174f63716078ffc324199edd1",
-        "nick": "미드필더",
-        "games": 89,
-        "wins": 37,
-        "winRate": 42
+        "ouid": "c4d139e665756377869b9a9dfc998e6b",
+        "nick": "미도물산",
+        "games": 87,
+        "wins": 38,
+        "winRate": 44
       },
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 88,
-        "wins": 38,
-        "winRate": 43
+        "games": 85,
+        "wins": 37,
+        "winRate": 44
       },
       {
-        "ouid": "c4d139e665756377869b9a9dfc998e6b",
-        "nick": "미도물산",
-        "games": 86,
-        "wins": 38,
-        "winRate": 44
+        "ouid": "2dd2edb174f63716078ffc324199edd1",
+        "nick": "미드필더",
+        "games": 82,
+        "wins": 34,
+        "winRate": 41
       }
     ]
   },
@@ -108,22 +108,22 @@
       }
     },
     "f3804c4f7f55e85ed62f2732aa40eb33": {
-      "games": 543,
+      "games": 551,
       "form": [
+        "win",
+        "win",
+        "win",
+        "lose",
+        "lose",
         "lose",
         "win",
-        "win",
-        "draw",
-        "win",
-        "draw",
         "lose",
-        "win",
         "lose",
         "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 1
+        "type": "win",
+        "n": 3
       },
       "rivals": {
         "nemesis": {
@@ -173,22 +173,22 @@
             "rate": 72
           }
         ],
-        "internalGames": 137
+        "internalGames": 143
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
-      "games": 441,
+      "games": 445,
       "form": [
         "win",
         "lose",
         "win",
-        "lose",
-        "lose",
-        "draw",
+        "win",
         "win",
         "lose",
         "win",
-        "win"
+        "lose",
+        "lose",
+        "draw"
       ],
       "streak": {
         "type": "win",
@@ -494,8 +494,9 @@
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
-      "games": 102,
+      "games": 103,
       "form": [
+        "lose",
         "draw",
         "draw",
         "lose",
@@ -504,10 +505,12 @@
         "lose",
         "lose",
         "win",
-        "draw",
-        "win"
+        "draw"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -541,22 +544,22 @@
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
-      "games": 562,
+      "games": 566,
       "form": [
+        "lose",
+        "win",
+        "win",
+        "win",
         "win",
         "win",
         "lose",
         "win",
         "win",
-        "win",
-        "lose",
-        "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
-        "type": "win",
-        "n": 2
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": {
@@ -632,8 +635,9 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 261,
+      "games": 262,
       "form": [
+        "lose",
         "lose",
         "draw",
         "win",
@@ -642,12 +646,11 @@
         "win",
         "win",
         "win",
-        "lose",
-        "win"
+        "lose"
       ],
       "streak": {
         "type": "lose",
-        "n": 1
+        "n": 2
       },
       "rivals": {
         "nemesis": {
@@ -768,20 +771,23 @@
       }
     },
     "b578e892bd97681f0d6bfbb1106d803a": {
-      "games": 149,
+      "games": 154,
       "form": [
-        "draw",
-        "win",
-        "win",
         "win",
         "draw",
         "win",
+        "win",
+        "draw",
         "lose",
-        "lose",
-        "lose",
-        "lose"
+        "win",
+        "win",
+        "win",
+        "draw"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -859,22 +865,22 @@
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
-      "games": 216,
+      "games": 226,
       "form": [
         "win",
         "win",
+        "lose",
         "win",
+        "lose",
         "lose",
         "win",
         "win",
-        "win",
         "lose",
-        "draw",
-        "draw"
+        "win"
       ],
       "streak": {
         "type": "win",
-        "n": 3
+        "n": 2
       },
       "rivals": {
         "nemesis": {
@@ -1117,8 +1123,10 @@
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
-      "games": 269,
+      "games": 271,
       "form": [
+        "win",
+        "win",
         "lose",
         "lose",
         "lose",
@@ -1126,13 +1134,11 @@
         "win",
         "draw",
         "lose",
-        "win",
-        "win",
         "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 3
+        "type": "win",
+        "n": 2
       },
       "rivals": {
         "nemesis": null,
@@ -1211,32 +1217,32 @@
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 140,
+      "games": 147,
       "form": [
         "lose",
         "lose",
+        "lose",
+        "win",
+        "win",
         "win",
         "lose",
         "lose",
-        "win",
         "lose",
-        "lose",
-        "lose",
-        "lose"
+        "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 2
+        "n": 3
       },
       "rivals": {
         "nemesis": {
-          "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
-          "nick": "Dor6문선생",
-          "games": 4,
+          "ouid": "2dd2edb174f63716078ffc324199edd1",
+          "nick": "미드필더",
+          "games": 3,
           "win": 0,
           "draw": 2,
-          "lose": 2,
-          "rate": 17
+          "lose": 1,
+          "rate": 22
         },
         "prey": {
           "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -1249,6 +1255,15 @@
         },
         "frequent": [
           {
+            "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
+            "nick": "Dor6문선생",
+            "games": 10,
+            "win": 3,
+            "draw": 2,
+            "lose": 5,
+            "rate": 37
+          },
+          {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
             "nick": "Dor6똘콩스",
             "games": 10,
@@ -1256,15 +1271,6 @@
             "draw": 1,
             "lose": 6,
             "rate": 33
-          },
-          {
-            "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
-            "nick": "Dor6문선생",
-            "games": 4,
-            "win": 0,
-            "draw": 2,
-            "lose": 2,
-            "rate": 17
           },
           {
             "ouid": "82c59dce895a829f78a8e10c10122249",
@@ -1276,7 +1282,7 @@
             "rate": 67
           }
         ],
-        "internalGames": 21
+        "internalGames": 27
       }
     }
   }
