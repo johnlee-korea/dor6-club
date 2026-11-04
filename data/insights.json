@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T12:09:00.628Z",
+  "updated": "2026-11-04T14:09:17.672Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -1554,33 +1554,33 @@
     },
     "001221eab7f2c49f8571511731cc2573": {
       "ctrl": "keyboard",
-      "games": 31,
+      "games": 32,
       "ace": [
         {
           "spId": 866252042,
           "group": "ST",
           "pos": 26,
-          "games": 29,
+          "games": 30,
           "metric": "sht",
-          "value": 4.07,
+          "value": 4.1,
           "base": 2.29,
-          "z": 2.33,
+          "z": 2.38,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
-          "goals": 46,
-          "assists": 15
+          "goals": 48,
+          "assists": 16
         },
         {
           "spId": 863202811,
           "group": "GK",
           "pos": 0,
-          "games": 20,
+          "games": 21,
           "metric": "sav",
-          "value": 4.35,
+          "value": 4.33,
           "base": 2.61,
-          "z": 2.31,
+          "z": 2.29,
           "title": {
             "emoji": "🧤",
             "name": "수호신"
@@ -1607,20 +1607,20 @@
       ],
       "goalMins": {
         "for": [
-          17,
+          18,
           15,
           9,
-          17,
-          9,
           18,
+          10,
+          19,
           2
         ],
         "against": [
           14,
-          14,
-          8,
           15,
-          15,
+          9,
+          17,
+          16,
           16,
           4
         ]
@@ -1628,26 +1628,26 @@
       "comebacks": 4,
       "lateWinners": 3,
       "manner": {
-        "games": 31,
+        "games": 32,
         "yellow": 3,
         "red": 0,
         "foul": 36,
-        "score": 1.45
+        "score": 1.41
       },
       "guide": {
         "v": 2,
-        "games": 31,
+        "games": 32,
         "split": false,
         "minSide": 15,
         "wlMembers": 5,
-        "summary": "31경기 12승 8무 11패 (승률 39%) · 경기당 득점 2.8 · 실점 2.8. 가장 큰 무기는 태클 성공률, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "32경기 12승 9무 11패 (승률 38%) · 경기당 득점 2.8 · 실점 2.8. 가장 큰 무기는 태클 성공률, 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [
           {
             "k": "tackleRate",
             "label": "태클 성공률",
             "v": "61%",
             "avg": "54%",
-            "z": 1.17,
+            "z": 1.14,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1660,9 +1660,9 @@
           {
             "k": "finish",
             "label": "결정력",
-            "v": "34%",
+            "v": "35%",
             "avg": "46%",
-            "z": -1.92,
+            "z": -1.86,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1675,7 +1675,7 @@
             "label": "유효슈팅 비율",
             "v": "74%",
             "avg": "79%",
-            "z": -1.15,
+            "z": -1.04,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1688,7 +1688,7 @@
             "label": "카드",
             "v": "0.1",
             "avg": "0.0",
-            "z": 0.9,
+            "z": 0.85,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1705,7 +1705,7 @@
             "label": "점유율",
             "v": "45%",
             "avg": "51%",
-            "z": -1.95,
+            "z": -2.04,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1728,7 +1728,7 @@
           }
         ],
         "time": [
-          "득점이 76-90분에 가장 많아요 (득점 85골 중 18골, 21%).",
+          "득점이 76-90분에 가장 많아요 (득점 89골 중 19골, 21%).",
           "역전승 4번 · 80분 이후 결승골(극장골) 3번."
         ]
       }
@@ -2186,17 +2186,17 @@
     },
     "b578e892bd97681f0d6bfbb1106d803a": {
       "ctrl": "keyboard",
-      "games": 18,
+      "games": 20,
       "ace": [
         {
           "spId": 861049072,
           "group": "W",
           "pos": 16,
-          "games": 14,
+          "games": 16,
           "metric": "sht",
-          "value": 1.5,
+          "value": 1.38,
           "base": 0.63,
-          "z": 2.5,
+          "z": 2.14,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
@@ -2208,91 +2208,78 @@
           "spId": 867041236,
           "group": "ST",
           "pos": 24,
-          "games": 18,
+          "games": 20,
           "metric": "win",
-          "value": 1.61,
+          "value": 1.5,
           "base": 0.77,
-          "z": 2.46,
+          "z": 2.13,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
-          "goals": 19,
-          "assists": 5
+          "goals": 21,
+          "assists": 6
         },
         {
           "spId": 877167905,
           "group": "W",
           "pos": 12,
-          "games": 18,
+          "games": 20,
           "metric": "int",
-          "value": 0.78,
+          "value": 0.75,
           "base": 0.36,
-          "z": 1.77,
+          "z": 1.65,
           "title": {
             "emoji": "🦅",
             "name": "볼 사냥꾼"
           },
-          "goals": 1,
+          "goals": 2,
           "assists": 10
         }
       ],
       "goalMins": {
         "for": [
           5,
-          8,
-          4,
-          10,
-          8,
+          9,
           6,
+          10,
+          10,
+          7,
           3
         ],
         "against": [
-          9,
+          10,
           4,
-          7,
+          8,
           7,
           6,
           6,
           2
         ]
       },
-      "comebacks": 4,
+      "comebacks": 5,
       "lateWinners": 2,
       "manner": {
-        "games": 18,
+        "games": 20,
         "yellow": 0,
         "red": 0,
-        "foul": 16,
-        "score": 0.89
+        "foul": 21,
+        "score": 1.05
       },
       "guide": {
         "v": 2,
-        "games": 18,
+        "games": 20,
         "split": false,
         "minSide": 15,
         "wlMembers": 5,
-        "summary": "18경기 9승 2무 7패 (승률 50%) · 경기당 득점 2.4 · 실점 2.3. 가장 큰 무기는 오프사이드, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "20경기 10승 3무 7패 (승률 50%) · 경기당 득점 2.5 · 실점 2.1. 가장 큰 무기는 패스 성공률, 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [
-          {
-            "k": "offside",
-            "label": "오프사이드",
-            "v": "0.3",
-            "avg": "0.5",
-            "z": -0.55,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "오프사이드가 적어요 (침투 타이밍 좋음)."
-          },
           {
             "k": "passRate",
             "label": "패스 성공률",
             "v": "90%",
             "avg": "89%",
-            "z": 0.52,
+            "z": 0.54,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2307,7 +2294,7 @@
             "label": "결정력",
             "v": "31%",
             "avg": "46%",
-            "z": -2.51,
+            "z": -2.46,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2318,9 +2305,9 @@
           {
             "k": "effRate",
             "label": "유효슈팅 비율",
-            "v": "74%",
+            "v": "75%",
             "avg": "79%",
-            "z": -1,
+            "z": -0.92,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2337,7 +2324,7 @@
             "label": "중거리 슈팅 비율",
             "v": "36%",
             "avg": "18%",
-            "z": 2.67,
+            "z": 2.63,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2346,11 +2333,11 @@
             "text": "랭커보다 많아요. 승패와는 뚜렷한 관계가 없어 장단점으로 보진 않아요."
           },
           {
-            "k": "corner",
-            "label": "코너킥",
-            "v": "1.9",
-            "avg": "1.4",
-            "z": 1.28,
+            "k": "throughRatio",
+            "label": "스루패스 비율",
+            "v": "19%",
+            "avg": "14%",
+            "z": 1.21,
             "win": null,
             "lose": null,
             "sig": false,
@@ -2360,9 +2347,9 @@
           }
         ],
         "time": [
-          "실점이 1-15분에 가장 많아요 (실점 39골 중 9골, 23%).",
-          "득점이 46-60분에 가장 많아요 (득점 41골 중 10골, 24%).",
-          "역전승 4번 · 80분 이후 결승골(극장골) 2번."
+          "실점이 1-15분에 가장 많아요 (실점 41골 중 10골, 24%).",
+          "득점이 46-60분에 가장 많아요 (득점 47골 중 10골, 21%).",
+          "역전승 5번 · 80분 이후 결승골(극장골) 2번."
         ]
       }
     },
@@ -3569,15 +3556,6 @@
         "score": 1.68
       },
       {
-        "ouid": "001221eab7f2c49f8571511731cc2573",
-        "nick": "ThomasTohell",
-        "games": 31,
-        "yellow": 3,
-        "red": 0,
-        "foul": 36,
-        "score": 1.45
-      },
-      {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "진저맨",
         "games": 24,
@@ -3585,6 +3563,15 @@
         "red": 0,
         "foul": 28,
         "score": 1.42
+      },
+      {
+        "ouid": "001221eab7f2c49f8571511731cc2573",
+        "nick": "ThomasTohell",
+        "games": 32,
+        "yellow": 3,
+        "red": 0,
+        "foul": 36,
+        "score": 1.41
       }
     ],
     "specialists": [

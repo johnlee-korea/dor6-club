@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T12:09:00.628Z",
+  "updated": "2026-11-04T14:09:17.672Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1040,14 +1040,12 @@
     "001221eab7f2c49f8571511731cc2573": {
       "games": 50,
       "style": {
-        "name": "ZD 중독자",
-        "line": "박스 밖 감아차기, 오늘도 골대 옆으로",
+        "name": "골문 앞 인간 방패",
+        "line": "점유율 내주고 몸으로 막는다",
         "basis": [
-          "finesse+",
-          "longShot+",
-          "finish-"
-        ],
-        "rare": true
+          "block+",
+          "poss-"
+        ]
       },
       "highs": [
         {
@@ -1057,25 +1055,25 @@
           "v": 5.96,
           "avg": 4.33,
           "z": 1.89,
-          "key": false
+          "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.475,
+          "v": 0.473,
           "avg": 0.302,
-          "z": 1.51,
-          "key": true
+          "z": 1.5,
+          "key": false
         },
         {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
-          "unit": "%",
-          "v": 0.255,
-          "avg": 0.179,
-          "z": 1.11,
-          "key": true
+          "k": "shots",
+          "label": "경기당 슈팅",
+          "unit": "",
+          "v": 8.22,
+          "avg": 6.966,
+          "z": 1.13,
+          "key": false
         }
       ],
       "lows": [
@@ -1083,27 +1081,27 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 45.78,
+          "v": 45.52,
           "avg": 50.791,
-          "z": -1.75,
-          "key": false
+          "z": -1.84,
+          "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.363,
+          "v": 0.365,
           "avg": 0.462,
-          "z": -1.59,
-          "key": true
+          "z": -1.56,
+          "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.73,
+          "v": 0.737,
           "avg": 0.788,
-          "z": -1.28,
+          "z": -1.13,
           "key": false
         }
       ]
@@ -1332,27 +1330,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.332,
+          "v": 0.336,
           "avg": 0.179,
-          "z": 2.24,
+          "z": 2.3,
           "key": true
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 2.14,
+          "v": 2.12,
           "avg": 1.431,
-          "z": 1.77,
+          "z": 1.72,
           "key": true
         },
         {
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.158,
+          "v": 0.163,
           "avg": 0.081,
-          "z": 1.39,
+          "z": 1.49,
           "key": false
         }
       ],
@@ -1361,18 +1359,18 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.324,
+          "v": 0.331,
           "avg": 0.462,
-          "z": -2.21,
+          "z": -2.1,
           "key": true
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.827,
+          "v": 0.83,
           "avg": 0.904,
-          "z": -1.33,
+          "z": -1.28,
           "key": false
         },
         {
