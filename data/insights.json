@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T22:08:11.036Z",
+  "updated": "2026-11-04T00:08:22.234Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -3179,7 +3179,7 @@
     },
     "10512ddbc79f7b043f02f62eac238b37": {
       "ctrl": "keyboard",
-      "games": 23,
+      "games": 25,
       "ace": [
         {
           "spId": 877000041,
@@ -3198,82 +3198,82 @@
           "assists": 11
         },
         {
-          "spId": 845176580,
-          "group": "ST",
-          "pos": 25,
-          "games": 15,
-          "metric": "pas",
-          "value": 16.07,
-          "base": 11.08,
-          "z": 1.75,
+          "spId": 835135455,
+          "group": "DM",
+          "pos": 11,
+          "games": 6,
+          "metric": "int",
+          "value": 1.67,
+          "base": 0.89,
+          "z": 2.2,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "🧹",
+            "name": "진공청소기"
           },
-          "goals": 18,
-          "assists": 11
+          "goals": 0,
+          "assists": 1
         },
         {
-          "spId": 848028130,
-          "group": "W",
-          "pos": 16,
-          "games": 13,
-          "metric": "pas",
-          "value": 12.23,
-          "base": 8.26,
-          "z": 1.46,
+          "spId": 845222481,
+          "group": "CB",
+          "pos": 4,
+          "games": 6,
+          "metric": "win",
+          "value": 3.83,
+          "base": 2.58,
+          "z": 2.19,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
-          "goals": 6,
-          "assists": 8
+          "goals": 0,
+          "assists": 0
         }
       ],
       "goalMins": {
         "for": [
           7,
-          9,
+          10,
           14,
           9,
-          12,
+          13,
           7,
           5
         ],
         "against": [
-          9,
-          17,
-          4,
-          12,
+          10,
+          18,
+          5,
+          13,
           7,
-          12,
+          13,
           3
         ]
       },
       "comebacks": 2,
       "lateWinners": 2,
       "manner": {
-        "games": 23,
+        "games": 25,
         "yellow": 1,
         "red": 0,
-        "foul": 22,
-        "score": 1.09
+        "foul": 24,
+        "score": 1.08
       },
       "guide": {
         "v": 2,
-        "games": 23,
+        "games": 25,
         "split": false,
         "minSide": 15,
         "wlMembers": 5,
-        "summary": "23경기 9승 8무 6패 (승률 39%) · 경기당 득점 2.7 · 실점 2.8. 가장 먼저 손볼 곳은 태클 성공률이에요.",
+        "summary": "25경기 9승 8무 8패 (승률 36%) · 경기당 득점 2.6 · 실점 2.8. 가장 먼저 손볼 곳은 태클 성공률이에요.",
         "strengths": [],
         "weaknesses": [
           {
             "k": "tackleRate",
             "label": "태클 성공률",
-            "v": "46%",
+            "v": "47%",
             "avg": "54%",
-            "z": -1.47,
+            "z": -1.27,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3282,30 +3282,30 @@
             "text": "태클 실패가 많아요. 성급한 태클보다 길목 막기(자리 지키기)를 먼저 해 보세요. 목표: 랭커 평균 54%."
           },
           {
-            "k": "offside",
-            "label": "오프사이드",
-            "v": "0.7",
-            "avg": "0.5",
-            "z": 0.83,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "오프사이드가 많아요. 스루패스 타이밍을 반 박자 늦추거나 공격수 움직임을 확인해 보세요. 목표: 랭커 평균 0.5."
-          },
-          {
             "k": "finish",
             "label": "결정력",
             "v": "41%",
             "avg": "46%",
-            "z": -0.76,
+            "z": -0.9,
             "win": null,
             "lose": null,
             "sig": false,
             "cw": null,
             "cl": null,
             "text": "슈팅 대비 골이 적어요. 먼 거리·각도 없는 슈팅을 줄이고 박스 안 좋은 자리까지 한 번 더 연결해 보세요. 목표: 랭커 평균 46%."
+          },
+          {
+            "k": "offside",
+            "label": "오프사이드",
+            "v": "0.6",
+            "avg": "0.5",
+            "z": 0.78,
+            "win": null,
+            "lose": null,
+            "sig": false,
+            "cw": null,
+            "cl": null,
+            "text": "오프사이드가 많아요. 스루패스 타이밍을 반 박자 늦추거나 공격수 움직임을 확인해 보세요. 목표: 랭커 평균 0.5."
           }
         ],
         "winSpecial": [],
@@ -3314,9 +3314,9 @@
           {
             "k": "tackleTry",
             "label": "태클 시도",
-            "v": "20.6",
+            "v": "20.9",
             "avg": "16.0",
-            "z": 1.18,
+            "z": 1.25,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3329,7 +3329,7 @@
             "label": "측면 각도 슈팅",
             "v": "20%",
             "avg": "28%",
-            "z": -1.06,
+            "z": -1.03,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3339,8 +3339,8 @@
           }
         ],
         "time": [
-          "실점이 16-30분에 가장 많아요 (실점 61골 중 17골, 28%).",
-          "득점이 31-45분에 가장 많아요 (득점 58골 중 14골, 24%).",
+          "실점이 16-30분에 가장 많아요 (실점 66골 중 18골, 27%).",
+          "득점이 31-45분에 가장 많아요 (득점 60골 중 14골, 23%).",
           "역전승 2번 · 80분 이후 결승골(극장골) 2번."
         ]
       }
