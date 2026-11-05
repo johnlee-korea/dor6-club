@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T06:07:46.767Z",
+  "updated": "2026-11-05T07:27:14.108Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1052,16 +1052,16 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 5.96,
+          "v": 5.84,
           "avg": 4.33,
-          "z": 1.89,
+          "z": 1.75,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.473,
+          "v": 0.474,
           "avg": 0.302,
           "z": 1.5,
           "key": false
@@ -1070,9 +1070,9 @@
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 8.22,
+          "v": 8.24,
           "avg": 6.966,
-          "z": 1.13,
+          "z": 1.15,
           "key": false
         }
       ],
@@ -1081,27 +1081,27 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 45.52,
+          "v": 45.12,
           "avg": 50.791,
-          "z": -1.84,
+          "z": -1.98,
           "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.365,
+          "v": 0.371,
           "avg": 0.462,
-          "z": -1.56,
+          "z": -1.45,
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.737,
-          "avg": 0.788,
-          "z": -1.13,
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 11.56,
+          "avg": 16.007,
+          "z": -1.14,
           "key": false
         }
       ]
@@ -1801,40 +1801,42 @@
     "980d209770b51f1cc39d22e82cb2d01c": {
       "games": 50,
       "style": {
-        "name": "크로스-헤더 공식",
-        "line": "측면에서 올리고 머리로 끝낸다",
+        "name": "공중 폭격기",
+        "line": "크로스 올리고 머리로, 코너킥도 머리로",
         "basis": [
+          "lobRatio+",
           "headShot+",
-          "lobRatio+"
-        ]
+          "corner+"
+        ],
+        "rare": true
       },
       "highs": [
         {
           "k": "lobRatio",
           "label": "띄우는 패스 비율",
           "unit": "%",
-          "v": 0.036,
+          "v": 0.032,
           "avg": 0.011,
-          "z": 2.93,
+          "z": 2.52,
           "key": true
         },
         {
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.425,
+          "v": 0.415,
           "avg": 0.189,
-          "z": 2.26,
+          "z": 2.16,
           "key": true
         },
         {
-          "k": "longRatio",
-          "label": "롱패스 비율",
-          "unit": "%",
-          "v": 0.114,
-          "avg": 0.057,
-          "z": 1.92,
-          "key": false
+          "k": "corner",
+          "label": "코너킥",
+          "unit": "",
+          "v": 2.26,
+          "avg": 1.431,
+          "z": 2.06,
+          "key": true
         }
       ],
       "lows": [
@@ -1842,27 +1844,27 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.373,
+          "v": 0.376,
           "avg": 0.462,
-          "z": -1.42,
-          "key": false
-        },
-        {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.862,
-          "avg": 0.888,
-          "z": -1.27,
+          "z": -1.38,
           "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.734,
+          "v": 0.727,
           "avg": 0.788,
-          "z": -1.2,
+          "z": -1.35,
+          "key": false
+        },
+        {
+          "k": "headGoal",
+          "label": "헤더골 비율",
+          "unit": "%",
+          "v": 0,
+          "avg": 0.098,
+          "z": -1.18,
           "key": false
         }
       ]
