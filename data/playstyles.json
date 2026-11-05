@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T12:08:14.609Z",
+  "updated": "2026-11-05T14:08:29.892Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1190,18 +1190,18 @@
           "k": "longGoal",
           "label": "중거리골 비율",
           "unit": "%",
-          "v": 0.177,
+          "v": 0.175,
           "avg": 0.081,
-          "z": 1.74,
+          "z": 1.71,
           "key": true
         },
         {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.29,
+          "v": 0.287,
           "avg": 0.179,
-          "z": 1.63,
+          "z": 1.59,
           "key": true
         },
         {
@@ -1219,27 +1219,27 @@
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.817,
+          "v": 0.813,
           "avg": 0.904,
-          "z": -1.5,
+          "z": -1.57,
           "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.162,
+          "v": 0.169,
           "avg": 0.302,
-          "z": -1.23,
+          "z": -1.16,
           "key": false
         },
         {
-          "k": "setGoal",
-          "label": "세트피스골",
-          "unit": "",
-          "v": 0.02,
-          "avg": 0.073,
-          "z": -0.62,
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.039,
+          "avg": 0.057,
+          "z": -0.6,
           "key": false
         }
       ]
@@ -1872,11 +1872,11 @@
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
       "games": 50,
       "style": {
-        "name": "투박한 타깃맨",
-        "line": "감아차기는 모른다, 머리로 들이받는다",
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
         "basis": [
-          "headShot+",
-          "finesse-"
+          "longRatio+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -1884,10 +1884,10 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.6,
+          "v": 0.594,
           "avg": 0.189,
-          "z": 3.93,
-          "key": true
+          "z": 3.87,
+          "key": false
         },
         {
           "k": "longRatio",
@@ -1896,7 +1896,7 @@
           "v": 0.155,
           "avg": 0.057,
           "z": 3.32,
-          "key": false
+          "key": true
         },
         {
           "k": "boxGoal",
@@ -1915,26 +1915,26 @@
           "unit": "%",
           "v": 0.834,
           "avg": 0.888,
-          "z": -2.67,
+          "z": -2.66,
+          "key": true
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.68,
+          "avg": 0.788,
+          "z": -2.4,
           "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 54.9,
+          "v": 55.08,
           "avg": 77.226,
-          "z": -2.34,
+          "z": -2.32,
           "key": false
-        },
-        {
-          "k": "finesse",
-          "label": "감아차기 비율",
-          "unit": "%",
-          "v": 0.044,
-          "avg": 0.302,
-          "z": -2.26,
-          "key": true
         }
       ]
     },
