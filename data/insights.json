@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T20:18:40.656Z",
+  "updated": "2026-11-05T22:08:54.298Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -1808,119 +1808,106 @@
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
       "ctrl": "keyboard",
-      "games": 26,
+      "games": 30,
       "ace": [
         {
           "spId": 861001040,
           "group": "DM",
           "pos": 11,
-          "games": 26,
+          "games": 30,
           "metric": "sht",
-          "value": 1.54,
+          "value": 1.53,
           "base": 0.48,
-          "z": 3.6,
+          "z": 3.58,
           "title": {
             "emoji": "🏹",
             "name": "슈팅 머신"
           },
           "goals": 2,
-          "assists": 5
-        },
-        {
-          "spId": 846020801,
-          "group": "ST",
-          "pos": 25,
-          "games": 26,
-          "metric": "sht",
-          "value": 3.58,
-          "base": 2.29,
-          "z": 1.69,
-          "title": {
-            "emoji": "🏹",
-            "name": "슈팅 머신"
-          },
-          "goals": 40,
-          "assists": 11
+          "assists": 6
         },
         {
           "spId": 867003622,
           "group": "CB",
           "pos": 4,
-          "games": 10,
+          "games": 14,
+          "metric": "int",
+          "value": 2.64,
+          "base": 1.73,
+          "z": 1.49,
+          "title": {
+            "emoji": "🚧",
+            "name": "길목 차단기"
+          },
+          "goals": 0,
+          "assists": 1
+        },
+        {
+          "spId": 867200145,
+          "group": "DM",
+          "pos": 9,
+          "games": 30,
           "metric": "win",
-          "value": 3.5,
-          "base": 2.58,
-          "z": 1.6,
+          "value": 3.2,
+          "base": 2.47,
+          "z": 1.32,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
-          "goals": 0,
-          "assists": 1
+          "goals": 5,
+          "assists": 3
         }
       ],
       "goalMins": {
         "for": [
-          12,
-          7,
-          12,
-          11,
           13,
-          10,
+          7,
+          14,
+          13,
+          14,
+          11,
           8
         ],
         "against": [
-          13,
-          13,
+          17,
+          14,
+          21,
+          14,
           18,
-          12,
-          12,
-          9,
-          7
+          11,
+          8
         ]
       },
       "comebacks": 6,
       "lateWinners": 7,
       "manner": {
-        "games": 26,
+        "games": 30,
         "yellow": 2,
         "red": 0,
-        "foul": 30,
-        "score": 1.38
+        "foul": 34,
+        "score": 1.33
       },
       "guide": {
         "v": 2,
-        "games": 26,
+        "games": 30,
         "split": false,
         "minSide": 15,
         "wlMembers": 6,
-        "summary": "26경기 11승 4무 11패 (승률 42%) · 경기당 득점 2.8 · 실점 3.2. 가장 큰 무기는 세트피스골, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "30경기 11승 4무 15패 (승률 37%) · 경기당 득점 2.7 · 실점 3.4. 가장 큰 무기는 세트피스골, 가장 먼저 손볼 곳은 결정력이에요.",
         "strengths": [
           {
             "k": "setGoal",
             "label": "세트피스골",
-            "v": "0.2",
+            "v": "0.1",
             "avg": "0.1",
-            "z": 0.96,
+            "z": 0.72,
             "win": null,
             "lose": null,
             "sig": false,
             "cw": null,
             "cl": null,
             "text": "세트피스로 골을 잘 만들어요. 프리킥·PK 키커를 유지하세요."
-          },
-          {
-            "k": "tackleRate",
-            "label": "태클 성공률",
-            "v": "59%",
-            "avg": "54%",
-            "z": 0.75,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "태클을 걸면 잘 따내요."
           }
         ],
         "weaknesses": [
@@ -1929,7 +1916,7 @@
             "label": "결정력",
             "v": "34%",
             "avg": "46%",
-            "z": -2.01,
+            "z": -1.95,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1940,9 +1927,9 @@
           {
             "k": "ga",
             "label": "경기당 실점",
-            "v": "3.2",
+            "v": "3.4",
             "avg": "2.4",
-            "z": 1.43,
+            "z": 1.79,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1953,9 +1940,9 @@
           {
             "k": "effRate",
             "label": "유효슈팅 비율",
-            "v": "75%",
+            "v": "74%",
             "avg": "79%",
-            "z": -0.93,
+            "z": -0.97,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1970,9 +1957,9 @@
           {
             "k": "longShot",
             "label": "중거리 슈팅 비율",
-            "v": "39%",
+            "v": "40%",
             "avg": "18%",
-            "z": 3.12,
+            "z": 3.18,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1985,7 +1972,7 @@
             "label": "측면 각도 슈팅",
             "v": "11%",
             "avg": "28%",
-            "z": -2.22,
+            "z": -2.27,
             "win": null,
             "lose": null,
             "sig": false,
@@ -1995,7 +1982,7 @@
           }
         ],
         "time": [
-          "실점이 31-45분에 가장 많아요 (실점 77골 중 18골, 23%).",
+          "실점이 31-45분에 가장 많아요 (실점 95골 중 21골, 22%).",
           "역전승 6번 · 80분 이후 결승골(극장골) 7번."
         ]
       }
@@ -3665,7 +3652,7 @@
         "nick": "chelse굴리트",
         "comebacks": 6,
         "lateWinners": 7,
-        "games": 26
+        "games": 30
       }
     ],
     "gentleman": [
@@ -3710,11 +3697,11 @@
       {
         "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
         "nick": "chelse굴리트",
-        "games": 26,
+        "games": 30,
         "yellow": 2,
         "red": 0,
-        "foul": 30,
-        "score": 1.38
+        "foul": 34,
+        "score": 1.33
       },
       {
         "ouid": "001221eab7f2c49f8571511731cc2573",
@@ -3765,11 +3752,11 @@
         "spId": 861001040,
         "group": "DM",
         "pos": 11,
-        "games": 26,
+        "games": 30,
         "metric": "sht",
-        "value": 1.54,
+        "value": 1.53,
         "base": 0.48,
-        "z": 3.6,
+        "z": 3.58,
         "title": {
           "emoji": "🏹",
           "name": "슈팅 머신"
