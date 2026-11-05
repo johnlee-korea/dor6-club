@@ -174,7 +174,13 @@ for (const pg of PAGES) {
     ["2026-10-16T10:00", "none", ".lg-final"],      // 리그 없는 날 → 지난 회차(10-15) 최종 결과 + 다음 예약 안내
     ["2026-10-17T06:50", "forming", ".lg-head"],
     ["2026-10-17T08:00", "delayed", ".lg-head"],
-    ["2026-10-15T13:05", "live", ".lg-test", Date.UTC(2026, 9, 15, 4, 0)]   // 🧪 테스트 리그: 13:00 시작·20초 간격 → 5분 뒤 15라운드
+    ["2026-10-15T13:05", "live", ".lg-test", Date.UTC(2026, 9, 15, 4, 0)],   // 🧪 테스트 리그(2부제): 13:00 시작·20초 간격 → 5분 뒤 15라운드
+    // 🏆 2부제 픽스처 10-19 (DPL 14 ~13:30 · DCL 8 ~10:30 · PO 13:30·13:45·14:00 3경기)
+    ["2026-10-19T06:20", "before", ".lg-divs [data-div]"],
+    ["2026-10-19T10:05", "live", "#lg-live .lg-match"],
+    ["2026-10-19T13:36", "live", "#lg-po .lg-live-match"],                  // ⚔️ PO 1차전 진행 중
+    ["2026-10-19T22:00", "done", ".lg-moves"],                              // 내일 리그 변동 카드
+    ["2026-10-20T10:00", "none", ".lg-moves"]                               // 다음 날(리그 없음) → 지난 2부제 회차 결과
   ];
   for (const [nowParam, want, expectSel, testStart] of CASES) {
     const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
@@ -223,6 +229,55 @@ for (const pg of PAGES) {
     const ok = errors.length === 0 && hasHeader && navOk && status === want && expectOk && !tabsOk.includes("✗");
     console.log(`${ok ? "✅" : "❌"} league${testStart ? "(테스트)" : ""} ${nowParam.slice(5).replace("T", " ")} 상태:${status}(기대 ${want}) ${expectSel}:${expectOk} 탭:${tabsOk.join("")} 네비:${navOk}`);
     [...new Set(errors)].slice(0, 3).forEach((e) => console.log("   ⚠ " + String(e).split("\n")[0]));
+    ok ? pass++ : fail++;
+  }
+
+  // 🏆 2부제 (v2.29.0): 리그 칩 전환 · 구역 표시 · 페널티 · 편성 규칙 · 승강 · 옛 스냅샷 불변
+  {
+    const D = await import(new URL("../js/league/divisions.js", import.meta.url));
+    const { judgeEligibility } = await import(new URL("../js/league/eligibility.js", import.meta.url));
+    const errors = [];
+    const dom = new JSDOM(rd("league.html"), { url: "http://localhost/league.html", pretendToBeVisual: true, runScripts: "outside-only" });
+    const { window } = dom;
+    window.addEventListener("error", (e) => errors.push(e.error?.message || e.message));
+    window.fetch = localFetch;
+    window.eval(rd("js/common.js"));
+    window.document.dispatchEvent(new window.Event("DOMContentLoaded"));
+    const app = await mountLeague(window.document.getElementById("league-root"), { win: window, fetch: leagueFetch, nowParam: "2026-10-19T22:00", myId: ME });
+    const doc = window.document;
+    const div0 = app.ctx().div;
+    doc.querySelector('[data-div="DCL"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    await sleep(20);
+    const div1 = app.ctx().div;
+    window.location.hash = "table"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(20);
+    const zoneOk = !!doc.querySelector(".lg-z-pro") && !!doc.querySelector(".lg-z-po");
+    const penOk = doc.body.innerHTML.includes("⚠️");
+    window.location.hash = "records"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(20);
+    const recOk = doc.body.innerHTML.includes("2부제") && doc.body.innerHTML.includes("DCL 우승");
+    window.location.hash = "myteam"; window.dispatchEvent(new window.HashChangeEvent("hashchange")); await sleep(20);
+    const myNote = doc.body.innerHTML.includes("에서 뛰어요");     // 내 팀은 DPL — DCL을 보면 안내
+    app.destroy();
+    // 편성 규칙: 새 클럽원 DCL 맨 뒤 · 탈퇴 시 DPL 14 채우기 · 페널티
+    const ids = Array.from({ length: 20 }, (_, i) => "o" + String(i).padStart(2, "0"));
+    const divFile = { DPL: ids.slice(0, 14), DCL: ids.slice(14, 19) };
+    const teams = [...ids.filter((x) => x !== "o03"), "zz"].map((ouid) => ({ ouid, name: ouid, ...(ouid === "o15" ? { short: { played: 1, need: 5 } } : {}) }));
+    const as = D.assignDivisions(teams, divFile);
+    const assignOk = as.order.DPL.length === 14 && as.order.DPL[13] === "o14" && as.order.DCL[as.order.DCL.length - 1] === "zz"
+      && as.teams.find((t) => t.ouid === "o15").penalty === D.PENALTY && !as.teams.find((t) => t.ouid === "o01").penalty;
+    // 판정: 판수 미달·휴식도 참가(penalize), 기본은 예전처럼 제외
+    const mem = { members: [{ ouid: "a", ingameNick: "A" }, { ouid: "b", ingameNick: "B" }, { ouid: "c", ingameNick: "C", isSub: true }] };
+    const dash = { current: { start: "2026-10-01", end: "2026-10-30", rows: [{ ouid: "a", played: 0, target: 50 }, { ouid: "b", resting: true, played: 0, target: 10 }] } };
+    const jp = judgeEligibility(mem, dash, "2026-10-20", { penalize: true }), j0 = judgeEligibility(mem, dash, "2026-10-20");
+    const judgeOk = jp.teams.length === 2 && !!jp.teams.find((t) => t.ouid === "a").short && !jp.teams.find((t) => t.ouid === "b").short && jp.excluded.length === 1 && j0.teams.length === 0;
+    // 승강: PO 승자 DPL, 강등·승격 맞교환, 인원 보존
+    const fx19 = JSON.parse(rd(FX + "days/2026-10-19.json"));
+    const out = D.runLeagueDay(fx19, { seed: "DOR6" }, null);
+    const nd = D.nextDivisions(fx19, out);
+    const moveOk = nd.DPL.length === 14 && nd.DPL.includes(nd.moves.promoted) && nd.DCL.includes(nd.moves.relegated) && nd.DPL.includes(out.playoff.winner) && nd.DCL.includes(out.playoff.loser)
+      && new Set([...nd.DPL, ...nd.DCL]).size === fx19.teams.length && out.playoff.games.every((g) => g.res.win);
+    const ok = !errors.length && div0 === "DPL" && div1 === "DCL" && zoneOk && penOk && recOk && myNote && assignOk && judgeOk && moveOk;
+    console.log(`${ok ? "✅" : "❌"} league 🏆2부제 칩:${div0}→${div1} 구역:${zoneOk} 페널티:${penOk} 기록실:${recOk} 내팀 안내:${myNote} 편성:${assignOk} 판정:${judgeOk} 승강:${moveOk}`);
+    errors.slice(0, 3).forEach((e) => console.log("   ⚠ " + e));
     ok ? pass++ : fail++;
   }
 

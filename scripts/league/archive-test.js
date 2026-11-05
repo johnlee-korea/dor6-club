@@ -10,11 +10,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { runDay, summarizeDay, ENGINE_VERSION } from "../../js/engine/index.js";
+import { ENGINE_VERSION } from "../../js/engine/index.js";
 import { judgeEligibility } from "../../js/league/eligibility.js";
 import { kstDate } from "../../js/league/clock.js";
-import { squadFromLineup, snapshotTeams } from "../../js/league/roster.js";
+import { squadFromLineup } from "../../js/league/roster.js";
 import { attachBoost } from "../../js/league/boost.js";
+import { assignDivisions, runLeagueDay, summarizeLeagueDay } from "../../js/league/divisions.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"));
@@ -37,13 +38,17 @@ if (history.days.some((d) => d.seed === seed)) { console.log("이미 기록된 �
 
 const config = read("data/league/config.json");
 const date = kstDate(start);
-const j = judgeEligibility(read("data/members.json"), read("data/dashboard.json"), date);
-// 테스트 리그 화면과 같은 방식: 실제 스쿼드(squads.json) 첨부 + 선수 이름표
+// 🏆 2부제(v2.29.0) — 테스트 리그 화면(league.js buildTestCtx)과 같은 방식: 판수 미달도 참가(페널티) · divisions.json 명단
+const j = judgeEligibility(read("data/members.json"), read("data/dashboard.json"), date, { penalize: true });
+let divFile = null; try { divFile = read("data/league/divisions.json"); } catch { /* 없으면 ouid 순 */ }
+const as = assignDivisions(j.teams, divFile);
+// 실제 스쿼드(squads.json) 첨부 + 선수 이름표
 const sq = read("data/squads.json").squads || {};
 let dg = null; try { dg = read("data/daily-games.json"); } catch { /* 없으면 보너스 없음 */ }
-const snap = { teams: attachBoost(j.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; }), dg, date).teams };
-const day = runDay({ daySeed: seed, teamSeed: config.seed, teams: snapshotTeams(snap, read("data/meta/players.json")) });
-const rec = { no: "테스트", test: true, date, seed, startedAt: new Date(start).toISOString(), engine: ENGINE_VERSION, teams: j.teams.length, ...summarizeDay(day) };
+const snap = { format: 2, date, seed, teamSeed: config.seed, teams: attachBoost(as.teams.map((t) => { const q = squadFromLineup(sq[t.ouid]); return q ? { ...t, squad: q } : t; }), dg, date).teams };
+const out = runLeagueDay(snap, config, read("data/meta/players.json"));
+const { next, ...sum } = summarizeLeagueDay(snap, out);
+const rec = { no: "테스트", test: true, date, seed, startedAt: new Date(start).toISOString(), engine: ENGINE_VERSION, ...sum };
 history.days.push(rec);
 fs.writeFileSync(HIST, JSON.stringify(history, null, 2) + "\n");
-console.log(`🧪 테스트 리그 기록 — ${rec.teams}팀 · 우승 ${rec.table[0].name}(승점 ${rec.table[0].pts}) · 득점왕 ${rec.scorers[0].player} ${rec.scorers[0].goals}골`);
+console.log(`🧪 테스트 리그 기록 — ${rec.teams}팀 · DPL 우승 ${rec.DPL ? rec.DPL.table[0].name : "-"} · DCL 우승 ${rec.DCL ? rec.DCL.table[0].name : "-"}`);

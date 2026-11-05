@@ -16,19 +16,21 @@ const read = (f) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } cat
 
 const config = read(path.join(DIR, "config.json")) || { days: [] };
 const history = read(path.join(DIR, "history.json")) || { days: [] };
-const pick = (r) => JSON.stringify({ t: r.table, s: r.scorers, a: r.assists, m: r.mvp });
+// 2부제(format 2)는 두 리그 + PO 전체 비교
+const pick = (r) => r.format === 2 ? JSON.stringify({ D: r.DPL, L: r.DCL, p: r.playoff, m: r.moves }) : JSON.stringify({ t: r.table, s: r.scorers, a: r.assists, m: r.mvp });
+const champ = (r) => (r.format === 2 ? (r.DPL && r.DPL.table[0].name) : r.table[0].name);
 
 console.log(`현재 엔진 v${ENGINE_VERSION} — 기록 ${history.days.length}회차 비교`);
 let diff = 0, checked = 0;
 const names = loadNames();
 for (const h of history.days) {
-  if (!h.table || h.test) continue;   // 🧪 테스트 기록은 스냅샷 파일이 없어 비교 대상 아님
+  if ((!h.table && h.format !== 2) || h.test) continue;   // 🧪 테스트 기록은 스냅샷 파일이 없어 비교 대상 아님
   const snap = read(path.join(DIR, "days", h.date + ".json"));
   if (!snap) { console.log(`  제${h.no}회 ${h.date}: 스냅샷 없음 — 건너뜀`); continue; }
   const now = archiveEntry(h, snap, config, names);
   const same = pick(now) === pick(h);
   checked++;
   if (!same) diff++;
-  console.log(`  제${h.no}회 ${h.date} (기록 엔진 v${h.engine}): ${same ? "✅ 동일" : "❌ 다름 — 우승 " + h.table[0].name + " → " + now.table[0].name}`);
+  console.log(`  제${h.no}회 ${h.date} (기록 엔진 v${h.engine}): ${same ? "✅ 동일" : "❌ 다름 — 우승 " + champ(h) + " → " + champ(now)}`);
 }
 console.log(checked ? (diff ? `\n⚠ ${diff}회차 결과가 달라짐 → 결과가 바뀌는 엔진 수정입니다 (ENGINE_VERSION 올리기·배포 시간 확인)` : "\n✅ 모든 기록과 일치") : "\n비교할 기록 없음");

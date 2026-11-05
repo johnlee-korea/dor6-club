@@ -1,6 +1,7 @@
 /* ============================================================
    league/views.js — 도륙리그 탭별 화면 조각 (HTML 문자열만 만듦, 이벤트 연결은 league.js)
    ctx(league.js buildCtx): { status, date, no, snap, day, R, k, myId, pending, config, history, now }
+   🏆 2부제(v2.29.0): ctx = 고른 리그(DPL|DCL) 하나 + ctx.div · ctx.L(두 리그·PO 전체) — ctx.L이 없으면 예전 단일 리그
    ============================================================ */
 import * as C from "./clock.js";
 import { reasonLabel } from "./eligibility.js";
@@ -9,6 +10,7 @@ import { formationOf } from "../engine/team.js";
 import { gamesOf, countedGames, boostText, prevDay, BOOST } from "./boost.js";
 import { starBoostText, CAREER_BOOST } from "./career-link.js";
 import { avatarSvg } from "../career/avatar.js";
+import { DIV_NAME, DIV_ICON, DPL_SIZE, penaltyText } from "./divisions.js";
 
 /* 🔥 전날 판수 보너스 (v2.14.0) — 스냅샷 팀의 act(유형별 판수)·boost */
 const snapTeam = (ctx, id) => ctx.snap && ctx.snap.teams && ctx.snap.teams.find((t) => t.ouid === id);
@@ -21,8 +23,17 @@ const fire = (ctx, id) => {
   const t = snapTeam(ctx, id);
   if (!t) return "";
   return (t.boost ? ` <span class="lg-fire" title="전날 ${gamesOf(t)}판 · 전력 ${boostText(t.boost)}">🔥</span>` : "")
-    + (t.star ? ` <span class="lg-fire" title="커리어 선수 ${esc(t.star.name)} OVR ${t.star.ovr} · ${starBoostText(t.star)}">⭐</span>` : "");
+    + (t.star ? ` <span class="lg-fire" title="커리어 선수 ${esc(t.star.name)} OVR ${t.star.ovr} · ${starBoostText(t.star)}">⭐</span>` : "")
+    + (t.penalty ? ` <span class="lg-fire" title="판수 미달${t.short ? " " + t.short.played + "/" + t.short.need + "판" : ""} → 전력 ${penaltyText(t.penalty)}">⚠️</span>` : "");
 };
+/* 🏆 2부제 구역: DPL 꼴찌 강등 · 끝에서 두 번째 PO / DCL 1위 승격 · 2위 PO (PO가 있는 날만) */
+function zoneOf(ctx, rank) {
+  if (!ctx.L || !ctx.L.plan.hasPO) return "";
+  const n = ctx.day.ids.length;
+  if (ctx.div === "DPL") return rank === n ? "rel" : rank === n - 1 ? "po" : "";
+  return rank === 1 ? "pro" : rank === 2 ? "po" : "";
+}
+const ZONE_LABEL = { rel: "🔻 강등", po: "⚔️ PO", pro: "🔺 승격" };
 const dayLabel = (d) => `${+d.slice(5, 7)}/${+d.slice(8, 10)}`;
 
 /* 포지션 표시: 실제 스쿼드면 세부 포지션(ST·CAM…), 교체는 "교체" */
@@ -98,7 +109,7 @@ export function tableHtml(ctx, k, limit) {
   return `<div class="table-wrap"><table class="data lg-table"><thead><tr>
       <th class="num">#</th><th>팀</th><th class="num">경기</th><th class="num">승점</th><th class="num">득실</th>
       <th class="num">승</th><th class="num">무</th><th class="num">패</th><th class="num">득</th><th class="num">실</th><th>최근 5</th></tr></thead><tbody>
-    ${list.map((r) => r === null ? `<tr class="lg-gap"><td colspan="11">⋯</td></tr>` : `<tr class="${mine(ctx, r.id).trim()}">
+    ${list.map((r) => r === null ? `<tr class="lg-gap"><td colspan="11">⋯</td></tr>` : `<tr class="${(mine(ctx, r.id) + (zoneOf(ctx, r.rank) ? " lg-z-" + zoneOf(ctx, r.rank) : "")).trim()}"${zoneOf(ctx, r.rank) ? ` title="${ZONE_LABEL[zoneOf(ctx, r.rank)]}"` : ""}>
       <td class="num"><span class="rank ${r.rank <= 3 ? "r" + r.rank : ""}">${r.rank}</span> ${move(r)}</td>
       <td class="lg-tname">${teamName(ctx, r.id)}${fire(ctx, r.id)}</td><td class="num">${r.p}</td><td class="num"><b>${r.pts}</b></td>
       <td class="num">${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="num">${r.w}</td><td class="num">${r.d}</td><td class="num">${r.l}</td>
@@ -121,12 +132,24 @@ export function headCard(ctx) {
   const isToday = ctx.viewToday;
   const pct = ctx.R ? Math.round((ctx.k / ctx.R) * 100) : 0;
   return `<div class="card lg-head">
-    <div class="lg-title">${ctx.test ? "🧪 테스트 리그" : `제${ctx.no}회 도륙리그`} ${isToday ? badge : `<span class="badge">지난 회차</span>`}</div>
+    <div class="lg-title">${ctx.test ? "🧪 테스트 리그" : `제${ctx.no}회 도륙리그`}${ctx.div ? ` <span class="lg-divname">${DIV_ICON[ctx.div]} ${ctx.div}</span>` : ""} ${isToday ? badge : `<span class="badge">지난 회차</span>`}</div>
     <div class="lg-sub">${C.dateLabel(ctx.date)} · 참가 ${ctx.day.ids.length}팀 · ${ctx.R}라운드 · ${tl(ctx, rt(ctx, 0))}~${tl(ctx, rt(ctx, ctx.R))}</div>
     <div class="progress ${ctx.k >= ctx.R ? "ok" : ""}"><div class="bar" style="width:${pct}%"></div></div>
     <div class="lg-prog"><span><b>${ctx.k}</b> / ${ctx.R} 라운드</span><span id="lg-count" class="lg-count">${countdownText(ctx)}</span></div>
+    ${ctx.L && ctx.L.plan.hasPO ? `<div class="lg-dim lg-posched">⚔️ 승강 PO ${tl(ctx, ctx.L.plan.poStart)} — DPL ${ctx.L.plan.n.DPL - 1}위 vs DCL 2위 (3판 2선승)</div>` : ""}
     ${isToday ? "" : statusMessage(ctx)}
   </div>`;
+}
+
+/* ---------- 🏆 리그 칩 [DPL | DCL] ---------- */
+export function divChips(ctx) {
+  const L = ctx.L;
+  return `<div class="chip-row lg-divs">${["DPL", "DCL"].filter((d) => L.divs[d]).map((d) => {
+    const c = L.divs[d];
+    const mineIn = ctx.myId && c.day.names.has(ctx.myId) ? " ⭐" : "";
+    const st = c.live ? " 🔴" : c.k >= c.R && c.viewToday ? " ✓" : "";
+    return `<button type="button" class="chip lg-divchip${d === ctx.div ? " active" : ""}" data-div="${d}">${DIV_ICON[d]} <b>${d}</b> <span class="lg-dim">${DIV_NAME[d]} · ${c.day.ids.length}팀</span>${mineIn}${st}</button>`;
+  }).join("")}</div>`;
 }
 
 /* 다음 이벤트까지 남은 시간 문구 (1초마다 갱신) */
@@ -135,6 +158,7 @@ export function countdownText(ctx) {
   const now = ctx.now();
   let target, label;
   if (ctx.live) return `🔴 ${ctx.live.r + 1}라운드 진행 중 <b>${minLabel(ctx.live.min)}</b>`;
+  if (ctx.k >= ctx.R && ctx.L) return poCountdown(ctx, now);
   if (ctx.k >= ctx.R) return "🏁 모든 라운드 종료";
   if (now < rt(ctx, 0)) { target = rt(ctx, 0); label = "개막까지"; }
   else { target = rt(ctx, ctx.k); label = `${ctx.k + 1}라운드 킥오프까지`; }
@@ -163,6 +187,8 @@ export function tabLive(ctx, open) {
   if (!ctx.day) return ctx.history.days.length ? lastResultCard(ctx.history.days[ctx.history.days.length - 1]) : "";
   const k = ctx.k, R = ctx.R;
   let html = "";
+  if (ctx.L) html += poCard(ctx);
+  if (ctx.L && ctx.L.status === "done" && ctx.L.po) html += movesCard(ctx);
   if (k >= R) html += finalCard(ctx);
   if (ctx.live) {
     // 📻 진행 중: 문자중계 (경기 1분마다 이 상자만 다시 그림 — league.js tick)
@@ -180,6 +206,7 @@ export function tabLive(ctx, open) {
   html += `<div class="section-title">📊 순위 <span class="lg-dim">${k ? k + "라운드 후" : "개막 전"}${ctx.live ? " · 경기가 끝나면 반영" : ""}</span><a class="lg-more" href="#table">전체 ›</a></div><div class="card">${tableHtml(ctx, k, 5)}</div>`;
   html += boostBox(ctx);
   html += starBox(ctx);
+  html += penaltyBox(ctx);
   html += excludedBox(ctx);
   return html;
 }
@@ -287,7 +314,16 @@ function excludedBox(ctx) {
   if (!ex.length) return "";
   return `<details class="card lg-excl"><summary>🚫 이번 회차 불참 ${ex.length}명</summary>
     <div class="lg-excl-list">${ex.map((x) => `<span class="lg-excl-item${mine(ctx, x.ouid)}">${esc(x.name)} <span class="lg-dim">${esc(reasonLabel(x))}</span></span>`).join("")}</div>
-    <div class="lg-dim" style="margin-top:6px;">시즌 판수 진행률에 못 미치면 리그에 나갈 수 없어요. 판수를 채우면 다음 리그부터 자동 참가!</div></details>`;
+    <div class="lg-dim" style="margin-top:6px;">${ctx.L ? "부계정은 리그에 나가지 않아요 (본계정 팀으로 참가)." : "시즌 판수 진행률에 못 미치면 리그에 나갈 수 없어요. 판수를 채우면 다음 리그부터 자동 참가!"}</div></details>`;
+}
+
+/* ⚠️ 판수 미달 페널티 목록 (2부제) */
+function penaltyBox(ctx) {
+  const list = ((ctx.snap && ctx.snap.teams) || []).filter((t) => t.penalty);
+  if (!list.length) return "";
+  return `<details class="card lg-excl"><summary>⚠️ 판수 미달 페널티 ${list.length}팀</summary>
+    <div class="lg-boost-list">${list.map((t) => `<div class="lg-boost${mine(ctx, t.ouid)}"><span>${esc(t.name)} <span class="lg-dim">${t.short ? t.short.played + "/" + t.short.need + "판" : ""}</span></span><b class="lg-pen">${penaltyText(t.penalty)}</b></div>`).join("")}</div>
+    <div class="lg-dim" style="margin-top:6px;">시즌 판수 진행률에 못 미치면 그날 팀 공격·수비력 ${penaltyText(list[0].penalty)} (판수 보너스의 반대). 판수를 채우면 다음 리그부터 사라져요.</div></details>`;
 }
 
 /* 종료 카드: 우승·득점왕·도움왕·MVP */
@@ -298,7 +334,7 @@ function finalCard(ctx) {
   const mvp = leaders(st, "avg", 1, Math.ceil(gamesPerTeam(ctx, ctx.R) / 2))[0];
   const p = (s) => s ? `${esc(player(ctx, s.team, s.idx).name)} <span class="lg-dim">${teamName(ctx, s.team)}</span>` : "-";
   return `<div class="card lg-final">
-    <div class="lg-champ">🏆 우승 <b>${teamName(ctx, champ.id)}</b></div>
+    <div class="lg-champ">${ctx.div ? `${DIV_ICON[ctx.div]} ${ctx.div} 우승` : "🏆 우승"} <b>${teamName(ctx, champ.id)}</b></div>
     <div class="lg-dim">${champ.w}승 ${champ.d}무 ${champ.l}패 · 승점 ${champ.pts} · 득실 ${champ.gd > 0 ? "+" : ""}${champ.gd}</div>
     <div class="lg-awards">
       <div>⚽ 득점왕 ${p(g)} <b>${g ? g.g + "골" : ""}</b></div>
@@ -312,6 +348,15 @@ const recLabel = (d) => (d.test ? `🧪 테스트${d.startedAt ? " " + C.hm(Date
 
 /* 리그 없는 날: 직전 회차 결과 요약 (history) */
 function lastResultCard(h) {
+  if (h.format === 2) {
+    const d = h.DPL && h.DPL.table[0], l = h.DCL && h.DCL.table[0];
+    return `<div class="section-title">🏆 지난 회차 결과</div><div class="card lg-final">
+      <div class="lg-dim">${recLabel(h)} · ${C.dateLabel(h.date)} · ${h.teams}팀</div>
+      ${d ? `<div class="lg-champ">🏆 DPL 우승 <b>${esc(d.name)}</b> <span class="lg-dim">승점 ${d.pts}</span></div>` : ""}
+      ${l ? `<div class="lg-champ sm">🥈 DCL 우승 <b>${esc(l.name)}</b> <span class="lg-dim">승점 ${l.pts}</span></div>` : ""}
+      ${movesLine(h)}
+      <a class="lg-more" href="#records">기록실 ›</a></div>`;
+  }
   const c = h.table && h.table[0];
   if (!c) return "";
   const s = h.scorers && h.scorers[0];
@@ -330,7 +375,9 @@ export function tabTable(ctx, sel) {
   const opts = Array.from({ length: ctx.k + 1 }, (_, i) => `<option value="${i}"${i === r ? " selected" : ""}>${i === 0 ? "개막 전" : i + "라운드 후"}</option>`).reverse().join("");
   return `<div class="lg-tools"><label class="lg-dim">기준</label><select class="input lg-select" data-sel="table">${opts}</select></div>
     <div class="card">${tableHtml(ctx, r)}</div>
-    <div class="lg-dim lg-foot">순위: 승점 → 득실차 → 다득점 → 승수. ▲▼ = 직전 라운드 대비.</div>`;
+    <div class="lg-dim lg-foot">순위: 승점 → 득실차 → 다득점 → 승수. ▲▼ = 직전 라운드 대비.${ctx.L && ctx.L.plan.hasPO ? (ctx.div === "DPL"
+      ? ` <span class="lg-zkey rel">${ctx.day.ids.length}위 강등</span> <span class="lg-zkey po">${ctx.day.ids.length - 1}위 승강 PO</span>`
+      : ` <span class="lg-zkey pro">1위 승격</span> <span class="lg-zkey po">2위 승강 PO</span>`) : ""}</div>`;
 }
 
 /* ---------- 탭 ③ 개인 순위 ---------- */
@@ -378,6 +425,12 @@ export function tabMyTeam(ctx, sel) {
   const picker = `<div class="lg-tools"><select class="input lg-select" data-sel="myteam"><option value="">팀 선택…</option>
     ${sorted.map((t) => `<option value="${esc(t)}"${t === id ? " selected" : ""}>${teamName(ctx, t)}${t === ctx.myId ? " ⭐" : ""}</option>`).join("")}</select></div>`;
   let note = "";
+  const mt = snapTeam(ctx, id || ctx.myId);
+  if (ctx.L && ctx.myId && !ctx.day.names.has(ctx.myId)) {
+    const other = Object.values(ctx.L.divs).find((c) => c.day.names.has(ctx.myId));
+    if (other) note = `<div class="lg-note">⭐ 내 팀은 ${DIV_ICON[other.div]} <b>${other.div}</b>에서 뛰어요 — 위의 리그 칩에서 바꿔 보세요.</div>`;
+  }
+  if (mt && mt.penalty && (id || ctx.myId) === ctx.myId) note += `<div class="lg-note warn">⚠️ 판수 미달${mt.short ? ` (${mt.short.played}/${mt.short.need}판)` : ""}이라 오늘 팀 전력 ${penaltyText(mt.penalty)} — 판수를 채우면 다음 리그부터 사라져요.</div>`;
   if (ex) note = `<div class="lg-note warn">🚫 ${esc(ex.name)}님은 이번 회차에 못 나갔어요 (${esc(reasonLabel(ex))}). 판수를 채우면 다음 리그부터 참가해요!</div>`;
   else if (!ctx.myId) note = `<div class="lg-note">⭐ 클럽원 프로필에서 '내 프로필'을 설정하면 내 팀이 자동으로 선택돼요.</div>`;
   if (!id) return picker + note;
@@ -401,7 +454,7 @@ export function tabMyTeam(ctx, sel) {
     .sort((a, b) => (b.start - a.start) || roleRank(a.p) - roleRank(b.p) || a.p.idx - b.p.idx);
   return picker + note + `<div class="card lg-myhead">
       <div class="lg-title">${teamName(ctx, id)}</div>
-      <div class="lg-sub">${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"}</div>
+      <div class="lg-sub">${ctx.div ? `${DIV_ICON[ctx.div]} ${ctx.div} · ` : ""}${ctx.k ? `현재 <b>${row.rank}위</b> · ${row.w}승 ${row.d}무 ${row.l}패 · 승점 ${row.pts} · 득실 ${row.gd > 0 ? "+" : ""}${row.gd}` : "개막 전"}</div>
       ${myBoostLine(ctx, id)}
       ${ctx.k > 1 ? rankChart(ctx, id) : ""}</div>
     ${next && ctx.live && next[0] === ctx.live.r ? `<div class="section-title">🔴 지금 경기 중</div>${myLiveCard(ctx, id)}`
@@ -451,20 +504,28 @@ function rankChart(ctx, id) {
 export function tabRecords(ctx) {
   const days = (ctx.history.days || []).slice().reverse();
   if (!days.length) return empty("아직 기록이 없어요. 리그가 끝나면 다음 날 새벽에 기록돼요.", "🏛");
-  const wins = new Map();
-  for (const d of days) {
-    const c = d.table && d.table[0];
-    if (!c) continue;
-    const w = wins.get(c.ouid) || { name: c.name, n: 0 };
-    w.n++; w.name = c.name;   // 최근 닉으로
-    wins.set(c.ouid, w);
-  }
-  const top = [...wins.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "ko"));
+  // 누적 우승 = DPL 우승(2부제 이전 단일 리그 우승 포함) · DCL 우승 따로
+  const count = (pick) => {
+    const wins = new Map();
+    for (const d of days) {
+      const c = pick(d);
+      if (!c) continue;
+      const w = wins.get(c.ouid) || { name: c.name, n: 0 };
+      w.n++; if (!w.latest) { w.name = c.name; w.latest = true; }   // 최근 닉으로 (days는 최신순)
+      wins.set(c.ouid, w);
+    }
+    return [...wins.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "ko"));
+  };
+  const top = count((d) => (d.format === 2 ? d.DPL && d.DPL.table[0] : d.table && d.table[0]));
+  const topL = count((d) => d.format === 2 && d.DCL && d.DCL.table[0]);
   const hasTest = days.some((d) => d.test);
-  return `<div class="section-title">👑 누적 우승${hasTest ? ` <span class="lg-dim">🧪 테스트 포함</span>` : ""}</div><div class="card">${top.map((w, i) => `<div class="lg-prow"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
-      <div class="lg-pinfo"><b>${esc(w.name)}</b></div><div class="lg-pval"><b>${w.n}회</b></div></div>`).join("")}</div>
+  const winList = (list) => `<div class="card">${list.map((w, i) => `<div class="lg-prow"><span class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</span>
+      <div class="lg-pinfo"><b>${esc(w.name)}</b></div><div class="lg-pval"><b>${w.n}회</b></div></div>`).join("")}</div>`;
+  return `<div class="section-title">👑 누적 우승${topL.length ? " <span class=\"lg-dim\">🏆 DPL (2부제 이전 우승 포함)</span>" : ""}${hasTest ? ` <span class="lg-dim">🧪 테스트 포함</span>` : ""}</div>${winList(top)}
+    ${topL.length ? `<div class="section-title">🥈 DCL 우승</div>${winList(topL)}` : ""}
     <div class="section-title">📜 회차별 기록</div>
     ${days.map((d) => {
+      if (d.format === 2) return recSplit(d);
       const c = d.table && d.table[0], s = d.scorers && d.scorers[0], a = d.assists && d.assists[0];
       if (!c) return `<div class="card lg-rec"><b>${recLabel(d)}</b> <span class="lg-dim">${C.dateLabel(d.date)} · 미개최</span></div>`;
       return `<details class="card lg-rec"><summary><b>${recLabel(d)}</b> <span class="lg-dim">${C.dateLabel(d.date)} · ${d.teams}팀</span>
@@ -478,4 +539,163 @@ export function tabRecords(ctx) {
           ${d.table.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.name)}</td><td class="num">${r.pts}</td><td class="num">${r.w}-${r.d}-${r.l}</td><td class="num">${r.gf - r.ga > 0 ? "+" : ""}${r.gf - r.ga}</td></tr>`).join("")}
         </tbody></table></div></details>`;
     }).join("")}`;
+}
+
+/* ============================================================
+   🏆 2부제 — 승강 플레이오프 · 내일 리그 변동 · 기록 (v2.29.0, CLAUDE.md 33)
+   ============================================================ */
+const poName = (po, id) => esc(po.names[id]);
+const poPlayer = (po, team, idx) => po.squads[team].players[idx];
+/* PO 경기 분 라벨: 정규(전반·후반·90+) → 연장 → 승부차기 */
+function koMinLabel(tl, m) {
+  const mi = Math.floor(m);
+  if (mi <= 0) return "킥오프";
+  if (mi <= 45) return `전반 ${mi}'`;
+  if (mi <= 90) return `후반 ${mi}'`;
+  if (mi <= tl.regEnd) return `후반 90+${mi - 90}'`;
+  if (mi <= tl.etEnd) return `연장 ${90 + mi - tl.regEnd}'`;
+  return "승부차기";
+}
+/* 경기 분 m까지 공개된 득점·승부차기 */
+function koScoreAt(g, m) {
+  const tl = g.tl, sc = { h: 0, a: 0 }, shown = [];
+  for (const e of g.res.ev.slice().sort((x, y) => tl.at(x) - tl.at(y))) {
+    if (tl.at(e) > m) break;
+    sc[e.side]++; shown.push({ e, h: sc.h, a: sc.a });
+  }
+  const pk = { h: 0, a: 0 }, kicks = [];
+  if (g.res.pens) g.res.pens.kicks.forEach((k, i) => { if (tl.kickAt(i) <= m) { if (k.ok) pk[k.side]++; kicks.push({ k, i, h: pk.h, a: pk.a }); } });
+  return { sc, shown, pk, kicks, ended: m >= tl.end };
+}
+const koExtra = (r) => (r.pens ? ` <span class="lg-dim">(승부차기 ${r.pens.h}:${r.pens.a})</span>` : r.et ? ` <span class="lg-dim">(연장)</span>` : "");
+/* PO 경기 한 줄 + (진행 중이면) 문자중계 */
+function poGame(ctx, g, state, m) {
+  const po = ctx.L.po;
+  const side = (id) => `lg-team${mine(ctx, id)}`;
+  const tag = (id) => (id === po.dpl ? "DPL" : "DCL");
+  const name = (id) => `${poName(po, id)} <span class="lg-dim">${tag(id)}</span>`;
+  if (state === "wait") return `<div class="lg-match"><div class="lg-dim">${g.g}차전 · ${tl(ctx, g.kick)} 킥오프 · ${poName(po, g.home)} 홈</div><div class="lg-match-row"><span class="${side(g.home)} h">${name(g.home)}</span><span class="lg-time">${tl(ctx, g.kick)}</span><span class="${side(g.away)} a">${name(g.away)}</span></div></div>`;
+  const r = g.res;
+  if (state === "done") {
+    const cls = (id) => `${side(id)}${id === g.winner ? " lg-win" : ""}`;
+    const goals = r.ev.slice().sort((x, y) => g.tl.at(x) - g.tl.at(y)).map((e) => koGoal(po, g, e)).join("");
+    return `<details class="lg-match"><summary><div class="lg-dim">${g.g}차전 · ${tl(ctx, g.kick)}</div><div class="lg-match-row"><span class="${cls(g.home)} h">${name(g.home)}</span><b class="lg-score">${r.hg} : ${r.ag}</b><span class="${cls(g.away)} a">${name(g.away)}</span></div><div class="lg-dim lg-ko-extra">${koExtra(r)}</div></summary><div class="lg-goals">${goals || '<div class="lg-dim">득점 없음</div>'}${r.pens ? pensLine(po, g, r.pens.kicks) : ""}</div></details>`;
+  }
+  // 진행 중
+  const now = koScoreAt(g, m);
+  const items = now.shown.map(({ e, h, a }) => ({ t: g.tl.at(e), html: `<div class="lg-feed-item goal${mine(ctx, e.side === "h" ? g.home : g.away)}"><span class="lg-feed-min">${e.et ? "연장 " + e.min + "'" : e.add ? "90+" + e.add + "'" : e.min + "'"}</span><div>⚽ <b>골!</b> ${esc(poPlayer(po, e.side === "h" ? g.home : g.away, e.s).name)} <span class="lg-dim">· ${poName(po, e.side === "h" ? g.home : g.away)}</span><div class="lg-feed-sc"><b>${h} : ${a}</b></div></div></div>` }));
+  const sys = (t, lab, txt) => items.push({ t, html: `<div class="lg-feed-item sys"><span class="lg-feed-min">${lab}</span><div>${txt}</div></div>` });
+  sys(0, "0'", "📢 킥오프!");
+  if (m >= 45) sys(45, "45'", "⏸ 전반 종료");
+  if (r.et && m >= g.tl.regEnd) sys(g.tl.regEnd + 0.1, "90'", `⏱ 정규 시간 ${r.ft.hg} : ${r.ft.ag} — 연장전!`);
+  if (r.pens && m >= g.tl.etEnd) sys(g.tl.etEnd + 0.1, "120'", `🥅 연장 종료 ${r.hg} : ${r.ag} — 승부차기!`);
+  for (const { k, i, h, a } of now.kicks) items.push({ t: g.tl.kickAt(i), html: `<div class="lg-feed-item${k.ok ? " goal" : ""}"><span class="lg-feed-min">PK</span><div>${k.ok ? "✅ 성공" : "❌ 실축"} ${esc(poPlayer(po, k.side === "h" ? g.home : g.away, k.p).name)} <span class="lg-dim">· ${poName(po, k.side === "h" ? g.home : g.away)}</span><div class="lg-feed-sc"><b>PK ${h} : ${a}</b></div></div></div>` });
+  items.sort((x, y) => y.t - x.t);
+  const lead = now.sc.h > now.sc.a ? g.home : now.sc.a > now.sc.h ? g.away : null;
+  const cls = (id) => `${side(id)}${id === lead ? " lg-win" : ""}`;
+  return `<div class="lg-match lg-live-match"><div class="lg-dim">${g.g}차전 · 🔴 LIVE <b>${koMinLabel(g.tl, m)}</b></div><div class="lg-match-row"><span class="${cls(g.home)} h">${name(g.home)}</span><b class="lg-score lg-live-score">${now.sc.h} : ${now.sc.a}${now.kicks.length ? ` <small>(PK ${now.pk.h}:${now.pk.a})</small>` : ""}</b><span class="${cls(g.away)} a">${name(g.away)}</span></div><div class="lg-feed">${items.map((x) => x.html).join("")}</div></div>`;
+}
+function koGoal(po, g, e) {
+  const team = e.side === "h" ? g.home : g.away;
+  const t = e.et ? `연장 ${e.min}'` : e.add ? `90+${e.add}'` : `${e.min}'`;
+  const as = e.as !== null ? ` <span class="lg-dim">(도움 ${esc(poPlayer(po, team, e.as).name)})</span>` : "";
+  return `<div class="lg-goal ${e.side}"><span class="lg-min">${t}</span> ⚽ ${esc(poPlayer(po, team, e.s).name)}${as}</div>`;
+}
+function pensLine(po, g, kicks) {
+  const row = (side) => kicks.filter((k) => k.side === side).map((k) => (k.ok ? "⚪" : "❌")).join("");
+  return `<div class="lg-pens"><div>🥅 승부차기</div><div>${poName(po, g.home)} ${row("h")}</div><div>${poName(po, g.away)} ${row("a")}</div></div>`;
+}
+/* PO 상자 본문 (진행 중엔 league.js tick이 30초마다 이 부분만 다시 그림) */
+export function poBody(ctx) {
+  const L = ctx.L, po = L.po;
+  if (!po) return "";
+  const n = ctx.now();
+  const wins = { [po.dpl]: 0, [po.dcl]: 0 };
+  const rows = [];
+  for (const g of po.games) {
+    const done = g.endAt <= n || !ctx.viewToday;
+    const live = po.live && po.live.g === g.g;
+    if (done) wins[g.winner]++;
+    rows.push(poGame(ctx, g, done ? "done" : live ? "live" : "wait", live ? po.live.min : 0));
+  }
+  const allDone = po.done >= po.games.length;
+  // 3차전: 1·2차전이 끝나기 전엔 "필요 시"만 (결과가 미리 드러나지 않게)
+  const shownRows = rows.slice(0, Math.max(2, po.done + 1));
+  if (!allDone && po.games.length === 3 && po.done < 2) shownRows.length = 2;
+  const g3 = !allDone && po.done < 2 ? `<div class="lg-dim lg-bye">3차전 ${tl(ctx, L.plan.poKick(3))} — 1승 1패일 때만</div>` : "";
+  const res = allDone ? `<div class="lg-po-res">${po.winner === po.dpl ? `🛡 <b>${poName(po, po.dpl)}</b> DPL 잔류!` : `🔺 <b>${poName(po, po.dcl)}</b> DPL 승격!`} <span class="lg-dim">시리즈 ${wins[po.winner]}:${wins[po.loser]}</span></div>` : "";
+  return `<div class="lg-po-series">시리즈 <b>${poName(po, po.dpl)} ${wins[po.dpl]} : ${wins[po.dcl]} ${poName(po, po.dcl)}</b></div>${shownRows.join("")}${g3}${res}`;
+}
+/* ⚔️ 승강 PO 카드 — 두 리그가 끝나기 전엔 현재 순위로 예고만 */
+function poCard(ctx) {
+  const L = ctx.L;
+  if (!L.plan.hasPO) return "";
+  const D = L.divs.DPL, Lc = L.divs.DCL;
+  const leaguesDone = D.k >= D.R && Lc.k >= Lc.R;
+  if (!leaguesDone) {
+    if (ctx.k < ctx.R) return "";   // 이 리그가 진행 중이면 순위표 아래 예고(아래 poPreview)로만
+    const cur = (c, rk) => { const row = c.day.tables[c.k][rk - 1]; return row ? esc(c.day.names.get(row.id)) : "-"; };
+    return `<div class="section-title">⚔️ 승강 플레이오프 <span class="lg-dim">${tl(ctx, L.plan.poStart)} 킥오프</span></div>
+      <div class="card"><div>DPL ${D.day.ids.length - 1}위 vs DCL 2위 · 3판 2선승 (비기면 연장·승부차기)</div>
+      <div class="lg-dim">지금 순위: ${cur(D, D.day.ids.length - 1)} vs ${cur(Lc, 2)} — 두 리그가 모두 끝나면 확정</div></div>`;
+  }
+  return `<div class="section-title">⚔️ 승강 플레이오프 <span class="lg-dim">DPL ${D.day.ids.length - 1}위 vs DCL 2위 · 3판 2선승</span></div>
+    <div class="card lg-po" id="lg-po">${poBody(ctx)}</div>`;
+}
+/* 리그가 끝난 뒤 카운트다운: PO 진행·대기·종료 */
+function poCountdown(ctx, now) {
+  const L = ctx.L, po = L.po;
+  if (!po) return L.status === "done" ? "🏁 오늘 일정 종료" : "🏁 이 리그 종료 · 다른 리그 진행 중";
+  if (po.live) return `⚔️ PO ${po.live.g}차전 <b>${koMinLabel(po.games.find((g) => g.g === po.live.g).tl, po.live.min)}</b>`;
+  if (po.done >= po.games.length) return "🏁 오늘 일정 종료";
+  const next = po.games[po.done];
+  const s = Math.max(0, Math.ceil((next.kick - now) / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return `⏱ PO ${next.g}차전까지 <b>${h ? `${h}시간 ${m}분` : `${m}:${String(sec).padStart(2, "0")}`}</b>`;
+}
+/* 내일 리그 변동 (모든 일정이 끝난 뒤) */
+function movesCard(ctx) {
+  const L = ctx.L, D = L.divs.DPL, Lc = L.divs.DCL, po = L.po;
+  const dT = D.day.tables[D.R], lT = Lc.day.tables[Lc.R];
+  const rel = dT[dT.length - 1].id, pro = lT[0].id;
+  const nm = (c, id) => esc(c.day.names.get(id));
+  return `<div class="card lg-moves"><div class="lg-title sm">📋 내일 리그 변동</div>
+    <div>🔻 강등 <b>${nm(D, rel)}</b> <span class="lg-dim">DPL ${dT.length}위 → DCL</span></div>
+    <div>🔺 승격 <b>${nm(Lc, pro)}</b> <span class="lg-dim">DCL 1위 → DPL</span></div>
+    <div>⚔️ PO ${po.winner === po.dpl ? `<b>${poName(po, po.dpl)}</b> DPL 잔류 · ${poName(po, po.dcl)} DCL 잔류` : `<b>${poName(po, po.dcl)}</b> DPL 승격 · ${poName(po, po.dpl)} DCL 강등`}</div></div>`;
+}
+/* 기록: 승강 한 줄 */
+function movesLine(h) {
+  const po = h.playoff, mv = h.moves;
+  if (!po || !mv) return "";
+  const nm = (id) => esc(po.names[id] || nameIn(h, id));
+  return `<div class="lg-dim">🔻 ${nm(mv.relegated)} · 🔺 ${nm(mv.promoted)} · ⚔️ PO ${nm(po.winner)} 승 (${po.wins[po.winner]}:${po.wins[po.loser]})</div>`;
+}
+const nameIn = (h, id) => {
+  for (const d of ["DPL", "DCL"]) { const r = h[d] && h[d].table.find((x) => x.ouid === id); if (r) return r.name; }
+  return id.slice(0, 6);
+};
+/* 기록실 2부제 회차 */
+function recSplit(d) {
+  const part = (div) => {
+    const x = d[div];
+    if (!x) return "";
+    const s = x.scorers && x.scorers[0], a = x.assists && x.assists[0];
+    return `<div class="lg-rec-div"><div class="lg-title sm">${DIV_ICON[div]} ${div} <span class="lg-dim">${DIV_NAME[div]} · ${x.teams}팀</span></div>
+      <div class="lg-awards">
+        ${s ? `<div>⚽ 득점왕 ${esc(s.player)} <span class="lg-dim">${esc(s.team)}</span> <b>${s.goals}골</b></div>` : ""}
+        ${a ? `<div>🅰️ 도움왕 ${esc(a.player)} <span class="lg-dim">${esc(a.team)}</span> <b>${a.assists}도움</b></div>` : ""}
+        ${x.mvp ? `<div>⭐ MVP ${esc(x.mvp.player)} <span class="lg-dim">${esc(x.mvp.team)}</span> <b>평점 ${Number(x.mvp.avg).toFixed(2)}</b></div>` : ""}
+      </div>
+      <div class="table-wrap"><table class="data"><thead><tr><th class="num">#</th><th>팀</th><th class="num">승점</th><th class="num">승무패</th><th class="num">득실</th></tr></thead><tbody>
+        ${x.table.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.name)}</td><td class="num">${r.pts}</td><td class="num">${r.w}-${r.d}-${r.l}</td><td class="num">${r.gf - r.ga > 0 ? "+" : ""}${r.gf - r.ga}</td></tr>`).join("")}
+      </tbody></table></div></div>`;
+  };
+  const po = d.playoff;
+  const poHtml = po ? `<div class="lg-rec-div"><div class="lg-title sm">⚔️ 승강 PO <span class="lg-dim">${esc(po.names[po.dpl])} vs ${esc(po.names[po.dcl])}</span></div>
+    ${po.games.map((g) => `<div class="lg-dim">${g.g}차전 ${esc(po.names[g.home])} <b>${g.hg} : ${g.ag}</b> ${esc(po.names[g.away])}${g.pens ? ` (승부차기 ${g.pens.h}:${g.pens.a})` : g.et ? " (연장)" : ""}</div>`).join("")}</div>` : "";
+  const D = d.DPL && d.DPL.table[0], Lw = d.DCL && d.DCL.table[0];
+  return `<details class="card lg-rec"><summary><b>${recLabel(d)}</b> <span class="lg-dim">${C.dateLabel(d.date)} · ${d.teams}팀 · 2부제</span>
+      <div>🏆 ${D ? esc(D.name) : "-"} <span class="lg-dim">DPL</span>${Lw ? ` · 🥈 ${esc(Lw.name)} <span class="lg-dim">DCL</span>` : ""}</div>${movesLine(d)}</summary>
+    ${part("DPL")}${part("DCL")}${poHtml}</details>`;
 }

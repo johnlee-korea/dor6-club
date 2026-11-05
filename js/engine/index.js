@@ -10,31 +10,34 @@
 import { makeRng } from "./rng.js";
 import { buildTeam, formationOf, teamPower } from "./team.js";
 import { doubleRoundRobin, roundCount } from "./schedule.js";
-import { simulateMatch, RATE_V2 } from "./match.js";
+import { simulateMatch, simulateKnockout, RATE_V2 } from "./match.js";
 import { buildTables } from "./table.js";
 import { playerStats, leaders, mvp } from "./stats.js";
 
 // v1: 가상 선수 · v2(2026-10-14): 실제 스쿼드 명단(roster) + 포지션별 득점·도움 확률
 // v3(2026-10-27): 모든 팀 전력 동일(순수 운) + 전날 판수 보너스만 차이 (CLAUDE.md 25-18)
 // v4(2026-10-31): 평점 v2(차등 확대 + 그날 폼) · 팀 공격력/수비력 따로 보정(boostAtt·boostDef — ⭐ 커리어 선수) (CLAUDE.md 25-21)
-export const ENGINE_VERSION = 4;
+// v5(2026-11-05): 2부제 — 판수 미달 페널티(penalty) · 승강 플레이오프 단판(simulateKnockout: 연장·승부차기) (CLAUDE.md 33)
+//   기존 입력(penalty 없음)은 v4와 결과·난수 순서 동일 → 지난 회차 재계산 그대로
+export const ENGINE_VERSION = 5;
 
 /* 리그 팀 공통 전력 (v3) — 팀 시드 능력치(72~78)·포메이션과 무관하게 모든 팀이 같은 값
    ATT − DEF = TUNE.gap(−1.2) → 보너스 없는 팀끼리 기대 득점 = TUNE.base (v2 평균 팀과 같은 득점 수준) */
 export const EVEN_POWER = { att: 73.8, def: 75 };
-export { roundCount, buildTeam, formationOf, teamPower, playerStats, leaders, mvp };
+export { roundCount, buildTeam, formationOf, teamPower, playerStats, leaders, mvp, simulateKnockout };
 
 /* daySeed: 일일 시드(예 "DOR6-2026-10-15") — 대진·경기 결과
    teamSeed: 리그 시드(예 "DOR6") — 선수단 능력치 (날짜와 무관하게 팀 정체성 유지)
    teams: [{ id, name, roster?, boost? }] — roster: [{ name, role, starter }] 실제 스쿼드(없으면 가상 선수)
    boost: 팀 공격력·수비력 보정(0.001 단위 정수, 선택값) — 없으면 기존과 같은 결과(난수 소비 순서 불변)
-   boostAtt·boostDef: 공격력만·수비력만 보정(0.001 단위, v4 — ⭐ 커리어 선수 보너스) */
+   boostAtt·boostDef: 공격력만·수비력만 보정(0.001 단위, v4 — ⭐ 커리어 선수 보너스)
+   penalty: 공격력·수비력에서 빼는 값(0.001 단위 양수, v5 — 판수 미달 페널티) */
 export function runDay({ daySeed, teamSeed, teams }) {
   // 입력 순서와 무관하게 같은 결과가 나오도록 id로 정렬 후 일일 시드로 섞음
   const sorted = teams.slice().sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const ids = sorted.map((t) => t.id);
   const squads = new Map(sorted.map((t) => {
-    const team = withBoost(evenPower(buildTeam(t.id, teamSeed, t.roster)), t.boost, t.boostAtt, t.boostDef);
+    const team = withBoost(evenPower(buildTeam(t.id, teamSeed, t.roster)), t.boost, t.boostAtt, t.boostDef, t.penalty);
     return [t.id, withForm(team, daySeed)];
   }));
   const names = new Map(sorted.map((t) => [t.id, t.name]));
@@ -57,12 +60,15 @@ function evenPower(team) {
 }
 
 /* 팀 전력 보정 (선택값) — 선수 능력치는 그대로, 경기 계산용 공격·수비력만 */
-function withBoost(team, boost, boostAtt, boostDef) {
+function withBoost(team, boost, boostAtt, boostDef, penalty) {
   const b = Math.floor(Number(boost) || 0);
   if (b > 0) { team.boost = b; team.att += b / 1000; team.def += b / 1000; }
   const ba = Math.floor(Number(boostAtt) || 0), bd = Math.floor(Number(boostDef) || 0);
   if (ba > 0) { team.boostAtt = ba; team.att += ba / 1000; }
   if (bd > 0) { team.boostDef = bd; team.def += bd / 1000; }
+  // 판수 미달 페널티(v5): 판수 보너스의 반대 — 공격·수비 모두 뺌
+  const pn = Math.floor(Number(penalty) || 0);
+  if (pn > 0) { team.penalty = pn; team.att -= pn / 1000; team.def -= pn / 1000; }
   return team;
 }
 

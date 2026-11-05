@@ -9,7 +9,8 @@ const KST = 9 * 3600 * 1000;
 export const OPEN_H = 7;                  // 개막 07:00
 export const CUTOFF_MIN = 6 * 60 + 30;    // 06:30 — 이후 [리그 시작]은 다음 날, [예약 취소] 불가
 const DAY_SEC = 16 * 3600;                // 07:00~23:00
-const MAX_I = 720, MIN_I = 360;           // 간격 12분 기본, 최소 6분
+const MAX_I = 720, MIN_I = 360;           // 간격 12분 기본, 최소 6분 (2부제 이전 스냅샷)
+export const MAX_I2 = 900;                // 2부제(v2.29.0, 스냅샷 format 2) 간격 15분 — CLAUDE.md 33-4
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -47,17 +48,17 @@ export function parseNowParam(s) {
 }
 
 /* ---------- 라운드 시각 ---------- */
-/* 간격(초) = min(12분, 16시간 ÷ 라운드), 최소 6분 */
-export function intervalSec(rounds) {
-  if (!rounds) return MAX_I;
-  return Math.max(MIN_I, Math.min(MAX_I, Math.floor(DAY_SEC / rounds)));
+/* 간격(초) = min(최대 간격, 16시간 ÷ 라운드), 최소 6분 — max: 기본 12분(옛 스냅샷), 2부제는 MAX_I2(15분) */
+export function intervalSec(rounds, max = MAX_I) {
+  if (!rounds) return max;
+  return Math.max(MIN_I, Math.min(max, Math.floor(DAY_SEC / rounds)));
 }
-/* 라운드 k(1부터) 결과 공개 시각 = 07:00 + k × 간격 (k=0 → 개막) */
-export function roundMs(date, k, rounds) {
-  return kstMs(date, OPEN_H) + k * intervalSec(rounds) * 1000;
+/* 라운드 k(0부터) 킥오프 시각 = 07:00 + k × 간격 (k = rounds → 종료). iv(초)를 주면 그 간격 */
+export function roundMs(date, k, rounds, iv) {
+  return kstMs(date, OPEN_H) + k * (iv || intervalSec(rounds)) * 1000;
 }
-export function endMs(date, rounds) {
-  return roundMs(date, rounds, rounds);
+export function endMs(date, rounds, iv) {
+  return roundMs(date, rounds, rounds, iv);
 }
 /* 지금까지 결과가 공개된 라운드 수 (0 ~ rounds) */
 export function revealedRounds(date, rounds, now) {
@@ -121,12 +122,13 @@ export function nextAutoDate(config, now) {
   return !dayEntry(config, today) && now < kstMs(today, OPEN_H) ? today : addDays(today, 1);
 }
 
-/* 오늘 리그 진행 중?todayRounds: 오늘 스냅샷 기준 라운드 수(모르면 null → 23:00까지 진행 중으로 간주) */
+/* 오늘 리그 진행 중? todayRounds: 오늘 스냅샷 기준 라운드 수(옛 형식) 또는 { end: 하루 종료 UTC ms }(2부제 — divisions.js dayEndMs)
+   모르면 null → 23:00까지 진행 중으로 간주 */
 export function todayRunning(config, now, todayRounds) {
   const today = kstDate(now);
   if (!dayEntry(config, today)) return false;
   const start = kstMs(today, OPEN_H);
-  const end = todayRounds == null ? kstMs(today, 23) : endMs(today, todayRounds);
+  const end = todayRounds == null ? kstMs(today, 23) : typeof todayRounds === "object" ? todayRounds.end : endMs(today, todayRounds);
   return now >= start && now < end;
 }
 

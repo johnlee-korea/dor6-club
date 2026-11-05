@@ -124,3 +124,69 @@ function onPitch(team, min) {
   }
   return team.starters.filter((i) => !out.has(i)).concat(inn).map((i) => team.players[i]);
 }
+
+/* ---------- 승강 플레이오프 단판 (엔진 v5, 2026-11-05 사용자 결정 "모든 경기 연장 및 승부차기") ----------
+   정규 90분은 simulateMatch 그대로 → 비기면 연장 30분(기대 득점 × 1/3, 91~120분) → 그래도 비기면 승부차기.
+   승부차기: 5명씩 번갈아(홈 먼저) · 킥 성공 75% · 남은 킥으로 따라잡을 수 없으면 중단 · 이후 서든데스.
+   키커 = 선발 중 GK 제외, 득점 가중(SCORE_W) 높은 순 → 끝까지 가면 처음부터 다시.
+   반환: simulateMatch 결과 + { ft: {hg, ag}(90분), et: {hg, ag}|null, pens: {h, a, kicks: [{side, p, ok}]}|null, win: "h"|"a" }
+   hg·ag = 연장 포함 최종 득점(승부차기 제외), ev에 연장 골도 들어감(min 91~120) */
+export const KO = { etDiv: 3, penOk: 0.75, penRounds: 5 };
+export function simulateKnockout(home, away, seedStr) {
+  const base = simulateMatch(home, away, seedStr);
+  const out = { ...base, ev: base.ev.slice(), ft: { hg: base.hg, ag: base.ag }, et: null, pens: null, win: null };
+  if (base.hg !== base.ag) { out.win = base.hg > base.ag ? "h" : "a"; return out; }
+
+  // 연장 30분
+  const rng = makeRng(seedStr + "|ET");
+  const eh = poisson(rng, expectedGoals(home.att, away.def, true) / KO.etDiv);
+  const ea = poisson(rng, expectedGoals(away.att, home.def, false) / KO.etDiv);
+  const etEv = [];
+  const pick = (team, n, side) => {
+    for (let g = 0; g < n; g++) {
+      const st = team.starters.map((i) => team.players[i]);
+      const s = st[rng.weighted(st.map((p) => (SCORE_W[p.role] || 0) * (p.sw ?? 1)))].idx;
+      let as = null;
+      if (rng.chance(TUNE.assistRate)) {
+        const pool = st.filter((p) => p.idx !== s);
+        as = pool[rng.weighted(pool.map((p) => (ASSIST_W[p.role] || 0) * (p.aw ?? 1)))].idx;
+      }
+      etEv.push({ min: 91 + rng.int(30), add: 0, side, s, as, et: true, o: etEv.length });
+    }
+  };
+  pick(home, eh, "h");
+  pick(away, ea, "a");
+  etEv.sort((x, y) => x.min - y.min || x.o - y.o);
+  etEv.forEach((e) => delete e.o);
+  out.ev = out.ev.concat(etEv);
+  out.et = { hg: eh, ag: ea };
+  out.hg += eh; out.ag += ea;
+  if (eh !== ea) { out.win = eh > ea ? "h" : "a"; return out; }
+
+  // 승부차기
+  const prng = makeRng(seedStr + "|PK");
+  const takers = (team) => team.starters.map((i) => team.players[i]).filter((p) => p.pos !== "GK" && p.role !== "GK")
+    .sort((a, b) => (SCORE_W[b.role] || 0) - (SCORE_W[a.role] || 0) || a.idx - b.idx).map((p) => p.idx);
+  const tk = { h: takers(home), a: takers(away) };
+  const sc = { h: 0, a: 0 }, kicks = [];
+  const n = KO.penRounds;
+  for (let r = 0; ; r++) {
+    for (const side of ["h", "a"]) {
+      const list = tk[side].length ? tk[side] : [0];
+      const ok = prng.chance(KO.penOk);
+      if (ok) sc[side]++;
+      kicks.push({ side, p: list[r % list.length], ok });
+      if (r < n) {
+        // 5번째 안에서 남은 킥으로도 못 따라잡으면 즉시 종료
+        const leftH = n - (r + 1), leftA = n - (r + 1) + (side === "h" ? 1 : 0);
+        if (sc.h > sc.a + leftA || sc.a > sc.h + leftH) { out.pens = { h: sc.h, a: sc.a, kicks }; out.win = sc.h > sc.a ? "h" : "a"; return out; }
+      }
+    }
+    if (r >= n - 1 && sc.h !== sc.a) break;
+    if (r > 60) break;   // 안전장치 (사실상 도달 불가)
+  }
+  if (sc.h === sc.a) sc.h++;   // 안전장치 결과 (도달 불가)
+  out.pens = { h: sc.h, a: sc.a, kicks };
+  out.win = sc.h > sc.a ? "h" : "a";
+  return out;
+}

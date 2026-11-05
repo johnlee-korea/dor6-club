@@ -88,4 +88,31 @@ for (const n of [2, 3, 24, 25, 26, 31, 41, 50, 81]) {
   const I = intervalSec(R2);
   console.log(`${String(n).padStart(4)}  | ${String(R2).padStart(5)}  | ${Math.floor(I / 60)}분${I % 60 ? " " + (I % 60) + "초" : ""} | ${endLabel(R2)} | ${ok ? "✅" : "❌"}`);
 }
+
+/* ---------- 🏆 2부제 (v2.29.0, CLAUDE.md 33) — 시간표 · 승강 PO 통계 ---------- */
+{
+  const D = await import("../../js/league/divisions.js");
+  const C = await import("../../js/league/clock.js");
+  console.log("\n🏆 2부제 시간표 (DPL 14 고정, 15분 간격)\n 전체 | DPL~ | DCL~ | PO 시작 | 하루 종료(3차전까지)");
+  for (const n of [16, 22, 29, 35, 47]) {
+    const teams = fakeTeams(n).map((t) => ({ ouid: t.id, name: t.name }));
+    const snap = { format: 2, date: "2026-11-06", teams: D.assignDivisions(teams, null).teams };
+    const p = D.dayPlan(snap);
+    console.log(`${String(n).padStart(5)} | ${C.hm(p.end.DPL)} | ${C.hm(p.end.DCL)} | ${C.hm(p.poStart)}   | ${C.hm(p.dayEnd)}${p.iv !== C.MAX_I2 ? " (간격 " + p.iv + "초)" : ""}`);
+  }
+  const teams = fakeTeams(29).map((t, i) => ({ ouid: t.id, name: t.name, ...(i % 5 === 4 ? { short: { played: 0, need: 9 } } : {}) }));
+  const snap0 = { format: 2, date: "2026-11-06", seed: "PO", teamSeed: "T", teams: D.assignDivisions(teams, null).teams };
+  let g3 = 0, up = 0, et = 0, pk = 0, games = 0, penRank = 0, penN = 0;
+  const N = Math.max(50, DAYS * 5);
+  for (let i = 0; i < N; i++) {
+    const out = D.runLeagueDay({ ...snap0, seed: "PO" + i }, { seed: "T" }, null);
+    const p = out.playoff;
+    if (p.games.length === 3) g3++;
+    if (p.winner === p.dcl) up++;
+    for (const g of p.games) { games++; if (g.res.et) et++; if (g.res.pens) pk++; }
+    for (const d of D.DIVS) { const t = out[d].tables[out[d].totalRounds]; for (const q of snap0.teams.filter((x) => x.div === d && x.penalty)) { penRank += t.find((r) => r.id === q.ouid).rank / t.length; penN++; } }
+  }
+  console.log(`\n⚔️ 승강 PO ${N}회 (29팀, 판수 미달 ${snap0.teams.filter((t) => t.penalty).length}팀 −10): 3차전 ${pct(g3 / N)} · DCL 팀 승격 ${pct(up / N)} · 경기 중 연장 ${pct(et / games)} · 승부차기 ${pct(pk / games)}`);
+  console.log(`   페널티 팀 평균 순위 상위 ${pct(penRank / penN)} (리그 안 위치, 100% = 꼴찌)`);
+}
 process.exit(okAll ? 0 : 1);

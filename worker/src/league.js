@@ -4,7 +4,9 @@
    - Cron: 06:40/06:50 KST 당일 참가팀 스냅샷 생성, 00:30 KST 전날 기록 보관 워크플로 호출
    - 🔁 자동 개최(v2.23.0): config.auto가 켜져 있으면 06:40/06:50 크론이 오늘을 개최일로 먼저 추가(참가 자격자 2명 이상일 때)
    - 서버는 경기 결과를 계산하지 않는다. 설정(config)과 스냅샷 파일만 커밋 → 결과는 브라우저가 결정론으로 계산
-   - 쓰는 파일: data/league/config.json · data/league/days/*.json 만 (members.json은 읽기만)
+   - 🏆 2부제(v2.29.0): 편성 때 data/league/divisions.json(기록 보관이 갱신한 다음 날 명단)으로 DPL·DCL을 나누고
+     판수 미달 팀에 페널티를 얼림(스냅샷 format 2). 휴식 중·판수 미달도 참가, 부계정만 제외
+   - 쓰는 파일: data/league/config.json · data/league/days/*.json 만 (members.json·divisions.json은 읽기만)
    - 시각 판정은 항상 Worker 서버 시각 기준 (관리자 기기 시계가 틀려도 안전)
    ============================================================ */
 import {
@@ -16,7 +18,11 @@ import { attachBoost, prevDay } from "../../js/league/boost.js";
 import { squadFromLineup } from "../../js/league/roster.js";
 import { starBoost } from "../../js/league/career-link.js";
 import { careerStar, careerList, careerBlock } from "./career.js";
-import { ENGINE_VERSION, roundCount } from "../../js/engine/index.js";
+import { ENGINE_VERSION } from "../../js/engine/index.js";
+import { assignDivisions, dayEndMs } from "../../js/league/divisions.js";
+
+// 2부제 참가 판정: 휴식·판수 미달도 참가(판수 미달은 short 표시 → 페널티), 부계정만 제외
+const judge = (members, dashboard, date) => judgeEligibility(members, dashboard, date, { penalize: true });
 
 export const LEAGUE_SNAPSHOT_CRON = "40,50 21 * * *";   // 06:40·06:50 KST — wrangler.toml crons와 같은 문자열
 export const LEAGUE_ARCHIVE_CRON = "30 15 * * *";       // 00:30 KST
@@ -88,15 +94,22 @@ async function makeSnapshot(env, now, opts) {
   if (existing && !opts.force) return { skipped: true, reason: "이미 스냅샷이 있어요" };
 
   const { members, dashboard } = await readRoster(env);
-  const judged = judgeEligibility(members, dashboard, today);
+  const judged = judge(members, dashboard, today);
+  // v2.29.0 🏆 2부제 명단: divisions.json (없으면 ouid 순으로 DPL 14 채움)
+  const divRead = await ghRead(env, "data/league/divisions.json").catch((e) => { console.error("[league] divisions.json 읽기 실패:", e.message); return null; });
+  const divFile = divRead && divRead.json;
+  const assigned = assignDivisions(judged.teams, divFile);
+  const prevHeld = config.days.filter((d) => d.date < today).reduce((m, d) => (d.date > m ? d.date : m), "");
+  const divisions = { basedOn: (divFile && divFile.basedOn) || null, stale: !divFile || (!!prevHeld && divFile.basedOn !== prevHeld) };
   // v2.12.0 실제 스쿼드: squads.json 최근 경기 라인업 18명을 [spId, spPosition]으로 얼려 둠 (없으면 가상 선수)
   const sqFile = await ghRead(env, "data/squads.json").catch((e) => { console.error("[league] squads.json 읽기 실패:", e.message); return null; });
   const sq = (sqFile && sqFile.json && sqFile.json.squads) || {};
   // v2.14.0 🔥 전날 판수 보너스: daily-games.json의 개최 전날 판수를 팀마다 얼려 둠 (없으면 보너스 없이 진행)
   const dgFile = await ghRead(env, "data/daily-games.json").catch((e) => { console.error("[league] daily-games.json 읽기 실패:", e.message); return null; });
-  const boosted = attachBoost(judged.teams.map((t) => {
+  const boosted = attachBoost(assigned.teams.map((t) => {
     const squad = squadFromLineup(sq[t.ouid]);
-    return squad ? { ouid: t.ouid, name: t.name, squad } : { ouid: t.ouid, name: t.name };
+    const base = { ouid: t.ouid, name: t.name, div: t.div, ...(t.penalty ? { penalty: t.penalty, short: t.short } : {}) };
+    return squad ? { ...base, squad } : base;
   }), dgFile && dgFile.json, today);
   // v2.24.0 ⭐ 커리어 선수: 클럽원별 최고 OVR 선수 1명 입단 (KV 없거나 실패면 없이 진행)
   // v2.25.0 전력 보너스는 개최 전날(KST) 플레이한 커리어 시즌 수(star.yday) 기준
@@ -108,6 +121,7 @@ async function makeSnapshot(env, now, opts) {
     return { ...t, star, ...(b.boostAtt ? { boostAtt: b.boostAtt } : {}), ...(b.boostDef ? { boostDef: b.boostDef } : {}) };
   });
   const snap = {
+    format: 2,
     date: today, no: entry.no,
     seed: `${config.seed}-${today}`, teamSeed: config.seed,
     engine: ENGINE_VERSION,
@@ -115,13 +129,15 @@ async function makeSnapshot(env, now, opts) {
     teams: boosted.teams,
     eligibility: judged.eligibility,
     activity: boosted.activity, activityDay: boosted.activityDay,
+    divisions,
     excluded: judged.excluded
   };
   const tag = opts.source === "cron" ? "[자동]" : "[기능]";
-  const msg = `${tag} 도륙리그 제${entry.no}회 편성 (${snap.teams.length}팀${existing ? ", 다시 만들기" : ""})`;
+  const cnt = (d) => snap.teams.filter((t) => t.div === d).length;
+  const msg = `${tag} 도륙리그 제${entry.no}회 편성 (DPL ${cnt("DPL")} · DCL ${cnt("DCL")}팀${existing ? ", 다시 만들기" : ""})`;
   const ok = await ghWrite(env, dayPath(today), snap, existing && existing.sha, msg);
   if (!ok) throw new LeagueError("다른 저장과 겹쳤어요. 잠시 후 다시 시도해 주세요.");
-  console.log(`[league] 스냅샷 생성 ${today} ${snap.teams.length}팀 (${opts.source})`);
+  console.log(`[league] 스냅샷 생성 ${today} ${snap.teams.length}팀 (${opts.source})${divisions.stale ? " ⚠ divisions.json 기준일 " + divisions.basedOn : ""}`);
   return { ok: true, date: today, no: entry.no, teams: snap.teams.length, excluded: snap.excluded.length, message: msg };
 }
 
@@ -132,13 +148,16 @@ async function leagueStatus(env, now) {
   const todayEntry = dayEntry(config, today);
   const snapFile = todayEntry ? await ghRead(env, dayPath(today)) : null;
   const snap = snapFile && snapFile.json;
-  const todayRounds = snap ? roundCount(snap.teams.length) : null;
+  const todayRounds = snap ? { end: dayEndMs(snap) } : null;   // 하루 종료(2부제는 PO 3차전까지 상한)
   const pend = pendingReservation(config, now);
   // 예상 참가: 예약이 있으면 그 날짜, 없으면 지금 [리그 시작]하면 열릴 날짜 기준 (최종 판정은 개최일 06:40)
   const reserve = canReserve(config, now, todayRounds);
   const expectDate = pend ? pend.date : config.auto ? nextAutoDate(config, now) : (reserve.date || kstDate(now));
   const { members, dashboard } = await readRoster(env);
-  const judged = judgeEligibility(members, dashboard, expectDate);
+  const judged = judge(members, dashboard, expectDate);
+  const divRead = await ghRead(env, "data/league/divisions.json").catch(() => null);
+  const preview = assignDivisions(judged.teams, divRead && divRead.json);
+  const count = (d) => preview.teams.filter((t) => t.div === d).length;
   return {
     now: new Date(now).toISOString(),
     today, engine: ENGINE_VERSION,
@@ -148,13 +167,17 @@ async function leagueStatus(env, now) {
     pending: pend,
     todayEntry,
     todayRunning: todayRunning(config, now, todayRounds),
-    snapshot: snap ? { teams: snap.teams.length, createdAt: snap.createdAt, source: snap.source, engine: snap.engine, eligibility: snap.eligibility, excluded: snap.excluded || [] } : null,
+    snapshot: snap ? { teams: snap.teams.length, createdAt: snap.createdAt, source: snap.source, engine: snap.engine, eligibility: snap.eligibility, excluded: snap.excluded || [],
+      format: snap.format || 1, DPL: snap.teams.filter((t) => t.div === "DPL").length, DCL: snap.teams.filter((t) => t.div === "DCL").length,
+      penalized: snap.teams.filter((t) => t.penalty).map((t) => ({ ouid: t.ouid, name: t.name, div: t.div, ...t.short })), divisions: snap.divisions || null } : null,
     can: {
       reserve,
       cancel: canCancel(config, now),
       snapshot: canSnapshot(config, now, !!snap)
     },
-    roster: { members: ((members.members) || []).length, expectDate, teams: judged.teams.length, excluded: judged.excluded, eligibility: judged.eligibility }
+    roster: { members: ((members.members) || []).length, expectDate, teams: judged.teams.length, excluded: judged.excluded, eligibility: judged.eligibility,
+      DPL: count("DPL"), DCL: count("DCL"), penalized: preview.teams.filter((t) => t.penalty).map((t) => ({ ouid: t.ouid, name: t.name, div: t.div, ...t.short })),
+      divisionsBasedOn: (divRead && divRead.json && divRead.json.basedOn) || null }
   };
 }
 
@@ -163,13 +186,13 @@ async function reserve(env, now, body) {
   for (let attempt = 0; attempt < 2; attempt++) {
     const { json: config, sha } = await readConfig(env);
     const todaySnap = dayEntry(config, kstDate(now)) ? await ghRead(env, dayPath(kstDate(now))) : null;
-    const can = canReserve(config, now, todaySnap ? roundCount(todaySnap.json.teams.length) : null);
+    const can = canReserve(config, now, todaySnap ? { end: dayEndMs(todaySnap.json) } : null);
     if (!can.ok) throw new LeagueError(can.reason);
     // 확인창에 보여준 날짜와 서버 판정이 다르면(06:30 경계) 다시 확인시킴
     if (body.expectDate && body.expectDate !== can.date)
       throw new LeagueError(`개최일이 ${dateLabel(can.date)}로 바뀌었어요 (06:30 경계). 다시 확인해 주세요.`);
     const { members, dashboard } = await readRoster(env);
-    const judged = judgeEligibility(members, dashboard, can.date);
+    const judged = judge(members, dashboard, can.date);
     if (judged.teams.length < 2) throw new LeagueError(`참가 자격이 있는 클럽원이 ${judged.teams.length}명이라 리그를 열 수 없어요 (2명 이상 필요).`);
     config.days.push({ no: can.no, date: can.date, reservedAt: new Date(now).toISOString() });
     const msg = `[기능] 도륙리그 제${can.no}회 예약 (${can.date})`;
@@ -202,7 +225,7 @@ async function autoOpen(env, now) {
     if (!config.auto) return { skipped: true, reason: "자동 개최 꺼짐" };
     if (dayEntry(config, today)) return { skipped: true, reason: "이미 개최일" };
     const { members, dashboard } = await readRoster(env);
-    const judged = judgeEligibility(members, dashboard, today);
+    const judged = judge(members, dashboard, today);
     if (judged.teams.length < 2) return { skipped: true, reason: `참가 자격자 ${judged.teams.length}명 (2명 미만)` };
     const no = lastNo(config) + 1;
     config.days.push({ no, date: today, reservedAt: new Date(now).toISOString(), auto: true });

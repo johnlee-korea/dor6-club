@@ -36,7 +36,8 @@ export function snapshotTeams(snap, names) {
     id: t.ouid, name: t.name, roster: applyStar(squadToRoster(t.squad, names), t.star),
     ...(t.boost ? { boost: t.boost } : {}),
     ...(t.boostAtt ? { boostAtt: t.boostAtt } : {}),
-    ...(t.boostDef ? { boostDef: t.boostDef } : {})
+    ...(t.boostDef ? { boostDef: t.boostDef } : {}),
+    ...(t.penalty ? { penalty: t.penalty } : {})     // ⚠️ 판수 미달 페널티(v2.29.0, 2부제)
   }));
 }
 

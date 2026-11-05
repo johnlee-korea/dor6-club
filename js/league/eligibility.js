@@ -21,8 +21,11 @@ export function requiredGames(target, season, joinDate, date) {
 }
 
 /* members: members.json 객체, dashboard: dashboard.json 객체(없으면 null), date: 개최일 "YYYY-MM-DD"
-   반환: { teams: [{ ouid, name }] (ouid 정렬), excluded: [{ ouid, name, reason, played?, need? }], eligibility: "ok"|"skipped" } */
-export function judgeEligibility(members, dashboard, date) {
+   반환: { teams: [{ ouid, name }] (ouid 정렬), excluded: [{ ouid, name, reason, played?, need? }], eligibility: "ok"|"skipped" }
+   opts.penalize (v2.29.0 2부제, 사용자 결정 "판수 미달자도 모두 참여 but 패널티 · 시뮬레이션이라 빠질 게 없음"):
+     휴식 중·판수 미달도 참가 → 판수 미달 팀에만 short: { played, need } 표시(페널티는 divisions.js가 붙임). 부계정만 제외 */
+export function judgeEligibility(members, dashboard, date, opts = {}) {
+  const pen = !!opts.penalize;
   const list = ((members && members.members) || []).filter((m) => m.ouid);
   const cur = dashboard && dashboard.current;
   const rows = new Map(((cur && cur.rows) || []).map((r) => [r.ouid, r]));
@@ -32,10 +35,16 @@ export function judgeEligibility(members, dashboard, date) {
     const name = m.ingameNick || m.ouid.slice(0, 8);
     const row = rows.get(m.ouid);
     if (m.isSub) { excluded.push({ ouid: m.ouid, name, reason: "sub" }); continue; }
-    if (row && row.resting) { excluded.push({ ouid: m.ouid, name, reason: "rest" }); continue; }
+    if (row && row.resting) {
+      if (pen) { teams.push({ ouid: m.ouid, name }); continue; }    // 2부제: 휴식 중도 참가(페널티 없음)
+      excluded.push({ ouid: m.ouid, name, reason: "rest" }); continue;
+    }
     if (row && inSeason) {
       const need = requiredGames(row.target, cur, m.joinDate, date);
-      if (row.played < need) { excluded.push({ ouid: m.ouid, name, reason: "short", played: row.played, need }); continue; }
+      if (row.played < need) {
+        if (pen) { teams.push({ ouid: m.ouid, name, short: { played: row.played, need } }); continue; }
+        excluded.push({ ouid: m.ouid, name, reason: "short", played: row.played, need }); continue;
+      }
     }
     teams.push({ ouid: m.ouid, name });
   }

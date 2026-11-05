@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "dor6-bot"
           git config user.email "actions@github.com"
-          git add data/league/history.json
+          git add data/league/history.json data/league/divisions.json
           if git diff --staged --quiet; then
             echo "변경 없음 — 커밋 생략"
           else

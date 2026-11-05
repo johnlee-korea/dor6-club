@@ -39,12 +39,14 @@
       ? (s.todayRunning ? `제${s.todayEntry.no}회 진행 중` : `제${s.todayEntry.no}회 개최일`)
       : "개최일 아님";
     const snap = s.todayEntry
-      ? (s.snapshot ? `✅ ${s.snapshot.teams}팀 · ${kstTime(s.snapshot.createdAt)} 생성 (${s.snapshot.source === "cron" ? "자동" : "관리자"})`
+      ? (s.snapshot ? `✅ ${s.snapshot.format === 2 ? `DPL ${s.snapshot.DPL} · DCL ${s.snapshot.DCL}팀` : s.snapshot.teams + "팀"} · ${kstTime(s.snapshot.createdAt)} 생성 (${s.snapshot.source === "cron" ? "자동" : "관리자"})`
+          + (s.snapshot.divisions && s.snapshot.divisions.stale ? ` <span class="badge warn">⚠ 리그 명단이 직전 회차 기준이 아님(${escapeHtml(s.snapshot.divisions.basedOn || "없음")}) — 기록 보관 확인</span>` : "")
           + (s.snapshot.engine !== s.engine ? ` <span class="badge danger">⚠ 엔진 버전 불일치 v${s.snapshot.engine}→v${s.engine}</span>` : "")
           + (s.snapshot.eligibility === "skipped" ? ` <span class="badge warn">⚠ 판수 판정 생략(대시보드 로드 실패)</span>` : "")
         : `<span style="color:var(--warn);">❌ 아직 없음</span> <span class="lg-dim">(06:40 자동 생성)</span>`)
       : "-";
     const ex = s.roster.excluded || [];
+    const pen = s.roster.penalized || [];
     const snapBtnLabel = can.snapshot.overwrite ? "🔄 오늘 스냅샷 다시 만들기" : "🧊 오늘 스냅샷 만들기";
     el.innerHTML = `
       <dl class="lg-admin-grid">
@@ -53,7 +55,9 @@
         <dt>오늘</dt><dd>${today}</dd>
         <dt>오늘 스냅샷</dt><dd>${snap}</dd>
         <dt>누적 개최</dt><dd>${s.totalHeld}회</dd>
-        <dt>예상 참가</dt><dd><b>${s.roster.teams}팀</b> / 명단 ${s.roster.members}명 <span class="lg-dim">(${dayLabel(s.roster.expectDate)} 기준, 최종 판정은 개최일 06:40)</span>
+        <dt>예상 참가</dt><dd><b>${s.roster.teams}팀</b>${s.roster.DPL != null ? ` <span class="lg-dim">(DPL ${s.roster.DPL} · DCL ${s.roster.DCL})</span>` : ""} / 명단 ${s.roster.members}명 <span class="lg-dim">(${dayLabel(s.roster.expectDate)} 기준, 최종 판정은 개최일 06:40 · 리그 명단 ${s.roster.divisionsBasedOn ? dayLabel(s.roster.divisionsBasedOn) + " 결과 기준" : "없음"})</span>
+          ${pen.length ? `<details style="margin-top:4px;"><summary class="lg-dim" style="cursor:pointer;">⚠️ 판수 미달 페널티 ${pen.length}명 보기</summary>
+            <div class="lg-excl-list">${pen.map((x) => `<span class="lg-excl-item">${escapeHtml(x.name)} <span class="lg-dim">${x.div} · ${x.played}/${x.need}판</span></span>`).join("")}</div></details>` : ""}
           ${ex.length ? `<details style="margin-top:4px;"><summary class="lg-dim" style="cursor:pointer;">제외 ${ex.length}명 보기</summary>
             <div class="lg-excl-list">${ex.map((x) => `<span class="lg-excl-item">${escapeHtml(x.name)} <span class="lg-dim">${(REASON[x.reason] || (() => x.reason))(x)}</span></span>`).join("")}</div></details>` : ""}</dd>
         <dt>엔진</dt><dd>v${s.engine} <span class="lg-dim">· 서버 시각 ${kstTime(s.now)} KST</span></dd>
