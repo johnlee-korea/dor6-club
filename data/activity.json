@@ -1,21 +1,21 @@
 {
-  "updated": "2026-11-05T08:08:53.217Z",
+  "updated": "2026-11-05T10:09:13.396Z",
   "week": {
-    "from": "2026-10-29T08:08:53.217Z",
+    "from": "2026-10-29T10:09:13.396Z",
     "rows": [
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
         "nick": "Dor6똘콩스",
-        "games": 103,
-        "wins": 51,
-        "winRate": 50
+        "games": 100,
+        "wins": 47,
+        "winRate": 47
       },
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "FO4커벌",
-        "games": 95,
-        "wins": 48,
-        "winRate": 51
+        "games": 97,
+        "wins": 50,
+        "winRate": 52
       },
       {
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
@@ -635,22 +635,22 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 267,
+      "games": 275,
       "form": [
-        "win",
-        "win",
-        "win",
         "lose",
+        "win",
+        "win",
         "draw",
-        "lose",
-        "lose",
+        "win",
+        "win",
+        "draw",
         "draw",
         "win",
         "win"
       ],
       "streak": {
-        "type": "win",
-        "n": 3
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": {
@@ -796,18 +796,18 @@
       }
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 635,
+      "games": 637,
       "form": [
         "draw",
+        "draw",
+        "lose",
         "lose",
         "lose",
         "lose",
         "win",
         "draw",
         "lose",
-        "lose",
-        "draw",
-        "win"
+        "lose"
       ],
       "streak": null,
       "rivals": {
@@ -840,6 +840,15 @@
             "rate": 49
           },
           {
+            "ouid": "10512ddbc79f7b043f02f62eac238b37",
+            "nick": "좌약먹은고릴라",
+            "games": 16,
+            "win": 8,
+            "draw": 2,
+            "lose": 6,
+            "rate": 54
+          },
+          {
             "ouid": "0ec85bc04c006744f49a284cd624bbbb",
             "nick": "땜쟁",
             "games": 15,
@@ -847,18 +856,9 @@
             "draw": 2,
             "lose": 6,
             "rate": 51
-          },
-          {
-            "ouid": "10512ddbc79f7b043f02f62eac238b37",
-            "nick": "좌약먹은고릴라",
-            "games": 14,
-            "win": 8,
-            "draw": 1,
-            "lose": 5,
-            "rate": 60
           }
         ],
-        "internalGames": 192
+        "internalGames": 194
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
@@ -1145,22 +1145,22 @@
       }
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
-      "games": 436,
+      "games": 438,
       "form": [
-        "lose",
-        "win",
-        "lose",
-        "win",
         "win",
         "win",
         "lose",
         "win",
         "lose",
-        "lose"
+        "win",
+        "win",
+        "win",
+        "lose",
+        "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 1
+        "type": "win",
+        "n": 2
       },
       "rivals": {
         "nemesis": {
@@ -1214,23 +1214,20 @@
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 149,
+      "games": 152,
       "form": [
-        "win",
-        "win",
-        "lose",
-        "lose",
-        "lose",
+        "draw",
+        "draw",
         "win",
         "win",
         "win",
         "lose",
-        "lose"
+        "lose",
+        "lose",
+        "win",
+        "win"
       ],
-      "streak": {
-        "type": "win",
-        "n": 2
-      },
+      "streak": null,
       "rivals": {
         "nemesis": {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -1254,11 +1251,11 @@
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
             "nick": "Dor6똘콩스",
-            "games": 12,
-            "win": 5,
-            "draw": 1,
+            "games": 15,
+            "win": 6,
+            "draw": 3,
             "lose": 6,
-            "rate": 44
+            "rate": 47
           },
           {
             "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1279,7 +1276,7 @@
             "rate": 67
           }
         ],
-        "internalGames": 29
+        "internalGames": 32
       }
     }
   }

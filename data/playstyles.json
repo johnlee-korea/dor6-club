@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T08:08:53.217Z",
+  "updated": "2026-11-05T10:09:13.396Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1052,27 +1052,27 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 5.84,
+          "v": 5.74,
           "avg": 4.33,
-          "z": 1.75,
+          "z": 1.64,
           "key": true
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.474,
+          "v": 0.485,
           "avg": 0.302,
-          "z": 1.5,
+          "z": 1.61,
           "key": false
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 8.24,
-          "avg": 6.966,
-          "z": 1.15,
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.624,
+          "avg": 0.543,
+          "z": 1.37,
           "key": false
         }
       ],
@@ -1081,27 +1081,27 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 45.12,
+          "v": 45,
           "avg": 50.791,
-          "z": -1.98,
+          "z": -2.02,
           "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.371,
+          "v": 0.377,
           "avg": 0.462,
-          "z": -1.45,
+          "z": -1.36,
           "key": false
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 11.56,
+          "v": 11.02,
           "avg": 16.007,
-          "z": -1.14,
+          "z": -1.28,
           "key": false
         }
       ]
@@ -1872,11 +1872,11 @@
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
       "games": 50,
       "style": {
-        "name": "로또 롱패스",
-        "line": "멀리 차고 기도한다",
+        "name": "투박한 타깃맨",
+        "line": "감아차기는 모른다, 머리로 들이받는다",
         "basis": [
-          "longRatio+",
-          "passRate-"
+          "headShot+",
+          "finesse-"
         ]
       },
       "highs": [
@@ -1884,19 +1884,19 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.585,
+          "v": 0.599,
           "avg": 0.189,
-          "z": 3.79,
-          "key": false
+          "z": 3.92,
+          "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.155,
+          "v": 0.156,
           "avg": 0.057,
-          "z": 3.33,
-          "key": true
+          "z": 3.34,
+          "key": false
         },
         {
           "k": "boxGoal",
@@ -1913,18 +1913,18 @@
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.833,
+          "v": 0.832,
           "avg": 0.888,
-          "z": -2.71,
-          "key": true
+          "z": -2.77,
+          "key": false
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 54.22,
+          "v": 54.86,
           "avg": 77.226,
-          "z": -2.41,
+          "z": -2.34,
           "key": false
         },
         {
@@ -1934,7 +1934,7 @@
           "v": 0.049,
           "avg": 0.302,
           "z": -2.22,
-          "key": false
+          "key": true
         }
       ]
     },
