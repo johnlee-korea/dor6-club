@@ -99,7 +99,7 @@ function row(m) {
   const badges = `${m.isSub ? `<span class="badge">부계정</span>` : ""}${!m.ouid ? `<span class="badge warn" title="넥슨 조회 대기">닉 확인중</span>` : ""}`;
   const inner = `
       <div class="info">
-        <div class="nick">${escapeHtml(m.ingameNick)}${m.prevNicks && m.prevNicks.length ? ` <span class="ms-prev" title="예전 닉: ${escapeHtml(m.prevNicks.join(", "))}">(구 ${escapeHtml(m.prevNicks[0])})</span>` : ""} ${ci ? `<span class="ctrl-ico" title="주 컨트롤러: ${ci[1]}">${ci[0]}</span>` : ""} ${roleBadge(m.role)} ${badges}</div>
+        <div class="nick">${escapeHtml(m.ingameNick)} ${ci ? `<span class="ctrl-ico" title="주 컨트롤러: ${ci[1]}">${ci[0]}</span>` : ""} ${roleBadge(m.role)} ${badges}</div>
         <div class="form-line">${act ? formDots(act.form) + " " + streakBadge(act.streak) : ""}
           ${ps && ps.style ? `<span class="ms-style">🎭 ${escapeHtml(ps.style.name)}${ps.style.rare ? " ✨" : ""}</span>` : ""}</div>
       </div>

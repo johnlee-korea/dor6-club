@@ -2006,6 +2006,6 @@ README 변경 이력(v2.13.0) · `data/patchnotes.json` · 본 장 '구현 결�
 
 ## 34. v2.29.1 닉네임 변경 자동 반영 · 관리자 명단 즉시 갱신 (2026-11-05, 사용자 요청)
 - **원인**: 모든 수집·집계 키는 ouid라 닉을 바꿔도 경기 기록은 이어졌지만, 화면 닉 = `members.json ingameNick`(등록 당시 닉)이라 갱신되지 않았음. 현재 닉은 collect.js가 넥슨 basic으로 `profiles.json`에 2시간마다 받고 있었음(실측 5명 불일치).
-- **반영**: `scripts/sync-nicks.js`(`syncNicks` 순수 함수) — collect.yml에서 수집 → **닉 동기화** → 집계 순. 다르면 ingameNick 교체 + 예전 닉 `prevNicks`(최근 5, 지금 닉과 같은 건 제외). 닉 조회 실패(빈 값)면 건드리지 않음. 클럽원 검색은 prevNicks도 찾고, 명단 행에 "(구 ○○)".
+- **반영**: `scripts/sync-nicks.js`(`syncNicks` 순수 함수) — collect.yml에서 수집 → **닉 동기화** → 집계 순. 다르면 ingameNick 교체 + 예전 닉 `prevNicks`(최근 5, 지금 닉과 같은 건 제외). 닉 조회 실패(빈 값)면 건드리지 않음. 클럽원 검색은 prevNicks도 찾음(화면에 예전 닉 표시는 안 함 — 사용자 결정).
 - **충돌 위험**: 관리자 등록·삭제가 수집 중(약 10분)에 일어나고 같은 회차에 닉 변경까지 겹치면 collect 커밋의 rebase가 members.json에서 충돌해 그 회차 커밋 실패 → 다음 회차가 다시 수집·동기화하므로 자동 복구(경기는 넥슨에 30일 보관).
 - **관리자 목록**: Worker `/members {action:"list"}`(GitHub API 직접 읽기) + add/delete 응답에 `members` → 화면 즉시 갱신(Pages 재빌드 1~2분 지연 없음). 등록 성공 후 없는 `#new-talk` 입력칸(톡방 닉 제거 때 남은 코드)을 비우다 예외 → 오류 문구·목록 미갱신이던 버그 수정.

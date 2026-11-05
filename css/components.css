@@ -395,7 +395,6 @@ a.ms-row { color: inherit; text-decoration: none; }
 a.ms-row:hover { background: var(--surface-2); }
 .ms-go { color: var(--text-dim); font-size: 22px; padding-left: var(--sp-2); }
 .ms-style { font-size: var(--fs-xs); color: var(--silver); white-space: nowrap; }
-.ms-prev { font-size: var(--fs-xs); color: var(--text-dim, var(--silver-dim)); font-weight: 400; }
 .ms-roster { margin-top: var(--sp-5); }
 .ms-roster > summary { cursor: pointer; font-weight: 800; padding: var(--sp-3) var(--sp-4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); list-style: none; }
 .ms-roster > summary::-webkit-details-marker { display: none; }
