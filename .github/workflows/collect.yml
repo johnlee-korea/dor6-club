@@ -33,6 +33,10 @@ jobs:
 
       # 랭커 기준값은 baseline.yml(주 1회)로 분리 — v2.2.0
 
+      # v2.29.1 닉네임 변경 자동 반영 (profiles.json 현재 닉 → members.json, 예전 닉은 prevNicks) — 집계 전에 해야 새 닉으로 집계됨
+      - name: 닉네임 변경 반영
+        run: node scripts/sync-nicks.js
+
       - name: 집계 실행
         run: node scripts/aggregate.js
 

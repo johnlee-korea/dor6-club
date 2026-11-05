@@ -465,6 +465,9 @@ async function mutateMembers(body, env) {
   const current = JSON.parse(decodeBase64(file.content));
   current.members = current.members || [];
 
+  // 관리자 화면 목록 (v2.29.1): GitHub에서 바로 읽어 Pages 재빌드(1~2분) 지연 없이 최신 명단
+  if (action === "list") return { ok: true, members: current.members };
+
   let message = "";
   if (action === "add") {
     if (!member || !member.ouid || !member.ingameNick) throw new Error("등록 정보가 부족합니다.");
@@ -488,7 +491,7 @@ async function mutateMembers(body, env) {
     if (current.members.length === before) return { error: "해당 클럽원을 찾을 수 없습니다." };
     message = `[수정] 클럽원 삭제: ${ouid}`;
   } else {
-    throw new Error("action은 add 또는 delete여야 합니다.");
+    throw new Error("action은 list·add·delete 중 하나여야 합니다.");
   }
 
   current.meta = current.meta || {};
@@ -506,7 +509,7 @@ async function mutateMembers(body, env) {
     })
   });
   if (!putRes.ok) throw new Error(`커밋 실패 (${putRes.status})`);
-  return { ok: true, message, count: current.members.length };
+  return { ok: true, message, count: current.members.length, members: current.members };
 }
 
 /* ---------- GitHub Actions 수집 워크플로 실행 (workflow_dispatch) ----------

@@ -395,6 +395,27 @@ for (const pg of PAGES) {
   bad.length ? fail++ : pass++;
 }
 
+/* ---------- ✏️ 닉네임 변경 자동 반영 (v2.29.1) ---------- */
+{
+  const { syncNicks } = await import(new URL("./sync-nicks.js", import.meta.url));
+  const mf = { members: [
+    { ouid: "a", ingameNick: "Dor6문선생" },
+    { ouid: "b", ingameNick: "같음" },
+    { ouid: "c", ingameNick: "조회실패" },
+    { ouid: "d", ingameNick: "새닉2", prevNicks: ["새닉1", "원래"] }
+  ] };
+  const pf = { profiles: { a: { nickname: "문선생" }, b: { nickname: "같음" }, c: {}, d: { nickname: "원래" } } };
+  const ch = syncNicks(mf, pf);
+  const [a, b, c, d] = mf.members;
+  const ok = ch.length === 2 && a.ingameNick === "문선생" && a.prevNicks[0] === "Dor6문선생" && !b.prevNicks && c.ingameNick === "조회실패"
+    && d.ingameNick === "원래" && JSON.stringify(d.prevNicks) === JSON.stringify(["새닉2", "새닉1"]);   // 예전 닉으로 되돌리면 목록에서 빠짐
+  // 클럽원 검색: 예전 닉으로도 찾힘
+  const msSrc = rd("js/members.js");
+  const searchOk = msSrc.includes("m.prevNicks || []");
+  console.log(`${ok && searchOk ? "✅" : "❌"} 닉 변경 반영 변경:${ch.length}명 예전 닉 보관:${ok} 예전 닉 검색:${searchOk}`);
+  ok && searchOk ? pass++ : fail++;
+}
+
 /* ---------- ⭐ 내 선수 키우기 (v2.13.0) ----------
    app.js는 ES 모듈 → Node에서 import해 jsdom 창에 mountCareer로 붙임 (저장소는 메모리 대체)
    흐름: 타이틀 → 선수 생성 → 시작 구단 → 오프시즌 탭 4개 → 시즌 2회 → 리포트 탭 4개 → 기록·업적·명예의 전당·설정(내보내기/가져오기)

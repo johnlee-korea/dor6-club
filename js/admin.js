@@ -43,10 +43,19 @@ async function showAdminView() {
   await loadMemberList();
 }
 
-async function loadMemberList() {
+/* 명단 표시 — 등록·삭제 직후엔 Worker 응답의 최신 명단(fresh)을 그대로 그림.
+   그 외엔 Worker가 GitHub에서 바로 읽은 명단(Pages 재빌드 1~2분 지연 없음), 실패하면 사이트 파일로 대체 (v2.29.1) */
+async function loadMemberList(fresh) {
   const box = $("admin-members");
-  const file = await loadJSON("data/members.json").catch(() => null);
-  const members = (file && file.members) || [];
+  let members = fresh;
+  if (!members) {
+    const r = await auth.call("/members", { action: "list" }).catch((e) => { console.warn("[관리자] 명단 직접 조회 실패 — 사이트 파일 사용:", e); return null; });
+    if (r && Array.isArray(r.members)) members = r.members;
+  }
+  if (!members) {
+    const file = await loadJSON("data/members.json").catch(() => null);
+    members = (file && file.members) || [];
+  }
   if (!members.length) { box.innerHTML = emptyState("등록된 클럽원이 없습니다."); return; }
   box.innerHTML = members.map((m) => `
     <div class="member-row">
@@ -77,9 +86,9 @@ async function doAdd() {
     });
     if (r.error) { msg.innerHTML = err(r.error); }
     else {
-      msg.innerHTML = `<span style="color:var(--ok);">✅ '${escapeHtml(nickname)}' 등록 완료 (총 ${r.count}명). 사이트 반영까지 1~2분 걸릴 수 있습니다.</span>`;
-      $("new-nick").value = ""; $("new-talk").value = "";
-      await loadMemberList();
+      msg.innerHTML = `<span style="color:var(--ok);">✅ '${escapeHtml(nickname)}' 등록 완료 (총 ${r.count}명). 다른 화면(클럽원·판수) 반영은 1~2분, 전적은 다음 수집(2시간마다) 때 채워져요.</span>`;
+      $("new-nick").value = "";
+      await loadMemberList(r.members);
     }
   } catch (e) {
     msg.innerHTML = err(e.message);
@@ -93,7 +102,7 @@ async function doDelete(ouid, nick) {
   try {
     const r = await auth.call("/members", { action: "delete", ouid });
     if (r.error) alert(r.error);
-    else await loadMemberList();
+    else await loadMemberList(r.members);
   } catch (e) { alert(e.message); }
 }
 
