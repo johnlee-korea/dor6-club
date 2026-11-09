@@ -1,6 +1,6 @@
 {
   "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
-  "updated": "2026-11-09T10:06:47.779Z",
+  "updated": "2026-11-09T12:06:02.079Z",
   "knownMatchIds": [
     "6ab3bcd2f9dbb1480cc2d2ed",
     "6ab3b9747d3e2a70ac8e8a5c",
@@ -388,9 +388,165 @@
     "6af1820ee7af4e51b0322a1c",
     "6af179406f2e0208d913eade",
     "6af17549641baba30635a2b2",
-    "6af1727789850a3a1c8d7eed"
+    "6af1727789850a3a1c8d7eed",
+    "6af18ccf114ecbf8db8d1304",
+    "6af17f5721efa0e01950b322"
   ],
   "matches": [
+    {
+      "matchId": "6af18ccf114ecbf8db8d1304",
+      "matchType": 50,
+      "matchDate": "2026-11-09T09:13:23",
+      "result": "lose",
+      "goalFor": 0,
+      "goalAgainst": 4,
+      "opponentOuid": "b78af592e3d2ca9eaf61a8bafefd38f1",
+      "opponentNick": "토끼는귀여워",
+      "stats": {
+        "possession": null,
+        "shootTotal": null,
+        "effectiveShoot": null,
+        "passTry": null,
+        "passSuccess": null,
+        "tackle": null,
+        "foul": null,
+        "corner": null
+      },
+      "lineup": [],
+      "oppLineup": [
+        {
+          "spId": 101000488,
+          "spPosition": 0,
+          "spGrade": 10
+        },
+        {
+          "spId": 861005454,
+          "spPosition": 8,
+          "spGrade": 11
+        },
+        {
+          "spId": 861007743,
+          "spPosition": 18,
+          "spGrade": 11
+        },
+        {
+          "spId": 877010704,
+          "spPosition": 26,
+          "spGrade": 10
+        },
+        {
+          "spId": 861011141,
+          "spPosition": 24,
+          "spGrade": 10
+        },
+        {
+          "spId": 852028765,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 868107715,
+          "spPosition": 4,
+          "spGrade": 10
+        },
+        {
+          "spId": 861121939,
+          "spPosition": 2,
+          "spGrade": 11
+        },
+        {
+          "spId": 836168473,
+          "spPosition": 28,
+          "spGrade": 10
+        },
+        {
+          "spId": 852191189,
+          "spPosition": 28,
+          "spGrade": 10
+        },
+        {
+          "spId": 508205659,
+          "spPosition": 28,
+          "spGrade": 3
+        },
+        {
+          "spId": 885206591,
+          "spPosition": 28,
+          "spGrade": 10
+        },
+        {
+          "spId": 863210514,
+          "spPosition": 28,
+          "spGrade": 9
+        },
+        {
+          "spId": 863234396,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 863237086,
+          "spPosition": 6,
+          "spGrade": 10
+        },
+        {
+          "spId": 836256079,
+          "spPosition": 28,
+          "spGrade": 2
+        },
+        {
+          "spId": 861261593,
+          "spPosition": 5,
+          "spGrade": 11
+        },
+        {
+          "spId": 856275298,
+          "spPosition": 9,
+          "spGrade": 10
+        }
+      ],
+      "styleRaw": {
+        "end": 2,
+        "pos": 0,
+        "rt": 0,
+        "dr": 0,
+        "off": 0,
+        "ck": 0,
+        "fl": 0,
+        "cd": 0,
+        "pT": 0,
+        "pS": 0,
+        "spT": 0,
+        "lpT": 0,
+        "tpT": 0,
+        "lobT": 0,
+        "sT": 0,
+        "eS": 0,
+        "g": 0,
+        "gH": 0,
+        "sO": 0,
+        "gO": 0,
+        "gI": 0,
+        "gSet": 0,
+        "tT": 0,
+        "tS": 0,
+        "bT": 0,
+        "ga": 4
+      },
+      "ctrl": null,
+      "cards": {
+        "y": 0,
+        "r": 0
+      },
+      "pStats": [],
+      "shots": [],
+      "oppGoals": [
+        165,
+        929,
+        2728,
+        4031
+      ]
+    },
     {
       "matchId": "6af184f1f89e8d6e4ab92e1b",
       "matchType": 50,
@@ -1163,6 +1319,340 @@
           6,
           848009676,
           851192883
+        ]
+      ],
+      "oppGoals": []
+    },
+    {
+      "matchId": "6af17f5721efa0e01950b322",
+      "matchType": 60,
+      "matchDate": "2026-11-09T08:12:51",
+      "result": "win",
+      "goalFor": 1,
+      "goalAgainst": 0,
+      "opponentOuid": null,
+      "opponentNick": null,
+      "stats": {
+        "possession": 53,
+        "shootTotal": 2,
+        "effectiveShoot": 1,
+        "passTry": 53,
+        "passSuccess": 47,
+        "tackle": 2,
+        "foul": 0,
+        "corner": 0
+      },
+      "lineup": [
+        {
+          "spId": 848001041,
+          "spPosition": 11,
+          "spGrade": 11
+        },
+        {
+          "spId": 861004000,
+          "spPosition": 12,
+          "spGrade": 11
+        },
+        {
+          "spId": 848009676,
+          "spPosition": 28,
+          "spGrade": 10
+        },
+        {
+          "spId": 322018122,
+          "spPosition": 28,
+          "spGrade": 1
+        },
+        {
+          "spId": 868107715,
+          "spPosition": 4,
+          "spGrade": 9
+        },
+        {
+          "spId": 861140601,
+          "spPosition": 6,
+          "spGrade": 11
+        },
+        {
+          "spId": 324157888,
+          "spPosition": 28,
+          "spGrade": 1
+        },
+        {
+          "spId": 848180930,
+          "spPosition": 25,
+          "spGrade": 9
+        },
+        {
+          "spId": 840184392,
+          "spPosition": 7,
+          "spGrade": 10
+        },
+        {
+          "spId": 324190947,
+          "spPosition": 28,
+          "spGrade": 1
+        },
+        {
+          "spId": 868191189,
+          "spPosition": 18,
+          "spGrade": 11
+        },
+        {
+          "spId": 851192883,
+          "spPosition": 16,
+          "spGrade": 10
+        },
+        {
+          "spId": 846210514,
+          "spPosition": 3,
+          "spGrade": 9
+        },
+        {
+          "spId": 324223709,
+          "spPosition": 28,
+          "spGrade": 1
+        },
+        {
+          "spId": 848224232,
+          "spPosition": 9,
+          "spGrade": 11
+        },
+        {
+          "spId": 856235840,
+          "spPosition": 0,
+          "spGrade": 9
+        },
+        {
+          "spId": 856237383,
+          "spPosition": 28,
+          "spGrade": 8
+        },
+        {
+          "spId": 323243397,
+          "spPosition": 28,
+          "spGrade": 1
+        }
+      ],
+      "oppLineup": [],
+      "styleRaw": {
+        "end": 1,
+        "pos": 53,
+        "rt": 3.82778,
+        "dr": 42,
+        "off": 1,
+        "ck": 0,
+        "fl": 0,
+        "cd": 0,
+        "pT": 53,
+        "pS": 47,
+        "spT": 40,
+        "lpT": 1,
+        "tpT": 3,
+        "lobT": 0,
+        "sT": 2,
+        "eS": 1,
+        "g": 1,
+        "gH": 0,
+        "sO": 1,
+        "gO": 0,
+        "gI": 1,
+        "gSet": 0,
+        "tT": 3,
+        "tS": 2,
+        "bT": 1,
+        "ga": 0
+      },
+      "ctrl": "gamepad",
+      "cards": {
+        "y": 0,
+        "r": 0
+      },
+      "pStats": [
+        [
+          848001041,
+          11,
+          1,
+          0,
+          7.5,
+          1,
+          8,
+          8,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          861004000,
+          12,
+          0,
+          0,
+          5.9,
+          1,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          868107715,
+          4,
+          0,
+          0,
+          5.4,
+          0,
+          2,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          861140601,
+          6,
+          0,
+          0,
+          6,
+          0,
+          2,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          848180930,
+          25,
+          0,
+          1,
+          7.2,
+          0,
+          8,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          840184392,
+          7,
+          0,
+          0,
+          6.8,
+          0,
+          7,
+          6,
+          0,
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          868191189,
+          18,
+          0,
+          0,
+          6.2,
+          0,
+          6,
+          5,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          851192883,
+          16,
+          0,
+          0,
+          5.9,
+          0,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          846210514,
+          3,
+          0,
+          0,
+          5.6,
+          0,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          848224232,
+          9,
+          0,
+          0,
+          6.6,
+          0,
+          5,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          856235840,
+          0,
+          0,
+          0,
+          5.8,
+          0,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "shots": [
+        [
+          1203,
+          0.83,
+          0.57,
+          2,
+          1,
+          861004000,
+          848001041
+        ],
+        [
+          1566,
+          0.88,
+          0.48,
+          3,
+          1,
+          848001041,
+          848180930
         ]
       ],
       "oppGoals": []
