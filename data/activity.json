@@ -1,15 +1,8 @@
 {
-  "updated": "2026-11-09T08:08:06.747Z",
+  "updated": "2026-11-09T10:09:02.823Z",
   "week": {
-    "from": "2026-11-02T08:08:06.747Z",
+    "from": "2026-11-02T10:09:02.823Z",
     "rows": [
-      {
-        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
-        "nick": "커벌",
-        "games": 113,
-        "wins": 68,
-        "winRate": 60
-      },
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
@@ -18,17 +11,24 @@
         "winRate": 41
       },
       {
-        "ouid": "b80a06acac01ad21b0aa609c2699d58b",
-        "nick": "Dor6똘콩스",
-        "games": 95,
-        "wins": 42,
-        "winRate": 44
+        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
+        "nick": "커벌",
+        "games": 104,
+        "wins": 65,
+        "winRate": 63
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "문선생",
         "games": 92,
         "wins": 39,
+        "winRate": 42
+      },
+      {
+        "ouid": "b80a06acac01ad21b0aa609c2699d58b",
+        "nick": "Dor6똘콩스",
+        "games": 88,
+        "wins": 37,
         "winRate": 42
       },
       {
@@ -274,18 +274,18 @@
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
-      "games": 382,
+      "games": 387,
       "form": [
         "win",
-        "draw",
-        "win",
         "lose",
         "lose",
         "win",
+        "lose",
         "win",
         "draw",
         "win",
-        "win"
+        "lose",
+        "lose"
       ],
       "streak": {
         "type": "win",
@@ -522,22 +522,22 @@
       }
     },
     "49f604d3f58f5f607234ef60c584326a": {
-      "games": 317,
+      "games": 320,
       "form": [
         "lose",
+        "draw",
+        "lose",
+        "lose",
         "lose",
         "win",
         "win",
         "win",
         "win",
-        "win",
-        "win",
-        "lose",
         "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 2
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
@@ -706,8 +706,9 @@
       }
     },
     "f8744e3b6044a3e44de9764d3d3ef81c": {
-      "games": 334,
+      "games": 335,
       "form": [
+        "lose",
         "lose",
         "draw",
         "lose",
@@ -716,12 +717,11 @@
         "lose",
         "win",
         "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 1
+        "n": 2
       },
       "rivals": {
         "nemesis": null,
