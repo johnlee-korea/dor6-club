@@ -1,14 +1,14 @@
 {
-  "updated": "2026-11-10T00:08:20.265Z",
+  "updated": "2026-11-10T02:09:02.604Z",
   "week": {
-    "from": "2026-11-03T00:08:20.265Z",
+    "from": "2026-11-03T02:09:02.604Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 107,
-        "wins": 42,
-        "winRate": 39
+        "games": 108,
+        "wins": 45,
+        "winRate": 42
       },
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
@@ -27,16 +27,16 @@
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
         "nick": "Dor6똘콩스",
-        "games": 85,
-        "wins": 35,
+        "games": 87,
+        "wins": 36,
         "winRate": 41
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "games": 77,
+        "games": 73,
         "wins": 36,
-        "winRate": 47
+        "winRate": 49
       }
     ]
   },
@@ -793,8 +793,10 @@
       }
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 687,
+      "games": 689,
       "form": [
+        "win",
+        "draw",
         "draw",
         "win",
         "draw",
@@ -802,11 +804,12 @@
         "win",
         "win",
         "win",
-        "win",
-        "lose",
         "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -1045,20 +1048,23 @@
       }
     },
     "9052276188238316b9fc057307e0d58c": {
-      "games": 514,
+      "games": 519,
       "form": [
+        "win",
+        "win",
+        "lose",
+        "win",
+        "win",
         "draw",
         "lose",
         "lose",
         "win",
-        "lose",
-        "draw",
-        "win",
-        "lose",
-        "win",
-        "draw"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 2
+      },
       "rivals": {
         "nemesis": {
           "ouid": "404c9f3ff9c66b4fb37b08c3ea1860a6",
