@@ -1,14 +1,14 @@
 {
-  "updated": "2026-11-11T06:08:17.190Z",
+  "updated": "2026-11-11T07:12:29.588Z",
   "week": {
-    "from": "2026-11-04T06:08:17.190Z",
+    "from": "2026-11-04T07:12:29.588Z",
     "rows": [
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "커벌",
-        "games": 109,
-        "wins": 65,
-        "winRate": 60
+        "games": 114,
+        "wins": 66,
+        "winRate": 58
       },
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -547,22 +547,22 @@
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
-      "games": 597,
+      "games": 601,
       "form": [
+        "lose",
+        "win",
+        "win",
+        "win",
         "win",
         "win",
         "draw",
         "win",
         "win",
-        "win",
-        "win",
-        "win",
-        "win",
         "win"
       ],
       "streak": {
-        "type": "win",
-        "n": 2
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": {
@@ -988,8 +988,9 @@
       }
     },
     "40e7eb538cbc1bf73403ace3a75e403b": {
-      "games": 384,
+      "games": 385,
       "form": [
+        "win",
         "draw",
         "lose",
         "lose",
@@ -998,10 +999,12 @@
         "lose",
         "lose",
         "lose",
-        "lose",
-        "win"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
@@ -1148,22 +1151,22 @@
       }
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
-      "games": 542,
+      "games": 547,
       "form": [
         "lose",
-        "lose",
-        "win",
-        "win",
-        "lose",
-        "win",
-        "lose",
-        "lose",
         "draw",
-        "win"
+        "win",
+        "lose",
+        "lose",
+        "lose",
+        "lose",
+        "win",
+        "win",
+        "lose"
       ],
       "streak": {
         "type": "lose",
-        "n": 2
+        "n": 1
       },
       "rivals": {
         "nemesis": {
