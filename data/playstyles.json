@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11T02:07:54.354Z",
+  "updated": "2026-11-11T04:09:44.603Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1738,40 +1738,40 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "깃발 수집가",
-        "line": "골보다 오프사이드 깃발이 더 많다",
+        "name": "측면 끝 슈터",
+        "line": "측면 깊숙이 들어가서 직접 해결",
         "basis": [
-          "offside+",
-          "gf-"
+          "wideShot+",
+          "lobRatio-"
         ]
       },
       "highs": [
         {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.157,
-          "avg": 0.08,
-          "z": 1.32,
-          "key": false
-        },
-        {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.374,
+          "v": 0.39,
           "avg": 0.284,
-          "z": 1.16,
+          "z": 1.36,
+          "key": true
+        },
+        {
+          "k": "volley",
+          "label": "발리 비율",
+          "unit": "%",
+          "v": 0.152,
+          "avg": 0.08,
+          "z": 1.24,
           "key": false
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.7,
+          "v": 0.68,
           "avg": 0.46,
-          "z": 1.04,
-          "key": true
+          "z": 0.95,
+          "key": false
         }
       ],
       "lows": [
@@ -1779,28 +1779,28 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.567,
+          "v": 0.57,
           "avg": 0.707,
-          "z": -1.79,
+          "z": -1.76,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.38,
+          "v": 2.42,
           "avg": 3.208,
-          "z": -1.33,
-          "key": true
+          "z": -1.26,
+          "key": false
         },
         {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
+          "k": "lobRatio",
+          "label": "띄우는 패스 비율",
           "unit": "%",
-          "v": 0.081,
-          "avg": 0.139,
-          "z": -1.28,
-          "key": false
+          "v": 0.001,
+          "avg": 0.011,
+          "z": -1.26,
+          "key": true
         }
       ]
     },
@@ -2010,6 +2010,75 @@
           "avg": 0.302,
           "z": -0.83,
           "key": true
+        }
+      ]
+    },
+    "993ae7920a134632d65834e680e11b78": {
+      "games": 48,
+      "style": {
+        "name": "로또 롱패스",
+        "line": "멀리 차고 기도한다",
+        "basis": [
+          "longRatio+",
+          "passRate-"
+        ]
+      },
+      "highs": [
+        {
+          "k": "ga",
+          "label": "경기당 실점",
+          "unit": "",
+          "v": 3.479,
+          "avg": 2.411,
+          "z": 1.87,
+          "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.559,
+          "avg": 0.462,
+          "z": 1.55,
+          "key": false
+        },
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.102,
+          "avg": 0.057,
+          "z": 1.53,
+          "key": true
+        }
+      ],
+      "lows": [
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.861,
+          "avg": 0.888,
+          "z": -1.33,
+          "key": true
+        },
+        {
+          "k": "dribble",
+          "label": "경기당 드리블",
+          "unit": "",
+          "v": 64.729,
+          "avg": 77.226,
+          "z": -1.31,
+          "key": false
+        },
+        {
+          "k": "poss",
+          "label": "점유율",
+          "unit": "avg%",
+          "v": 47.125,
+          "avg": 50.791,
+          "z": -1.28,
+          "key": false
         }
       ]
     }
