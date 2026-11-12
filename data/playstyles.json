@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-12T18:09:16.707Z",
+  "updated": "2026-11-12T20:09:30.052Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -695,69 +695,71 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "신중한 저격수",
-        "line": "아껴 쏘는 만큼 골문 안으로",
+        "name": "무소음 공격",
+        "line": "슈팅도 코너킥도 골도 조용",
         "basis": [
           "shots-",
-          "effRate+"
-        ]
+          "gf-",
+          "corner-"
+        ],
+        "rare": true
       },
       "highs": [
-        {
-          "k": "finesse",
-          "label": "감아차기 비율",
-          "unit": "%",
-          "v": 0.521,
-          "avg": 0.302,
-          "z": 1.92,
-          "key": false
-        },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.225,
+          "v": 0.23,
           "avg": 0.139,
-          "z": 1.87,
+          "z": 1.99,
+          "key": false
+        },
+        {
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.518,
+          "avg": 0.302,
+          "z": 1.89,
           "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.837,
+          "v": 0.835,
           "avg": 0.788,
-          "z": 1.07,
-          "key": true
+          "z": 1.05,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
-          "unit": "%",
-          "v": 0.138,
-          "avg": 0.284,
-          "z": -1.88,
-          "key": false
-        },
-        {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 5.02,
+          "v": 4.62,
           "avg": 6.966,
-          "z": -1.76,
+          "z": -2.12,
           "key": true
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 0.78,
+          "v": 0.74,
           "avg": 1.431,
-          "z": -1.62,
-          "key": false
+          "z": -1.72,
+          "key": true
+        },
+        {
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.14,
+          "avg": 3.208,
+          "z": -1.71,
+          "key": true
         }
       ]
     },
@@ -1734,11 +1736,11 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "측면 끝 슈터",
-        "line": "측면 깊숙이 들어가서 직접 해결",
+        "name": "깃발 수집가",
+        "line": "골보다 오프사이드 깃발이 더 많다",
         "basis": [
-          "wideShot+",
-          "lobRatio-"
+          "offside+",
+          "gf-"
         ]
       },
       "highs": [
@@ -1746,19 +1748,19 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.163,
+          "v": 0.167,
           "avg": 0.08,
-          "z": 1.41,
+          "z": 1.48,
           "key": false
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.392,
+          "v": 0.379,
           "avg": 0.284,
-          "z": 1.39,
-          "key": true
+          "z": 1.23,
+          "key": false
         },
         {
           "k": "offside",
@@ -1767,7 +1769,7 @@
           "v": 0.66,
           "avg": 0.46,
           "z": 0.86,
-          "key": false
+          "key": true
         }
       ],
       "lows": [
@@ -1775,28 +1777,28 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.57,
+          "v": 0.569,
           "avg": 0.707,
-          "z": -1.76,
+          "z": -1.78,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.42,
+          "v": 2.44,
           "avg": 3.208,
-          "z": -1.26,
-          "key": false
+          "z": -1.23,
+          "key": true
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
+          "k": "throughRatio",
+          "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.001,
-          "avg": 0.011,
-          "z": -1.24,
-          "key": true
+          "v": 0.083,
+          "avg": 0.139,
+          "z": -1.23,
+          "key": false
         }
       ]
     },
