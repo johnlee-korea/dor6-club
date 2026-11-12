@@ -1,21 +1,21 @@
 {
-  "updated": "2026-11-12T10:09:06.693Z",
+  "updated": "2026-11-12T12:09:13.523Z",
   "week": {
-    "from": "2026-11-05T10:09:06.693Z",
+    "from": "2026-11-05T12:09:13.523Z",
     "rows": [
-      {
-        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
-        "nick": "커벌",
-        "games": 116,
-        "wins": 70,
-        "winRate": 60
-      },
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
         "games": 113,
         "wins": 41,
         "winRate": 36
+      },
+      {
+        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
+        "nick": "커벌",
+        "games": 109,
+        "wins": 65,
+        "winRate": 60
       },
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
@@ -27,9 +27,9 @@
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
         "nick": "Dor6똘콩스",
-        "games": 73,
-        "wins": 39,
-        "winRate": 53
+        "games": 74,
+        "wins": 40,
+        "winRate": 54
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -641,43 +641,46 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 326,
+      "games": 331,
       "form": [
+        "lose",
+        "win",
+        "draw",
+        "lose",
         "draw",
         "lose",
         "lose",
-        "win",
-        "win",
         "lose",
-        "draw",
         "win",
-        "win",
-        "draw"
+        "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "b80a06acac01ad21b0aa609c2699d58b",
           "nick": "Dor6똘콩스",
-          "games": 9,
+          "games": 12,
           "win": 0,
           "draw": 4,
-          "lose": 5,
-          "rate": 15
+          "lose": 8,
+          "rate": 11
         },
         "prey": null,
         "frequent": [
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
             "nick": "Dor6똘콩스",
-            "games": 9,
+            "games": 12,
             "win": 0,
             "draw": 4,
-            "lose": 5,
-            "rate": 15
+            "lose": 8,
+            "rate": 11
           }
         ],
-        "internalGames": 9
+        "internalGames": 13
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -799,18 +802,18 @@
       }
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
-      "games": 716,
+      "games": 719,
       "form": [
         "draw",
         "win",
+        "win",
+        "draw",
+        "win",
         "draw",
         "win",
         "win",
         "win",
-        "win",
-        "win",
-        "lose",
-        "lose"
+        "win"
       ],
       "streak": null,
       "rivals": {
@@ -845,11 +848,11 @@
           {
             "ouid": "10512ddbc79f7b043f02f62eac238b37",
             "nick": "좌약먹은고릴라",
-            "games": 23,
+            "games": 24,
             "win": 14,
-            "draw": 3,
+            "draw": 4,
             "lose": 6,
-            "rate": 65
+            "rate": 64
           },
           {
             "ouid": "0ec85bc04c006744f49a284cd624bbbb",
@@ -861,7 +864,7 @@
             "rate": 51
           }
         ],
-        "internalGames": 209
+        "internalGames": 212
       }
     },
     "f607127b51dcfb4f0339aaaf638e70d8": {
@@ -1123,9 +1126,10 @@
       }
     },
     "980d209770b51f1cc39d22e82cb2d01c": {
-      "games": 317,
+      "games": 321,
       "form": [
         "win",
+        "draw",
         "win",
         "lose",
         "win",
@@ -1133,12 +1137,11 @@
         "lose",
         "win",
         "win",
-        "win",
-        "win"
+        "lose"
       ],
       "streak": {
         "type": "win",
-        "n": 2
+        "n": 1
       },
       "rivals": {
         "nemesis": null,
@@ -1217,20 +1220,23 @@
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 186,
+      "games": 189,
       "form": [
+        "lose",
+        "draw",
+        "lose",
         "draw",
         "lose",
         "lose",
         "lose",
         "lose",
         "win",
-        "lose",
-        "win",
-        "win",
         "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -1254,9 +1260,9 @@
           {
             "ouid": "b80a06acac01ad21b0aa609c2699d58b",
             "nick": "Dor6똘콩스",
-            "games": 23,
+            "games": 24,
             "win": 7,
-            "draw": 5,
+            "draw": 6,
             "lose": 11,
             "rate": 38
           },
@@ -1279,7 +1285,7 @@
             "rate": 75
           }
         ],
-        "internalGames": 50
+        "internalGames": 52
       }
     },
     "993ae7920a134632d65834e680e11b78": {
