@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-13T06:09:06.862Z",
+  "updated": "2026-11-13T07:21:47.275Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -709,27 +709,27 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.23,
+          "v": 0.228,
           "avg": 0.139,
-          "z": 1.99,
+          "z": 1.95,
           "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.518,
+          "v": 0.509,
           "avg": 0.302,
-          "z": 1.89,
+          "z": 1.81,
           "key": false
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.835,
-          "avg": 0.788,
-          "z": 1.05,
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.66,
+          "avg": 0.46,
+          "z": 0.86,
           "key": false
         }
       ],
@@ -744,21 +744,21 @@
           "key": true
         },
         {
-          "k": "corner",
-          "label": "코너킥",
-          "unit": "",
-          "v": 0.74,
-          "avg": 1.431,
-          "z": -1.72,
-          "key": true
-        },
-        {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.14,
+          "v": 2.1,
           "avg": 3.208,
-          "z": -1.71,
+          "z": -1.78,
+          "key": true
+        },
+        {
+          "k": "corner",
+          "label": "코너킥",
+          "unit": "",
+          "v": 0.76,
+          "avg": 1.431,
+          "z": -1.67,
           "key": true
         }
       ]
