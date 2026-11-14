@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-14T10:08:27.124Z",
+  "updated": "2026-11-14T12:08:07.452Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -356,9 +356,9 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.236,
+          "v": 0.229,
           "avg": 0.179,
-          "z": 0.84,
+          "z": 0.74,
           "key": true
         },
         {
@@ -371,12 +371,12 @@
           "key": false
         },
         {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
+          "k": "volley",
+          "label": "발리 비율",
           "unit": "%",
-          "v": 0.164,
-          "avg": 0.139,
-          "z": 0.53,
+          "v": 0.118,
+          "avg": 0.08,
+          "z": 0.65,
           "key": false
         }
       ],
@@ -385,27 +385,27 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.726,
+          "v": 0.725,
           "avg": 0.788,
-          "z": -1.39,
+          "z": -1.4,
           "key": true
         },
         {
-          "k": "finish",
-          "label": "결정력",
+          "k": "passRate",
+          "label": "패스 성공률",
           "unit": "%",
-          "v": 0.402,
-          "avg": 0.462,
-          "z": -0.96,
+          "v": 0.87,
+          "avg": 0.888,
+          "z": -0.87,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.6,
+          "v": 3.62,
           "avg": 4.33,
-          "z": -0.85,
+          "z": -0.83,
           "key": false
         }
       ]
@@ -918,48 +918,48 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.236,
+          "v": 0.241,
           "avg": 0.101,
-          "z": 1.8,
-          "key": false
-        },
-        {
-          "k": "passRate",
-          "label": "패스 성공률",
-          "unit": "%",
-          "v": 0.908,
-          "avg": 0.888,
-          "z": 0.96,
+          "z": 1.88,
           "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 53.42,
+          "v": 53.46,
           "avg": 50.791,
-          "z": 0.92,
+          "z": 0.93,
           "key": true
+        },
+        {
+          "k": "passRate",
+          "label": "패스 성공률",
+          "unit": "%",
+          "v": 0.907,
+          "avg": 0.888,
+          "z": 0.91,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.73,
-          "avg": 0.788,
-          "z": -1.29,
-          "key": false
-        },
-        {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 11.16,
+          "v": 11.3,
           "avg": 16.007,
-          "z": -1.25,
+          "z": -1.21,
           "key": true
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.736,
+          "avg": 0.788,
+          "z": -1.17,
+          "key": false
         },
         {
           "k": "headGoal",

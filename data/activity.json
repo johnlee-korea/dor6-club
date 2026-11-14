@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-14T10:08:27.124Z",
+  "updated": "2026-11-14T12:08:07.452Z",
   "week": {
-    "from": "2026-11-07T10:08:27.124Z",
+    "from": "2026-11-07T12:08:07.452Z",
     "rows": [
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
@@ -249,20 +249,23 @@
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
-      "games": 148,
+      "games": 152,
       "form": [
+        "win",
+        "win",
+        "win",
+        "lose",
         "draw",
         "lose",
         "win",
         "lose",
         "lose",
-        "win",
-        "lose",
-        "lose",
-        "lose",
         "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 3
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -381,17 +384,17 @@
       }
     },
     "0c8289526c449f2aa5ad15b6bee772dc": {
-      "games": 233,
+      "games": 236,
       "form": [
+        "draw",
+        "win",
+        "lose",
         "draw",
         "win",
         "draw",
         "win",
         "win",
         "lose",
-        "win",
-        "win",
-        "win",
         "win"
       ],
       "streak": null,
@@ -538,22 +541,22 @@
       }
     },
     "0ec85bc04c006744f49a284cd624bbbb": {
-      "games": 627,
+      "games": 628,
       "form": [
         "win",
         "win",
         "win",
+        "win",
         "draw",
         "win",
         "win",
         "lose",
         "draw",
-        "lose",
         "lose"
       ],
       "streak": {
         "type": "win",
-        "n": 3
+        "n": 4
       },
       "rivals": {
         "nemesis": {
