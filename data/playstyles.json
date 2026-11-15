@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15T00:08:53.173Z",
+  "updated": "2026-11-15T02:08:11.452Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1747,15 +1747,6 @@
       },
       "highs": [
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
-          "unit": "%",
-          "v": 0.373,
-          "avg": 0.284,
-          "z": 1.14,
-          "key": false
-        },
-        {
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
@@ -1765,12 +1756,21 @@
           "key": false
         },
         {
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.366,
+          "avg": 0.284,
+          "z": 1.06,
+          "key": false
+        },
+        {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.174,
+          "v": 0.171,
           "avg": 0.101,
-          "z": 0.98,
+          "z": 0.93,
           "key": true
         }
       ],
@@ -1779,27 +1779,27 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.566,
+          "v": 0.567,
           "avg": 0.707,
-          "z": -1.81,
+          "z": -1.8,
           "key": false
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.078,
+          "v": 0.077,
           "avg": 0.139,
-          "z": -1.34,
+          "z": -1.35,
           "key": false
         },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.161,
+          "v": 0.168,
           "avg": 0.302,
-          "z": -1.23,
+          "z": -1.18,
           "key": true
         }
       ]
