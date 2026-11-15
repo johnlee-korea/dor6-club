@@ -1,20 +1,20 @@
 {
-  "updated": "2026-11-15T04:08:19.855Z",
+  "updated": "2026-11-15T06:10:28.950Z",
   "week": {
-    "from": "2026-11-08T04:08:19.855Z",
+    "from": "2026-11-08T06:10:28.950Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 136,
-        "wins": 54,
-        "winRate": 40
+        "games": 140,
+        "wins": 57,
+        "winRate": 41
       },
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "커벌",
-        "games": 129,
-        "wins": 69,
+        "games": 126,
+        "wins": 67,
         "winRate": 53
       },
       {
@@ -27,9 +27,9 @@
       {
         "ouid": "f3804c4f7f55e85ed62f2732aa40eb33",
         "nick": "문선생",
-        "games": 84,
+        "games": 82,
         "wins": 42,
-        "winRate": 50
+        "winRate": 51
       },
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
@@ -180,8 +180,10 @@
       }
     },
     "ec6b3d922b94994ccd28de27367cf479": {
-      "games": 498,
+      "games": 500,
       "form": [
+        "win",
+        "win",
         "lose",
         "win",
         "lose",
@@ -189,13 +191,11 @@
         "draw",
         "win",
         "win",
-        "win",
-        "win",
-        "lose"
+        "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 1
+        "type": "win",
+        "n": 2
       },
       "rivals": {
         "nemesis": {
@@ -678,9 +678,18 @@
             "draw": 4,
             "lose": 8,
             "rate": 11
+          },
+          {
+            "ouid": "86f3d0f045dea76d5db1c114d38c8c0d",
+            "nick": "ACE호날두",
+            "games": 5,
+            "win": 2,
+            "draw": 0,
+            "lose": 3,
+            "rate": 40
           }
         ],
-        "internalGames": 14
+        "internalGames": 19
       }
     },
     "8d32fed0280eb81bcf6bed6405a278d3": {
@@ -749,31 +758,6 @@
           }
         ],
         "internalGames": 6
-      }
-    },
-    "75278aef5ddb1cb75d88dd114f68f0ab": {
-      "games": 88,
-      "form": [
-        "lose",
-        "win",
-        "lose",
-        "win",
-        "win",
-        "win",
-        "win",
-        "win",
-        "win",
-        "win"
-      ],
-      "streak": {
-        "type": "lose",
-        "n": 1
-      },
-      "rivals": {
-        "nemesis": null,
-        "prey": null,
-        "frequent": [],
-        "internalGames": 0
       }
     },
     "b578e892bd97681f0d6bfbb1106d803a": {
@@ -1057,22 +1041,22 @@
       }
     },
     "9052276188238316b9fc057307e0d58c": {
-      "games": 610,
+      "games": 614,
       "form": [
         "win",
+        "win",
+        "win",
+        "draw",
+        "win",
         "lose",
         "win",
         "lose",
         "lose",
-        "lose",
-        "lose",
-        "win",
-        "win",
         "lose"
       ],
       "streak": {
         "type": "win",
-        "n": 1
+        "n": 3
       },
       "rivals": {
         "nemesis": {
@@ -1151,8 +1135,9 @@
       }
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
-      "games": 610,
+      "games": 611,
       "form": [
+        "lose",
         "lose",
         "win",
         "lose",
@@ -1161,12 +1146,11 @@
         "draw",
         "win",
         "lose",
-        "win",
         "win"
       ],
       "streak": {
         "type": "lose",
-        "n": 1
+        "n": 2
       },
       "rivals": {
         "nemesis": {
@@ -1311,6 +1295,46 @@
         "prey": null,
         "frequent": [],
         "internalGames": 3
+      }
+    },
+    "86f3d0f045dea76d5db1c114d38c8c0d": {
+      "games": 115,
+      "form": [
+        "draw",
+        "win",
+        "lose",
+        "win",
+        "draw",
+        "lose",
+        "win",
+        "win",
+        "lose",
+        "lose"
+      ],
+      "streak": null,
+      "rivals": {
+        "nemesis": null,
+        "prey": {
+          "ouid": "001221eab7f2c49f8571511731cc2573",
+          "nick": "ThomasTohell",
+          "games": 5,
+          "win": 3,
+          "draw": 0,
+          "lose": 2,
+          "rate": 60
+        },
+        "frequent": [
+          {
+            "ouid": "001221eab7f2c49f8571511731cc2573",
+            "nick": "ThomasTohell",
+            "games": 5,
+            "win": 3,
+            "draw": 0,
+            "lose": 2,
+            "rate": 60
+          }
+        ],
+        "internalGames": 5
       }
     }
   }
