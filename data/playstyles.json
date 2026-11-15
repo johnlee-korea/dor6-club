@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15T12:09:12.201Z",
+  "updated": "2026-11-15T14:08:20.224Z",
   "baselineUpdated": "2026-11-01T22:30:34.902Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1680,27 +1680,27 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.356,
+          "v": 0.363,
           "avg": 0.284,
-          "z": 0.92,
-          "key": false
-        },
-        {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.131,
-          "avg": 0.08,
-          "z": 0.88,
+          "z": 1.01,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.949,
+          "v": 0.947,
           "avg": 0.904,
-          "z": 0.77,
+          "z": 0.74,
+          "key": false
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.62,
+          "avg": 0.46,
+          "z": 0.69,
           "key": false
         }
       ],
@@ -1709,26 +1709,26 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.566,
+          "v": 0.559,
           "avg": 0.707,
-          "z": -1.81,
+          "z": -1.9,
           "key": true
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.14,
+          "v": 3.08,
           "avg": 4.33,
-          "z": -1.38,
+          "z": -1.45,
           "key": false
         },
         {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
+          "k": "effRate",
+          "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.085,
-          "avg": 0.139,
+          "v": 0.735,
+          "avg": 0.788,
           "z": -1.18,
           "key": false
         }
