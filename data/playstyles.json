@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16T18:08:32.152Z",
+  "updated": "2026-11-16T20:08:59.061Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -413,12 +413,14 @@
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "games": 50,
       "style": {
-        "name": "공이 곧 수비",
-        "line": "뺏길 일이 없으니 태클할 일도 없다",
+        "name": "박물관 티키타카",
+        "line": "공은 실컷 돌리는데 슈팅은 전시용",
         "basis": [
           "poss+",
-          "tackleTry-"
-        ]
+          "shortRatio+",
+          "shots-"
+        ],
+        "rare": true
       },
       "highs": [
         {
@@ -434,9 +436,9 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 52.94,
+          "v": 52.72,
           "avg": 50.483,
-          "z": 0.86,
+          "z": 0.79,
           "key": true
         },
         {
@@ -446,7 +448,7 @@
           "v": 0.764,
           "avg": 0.701,
           "z": 0.77,
-          "key": false
+          "key": true
         }
       ],
       "lows": [
@@ -454,28 +456,28 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.84,
+          "v": 9.74,
           "avg": 16.254,
-          "z": -1.49,
-          "key": true
+          "z": -1.51,
+          "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.5,
+          "v": 2.48,
           "avg": 3.183,
-          "z": -1.18,
+          "z": -1.22,
           "key": false
         },
         {
-          "k": "foul",
-          "label": "파울",
+          "k": "shots",
+          "label": "경기당 슈팅",
           "unit": "",
-          "v": 0.64,
-          "avg": 0.939,
-          "z": -1.02,
-          "key": false
+          "v": 5.58,
+          "avg": 6.646,
+          "z": -0.95,
+          "key": true
         }
       ]
     },
@@ -766,40 +768,42 @@
     "c4d139e665756377869b9a9dfc998e6b": {
       "games": 50,
       "style": {
-        "name": "패스 생략 슈팅",
-        "line": "패스 대신 슈팅, 일단 쏜다",
+        "name": "돌격 일변도",
+        "line": "패스는 대충, 라인은 무시, 슈팅은 무조건",
         "basis": [
           "shots+",
+          "offside+",
           "passRate-"
-        ]
+        ],
+        "rare": true
       },
       "highs": [
         {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 8.44,
+          "v": 8.32,
           "avg": 6.646,
-          "z": 1.6,
+          "z": 1.49,
           "key": true
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 2.06,
+          "v": 2.08,
           "avg": 1.395,
-          "z": 1.42,
+          "z": 1.47,
           "key": false
         },
         {
-          "k": "tackleTry",
-          "label": "태클 시도",
+          "k": "offside",
+          "label": "오프사이드",
           "unit": "",
-          "v": 21.32,
-          "avg": 16.254,
-          "z": 1.18,
-          "key": false
+          "v": 0.78,
+          "avg": 0.472,
+          "z": 1.42,
+          "key": true
         }
       ],
       "lows": [
@@ -807,27 +811,27 @@
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.823,
+          "v": 0.824,
           "avg": 0.889,
-          "z": -3.1,
+          "z": -3.07,
           "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.336,
+          "v": 0.334,
           "avg": 0.483,
-          "z": -2.11,
+          "z": -2.15,
           "key": false
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.174,
+          "v": 0.17,
           "avg": 0.284,
-          "z": -1.48,
+          "z": -1.54,
           "key": false
         }
       ]

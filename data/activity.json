@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-16T18:08:32.152Z",
+  "updated": "2026-11-16T20:08:59.061Z",
   "week": {
-    "from": "2026-11-09T18:08:32.152Z",
+    "from": "2026-11-09T20:08:59.061Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -27,9 +27,9 @@
       {
         "ouid": "e09247d71b35284f7ac9ed156f9d74bf",
         "nick": "Dor6진저맨",
-        "games": 75,
+        "games": 76,
         "wins": 39,
-        "winRate": 52
+        "winRate": 51
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -274,8 +274,9 @@
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
-      "games": 464,
+      "games": 465,
       "form": [
+        "lose",
         "win",
         "draw",
         "win",
@@ -284,11 +285,10 @@
         "win",
         "draw",
         "lose",
-        "lose",
-        "win"
+        "lose"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
@@ -500,18 +500,18 @@
       }
     },
     "c4d139e665756377869b9a9dfc998e6b": {
-      "games": 163,
+      "games": 168,
       "form": [
         "lose",
         "win",
         "lose",
-        "lose",
         "draw",
         "draw",
         "lose",
         "win",
-        "win",
-        "lose"
+        "lose",
+        "lose",
+        "draw"
       ],
       "streak": {
         "type": "lose",
