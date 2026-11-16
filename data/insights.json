@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16T20:08:59.061Z",
+  "updated": "2026-11-16T22:09:23.316Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -2975,100 +2975,97 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 26,
+      "games": 29,
       "ace": [
         {
           "spId": 100214101,
           "group": "W",
           "pos": 16,
-          "games": 11,
+          "games": 14,
           "metric": "ast",
-          "value": 1.09,
+          "value": 0.93,
           "base": 0.5,
-          "z": 1.95,
+          "z": 1.41,
           "title": {
             "emoji": "🎯",
             "name": "킬패스 장인"
           },
           "goals": 1,
-          "assists": 12
-        },
-        {
-          "spId": 868045674,
-          "group": "DM",
-          "pos": 9,
-          "games": 11,
-          "metric": "rt",
-          "value": 7.7,
-          "base": 7.05,
-          "z": 1.66,
-          "title": {
-            "emoji": "⭐",
-            "name": "믿을맨"
-          },
-          "goals": 5,
-          "assists": 2
+          "assists": 13
         },
         {
           "spId": 886214098,
           "group": "DM",
           "pos": 11,
-          "games": 11,
+          "games": 14,
           "metric": "win",
-          "value": 3.55,
+          "value": 3.29,
           "base": 2.5,
-          "z": 1.66,
+          "z": 1.24,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
           },
           "goals": 1,
           "assists": 1
+        },
+        {
+          "spId": 868045674,
+          "group": "DM",
+          "pos": 9,
+          "games": 14,
+          "metric": "int",
+          "value": 1.29,
+          "base": 0.92,
+          "z": 0.98,
+          "title": null,
+          "goals": 5,
+          "assists": 2
         }
       ],
       "goalMins": {
         "for": [
-          8,
-          10,
-          8,
+          9,
+          11,
+          9,
           16,
           14,
-          10,
+          12,
           3
         ],
         "against": [
-          6,
+          8,
           5,
-          7,
-          13,
-          9,
-          7,
+          8,
+          15,
+          11,
+          8,
           1
         ]
       },
-      "comebacks": 5,
-      "lateWinners": 1,
+      "comebacks": 6,
+      "lateWinners": 2,
       "manner": {
-        "games": 26,
-        "yellow": 0,
+        "games": 29,
+        "yellow": 2,
         "red": 0,
-        "foul": 26,
-        "score": 1
+        "foul": 31,
+        "score": 1.28
       },
       "guide": {
         "v": 2,
-        "games": 26,
+        "games": 29,
         "split": false,
         "minSide": 15,
         "wlMembers": 14,
-        "summary": "26경기 14승 5무 7패 (승률 54%) · 경기당 득점 2.7 · 실점 1.8. 가장 큰 무기는 경기당 실점, 가장 먼저 손볼 곳은 결정력이에요.",
+        "summary": "29경기 15승 5무 9패 (승률 52%) · 경기당 득점 2.6 · 실점 1.9. 가장 큰 무기는 경기당 실점, 가장 먼저 손볼 곳은 유효슈팅 비율이에요.",
         "strengths": [
           {
             "k": "ga",
             "label": "경기당 실점",
-            "v": "1.8",
+            "v": "1.9",
             "avg": "2.6",
-            "z": -1.32,
+            "z": -1.17,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3079,11 +3076,24 @@
         ],
         "weaknesses": [
           {
+            "k": "effRate",
+            "label": "유효슈팅 비율",
+            "v": "71%",
+            "avg": "80%",
+            "z": -1.59,
+            "win": null,
+            "lose": null,
+            "sig": false,
+            "cw": null,
+            "cl": null,
+            "text": "골문을 벗어나는 슈팅이 많아요. 수비가 붙은 상태·몸이 꺾인 상태의 슈팅을 줄여 보세요. 목표: 랭커 평균 80%."
+          },
+          {
             "k": "finish",
             "label": "결정력",
-            "v": "42%",
+            "v": "41%",
             "avg": "48%",
-            "z": -0.86,
+            "z": -1.1,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3103,19 +3113,6 @@
             "cw": null,
             "cl": null,
             "text": "세트피스 골이 적어요. 목표: 랭커 평균 0.1."
-          },
-          {
-            "k": "effRate",
-            "label": "유효슈팅 비율",
-            "v": "75%",
-            "avg": "80%",
-            "z": -0.81,
-            "win": null,
-            "lose": null,
-            "sig": false,
-            "cw": null,
-            "cl": null,
-            "text": "골문을 벗어나는 슈팅이 많아요. 수비가 붙은 상태·몸이 꺾인 상태의 슈팅을 줄여 보세요. 목표: 랭커 평균 80%."
           }
         ],
         "winSpecial": [],
@@ -3124,9 +3121,9 @@
           {
             "k": "headShot",
             "label": "헤더 슈팅 비율",
-            "v": "41%",
+            "v": "42%",
             "avg": "18%",
-            "z": 2.23,
+            "z": 2.35,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3137,9 +3134,9 @@
           {
             "k": "finesse",
             "label": "감아차기 비율",
-            "v": "7.1%",
+            "v": "6.9%",
             "avg": "30%",
-            "z": -1.86,
+            "z": -1.87,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3149,9 +3146,9 @@
           }
         ],
         "time": [
-          "실점이 46-60분에 가장 많아요 (실점 47골 중 13골, 28%).",
-          "득점이 46-60분에 가장 많아요 (득점 66골 중 16골, 24%).",
-          "역전승 5번 · 80분 이후 결승골(극장골) 1번."
+          "실점이 46-60분에 가장 많아요 (실점 55골 중 15골, 27%).",
+          "득점이 46-60분에 가장 많아요 (득점 71골 중 16골, 23%).",
+          "역전승 6번 · 80분 이후 결승골(극장골) 2번."
         ]
       }
     },
@@ -4701,6 +4698,15 @@
         "score": 1.36
       },
       {
+        "ouid": "b80a06acac01ad21b0aa609c2699d58b",
+        "nick": "Dor6똘콩스",
+        "games": 29,
+        "yellow": 2,
+        "red": 0,
+        "foul": 31,
+        "score": 1.28
+      },
+      {
         "ouid": "980d209770b51f1cc39d22e82cb2d01c",
         "nick": "FaceID",
         "games": 90,
@@ -4708,15 +4714,6 @@
         "red": 0,
         "foul": 104,
         "score": 1.26
-      },
-      {
-        "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
-        "nick": "chelse굴리트",
-        "games": 60,
-        "yellow": 5,
-        "red": 0,
-        "foul": 60,
-        "score": 1.25
       }
     ],
     "specialists": [
