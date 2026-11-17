@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-17T10:09:24.974Z",
+  "updated": "2026-11-17T12:08:31.647Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -1199,36 +1199,36 @@
     },
     "0c8289526c449f2aa5ad15b6bee772dc": {
       "ctrl": "keyboard",
-      "games": 10,
+      "games": 14,
       "ace": [
         {
           "spId": 866212198,
           "group": "AM",
           "pos": 18,
-          "games": 9,
+          "games": 12,
           "metric": "ast",
-          "value": 1.33,
+          "value": 1.08,
           "base": 0.57,
-          "z": 2.52,
+          "z": 1.69,
           "title": {
             "emoji": "🎯",
             "name": "킬패스 장인"
           },
-          "goals": 4,
-          "assists": 12
+          "goals": 7,
+          "assists": 13
         },
         {
-          "spId": 260193080,
-          "group": "GK",
-          "pos": 0,
-          "games": 10,
-          "metric": "pas",
-          "value": 2.8,
-          "base": 2.02,
-          "z": 1.51,
+          "spId": 878234574,
+          "group": "FB",
+          "pos": 2,
+          "games": 14,
+          "metric": "win",
+          "value": 3.43,
+          "base": 2.51,
+          "z": 1.6,
           "title": {
-            "emoji": "📨",
-            "name": "패스 마스터"
+            "emoji": "🥷",
+            "name": "볼 탈취왕"
           },
           "goals": 0,
           "assists": 0
@@ -1237,51 +1237,51 @@
           "spId": 878243014,
           "group": "ST",
           "pos": 25,
-          "games": 7,
+          "games": 8,
           "metric": "gol",
-          "value": 1.71,
+          "value": 1.63,
           "base": 1.1,
-          "z": 1.38,
+          "z": 1.18,
           "title": {
             "emoji": "🔫",
             "name": "골 사냥꾼"
           },
-          "goals": 13,
-          "assists": 3
+          "goals": 17,
+          "assists": 5
         }
       ],
       "goalMins": {
         "for": [
-          3,
           4,
-          4,
+          9,
           8,
-          2,
-          4,
+          9,
+          3,
+          5,
           2
         ],
         "against": [
           2,
-          3,
+          4,
+          8,
+          6,
+          4,
           5,
-          3,
-          3,
-          2,
-          1
+          2
         ]
       },
-      "comebacks": 2,
+      "comebacks": 3,
       "lateWinners": 1,
       "manner": {
-        "games": 10,
+        "games": 14,
         "yellow": 0,
         "red": 0,
-        "foul": 7,
-        "score": 0.7
+        "foul": 11,
+        "score": 0.79
       },
       "guide": {
         "v": 2,
-        "games": 10,
+        "games": 14,
         "minGames": 15
       }
     },
@@ -4769,15 +4769,6 @@
     ],
     "gentleman": [
       {
-        "ouid": "0c8289526c449f2aa5ad15b6bee772dc",
-        "nick": "아제이",
-        "games": 10,
-        "yellow": 0,
-        "red": 0,
-        "foul": 7,
-        "score": 0.7
-      },
-      {
         "ouid": "f607127b51dcfb4f0339aaaf638e70d8",
         "nick": "Dor6평정",
         "games": 38,
@@ -4794,6 +4785,15 @@
         "red": 0,
         "foul": 45,
         "score": 0.72
+      },
+      {
+        "ouid": "82c59dce895a829f78a8e10c10122249",
+        "nick": "Dor6곽철용",
+        "games": 73,
+        "yellow": 0,
+        "red": 0,
+        "foul": 53,
+        "score": 0.73
       }
     ],
     "toughGuy": [
