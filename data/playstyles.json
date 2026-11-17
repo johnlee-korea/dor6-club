@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-17T00:09:10.208Z",
+  "updated": "2026-11-17T02:09:02.458Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -697,41 +697,39 @@
     "2dd2edb174f63716078ffc324199edd1": {
       "games": 50,
       "style": {
-        "name": "침투 설계자",
-        "line": "스루와 침투는 많은데 슈팅은 아낀다",
+        "name": "터프한 플레이메이커",
+        "line": "스루는 날카롭게, 몸싸움은 거칠게",
         "basis": [
-          "offside+",
           "throughRatio+",
-          "shots-"
-        ],
-        "rare": true
+          "cards+"
+        ]
       },
       "highs": [
-        {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
-          "unit": "%",
-          "v": 0.229,
-          "avg": 0.139,
-          "z": 1.91,
-          "key": true
-        },
         {
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.537,
+          "v": 0.532,
           "avg": 0.301,
-          "z": 1.9,
+          "z": 1.86,
           "key": false
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.225,
+          "avg": 0.139,
+          "z": 1.81,
+          "key": true
+        },
+        {
+          "k": "cards",
+          "label": "카드",
           "unit": "",
-          "v": 0.7,
-          "avg": 0.472,
-          "z": 1.06,
+          "v": 0.1,
+          "avg": 0.036,
+          "z": 1.04,
           "key": true
         }
       ],
@@ -740,27 +738,27 @@
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 4.72,
+          "v": 4.8,
           "avg": 6.646,
-          "z": -1.71,
-          "key": true
+          "z": -1.64,
+          "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.3,
+          "v": 2.34,
           "avg": 3.183,
-          "z": -1.53,
+          "z": -1.46,
           "key": false
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.179,
+          "v": 0.176,
           "avg": 0.284,
-          "z": -1.42,
+          "z": -1.46,
           "key": false
         }
       ]
@@ -1678,30 +1676,30 @@
       },
       "highs": [
         {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.76,
+          "avg": 0.472,
+          "z": 1.33,
+          "key": false
+        },
+        {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.374,
+          "v": 0.368,
           "avg": 0.284,
-          "z": 1.22,
+          "z": 1.13,
           "key": true
         },
         {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.18,
+          "v": 0.172,
           "avg": 0.1,
-          "z": 1.1,
-          "key": false
-        },
-        {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.7,
-          "avg": 0.472,
-          "z": 1.06,
+          "z": 1,
           "key": false
         }
       ],
@@ -1710,18 +1708,18 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.561,
+          "v": 0.555,
           "avg": 0.701,
-          "z": -1.73,
+          "z": -1.79,
           "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.12,
+          "v": 3.18,
           "avg": 4.438,
-          "z": -1.58,
+          "z": -1.51,
           "key": false
         },
         {
