@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T04:08:24.680Z",
+  "updated": "2026-11-18T06:09:10.422Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -908,11 +908,11 @@
     "0ec85bc04c006744f49a284cd624bbbb": {
       "games": 50,
       "style": {
-        "name": "공이 곧 수비",
-        "line": "뺏길 일이 없으니 태클할 일도 없다",
+        "name": "두드려도 안 열리는",
+        "line": "코너킥까지 뽑는데 골문은 안 열린다",
         "basis": [
-          "poss+",
-          "tackleTry-"
+          "corner+",
+          "finish-"
         ]
       },
       "highs": [
@@ -920,28 +920,28 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.233,
+          "v": 0.226,
           "avg": 0.1,
-          "z": 1.84,
+          "z": 1.75,
           "key": false
         },
         {
-          "k": "poss",
-          "label": "점유율",
-          "unit": "avg%",
-          "v": 53.44,
-          "avg": 50.483,
-          "z": 1.04,
-          "key": true
+          "k": "lateGoal",
+          "label": "후반 득점 비율",
+          "unit": "%",
+          "v": 0.654,
+          "avg": 0.58,
+          "z": 1.01,
+          "key": false
         },
         {
-          "k": "dribble",
-          "label": "경기당 드리블",
+          "k": "corner",
+          "label": "코너킥",
           "unit": "",
-          "v": 86.86,
-          "avg": 78.034,
-          "z": 0.97,
-          "key": false
+          "v": 1.84,
+          "avg": 1.395,
+          "z": 0.95,
+          "key": true
         }
       ],
       "lows": [
@@ -949,27 +949,27 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.394,
+          "v": 0.374,
           "avg": 0.483,
-          "z": -1.29,
-          "key": false
+          "z": -1.58,
+          "key": true
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 10.76,
+          "v": 10.88,
           "avg": 16.254,
-          "z": -1.28,
-          "key": true
+          "z": -1.25,
+          "key": false
         },
         {
-          "k": "ga",
-          "label": "경기당 실점",
+          "k": "gf",
+          "label": "경기당 득점",
           "unit": "",
-          "v": 2.02,
-          "avg": 2.555,
-          "z": -1,
+          "v": 2.54,
+          "avg": 3.183,
+          "z": -1.11,
           "key": false
         }
       ]
@@ -1679,27 +1679,27 @@
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.88,
+          "v": 0.9,
           "avg": 0.472,
-          "z": 1.89,
+          "z": 1.98,
           "key": true
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.37,
+          "v": 0.376,
           "avg": 0.284,
-          "z": 1.16,
+          "z": 1.24,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.943,
+          "v": 0.949,
           "avg": 0.896,
-          "z": 0.83,
+          "z": 0.94,
           "key": false
         }
       ],
@@ -1708,10 +1708,19 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.544,
+          "v": 0.54,
           "avg": 0.701,
-          "z": -1.93,
+          "z": -1.98,
           "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.375,
+          "avg": 0.483,
+          "z": -1.55,
+          "key": true
         },
         {
           "k": "block",
@@ -1721,15 +1730,6 @@
           "avg": 4.438,
           "z": -1.49,
           "key": false
-        },
-        {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.392,
-          "avg": 0.483,
-          "z": -1.31,
-          "key": true
         }
       ]
     },
