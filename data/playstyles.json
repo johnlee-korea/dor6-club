@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T14:08:59.529Z",
+  "updated": "2026-11-18T16:08:20.403Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -413,39 +413,39 @@
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "games": 50,
       "style": {
-        "name": "평화주의자",
-        "line": "안 뺏고, 안 넣는다",
+        "name": "공격만 하는 한량",
+        "line": "수비는 남 일, 중거리는 내 일",
         "basis": [
-          "tackleTry-",
-          "gf-"
+          "longShot+",
+          "tackleTry-"
         ]
       },
       "highs": [
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.7,
-          "avg": 0.472,
-          "z": 1.06,
-          "key": false
-        },
-        {
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.25,
+          "v": 0.272,
           "avg": 0.181,
-          "z": 0.94,
-          "key": false
+          "z": 1.24,
+          "key": true
         },
         {
           "k": "rating",
           "label": "평균 평점",
           "unit": "",
-          "v": 4.534,
+          "v": 4.605,
           "avg": 4.293,
-          "z": 0.91,
+          "z": 1.17,
+          "key": false
+        },
+        {
+          "k": "offside",
+          "label": "오프사이드",
+          "unit": "",
+          "v": 0.66,
+          "avg": 0.472,
+          "z": 0.87,
           "key": false
         }
       ],
@@ -454,27 +454,27 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.68,
+          "v": 9.4,
           "avg": 16.254,
-          "z": -1.53,
+          "z": -1.59,
           "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.34,
+          "v": 2.32,
           "avg": 3.183,
-          "z": -1.46,
-          "key": true
+          "z": -1.49,
+          "key": false
         },
         {
-          "k": "foul",
-          "label": "파울",
-          "unit": "",
-          "v": 0.56,
-          "avg": 0.939,
-          "z": -1.29,
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.198,
+          "avg": 0.284,
+          "z": -1.16,
           "key": false
         }
       ]
@@ -718,9 +718,9 @@
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.214,
+          "v": 0.213,
           "avg": 0.139,
-          "z": 1.59,
+          "z": 1.57,
           "key": true
         },
         {
@@ -747,18 +747,18 @@
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 4.98,
+          "v": 4.96,
           "avg": 6.646,
-          "z": -1.48,
+          "z": -1.5,
           "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.36,
+          "v": 2.4,
           "avg": 3.183,
-          "z": -1.42,
+          "z": -1.36,
           "key": false
         }
       ]
@@ -906,11 +906,11 @@
     "0ec85bc04c006744f49a284cd624bbbb": {
       "games": 50,
       "style": {
-        "name": "두드려도 안 열리는",
-        "line": "코너킥까지 뽑는데 골문은 안 열린다",
+        "name": "평화주의자",
+        "line": "안 뺏고, 안 넣는다",
         "basis": [
-          "corner+",
-          "finish-"
+          "tackleTry-",
+          "gf-"
         ]
       },
       "highs": [
@@ -918,28 +918,28 @@
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.222,
+          "v": 0.199,
           "avg": 0.1,
-          "z": 1.69,
+          "z": 1.37,
           "key": false
         },
         {
           "k": "lateGoal",
           "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.667,
+          "v": 0.669,
           "avg": 0.58,
-          "z": 1.19,
+          "z": 1.22,
           "key": false
         },
         {
           "k": "corner",
           "label": "코너킥",
           "unit": "",
-          "v": 1.84,
+          "v": 1.86,
           "avg": 1.395,
-          "z": 0.95,
-          "key": true
+          "z": 1,
+          "key": false
         }
       ],
       "lows": [
@@ -947,28 +947,28 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.376,
+          "v": 0.36,
           "avg": 0.483,
-          "z": -1.54,
-          "key": true
+          "z": -1.77,
+          "key": false
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 10.72,
+          "v": 10.04,
           "avg": 16.254,
-          "z": -1.28,
-          "key": false
+          "z": -1.44,
+          "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.58,
+          "v": 2.48,
           "avg": 3.183,
-          "z": -1.04,
-          "key": false
+          "z": -1.22,
+          "key": true
         }
       ]
     },
@@ -1870,13 +1870,13 @@
       ]
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 49,
+      "games": 50,
       "style": {
-        "name": "투박한 타깃맨",
-        "line": "감아차기는 모른다, 머리로 들이받는다",
+        "name": "헤딩 헛방",
+        "line": "머리는 대는데 방향이 안 맞는다",
         "basis": [
           "headShot+",
-          "finesse-"
+          "finish-"
         ]
       },
       "highs": [
@@ -1884,27 +1884,27 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.341,
+          "v": 0.338,
           "avg": 0.181,
-          "z": 1.56,
+          "z": 1.53,
           "key": true
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 21.061,
+          "v": 21.34,
           "avg": 16.254,
-          "z": 1.12,
+          "z": 1.18,
           "key": false
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.18,
+          "v": 0.182,
           "avg": 0.139,
-          "z": 0.88,
+          "z": 0.91,
           "key": false
         }
       ],
@@ -1913,28 +1913,28 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.411,
+          "v": 0.414,
           "avg": 0.483,
-          "z": -1.04,
+          "z": -1,
+          "key": true
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.745,
+          "avg": 0.797,
+          "z": -1,
           "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.489,
+          "v": 0.487,
           "avg": 0.546,
-          "z": -0.96,
+          "z": -0.99,
           "key": false
-        },
-        {
-          "k": "finesse",
-          "label": "감아차기 비율",
-          "unit": "%",
-          "v": 0.19,
-          "avg": 0.301,
-          "z": -0.9,
-          "key": true
         }
       ]
     },
