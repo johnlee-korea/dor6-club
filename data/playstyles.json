@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T08:08:53.927Z",
+  "updated": "2026-11-18T10:09:24.093Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -413,14 +413,12 @@
     "e09247d71b35284f7ac9ed156f9d74bf": {
       "games": 50,
       "style": {
-        "name": "박물관 티키타카",
-        "line": "공은 실컷 돌리는데 슈팅은 전시용",
+        "name": "평화주의자",
+        "line": "안 뺏고, 안 넣는다",
         "basis": [
-          "poss+",
-          "shortRatio+",
-          "shots-"
-        ],
-        "rare": true
+          "tackleTry-",
+          "gf-"
+        ]
       },
       "highs": [
         {
@@ -436,19 +434,19 @@
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 52.62,
+          "v": 52.66,
           "avg": 50.483,
-          "z": 0.75,
-          "key": true
+          "z": 0.77,
+          "key": false
         },
         {
-          "k": "shortRatio",
-          "label": "짧은 패스 비율",
+          "k": "longShot",
+          "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.761,
-          "avg": 0.701,
-          "z": 0.74,
-          "key": true
+          "v": 0.236,
+          "avg": 0.181,
+          "z": 0.75,
+          "key": false
         }
       ],
       "lows": [
@@ -456,28 +454,28 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 9.72,
+          "v": 9.76,
           "avg": 16.254,
-          "z": -1.52,
-          "key": false
+          "z": -1.51,
+          "key": true
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.44,
+          "v": 2.42,
           "avg": 3.183,
-          "z": -1.29,
-          "key": false
+          "z": -1.32,
+          "key": true
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
-          "unit": "",
-          "v": 5.62,
-          "avg": 6.646,
-          "z": -0.91,
-          "key": true
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.214,
+          "avg": 0.284,
+          "z": -0.95,
+          "key": false
         }
       ]
     },
@@ -1679,27 +1677,27 @@
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.9,
+          "v": 0.92,
           "avg": 0.472,
-          "z": 1.98,
+          "z": 2.07,
           "key": true
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.376,
+          "v": 0.382,
           "avg": 0.284,
-          "z": 1.24,
+          "z": 1.32,
           "key": false
         },
         {
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.949,
+          "v": 0.947,
           "avg": 0.896,
-          "z": 0.94,
+          "z": 0.91,
           "key": false
         }
       ],
@@ -1708,27 +1706,27 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.54,
+          "v": 0.538,
           "avg": 0.701,
-          "z": -1.98,
+          "z": -2.01,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.375,
+          "v": 0.364,
           "avg": 0.483,
-          "z": -1.55,
+          "z": -1.71,
           "key": true
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.2,
+          "v": 3.32,
           "avg": 4.438,
-          "z": -1.49,
+          "z": -1.34,
           "key": false
         }
       ]
