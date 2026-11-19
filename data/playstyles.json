@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T12:08:08.965Z",
+  "updated": "2026-11-19T14:09:04.303Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -620,69 +620,69 @@
     "0c8289526c449f2aa5ad15b6bee772dc": {
       "games": 50,
       "style": {
-        "name": "쏘고 잊는 공격수",
-        "line": "앞에선 쏘고, 뒤에선 안 막는다",
+        "name": "뚝배기 크로스형",
+        "line": "패스보다 크로스, 골은 머리로",
         "basis": [
-          "longShot+",
-          "block-"
+          "lobRatio+",
+          "headGoal+"
         ]
       },
       "highs": [
         {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.167,
-          "avg": 0.078,
-          "z": 1.39,
-          "key": false
-        },
-        {
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.178,
+          "v": 0.158,
           "avg": 0.078,
-          "z": 1.33,
+          "z": 1.07,
+          "key": true
+        },
+        {
+          "k": "volley",
+          "label": "발리 비율",
+          "unit": "%",
+          "v": 0.137,
+          "avg": 0.078,
+          "z": 0.93,
           "key": false
         },
         {
-          "k": "longShot",
-          "label": "중거리 슈팅 비율",
+          "k": "lobRatio",
+          "label": "띄우는 패스 비율",
           "unit": "%",
-          "v": 0.248,
-          "avg": 0.181,
-          "z": 0.92,
+          "v": 0.018,
+          "avg": 0.012,
+          "z": 0.74,
           "key": true
         }
       ],
       "lows": [
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.723,
-          "avg": 0.797,
-          "z": -1.42,
-          "key": false
-        },
-        {
           "k": "lateGoal",
           "label": "후반 득점 비율",
           "unit": "%",
-          "v": 0.481,
+          "v": 0.446,
           "avg": 0.58,
-          "z": -1.35,
+          "z": -1.84,
           "key": false
         },
         {
-          "k": "block",
-          "label": "블락 시도",
-          "unit": "",
-          "v": 3.52,
-          "avg": 4.438,
-          "z": -1.1,
-          "key": true
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.734,
+          "avg": 0.797,
+          "z": -1.21,
+          "key": false
+        },
+        {
+          "k": "tackleRate",
+          "label": "태클 성공률",
+          "unit": "%",
+          "v": 0.486,
+          "avg": 0.546,
+          "z": -1.01,
+          "key": false
         }
       ]
     },
@@ -777,31 +777,31 @@
       },
       "highs": [
         {
+          "k": "corner",
+          "label": "코너킥",
+          "unit": "",
+          "v": 2.12,
+          "avg": 1.395,
+          "z": 1.55,
+          "key": false
+        },
+        {
           "k": "shots",
           "label": "경기당 슈팅",
           "unit": "",
-          "v": 8.28,
+          "v": 8.2,
           "avg": 6.646,
-          "z": 1.45,
+          "z": 1.38,
           "key": true
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.78,
+          "v": 0.76,
           "avg": 0.472,
-          "z": 1.42,
+          "z": 1.33,
           "key": true
-        },
-        {
-          "k": "corner",
-          "label": "코너킥",
-          "unit": "",
-          "v": 2.06,
-          "avg": 1.395,
-          "z": 1.42,
-          "key": false
         }
       ],
       "lows": [
@@ -809,27 +809,27 @@
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.823,
+          "v": 0.821,
           "avg": 0.889,
-          "z": -3.09,
+          "z": -3.2,
           "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.333,
+          "v": 0.334,
           "avg": 0.483,
-          "z": -2.16,
+          "z": -2.15,
           "key": false
         },
         {
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.181,
+          "v": 0.18,
           "avg": 0.284,
-          "z": -1.39,
+          "z": -1.41,
           "key": false
         }
       ]
@@ -1743,31 +1743,31 @@
       },
       "highs": [
         {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
-          "unit": "%",
-          "v": 0.176,
-          "avg": 0.1,
-          "z": 1.05,
-          "key": false
-        },
-        {
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.287,
+          "v": 0.315,
           "avg": 0.181,
-          "z": 1.03,
+          "z": 1.3,
           "key": false
         },
         {
           "k": "foul",
           "label": "파울",
           "unit": "",
-          "v": 1.24,
+          "v": 1.3,
           "avg": 0.939,
-          "z": 1.03,
+          "z": 1.23,
           "key": true
+        },
+        {
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
+          "unit": "%",
+          "v": 0.172,
+          "avg": 0.1,
+          "z": 1,
+          "key": false
         }
       ],
       "lows": [
@@ -1775,27 +1775,27 @@
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.391,
+          "v": 0.396,
           "avg": 0.483,
-          "z": -1.33,
+          "z": -1.26,
           "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.479,
+          "v": 0.48,
           "avg": 0.546,
-          "z": -1.14,
+          "z": -1.12,
           "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 68.72,
+          "v": 68.22,
           "avg": 78.034,
-          "z": -1.02,
+          "z": -1.07,
           "key": false
         }
       ]
@@ -1872,11 +1872,11 @@
     "10512ddbc79f7b043f02f62eac238b37": {
       "games": 50,
       "style": {
-        "name": "헤딩 헛방",
-        "line": "머리는 대는데 방향이 안 맞는다",
+        "name": "투박한 타깃맨",
+        "line": "감아차기는 모른다, 머리로 들이받는다",
         "basis": [
           "headShot+",
-          "finish-"
+          "finesse-"
         ]
       },
       "highs": [
@@ -1884,27 +1884,27 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.347,
+          "v": 0.356,
           "avg": 0.181,
-          "z": 1.62,
+          "z": 1.71,
           "key": true
-        },
-        {
-          "k": "tackleTry",
-          "label": "태클 시도",
-          "unit": "",
-          "v": 20.36,
-          "avg": 16.254,
-          "z": 0.95,
-          "key": false
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.182,
+          "v": 0.184,
           "avg": 0.139,
-          "z": 0.91,
+          "z": 0.94,
+          "key": false
+        },
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 20.28,
+          "avg": 16.254,
+          "z": 0.93,
           "key": false
         }
       ],
@@ -1913,28 +1913,28 @@
           "k": "wideShot",
           "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.2,
+          "v": 0.199,
           "avg": 0.284,
-          "z": -1.13,
+          "z": -1.15,
           "key": false
+        },
+        {
+          "k": "finesse",
+          "label": "감아차기 비율",
+          "unit": "%",
+          "v": 0.169,
+          "avg": 0.301,
+          "z": -1.07,
+          "key": true
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.483,
+          "v": 0.484,
           "avg": 0.546,
-          "z": -1.06,
+          "z": -1.05,
           "key": false
-        },
-        {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.413,
-          "avg": 0.483,
-          "z": -1,
-          "key": true
         }
       ]
     },
