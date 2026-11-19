@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T04:08:01.099Z",
+  "updated": "2026-11-19T06:08:07.812Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -344,11 +344,11 @@
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "games": 50,
       "style": {
-        "name": "전반 원툴",
-        "line": "초반 러시 후 방전",
+        "name": "무모한 침투",
+        "line": "패스도 침투도 일단 던지고 본다",
         "basis": [
-          "lateGoal-",
-          "shots+"
+          "offside+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -356,27 +356,27 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.127,
+          "v": 0.129,
           "avg": 0.078,
-          "z": 0.76,
+          "z": 0.79,
           "key": false
         },
         {
-          "k": "shots",
-          "label": "경기당 슈팅",
+          "k": "offside",
+          "label": "오프사이드",
           "unit": "",
-          "v": 7.26,
-          "avg": 6.646,
-          "z": 0.55,
+          "v": 0.62,
+          "avg": 0.472,
+          "z": 0.69,
           "key": true
         },
         {
-          "k": "longRatio",
-          "label": "롱패스 비율",
+          "k": "throughRatio",
+          "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.07,
-          "avg": 0.054,
-          "z": 0.53,
+          "v": 0.164,
+          "avg": 0.139,
+          "z": 0.54,
           "key": false
         }
       ],
@@ -385,27 +385,27 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.73,
+          "v": 0.737,
           "avg": 0.797,
-          "z": -1.29,
+          "z": -1.16,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.416,
+          "v": 0.415,
           "avg": 0.483,
-          "z": -0.97,
+          "z": -0.99,
           "key": false
         },
         {
-          "k": "lateGoal",
-          "label": "후반 득점 비율",
+          "k": "passRate",
+          "label": "패스 성공률",
           "unit": "%",
-          "v": 0.51,
-          "avg": 0.58,
-          "z": -0.96,
+          "v": 0.87,
+          "avg": 0.889,
+          "z": -0.89,
           "key": true
         }
       ]
@@ -1743,30 +1743,30 @@
       },
       "highs": [
         {
-          "k": "foul",
-          "label": "파울",
-          "unit": "",
-          "v": 1.32,
-          "avg": 0.939,
-          "z": 1.3,
-          "key": true
-        },
-        {
           "k": "lowShot",
           "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.179,
+          "v": 0.189,
           "avg": 0.1,
-          "z": 1.1,
+          "z": 1.23,
           "key": false
         },
         {
-          "k": "headShot",
-          "label": "헤더 슈팅 비율",
-          "unit": "%",
-          "v": 0.279,
-          "avg": 0.181,
-          "z": 0.96,
+          "k": "foul",
+          "label": "파울",
+          "unit": "",
+          "v": 1.26,
+          "avg": 0.939,
+          "z": 1.09,
+          "key": true
+        },
+        {
+          "k": "tackleTry",
+          "label": "태클 시도",
+          "unit": "",
+          "v": 19.84,
+          "avg": 16.254,
+          "z": 0.83,
           "key": false
         }
       ],
@@ -1784,18 +1784,18 @@
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.493,
+          "v": 0.489,
           "avg": 0.546,
-          "z": -0.9,
+          "z": -0.97,
           "key": true
         },
         {
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 70.36,
+          "v": 69.94,
           "avg": 78.034,
-          "z": -0.84,
+          "z": -0.89,
           "key": false
         }
       ]
