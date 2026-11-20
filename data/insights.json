@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T22:08:20.368Z",
+  "updated": "2026-11-20T00:09:03.822Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -2994,100 +2994,100 @@
     },
     "b80a06acac01ad21b0aa609c2699d58b": {
       "ctrl": "gamepad",
-      "games": 34,
+      "games": 39,
       "ace": [
         {
-          "spId": 100001109,
-          "group": "CB",
-          "pos": 6,
-          "games": 8,
-          "metric": "int",
-          "value": 2.75,
-          "base": 1.76,
-          "z": 1.69,
+          "spId": 868192181,
+          "group": "AM",
+          "pos": 18,
+          "games": 12,
+          "metric": "sht",
+          "value": 2.42,
+          "base": 1.2,
+          "z": 1.71,
           "title": {
-            "emoji": "🚧",
-            "name": "길목 차단기"
+            "emoji": "🏹",
+            "name": "슈팅 머신"
           },
-          "goals": 0,
-          "assists": 0
+          "goals": 26,
+          "assists": 6
         },
         {
-          "spId": 861005099,
+          "spId": 848241096,
           "group": "FB",
-          "pos": 7,
-          "games": 8,
+          "pos": 3,
+          "games": 13,
           "metric": "int",
-          "value": 1.75,
+          "value": 1.77,
           "base": 1.06,
-          "z": 1.65,
+          "z": 1.69,
           "title": {
             "emoji": "🦅",
             "name": "볼 사냥꾼"
           },
           "goals": 0,
-          "assists": 0
+          "assists": 4
         },
         {
-          "spId": 100214101,
-          "group": "W",
-          "pos": 16,
-          "games": 19,
-          "metric": "drb",
-          "value": 9.42,
-          "base": 6.57,
-          "z": 1.53,
+          "spId": 868045674,
+          "group": "DM",
+          "pos": 11,
+          "games": 24,
+          "metric": "int",
+          "value": 1.54,
+          "base": 0.92,
+          "z": 1.67,
           "title": {
-            "emoji": "🏃",
-            "name": "측면 돌파왕"
+            "emoji": "🧹",
+            "name": "진공청소기"
           },
-          "goals": 1,
-          "assists": 15
+          "goals": 7,
+          "assists": 4
         }
       ],
       "goalMins": {
         "for": [
-          10,
-          11,
-          11,
-          19,
-          16,
+          14,
           15,
+          12,
+          21,
+          19,
+          18,
           4
         ],
         "against": [
           10,
-          8,
-          10,
-          17,
-          12,
-          9,
-          1
+          11,
+          13,
+          21,
+          16,
+          13,
+          2
         ]
       },
       "comebacks": 6,
       "lateWinners": 2,
       "manner": {
-        "games": 34,
+        "games": 39,
         "yellow": 2,
         "red": 0,
-        "foul": 36,
-        "score": 1.24
+        "foul": 42,
+        "score": 1.23
       },
       "guide": {
         "v": 2,
-        "games": 34,
+        "games": 39,
         "split": false,
         "minSide": 15,
         "wlMembers": 15,
-        "summary": "34경기 16승 8무 10패 (승률 47%) · 경기당 득점 2.5 · 실점 2.0. 가장 큰 무기는 경기당 실점, 가장 먼저 손볼 곳은 유효슈팅 비율이에요.",
+        "summary": "39경기 17승 9무 13패 (승률 44%) · 경기당 득점 2.6 · 실점 2.2. 가장 큰 무기는 경기당 실점, 가장 먼저 손볼 곳은 유효슈팅 비율이에요.",
         "strengths": [
           {
             "k": "ga",
             "label": "경기당 실점",
-            "v": "2.0",
+            "v": "2.2",
             "avg": "2.6",
-            "z": -1.09,
+            "z": -0.65,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3100,9 +3100,9 @@
           {
             "k": "effRate",
             "label": "유효슈팅 비율",
-            "v": "72%",
+            "v": "71%",
             "avg": "80%",
-            "z": -1.52,
+            "z": -1.65,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3113,9 +3113,9 @@
           {
             "k": "finish",
             "label": "결정력",
-            "v": "41%",
+            "v": "40%",
             "avg": "48%",
-            "z": -1.03,
+            "z": -1.16,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3128,7 +3128,7 @@
             "label": "세트피스골",
             "v": "0.0",
             "avg": "0.1",
-            "z": -0.51,
+            "z": -0.55,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3145,7 +3145,7 @@
             "label": "헤더 슈팅 비율",
             "v": "40%",
             "avg": "18%",
-            "z": 2.12,
+            "z": 2.15,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3156,9 +3156,9 @@
           {
             "k": "volley",
             "label": "발리 비율",
-            "v": "19%",
+            "v": "20%",
             "avg": "7.8%",
-            "z": 1.78,
+            "z": 1.85,
             "win": null,
             "lose": null,
             "sig": false,
@@ -3168,8 +3168,8 @@
           }
         ],
         "time": [
-          "실점이 46-60분에 가장 많아요 (실점 66골 중 17골, 26%).",
-          "득점이 46-60분에 가장 많아요 (득점 82골 중 19골, 23%).",
+          "실점이 46-60분에 가장 많아요 (실점 84골 중 21골, 25%).",
+          "득점이 46-60분에 가장 많아요 (득점 99골 중 21골, 21%).",
           "역전승 6번 · 80분 이후 결승골(극장골) 2번."
         ]
       }
@@ -4849,11 +4849,11 @@
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
         "nick": "Dor6똘콩스",
-        "games": 34,
+        "games": 39,
         "yellow": 2,
         "red": 0,
-        "foul": 36,
-        "score": 1.24
+        "foul": 42,
+        "score": 1.23
       }
     ],
     "specialists": [
