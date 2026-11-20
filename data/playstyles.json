@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T20:08:29.615Z",
+  "updated": "2026-11-20T20:46:15.023Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -356,56 +356,56 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.135,
+          "v": 0.138,
           "avg": 0.078,
-          "z": 0.9,
+          "z": 0.94,
           "key": false
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.64,
+          "v": 0.66,
           "avg": 0.472,
-          "z": 0.78,
+          "z": 0.87,
           "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.075,
+          "v": 0.076,
           "avg": 0.054,
-          "z": 0.71,
+          "z": 0.73,
           "key": false
         }
       ],
       "lows": [
-        {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.399,
-          "avg": 0.483,
-          "z": -1.2,
-          "key": false
-        },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
           "v": 0.866,
           "avg": 0.889,
-          "z": -1.07,
+          "z": -1.08,
           "key": true
         },
         {
-          "k": "lobRatio",
-          "label": "띄우는 패스 비율",
+          "k": "finish",
+          "label": "결정력",
           "unit": "%",
-          "v": 0.004,
-          "avg": 0.012,
-          "z": -0.87,
+          "v": 0.41,
+          "avg": 0.483,
+          "z": -1.05,
+          "key": false
+        },
+        {
+          "k": "lateGoal",
+          "label": "후반 득점 비율",
+          "unit": "%",
+          "v": 0.51,
+          "avg": 0.58,
+          "z": -0.96,
           "key": false
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T20:08:29.615Z",
+  "updated": "2026-11-20T20:46:15.023Z",
   "seasonId": "s6",
   "seasonName": "시즌6",
   "seasonStart": "2026-10-29",
@@ -618,36 +618,36 @@
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
       "ctrl": "gamepad",
-      "games": 35,
+      "games": 36,
       "ace": [
+        {
+          "spId": 868007512,
+          "group": "ST",
+          "pos": 25,
+          "games": 7,
+          "metric": "sht",
+          "value": 3.29,
+          "base": 2.05,
+          "z": 1.76,
+          "title": {
+            "emoji": "🏹",
+            "name": "슈팅 머신"
+          },
+          "goals": 13,
+          "assists": 0
+        },
         {
           "spId": 867201024,
           "group": "CB",
           "pos": 4,
-          "games": 28,
+          "games": 29,
           "metric": "win",
-          "value": 3.39,
+          "value": 3.38,
           "base": 2.53,
-          "z": 1.63,
+          "z": 1.6,
           "title": {
             "emoji": "🥷",
             "name": "볼 탈취왕"
-          },
-          "goals": 0,
-          "assists": 0
-        },
-        {
-          "spId": 867001116,
-          "group": "CB",
-          "pos": 6,
-          "games": 6,
-          "metric": "int",
-          "value": 2.67,
-          "base": 1.76,
-          "z": 1.55,
-          "title": {
-            "emoji": "🚧",
-            "name": "길목 차단기"
           },
           "goals": 0,
           "assists": 0
@@ -672,39 +672,39 @@
       "goalMins": {
         "for": [
           11,
-          18,
-          17,
+          19,
+          19,
           20,
           11,
-          16,
-          5
+          17,
+          6
         ],
         "against": [
           12,
-          13,
+          15,
           8,
           17,
           15,
-          15,
+          16,
           3
         ]
       },
-      "comebacks": 2,
+      "comebacks": 3,
       "lateWinners": 1,
       "manner": {
-        "games": 35,
+        "games": 36,
         "yellow": 1,
         "red": 1,
-        "foul": 34,
+        "foul": 35,
         "score": 1.14
       },
       "guide": {
         "v": 2,
-        "games": 35,
+        "games": 36,
         "split": false,
         "minSide": 15,
         "wlMembers": 15,
-        "summary": "35경기 18승 4무 13패 (승률 51%) · 경기당 득점 2.8 · 실점 2.4. 가장 먼저 손볼 곳은 오프사이드예요.",
+        "summary": "36경기 19승 4무 13패 (승률 53%) · 경기당 득점 2.9 · 실점 2.4. 가장 먼저 손볼 곳은 오프사이드예요.",
         "strengths": [],
         "weaknesses": [
           {
@@ -712,7 +712,7 @@
             "label": "오프사이드",
             "v": "0.8",
             "avg": "0.5",
-            "z": 1.39,
+            "z": 1.41,
             "win": null,
             "lose": null,
             "sig": false,
@@ -723,9 +723,9 @@
           {
             "k": "finish",
             "label": "결정력",
-            "v": "39%",
+            "v": "40%",
             "avg": "48%",
-            "z": -1.31,
+            "z": -1.21,
             "win": null,
             "lose": null,
             "sig": false,
@@ -738,7 +738,7 @@
             "label": "패스 성공률",
             "v": "87%",
             "avg": "89%",
-            "z": -0.98,
+            "z": -1.01,
             "win": null,
             "lose": null,
             "sig": false,
@@ -751,9 +751,7 @@
         "loseSpecial": [],
         "traits": [],
         "time": [
-          "실점이 46-60분에 가장 많아요 (실점 80골 중 17골, 21%).",
-          "득점이 46-60분에 가장 많아요 (득점 93골 중 20골, 22%).",
-          "역전승 2번 · 80분 이후 결승골(극장골) 1번."
+          "역전승 3번 · 80분 이후 결승골(극장골) 1번."
         ]
       }
     },
