@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T04:08:38.574Z",
+  "updated": "2026-11-20T06:09:23.515Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -351,50 +351,50 @@
       },
       "highs": [
         {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.129,
-          "avg": 0.078,
-          "z": 0.79,
-          "key": false
-        },
-        {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.62,
+          "v": 0.64,
           "avg": 0.472,
-          "z": 0.69,
+          "z": 0.78,
           "key": true
         },
         {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
+          "k": "volley",
+          "label": "발리 비율",
           "unit": "%",
-          "v": 0.164,
-          "avg": 0.139,
-          "z": 0.54,
+          "v": 0.122,
+          "avg": 0.078,
+          "z": 0.69,
+          "key": false
+        },
+        {
+          "k": "longRatio",
+          "label": "롱패스 비율",
+          "unit": "%",
+          "v": 0.07,
+          "avg": 0.054,
+          "z": 0.53,
           "key": false
         }
       ],
       "lows": [
-        {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
-          "unit": "%",
-          "v": 0.737,
-          "avg": 0.797,
-          "z": -1.16,
-          "key": false
-        },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
           "v": 0.415,
           "avg": 0.483,
-          "z": -0.99,
+          "z": -0.98,
+          "key": false
+        },
+        {
+          "k": "effRate",
+          "label": "유효슈팅 비율",
+          "unit": "%",
+          "v": 0.747,
+          "avg": 0.797,
+          "z": -0.97,
           "key": false
         },
         {
@@ -1179,11 +1179,11 @@
     "f8744e3b6044a3e44de9764d3d3ef81c": {
       "games": 50,
       "style": {
-        "name": "원터치 중거리",
-        "line": "잡자마자 박스 밖에서 바로 슛",
+        "name": "박스 밖 전문가",
+        "line": "박스 밖에서 쏘고, 박스 밖에서 넣는다",
         "basis": [
           "longShot+",
-          "dribble-"
+          "boxGoal-"
         ]
       },
       "highs": [
@@ -1191,27 +1191,27 @@
           "k": "longShot",
           "label": "중거리 슈팅 비율",
           "unit": "%",
-          "v": 0.289,
+          "v": 0.298,
           "avg": 0.181,
-          "z": 1.47,
+          "z": 1.58,
           "key": true
         },
         {
           "k": "ga",
           "label": "경기당 실점",
           "unit": "",
-          "v": 3.26,
+          "v": 3.32,
           "avg": 2.555,
-          "z": 1.32,
+          "z": 1.43,
           "key": false
         },
         {
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.801,
+          "v": 0.802,
           "avg": 0.701,
-          "z": 1.23,
+          "z": 1.24,
           "key": false
         }
       ],
@@ -1220,27 +1220,27 @@
           "k": "finesse",
           "label": "감아차기 비율",
           "unit": "%",
-          "v": 0.134,
+          "v": 0.129,
           "avg": 0.301,
-          "z": -1.35,
+          "z": -1.39,
           "key": false
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.22,
+          "v": 0.18,
           "avg": 0.472,
-          "z": -1.16,
+          "z": -1.35,
           "key": false
         },
         {
-          "k": "dribble",
-          "label": "경기당 드리블",
-          "unit": "",
-          "v": 69.32,
-          "avg": 78.034,
-          "z": -0.95,
+          "k": "boxGoal",
+          "label": "박스안골 비율",
+          "unit": "%",
+          "v": 0.836,
+          "avg": 0.896,
+          "z": -1.04,
           "key": true
         }
       ]
