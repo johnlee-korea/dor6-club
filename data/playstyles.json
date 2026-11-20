@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T18:08:45.916Z",
+  "updated": "2026-11-20T20:08:29.615Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -1682,21 +1682,21 @@
           "key": true
         },
         {
-          "k": "volley",
-          "label": "발리 비율",
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
           "unit": "%",
-          "v": 0.15,
-          "avg": 0.078,
-          "z": 1.13,
+          "v": 0.37,
+          "avg": 0.284,
+          "z": 1.15,
           "key": false
         },
         {
-          "k": "lowShot",
-          "label": "땅볼 슈팅 비율",
+          "k": "volley",
+          "label": "발리 비율",
           "unit": "%",
-          "v": 0.168,
-          "avg": 0.1,
-          "z": 0.94,
+          "v": 0.149,
+          "avg": 0.078,
+          "z": 1.11,
           "key": false
         }
       ],
@@ -1705,27 +1705,27 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.515,
+          "v": 0.519,
           "avg": 0.701,
-          "z": -2.28,
+          "z": -2.24,
           "key": false
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.362,
+          "v": 0.363,
           "avg": 0.483,
-          "z": -1.74,
+          "z": -1.72,
           "key": true
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.2,
+          "v": 3.34,
           "avg": 4.438,
-          "z": -1.49,
+          "z": -1.32,
           "key": false
         }
       ]
@@ -1940,11 +1940,11 @@
     "993ae7920a134632d65834e680e11b78": {
       "games": 50,
       "style": {
-        "name": "롱볼 카운터",
-        "line": "뺏으면 드리블 없이 바로 전방으로",
+        "name": "뚝배기 원툴",
+        "line": "그냥 패스보다 크로스를 잘하는 뚝배기 원툴",
         "basis": [
-          "longRatio+",
-          "dribble-"
+          "headGoal+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -1952,19 +1952,19 @@
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.214,
+          "v": 0.225,
           "avg": 0.078,
-          "z": 1.8,
-          "key": false
+          "z": 1.95,
+          "key": true
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.104,
+          "v": 0.106,
           "avg": 0.054,
-          "z": 1.66,
-          "key": true
+          "z": 1.75,
+          "key": false
         },
         {
           "k": "offside",
@@ -1981,27 +1981,27 @@
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 63.22,
+          "v": 63.24,
           "avg": 78.034,
           "z": -1.62,
-          "key": true
+          "key": false
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.859,
+          "v": 0.858,
           "avg": 0.889,
-          "z": -1.42,
-          "key": false
+          "z": -1.43,
+          "key": true
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 47.04,
+          "v": 47.2,
           "avg": 50.483,
-          "z": -1.21,
+          "z": -1.16,
           "key": false
         }
       ]
