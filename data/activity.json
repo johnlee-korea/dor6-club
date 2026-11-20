@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-20T08:08:04.786Z",
+  "updated": "2026-11-20T10:08:57.381Z",
   "week": {
-    "from": "2026-11-13T08:08:04.786Z",
+    "from": "2026-11-13T10:08:57.381Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -13,16 +13,9 @@
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "games": 84,
-        "wins": 28,
+        "games": 88,
+        "wins": 29,
         "winRate": 33
-      },
-      {
-        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
-        "nick": "거터",
-        "games": 82,
-        "wins": 47,
-        "winRate": 57
       },
       {
         "ouid": "b80a06acac01ad21b0aa609c2699d58b",
@@ -30,6 +23,13 @@
         "games": 79,
         "wins": 48,
         "winRate": 61
+      },
+      {
+        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
+        "nick": "거터",
+        "games": 79,
+        "wins": 45,
+        "winRate": 57
       },
       {
         "ouid": "c4d139e665756377869b9a9dfc998e6b",
@@ -249,23 +249,20 @@
       }
     },
     "a657df6cfcd103e150c3ae1145cd51a8": {
-      "games": 164,
+      "games": 166,
       "form": [
+        "draw",
+        "win",
         "win",
         "lose",
         "lose",
         "lose",
         "win",
         "lose",
-        "win",
-        "win",
         "win",
         "win"
       ],
-      "streak": {
-        "type": "win",
-        "n": 1
-      },
+      "streak": null,
       "rivals": {
         "nemesis": null,
         "prey": null,
@@ -274,18 +271,18 @@
       }
     },
     "e09247d71b35284f7ac9ed156f9d74bf": {
-      "games": 496,
+      "games": 500,
       "form": [
         "lose",
         "win",
+        "lose",
+        "win",
+        "lose",
+        "win",
         "win",
         "lose",
         "lose",
-        "win",
-        "win",
-        "draw",
-        "win",
-        "draw"
+        "win"
       ],
       "streak": {
         "type": "lose",
@@ -449,22 +446,22 @@
       }
     },
     "2dd2edb174f63716078ffc324199edd1": {
-      "games": 920,
+      "games": 924,
       "form": [
+        "lose",
+        "lose",
+        "draw",
+        "win",
         "win",
         "draw",
         "lose",
         "win",
         "draw",
-        "draw",
-        "lose",
-        "lose",
-        "lose",
-        "lose"
+        "draw"
       ],
       "streak": {
-        "type": "win",
-        "n": 1
+        "type": "lose",
+        "n": 2
       },
       "rivals": {
         "nemesis": {
