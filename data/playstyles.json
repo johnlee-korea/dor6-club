@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T04:08:38.482Z",
+  "updated": "2026-11-21T06:09:02.710Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -1940,11 +1940,11 @@
     "993ae7920a134632d65834e680e11b78": {
       "games": 50,
       "style": {
-        "name": "뚝배기 원툴",
-        "line": "그냥 패스보다 크로스를 잘하는 뚝배기 원툴",
+        "name": "롱볼 카운터",
+        "line": "뺏으면 드리블 없이 바로 전방으로",
         "basis": [
-          "headGoal+",
-          "passRate-"
+          "longRatio+",
+          "dribble-"
         ]
       },
       "highs": [
@@ -1952,27 +1952,27 @@
           "k": "headGoal",
           "label": "헤더골 비율",
           "unit": "%",
-          "v": 0.225,
+          "v": 0.224,
           "avg": 0.078,
-          "z": 1.95,
-          "key": true
+          "z": 1.94,
+          "key": false
         },
         {
           "k": "longRatio",
           "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.106,
+          "v": 0.108,
           "avg": 0.054,
-          "z": 1.75,
-          "key": false
+          "z": 1.81,
+          "key": true
         },
         {
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.8,
+          "v": 0.76,
           "avg": 0.472,
-          "z": 1.52,
+          "z": 1.33,
           "key": false
         }
       ],
@@ -1981,25 +1981,25 @@
           "k": "dribble",
           "label": "경기당 드리블",
           "unit": "",
-          "v": 63.24,
+          "v": 62.4,
           "avg": 78.034,
-          "z": -1.62,
-          "key": false
+          "z": -1.71,
+          "key": true
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.858,
+          "v": 0.859,
           "avg": 0.889,
-          "z": -1.43,
-          "key": true
+          "z": -1.42,
+          "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 47.2,
+          "v": 47.18,
           "avg": 50.483,
           "z": -1.16,
           "key": false

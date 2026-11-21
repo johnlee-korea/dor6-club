@@ -1,14 +1,14 @@
 {
-  "updated": "2026-11-21T04:08:38.482Z",
+  "updated": "2026-11-21T06:09:02.710Z",
   "week": {
-    "from": "2026-11-14T04:08:38.482Z",
+    "from": "2026-11-14T06:09:02.710Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
         "nick": "휴민트",
-        "games": 130,
+        "games": 127,
         "wins": 57,
-        "winRate": 44
+        "winRate": 45
       },
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
@@ -16,13 +16,6 @@
         "games": 79,
         "wins": 30,
         "winRate": 38
-      },
-      {
-        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
-        "nick": "거터",
-        "games": 73,
-        "wins": 43,
-        "winRate": 59
       },
       {
         "ouid": "8d32fed0280eb81bcf6bed6405a278d3",
@@ -37,6 +30,13 @@
         "games": 71,
         "wins": 31,
         "winRate": 44
+      },
+      {
+        "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
+        "nick": "거터",
+        "games": 69,
+        "wins": 42,
+        "winRate": 61
       }
     ]
   },
@@ -1291,22 +1291,22 @@
       }
     },
     "993ae7920a134632d65834e680e11b78": {
-      "games": 179,
+      "games": 183,
       "form": [
-        "lose",
         "win",
         "win",
         "lose",
         "win",
+        "lose",
         "win",
         "win",
-        "win",
+        "lose",
         "win",
         "win"
       ],
       "streak": {
-        "type": "lose",
-        "n": 1
+        "type": "win",
+        "n": 2
       },
       "rivals": {
         "nemesis": null,
