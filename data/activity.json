@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-21T20:08:07.727Z",
+  "updated": "2026-11-21T22:09:08.439Z",
   "week": {
-    "from": "2026-11-14T20:08:07.727Z",
+    "from": "2026-11-14T22:09:08.439Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -1219,8 +1219,10 @@
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 242,
+      "games": 244,
       "form": [
+        "lose",
+        "win",
         "draw",
         "lose",
         "win",
@@ -1228,11 +1230,12 @@
         "draw",
         "win",
         "win",
-        "lose",
-        "lose",
-        "win"
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": {
           "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
