@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T22:09:08.439Z",
+  "updated": "2026-11-22T00:09:10.849Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -1868,11 +1868,11 @@
     "10512ddbc79f7b043f02f62eac238b37": {
       "games": 50,
       "style": {
-        "name": "헤딩 헛방",
-        "line": "머리는 대는데 방향이 안 맞는다",
+        "name": "스루 난사범",
+        "line": "찔러는 주는데 절반은 상대 발 앞",
         "basis": [
-          "headShot+",
-          "finish-"
+          "throughRatio+",
+          "passRate-"
         ]
       },
       "highs": [
@@ -1880,27 +1880,27 @@
           "k": "headShot",
           "label": "헤더 슈팅 비율",
           "unit": "%",
-          "v": 0.37,
+          "v": 0.354,
           "avg": 0.181,
-          "z": 1.84,
-          "key": true
+          "z": 1.68,
+          "key": false
         },
         {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.189,
+          "v": 0.197,
           "avg": 0.139,
-          "z": 1.05,
-          "key": false
+          "z": 1.23,
+          "key": true
         },
         {
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 19.84,
+          "v": 20.94,
           "avg": 16.254,
-          "z": 0.83,
+          "z": 1.09,
           "key": false
         }
       ],
@@ -1909,27 +1909,27 @@
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.72,
+          "v": 0.713,
           "avg": 0.797,
-          "z": -1.47,
+          "z": -1.61,
           "key": false
-        },
-        {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.403,
-          "avg": 0.483,
-          "z": -1.15,
-          "key": true
         },
         {
           "k": "passRate",
           "label": "패스 성공률",
           "unit": "%",
-          "v": 0.867,
+          "v": 0.861,
           "avg": 0.889,
-          "z": -1.05,
+          "z": -1.33,
+          "key": true
+        },
+        {
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.207,
+          "avg": 0.284,
+          "z": -1.04,
           "key": false
         }
       ]
