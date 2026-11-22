@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T02:08:10.788Z",
+  "updated": "2026-11-22T04:08:23.372Z",
   "baselineUpdated": "2026-11-15T23:15:47.883Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 149,
@@ -1661,11 +1661,11 @@
     "9052276188238316b9fc057307e0d58c": {
       "games": 50,
       "style": {
-        "name": "반 박자 빠른 사나이",
-        "line": "라인 끝에서 늘 한 발 먼저, 마무리는 한 발 늦게",
+        "name": "빌드업 생략파",
+        "line": "미드필더 생략, 골키퍼에서 공격수로 직행",
         "basis": [
-          "offside+",
-          "finish-"
+          "longRatio+",
+          "shortRatio-"
         ]
       },
       "highs": [
@@ -1673,28 +1673,28 @@
           "k": "offside",
           "label": "오프사이드",
           "unit": "",
-          "v": 0.86,
+          "v": 0.82,
           "avg": 0.472,
-          "z": 1.79,
-          "key": true
+          "z": 1.61,
+          "key": false
         },
         {
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.153,
+          "v": 0.158,
           "avg": 0.078,
-          "z": 1.17,
+          "z": 1.25,
           "key": false
         },
         {
-          "k": "wideShot",
-          "label": "측면 각도 슈팅",
+          "k": "longRatio",
+          "label": "롱패스 비율",
           "unit": "%",
-          "v": 0.358,
-          "avg": 0.284,
-          "z": 1,
-          "key": false
+          "v": 0.089,
+          "avg": 0.054,
+          "z": 1.15,
+          "key": true
         }
       ],
       "lows": [
@@ -1702,27 +1702,27 @@
           "k": "shortRatio",
           "label": "짧은 패스 비율",
           "unit": "%",
-          "v": 0.522,
+          "v": 0.516,
           "avg": 0.701,
-          "z": -2.21,
-          "key": false
+          "z": -2.27,
+          "key": true
         },
         {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.379,
+          "v": 0.372,
           "avg": 0.483,
-          "z": -1.5,
-          "key": true
+          "z": -1.6,
+          "key": false
         },
         {
           "k": "effRate",
           "label": "유효슈팅 비율",
           "unit": "%",
-          "v": 0.734,
+          "v": 0.722,
           "avg": 0.797,
-          "z": -1.22,
+          "z": -1.43,
           "key": false
         }
       ]
