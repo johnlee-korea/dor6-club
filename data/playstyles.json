@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T20:09:23.937Z",
+  "updated": "2026-11-24T22:09:13.192Z",
   "baselineUpdated": "2026-11-23T00:05:26.845Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -1885,9 +1885,9 @@
           "k": "tackleTry",
           "label": "태클 시도",
           "unit": "",
-          "v": 21.68,
+          "v": 21.64,
           "avg": 16.45,
-          "z": 1.42,
+          "z": 1.41,
           "key": true
         },
         {
@@ -1903,9 +1903,9 @@
           "k": "boxGoal",
           "label": "박스안골 비율",
           "unit": "%",
-          "v": 0.933,
+          "v": 0.926,
           "avg": 0.884,
-          "z": 0.72,
+          "z": 0.62,
           "key": false
         }
       ],
@@ -1914,27 +1914,27 @@
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.36,
+          "v": 3.38,
           "avg": 4.429,
-          "z": -1.29,
+          "z": -1.26,
           "key": false
         },
         {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.489,
+          "v": 0.487,
           "avg": 0.539,
-          "z": -1,
+          "z": -1.03,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.7,
+          "v": 2.72,
           "avg": 3.171,
-          "z": -0.99,
+          "z": -0.95,
           "key": false
         }
       ]
@@ -2080,31 +2080,22 @@
     "3fb6b5444deacd8c1a0114c7d7369b78": {
       "games": 50,
       "style": {
-        "name": "발리 난사",
-        "line": "떨어지는 공마다 발리, 결과는 하늘에",
+        "name": "떠먹여도 못 먹는",
+        "line": "스루는 완벽, 마무리가 문제",
         "basis": [
-          "volley+",
+          "throughRatio+",
           "finish-"
         ]
       },
       "highs": [
         {
-          "k": "volley",
-          "label": "발리 비율",
-          "unit": "%",
-          "v": 0.174,
-          "avg": 0.072,
-          "z": 1.7,
-          "key": true
-        },
-        {
           "k": "throughRatio",
           "label": "스루패스 비율",
           "unit": "%",
-          "v": 0.198,
+          "v": 0.2,
           "avg": 0.137,
-          "z": 1.44,
-          "key": false
+          "z": 1.49,
+          "key": true
         },
         {
           "k": "setGoal",
@@ -2114,33 +2105,42 @@
           "avg": 0.08,
           "z": 1.43,
           "key": false
+        },
+        {
+          "k": "volley",
+          "label": "발리 비율",
+          "unit": "%",
+          "v": 0.147,
+          "avg": 0.072,
+          "z": 1.25,
+          "key": false
         }
       ],
       "lows": [
         {
-          "k": "tackleRate",
-          "label": "태클 성공률",
-          "unit": "%",
-          "v": 0.461,
-          "avg": 0.539,
-          "z": -1.55,
-          "key": false
-        },
-        {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.375,
+          "v": 0.36,
           "avg": 0.48,
-          "z": -1.43,
+          "z": -1.63,
           "key": true
         },
         {
-          "k": "effRate",
-          "label": "유효슈팅 비율",
+          "k": "tackleRate",
+          "label": "태클 성공률",
           "unit": "%",
-          "v": 0.733,
-          "avg": 0.799,
+          "v": 0.465,
+          "avg": 0.539,
+          "z": -1.46,
+          "key": false
+        },
+        {
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.58,
+          "avg": 3.171,
           "z": -1.25,
           "key": false
         }

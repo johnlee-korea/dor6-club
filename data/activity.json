@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-24T20:09:23.937Z",
+  "updated": "2026-11-24T22:09:13.192Z",
   "week": {
-    "from": "2026-11-17T20:09:23.937Z",
+    "from": "2026-11-17T22:09:13.192Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -20,9 +20,16 @@
       {
         "ouid": "3fb6b5444deacd8c1a0114c7d7369b78",
         "nick": "타겟터를써보자",
-        "games": 82,
-        "wins": 33,
+        "games": 85,
+        "wins": 34,
         "winRate": 40
+      },
+      {
+        "ouid": "10512ddbc79f7b043f02f62eac238b37",
+        "nick": "좌약먹은고릴라",
+        "games": 83,
+        "wins": 32,
+        "winRate": 39
       },
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
@@ -30,13 +37,6 @@
         "games": 80,
         "wins": 43,
         "winRate": 54
-      },
-      {
-        "ouid": "10512ddbc79f7b043f02f62eac238b37",
-        "nick": "좌약먹은고릴라",
-        "games": 79,
-        "wins": 31,
-        "winRate": 39
       }
     ]
   },
@@ -1225,22 +1225,22 @@
       }
     },
     "10512ddbc79f7b043f02f62eac238b37": {
-      "games": 296,
+      "games": 300,
       "form": [
+        "lose",
+        "draw",
+        "win",
+        "draw",
         "win",
         "win",
         "win",
         "draw",
         "lose",
-        "lose",
-        "draw",
-        "lose",
-        "win",
         "lose"
       ],
       "streak": {
-        "type": "win",
-        "n": 3
+        "type": "lose",
+        "n": 1
       },
       "rivals": {
         "nemesis": {
@@ -1362,20 +1362,23 @@
       }
     },
     "3fb6b5444deacd8c1a0114c7d7369b78": {
-      "games": 130,
+      "games": 133,
       "form": [
-        "draw",
-        "draw",
         "lose",
-        "lose",
-        "lose",
-        "lose",
-        "lose",
+        "win",
         "lose",
         "draw",
-        "win"
+        "draw",
+        "lose",
+        "lose",
+        "lose",
+        "lose",
+        "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": null,
