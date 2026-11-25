@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T22:48:24.839Z",
+  "updated": "2026-11-25T00:08:44.691Z",
   "baselineUpdated": "2026-11-23T00:05:26.845Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -2080,69 +2080,69 @@
     "3fb6b5444deacd8c1a0114c7d7369b78": {
       "games": 50,
       "style": {
-        "name": "떠먹여도 못 먹는",
-        "line": "스루는 완벽, 마무리가 문제",
+        "name": "세트피스 의존증",
+        "line": "필드골은 없고 세트피스만",
         "basis": [
-          "throughRatio+",
-          "finish-"
+          "setGoal+",
+          "gf-"
         ]
       },
       "highs": [
         {
-          "k": "throughRatio",
-          "label": "스루패스 비율",
-          "unit": "%",
-          "v": 0.2,
-          "avg": 0.137,
-          "z": 1.49,
-          "key": true
-        },
-        {
           "k": "setGoal",
           "label": "세트피스골",
           "unit": "",
-          "v": 0.2,
+          "v": 0.28,
           "avg": 0.08,
-          "z": 1.43,
+          "z": 2.37,
+          "key": true
+        },
+        {
+          "k": "throughRatio",
+          "label": "스루패스 비율",
+          "unit": "%",
+          "v": 0.199,
+          "avg": 0.137,
+          "z": 1.47,
           "key": false
         },
         {
-          "k": "volley",
-          "label": "발리 비율",
+          "k": "lowShot",
+          "label": "땅볼 슈팅 비율",
           "unit": "%",
-          "v": 0.147,
-          "avg": 0.072,
-          "z": 1.25,
+          "v": 0.176,
+          "avg": 0.096,
+          "z": 1.05,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "finish",
-          "label": "결정력",
-          "unit": "%",
-          "v": 0.36,
-          "avg": 0.48,
-          "z": -1.63,
-          "key": true
-        },
-        {
           "k": "tackleRate",
           "label": "태클 성공률",
           "unit": "%",
-          "v": 0.465,
+          "v": 0.453,
           "avg": 0.539,
-          "z": -1.46,
+          "z": -1.71,
+          "key": false
+        },
+        {
+          "k": "finish",
+          "label": "결정력",
+          "unit": "%",
+          "v": 0.361,
+          "avg": 0.48,
+          "z": -1.62,
           "key": false
         },
         {
           "k": "gf",
           "label": "경기당 득점",
           "unit": "",
-          "v": 2.58,
+          "v": 2.52,
           "avg": 3.171,
-          "z": -1.25,
-          "key": false
+          "z": -1.37,
+          "key": true
         }
       ]
     }
