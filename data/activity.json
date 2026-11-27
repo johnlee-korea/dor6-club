@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-27T06:08:17.176Z",
+  "updated": "2026-11-27T08:08:24.390Z",
   "week": {
-    "from": "2026-11-20T06:08:17.176Z",
+    "from": "2026-11-20T08:08:24.390Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -34,9 +34,9 @@
       {
         "ouid": "2dd2edb174f63716078ffc324199edd1",
         "nick": "미드필더",
-        "games": 83,
-        "wins": 36,
-        "winRate": 43
+        "games": 79,
+        "wins": 35,
+        "winRate": 44
       }
     ]
   },
@@ -1322,8 +1322,10 @@
       }
     },
     "86f3d0f045dea76d5db1c114d38c8c0d": {
-      "games": 187,
+      "games": 189,
       "form": [
+        "lose",
+        "win",
         "draw",
         "lose",
         "win",
@@ -1331,11 +1333,12 @@
         "lose",
         "win",
         "lose",
-        "win",
-        "win",
-        "draw"
+        "win"
       ],
-      "streak": null,
+      "streak": {
+        "type": "lose",
+        "n": 1
+      },
       "rivals": {
         "nemesis": null,
         "prey": {
