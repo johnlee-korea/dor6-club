@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T08:08:24.390Z",
+  "updated": "2026-11-27T09:08:35.706Z",
   "baselineUpdated": "2026-11-23T00:05:26.845Z",
   "baselineSource": "공식경기 1on1 랭킹 1~1000위 샘플, 최근 15경기",
   "baselineSampleSize": 150,
@@ -2009,11 +2009,11 @@
     "86f3d0f045dea76d5db1c114d38c8c0d": {
       "games": 50,
       "style": {
-        "name": "발리 난사",
-        "line": "떨어지는 공마다 발리, 결과는 하늘에",
+        "name": "뺏기면 끝",
+        "line": "공 잡을 땐 왕, 뺏기면 무방비",
         "basis": [
-          "volley+",
-          "finish-"
+          "poss+",
+          "block-"
         ]
       },
       "highs": [
@@ -2021,56 +2021,56 @@
           "k": "volley",
           "label": "발리 비율",
           "unit": "%",
-          "v": 0.177,
+          "v": 0.184,
           "avg": 0.072,
-          "z": 1.74,
-          "key": true
+          "z": 1.87,
+          "key": false
         },
         {
           "k": "poss",
           "label": "점유율",
           "unit": "avg%",
-          "v": 54.26,
+          "v": 54.5,
           "avg": 50.492,
-          "z": 1.38,
-          "key": false
+          "z": 1.46,
+          "key": true
         },
         {
-          "k": "offside",
-          "label": "오프사이드",
-          "unit": "",
-          "v": 0.7,
-          "avg": 0.49,
-          "z": 0.98,
+          "k": "wideShot",
+          "label": "측면 각도 슈팅",
+          "unit": "%",
+          "v": 0.363,
+          "avg": 0.273,
+          "z": 1.2,
           "key": false
         }
       ],
       "lows": [
         {
-          "k": "gf",
-          "label": "경기당 득점",
-          "unit": "",
-          "v": 2.3,
-          "avg": 3.171,
-          "z": -1.84,
-          "key": false
-        },
-        {
           "k": "finish",
           "label": "결정력",
           "unit": "%",
-          "v": 0.354,
+          "v": 0.366,
           "avg": 0.48,
-          "z": -1.72,
-          "key": true
+          "z": -1.55,
+          "key": false
         },
         {
           "k": "block",
           "label": "블락 시도",
           "unit": "",
-          "v": 3.2,
+          "v": 3.18,
           "avg": 4.429,
-          "z": -1.48,
+          "z": -1.51,
+          "key": true
+        },
+        {
+          "k": "gf",
+          "label": "경기당 득점",
+          "unit": "",
+          "v": 2.52,
+          "avg": 3.171,
+          "z": -1.37,
           "key": false
         }
       ]
