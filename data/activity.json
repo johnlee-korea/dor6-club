@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-28T04:09:14.747Z",
+  "updated": "2026-11-28T06:08:33.084Z",
   "week": {
-    "from": "2026-11-21T04:09:14.747Z",
+    "from": "2026-11-21T06:08:33.084Z",
     "rows": [
       {
         "ouid": "9052276188238316b9fc057307e0d58c",
@@ -20,9 +20,9 @@
       {
         "ouid": "0d3885c2f5c8446370d0bce6c5a2cbf3",
         "nick": "거터",
-        "games": 97,
-        "wins": 50,
-        "winRate": 52
+        "games": 105,
+        "wins": 56,
+        "winRate": 53
       },
       {
         "ouid": "3fb6b5444deacd8c1a0114c7d7369b78",
@@ -656,21 +656,21 @@
       }
     },
     "001221eab7f2c49f8571511731cc2573": {
-      "games": 372,
+      "games": 375,
       "form": [
+        "lose",
+        "win",
+        "win",
         "win",
         "lose",
         "win",
         "lose",
         "win",
         "draw",
-        "win",
-        "win",
-        "lose",
         "win"
       ],
       "streak": {
-        "type": "win",
+        "type": "lose",
         "n": 1
       },
       "rivals": {
@@ -1153,20 +1153,23 @@
       }
     },
     "0d3885c2f5c8446370d0bce6c5a2cbf3": {
-      "games": 772,
+      "games": 780,
       "form": [
-        "draw",
+        "win",
+        "win",
+        "win",
         "lose",
         "win",
         "draw",
         "win",
         "win",
-        "win",
-        "draw",
         "draw",
         "lose"
       ],
-      "streak": null,
+      "streak": {
+        "type": "win",
+        "n": 3
+      },
       "rivals": {
         "nemesis": {
           "ouid": "2dd2edb174f63716078ffc324199edd1",
